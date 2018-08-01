@@ -2,6 +2,7 @@ package listener
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net"
 )
@@ -15,15 +16,15 @@ const (
 
 // Listener is the object representing the TCP listener
 type Listener struct {
-	publisher DatapointPublisher
-	parser    PacketParser
+	Publisher DatapointPublisher
+	Parser    PacketParser
 }
 
 // NewListener returns an initialized Listener
 func NewListener() *Listener {
 	return &Listener{
-		publisher: NewDatapointPublisher(),
-		parser:    NewPacketParser(),
+		Publisher: NewDatapointPublisher(),
+		Parser:    NewPacketParser(),
 	}
 }
 
@@ -67,14 +68,19 @@ func Listen() {
 // HandleRequest handles a new connection
 func (listener *Listener) HandleRequest(conn net.Conn) {
 	buf := make([]byte, 1024)
-	reqLen, err := conn.Read(buf)
-	if err != nil {
-		log.Fatalf("Error reading from %s: %s", conn.RemoteAddr().Network(), err)
-	}
-	for i := 0; i < reqLen; i++ {
-		if listener.parser.ParseByte(buf[i]) {
-			point := listener.parser.ParsePacket()
-			listener.publisher.Publish(point)
+	for {
+		reqLen, err := conn.Read(buf)
+		if err != nil {
+			if err == io.EOF {
+				return
+			}
+			log.Fatalf("Error reading from %s: %s", conn.RemoteAddr().Network(), err)
+		}
+		for i := 0; i < reqLen; i++ {
+			if listener.Parser.ParseByte(buf[i]) {
+				point := listener.Parser.ParsePacket()
+				listener.Publisher.Publish(point)
+			}
 		}
 	}
 }

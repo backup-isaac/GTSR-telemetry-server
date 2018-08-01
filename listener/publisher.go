@@ -13,14 +13,21 @@ type DatapointPublisher interface {
 	Publish(point *Datapoint)
 }
 
+// single(ton) reaccs only :(
+var globalPublisher *datapointPublisher
+
 // NewDatapointPublisher returns a new DatapointPublisher with the standard
 // implementation, and starts the publisher thread
 func NewDatapointPublisher() DatapointPublisher {
+	if globalPublisher != nil {
+		return globalPublisher
+	}
 	publisher := &datapointPublisher{
 		PublishChannel:  make(chan *Datapoint),
 		Subscribers:     []chan *Datapoint{},
 		SubscribersLock: new(sync.Mutex),
 	}
+	globalPublisher = publisher
 	go publisher.publisherThread()
 	return publisher
 }
