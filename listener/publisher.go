@@ -7,16 +7,32 @@ import (
 
 // DatapointPublisher allows threads to subscribe to a particular publisher,
 // in this case the tcp port listener
-type DatapointPublisher struct {
+type DatapointPublisher interface {
+	Subscribe(c chan *Datapoint) error
+	Unsubscribe(c chan *Datapoint) error
+	Publish(point *Datapoint)
+}
+
+// NewDatapointPublisher returns a new DatapointPublisher with the standard
+// implementation, and starts the publisher thread
+func NewDatapointPublisher() DatapointPublisher {
+	publisher := &datapointPublisher{
+		PublishChannel:  make(chan *Datapoint),
+		Subscribers:     []chan *Datapoint{},
+		SubscribersLock: new(sync.Mutex),
+	}
+	go publisher.publisherThread()
+	return publisher
+}
+
+type datapointPublisher struct {
 	PublishChannel  chan *Datapoint
 	Subscribers     []chan *Datapoint
 	SubscribersLock *sync.Mutex
 }
 
-var publisher *DatapointPublisher
-
 // Subscribe will add a channel to the list of Subscribers
-func Subscribe(c chan *Datapoint) error {
+func (publisher *datapointPublisher) Subscribe(c chan *Datapoint) error {
 	if publisher == nil {
 		return fmt.Errorf("Subscribe called before Listen")
 	}
@@ -27,7 +43,7 @@ func Subscribe(c chan *Datapoint) error {
 }
 
 // Unsubscribe will remove a channel from the list of Subscribers
-func Unsubscribe(c chan *Datapoint) error {
+func (publisher *datapointPublisher) Unsubscribe(c chan *Datapoint) error {
 	if publisher == nil {
 		return fmt.Errorf("Unsubscribe called before Listen")
 	}
@@ -43,11 +59,11 @@ func Unsubscribe(c chan *Datapoint) error {
 }
 
 // Publish data
-func Publish(point *Datapoint) {
+func (publisher *datapointPublisher) Publish(point *Datapoint) {
 	publisher.PublishChannel <- point
 }
 
-func publisherThread() {
+func (publisher *datapointPublisher) publisherThread() {
 	for {
 		point := <-publisher.PublishChannel
 		publisher.SubscribersLock.Lock()

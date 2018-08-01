@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net"
-	"sync"
 )
 
 const (
@@ -13,6 +12,20 @@ const (
 	connType   = "tcp"
 	dataLength = 16
 )
+
+// Listener is the object representing the TCP listener
+type Listener struct {
+	publisher DatapointPublisher
+	parser    PacketParser
+}
+
+// NewListener returns an initialized Listener
+func NewListener() *Listener {
+	return &Listener{
+		publisher: NewDatapointPublisher(),
+		parser:    NewPacketParser(),
+	}
+}
 
 // Datapoint is a container for raw data from the car
 type Datapoint struct {
@@ -25,40 +38,21 @@ type Datapoint struct {
 	Tags map[string]string
 }
 
-func init() {
-	initPublisher()
-	err := loadConfigs()
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-
-func initPublisher() {
-	if publisher != nil {
-		return
-	}
-	publisher = &DatapointPublisher{
-		Subscribers:     []chan *Datapoint{},
-		SubscribersLock: &sync.Mutex{},
-		PublishChannel:  make(chan *Datapoint),
-	}
-	go publisherThread()
-}
-
 // Listen is the main function of listener which listens to the TCP data port for incoming connections
 func Listen() {
-	listener, err := net.Listen(connType, connHost+":"+connPort)
+	connListener, err := net.Listen(connType, connHost+":"+connPort)
 	if err != nil {
 		log.Fatal(fmt.Errorf("Error listening on TCP port: %s", err))
 	}
-	defer listener.Close()
+	defer connListener.Close()
 	fmt.Printf("Listening on %s:%s\n", connHost, connPort)
 	consecutiveFailures := 0
 	for {
-		conn, err := listener.Accept()
+		conn, err := connListener.Accept()
 		if err == nil {
 			consecutiveFailures = 0
-			go handleRequest(conn)
+			listener := NewListener()
+			go listener.HandleRequest(conn)
 		} else {
 			consecutiveFailures++
 			fmt.Println("Error accepting connection in function Listen: listener/listen.go")
@@ -70,11 +64,17 @@ func Listen() {
 	}
 }
 
-func handleRequest(conn net.Conn) {
+// HandleRequest handles a new connection
+func (listener *Listener) HandleRequest(conn net.Conn) {
 	buf := make([]byte, 1024)
 	reqLen, err := conn.Read(buf)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Error reading from %s: %s", conn.RemoteAddr().Network(), err))
+		log.Fatalf("Error reading from %s: %s", conn.RemoteAddr().Network(), err)
 	}
-	fmt.Println(string(buf[:reqLen]))
+	for i := 0; i < reqLen; i++ {
+		if listener.parser.ParseByte(buf[i]) {
+			point := listener.parser.ParsePacket()
+			listener.publisher.Publish(point)
+		}
+	}
 }

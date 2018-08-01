@@ -3,7 +3,9 @@ package listener
 import (
 	"encoding/binary"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"log"
 	"math"
 )
 
@@ -45,8 +47,25 @@ const (
 // ReceiverState is the enumerated type for receiver state
 type ReceiverState int
 
-// Parser is a struct which parses incoming packets from the car
-type Parser struct {
+// PacketParser is a interface describe an object which parses incoming packets from the car
+type PacketParser interface {
+	ParseByte(value byte) bool
+	ParsePacket() *Datapoint
+}
+
+// NewPacketParser returns a new PacketParser with the standard implementation
+func NewPacketParser() PacketParser {
+	err := loadConfigs()
+	if err != nil {
+		log.Fatalf("Error loading CAN configs: %s", err)
+	}
+	return &packetParser{
+		State:        idle,
+		PacketBuffer: make([]byte, 16),
+	}
+}
+
+type packetParser struct {
 	State        ReceiverState
 	PacketBuffer []byte
 	Offset       int
@@ -59,45 +78,50 @@ const (
 )
 
 // ParseByte maintains the parser state machine, parsing one byte at a time
-func (p *Parser) ParseByte(value byte) bool {
-	if p.State == idle {
+// It returns true when the full packet has been received
+func (p *packetParser) ParseByte(value byte) bool {
+	switch p.State {
+	case idle:
 		if value == byte('G') {
 			p.State = pre1
 		} else {
 			p.State = idle
 		}
-	} else if p.State == pre1 {
+	case pre1:
 		if value == byte('T') {
 			p.State = pre2
 		} else {
 			p.State = idle
 		}
-	} else if p.State == pre2 {
+	case pre2:
 		if value == byte('S') {
 			p.State = pre3
 		} else {
 			p.State = idle
 		}
-	} else if p.State == pre3 {
+	case pre3:
 		if value == byte('R') {
 			p.State = preambleRecvd
-			p.Offset = 4
+			p.Offset = 4 // Preamble offset
 		} else {
 			p.State = idle
 		}
-	} else if p.State == preambleRecvd {
+	case preambleRecvd:
 		p.PacketBuffer[p.Offset] = value
 		p.Offset++
 		if p.Offset >= len(p.PacketBuffer) {
 			p.State = idle
 			return true
 		}
+	default:
+		fmt.Println("Unrecognized packet parser state: ", p.State)
+		p.State = idle
 	}
 	return false
 }
 
 // ParsePacket returns the datapoint parsed from the current packet saved within the parser
-func (p *Parser) ParsePacket() *Datapoint {
+func (p *packetParser) ParsePacket() *Datapoint {
 	canID := int(binary.LittleEndian.Uint16(p.PacketBuffer[4:6]))
 	config := canDatatypes[canID]
 	point := &Datapoint{
