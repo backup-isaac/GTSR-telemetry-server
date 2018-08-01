@@ -28,6 +28,26 @@ func NewListener() *Listener {
 	}
 }
 
+// HandleRequest handles a new connection
+func (listener *Listener) HandleRequest(conn net.Conn) {
+	buf := make([]byte, 1024)
+	for {
+		reqLen, err := conn.Read(buf)
+		if err != nil {
+			if err == io.EOF {
+				return
+			}
+			log.Fatalf("Error reading from %s: %s", conn.RemoteAddr().Network(), err)
+		}
+		for i := 0; i < reqLen; i++ {
+			if listener.Parser.ParseByte(buf[i]) {
+				point := listener.Parser.ParsePacket()
+				listener.Publisher.Publish(point)
+			}
+		}
+	}
+}
+
 // Datapoint is a container for raw data from the car
 type Datapoint struct {
 	// Metric is the name of the metric type for this datapoint
@@ -65,22 +85,12 @@ func Listen() {
 	}
 }
 
-// HandleRequest handles a new connection
-func (listener *Listener) HandleRequest(conn net.Conn) {
-	buf := make([]byte, 1024)
-	for {
-		reqLen, err := conn.Read(buf)
-		if err != nil {
-			if err == io.EOF {
-				return
-			}
-			log.Fatalf("Error reading from %s: %s", conn.RemoteAddr().Network(), err)
-		}
-		for i := 0; i < reqLen; i++ {
-			if listener.Parser.ParseByte(buf[i]) {
-				point := listener.Parser.ParsePacket()
-				listener.Publisher.Publish(point)
-			}
-		}
-	}
+// Subscribe subscribes the channel c to the datapoint publisher
+func Subscribe(c chan *Datapoint) error {
+	return NewDatapointPublisher().Subscribe(c)
+}
+
+// Unsubscribe unsubscribes the channel c from the datapoint publisher
+func Unsubscribe(c chan *Datapoint) error {
+	return NewDatapointPublisher().Unsubscribe(c)
 }
