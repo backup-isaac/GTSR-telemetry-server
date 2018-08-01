@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.gatech.edu/JDuncan45/telemetry-server/listener"
+	"github.gatech.edu/GTSR/telemetry-server/listener"
 )
 
 func TestDatapointPublisher(t *testing.T) {

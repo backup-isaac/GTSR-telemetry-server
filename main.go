@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.gatech.edu/JDuncan45/telemetry-server/listener"
+	"github.gatech.edu/GTSR/telemetry-server/listener"
 )
 
 func main() {
