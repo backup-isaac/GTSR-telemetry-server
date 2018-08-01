@@ -21,10 +21,10 @@ type Listener struct {
 }
 
 // NewListener returns an initialized Listener
-func NewListener() *Listener {
+func NewListener(publisher DatapointPublisher, parser PacketParser) *Listener {
 	return &Listener{
-		Publisher: NewDatapointPublisher(),
-		Parser:    NewPacketParser(),
+		Publisher: publisher,
+		Parser:    parser,
 	}
 }
 
@@ -72,7 +72,7 @@ func Listen() {
 		conn, err := connListener.Accept()
 		if err == nil {
 			consecutiveFailures = 0
-			listener := NewListener()
+			listener := NewListener(NewDatapointPublisher(), NewPacketParser())
 			go listener.HandleRequest(conn)
 		} else {
 			consecutiveFailures++

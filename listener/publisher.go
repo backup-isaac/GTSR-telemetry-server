@@ -40,9 +40,6 @@ type datapointPublisher struct {
 
 // Subscribe will add a channel to the list of Subscribers
 func (publisher *datapointPublisher) Subscribe(c chan *Datapoint) error {
-	if publisher == nil {
-		return fmt.Errorf("Subscribe called before Listen")
-	}
 	publisher.SubscribersLock.Lock()
 	defer publisher.SubscribersLock.Unlock()
 	publisher.Subscribers = append(publisher.Subscribers, c)
@@ -51,9 +48,6 @@ func (publisher *datapointPublisher) Subscribe(c chan *Datapoint) error {
 
 // Unsubscribe will remove a channel from the list of Subscribers
 func (publisher *datapointPublisher) Unsubscribe(c chan *Datapoint) error {
-	if publisher == nil {
-		return fmt.Errorf("Unsubscribe called before Listen")
-	}
 	publisher.SubscribersLock.Lock()
 	defer publisher.SubscribersLock.Unlock()
 	for i, channel := range publisher.Subscribers {
