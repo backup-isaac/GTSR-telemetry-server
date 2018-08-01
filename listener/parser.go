@@ -5,35 +5,34 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"math"
 )
 
-type canConfigType struct {
+// CanConfigType holds CAN configuration information
+type CanConfigType struct {
 	CanID    int
 	Datatype string
 	Name     string
 	Offset   int
 }
 
-var canDatatypes map[int]*canConfigType
-
-func loadConfigs() error {
-	canDatatypes = make(map[int]*canConfigType)
-	rawJSON, err := ioutil.ReadFile("../can_config.json")
+// LoadConfigs loads the CAN configs from the config file
+func LoadConfigs() (map[int]*CanConfigType, error) {
+	rawJSON, err := ioutil.ReadFile("can_config.json")
 	if err != nil {
-		return err
+		return nil, err
 	}
-	var canConfigList []canConfigType
+	var canConfigList []CanConfigType
 	err = json.Unmarshal(rawJSON, &canConfigList)
 	if err != nil {
-		return err
+		return nil, err
 	}
+	canDatatypes := make(map[int]*CanConfigType)
 	for i := range canConfigList {
 		config := &canConfigList[i]
 		canDatatypes[config.CanID] = config
 	}
-	return nil
+	return canDatatypes, nil
 }
 
 const (
@@ -54,14 +53,11 @@ type PacketParser interface {
 }
 
 // NewPacketParser returns a new PacketParser with the standard implementation
-func NewPacketParser() PacketParser {
-	err := loadConfigs()
-	if err != nil {
-		log.Fatalf("Error loading CAN configs: %s", err)
-	}
+func NewPacketParser(canConfigs map[int]*CanConfigType) PacketParser {
 	return &packetParser{
 		State:        idle,
 		PacketBuffer: make([]byte, 16),
+		CANConfigs:   canConfigs,
 	}
 }
 
@@ -69,6 +65,7 @@ type packetParser struct {
 	State        ReceiverState
 	PacketBuffer []byte
 	Offset       int
+	CANConfigs   map[int]*CanConfigType
 }
 
 const (
@@ -123,7 +120,7 @@ func (p *packetParser) ParseByte(value byte) bool {
 // ParsePacket returns the datapoint parsed from the current packet saved within the parser
 func (p *packetParser) ParsePacket() *Datapoint {
 	canID := int(binary.LittleEndian.Uint16(p.PacketBuffer[4:6]))
-	config := canDatatypes[canID]
+	config := p.CANConfigs[canID]
 	point := &Datapoint{
 		Metric: config.Name,
 	}

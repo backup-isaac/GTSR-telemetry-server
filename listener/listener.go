@@ -61,6 +61,10 @@ type Datapoint struct {
 
 // Listen is the main function of listener which listens to the TCP data port for incoming connections
 func Listen() {
+	canConfigs, err := LoadConfigs()
+	if err != nil {
+		log.Fatalf("Error loading CAN configs: %s", err)
+	}
 	connListener, err := net.Listen(connType, connHost+":"+connPort)
 	if err != nil {
 		log.Fatal(fmt.Errorf("Error listening on TCP port: %s", err))
@@ -72,7 +76,7 @@ func Listen() {
 		conn, err := connListener.Accept()
 		if err == nil {
 			consecutiveFailures = 0
-			listener := NewListener(NewDatapointPublisher(), NewPacketParser())
+			listener := NewListener(NewDatapointPublisher(), NewPacketParser(canConfigs))
 			go listener.HandleRequest(conn)
 		} else {
 			consecutiveFailures++

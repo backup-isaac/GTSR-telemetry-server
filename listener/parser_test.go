@@ -9,7 +9,15 @@ import (
 )
 
 func TestPacketParser(t *testing.T) {
-	parser := listener.NewPacketParser()
+	canConfig := map[int]*listener.CanConfigType{
+		0: {
+			CanID:    0,
+			Datatype: "int32",
+			Name:     "Test 1",
+			Offset:   0,
+		},
+	}
+	parser := listener.NewPacketParser(canConfig)
 	packet := make([]byte, 12)
 	// Can ID 0
 	packet[0] = 0
