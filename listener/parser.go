@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"math"
+
+	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 )
 
 // CanConfigType holds CAN configuration information
@@ -49,7 +51,7 @@ type ReceiverState int
 // PacketParser is a interface describe an object which parses incoming packets from the car
 type PacketParser interface {
 	ParseByte(value byte) bool
-	ParsePacket() *Datapoint
+	ParsePacket() *datatypes.Datapoint
 }
 
 // NewPacketParser returns a new PacketParser with the standard implementation
@@ -118,10 +120,10 @@ func (p *packetParser) ParseByte(value byte) bool {
 }
 
 // ParsePacket returns the datapoint parsed from the current packet saved within the parser
-func (p *packetParser) ParsePacket() *Datapoint {
+func (p *packetParser) ParsePacket() *datatypes.Datapoint {
 	canID := int(binary.LittleEndian.Uint16(p.PacketBuffer[4:6]))
 	config := p.CANConfigs[canID]
-	point := &Datapoint{
+	point := &datatypes.Datapoint{
 		Metric: config.Name,
 	}
 	if config.Datatype == uint8Type {

@@ -5,6 +5,8 @@ import (
 	"io"
 	"log"
 	"net"
+
+	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 )
 
 const (
@@ -48,17 +50,6 @@ func (listener *Listener) HandleRequest(conn net.Conn) {
 	}
 }
 
-// Datapoint is a container for raw data from the car
-type Datapoint struct {
-	// Metric is the name of the metric type for this datapoint
-	// Examples: Wavesculptor RPM, BMS Current
-	Metric string
-	// Value of this datapoint
-	Value interface{}
-	// Map of tags associated with this datapoint (e.g. event tags)
-	Tags map[string]string
-}
-
 // Listen is the main function of listener which listens to the TCP data port for incoming connections
 func Listen() {
 	canConfigs, err := LoadConfigs()
@@ -90,11 +81,11 @@ func Listen() {
 }
 
 // Subscribe subscribes the channel c to the datapoint publisher
-func Subscribe(c chan *Datapoint) error {
+func Subscribe(c chan *datatypes.Datapoint) error {
 	return NewDatapointPublisher().Subscribe(c)
 }
 
 // Unsubscribe unsubscribes the channel c from the datapoint publisher
-func Unsubscribe(c chan *Datapoint) error {
+func Unsubscribe(c chan *datatypes.Datapoint) error {
 	return NewDatapointPublisher().Unsubscribe(c)
 }

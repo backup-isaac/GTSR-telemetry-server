@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 	"github.gatech.edu/GTSR/telemetry-server/listener"
-
 	"github.gatech.edu/GTSR/telemetry-server/listener/mocks"
 )
 
@@ -15,7 +15,7 @@ func TestListener(t *testing.T) {
 	parser := &mocks.PacketParser{}
 	parser.On("ParseByte", uint8(0)).Return(false)
 	parser.On("ParseByte", uint8(1)).Return(true)
-	datapoint := &listener.Datapoint{}
+	datapoint := &datatypes.Datapoint{}
 	parser.On("ParsePacket").Return(datapoint)
 
 	publisher := &mocks.DatapointPublisher{}

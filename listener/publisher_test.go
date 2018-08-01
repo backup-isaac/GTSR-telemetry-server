@@ -5,15 +5,16 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 	"github.gatech.edu/GTSR/telemetry-server/listener"
 )
 
 func TestDatapointPublisher(t *testing.T) {
 	publisher := listener.NewDatapointPublisher()
-	c := make(chan *listener.Datapoint)
+	c := make(chan *datatypes.Datapoint)
 	err := publisher.Subscribe(c)
 	assert.NoError(t, err)
-	datapoint := &listener.Datapoint{
+	datapoint := &datatypes.Datapoint{
 		Metric: "fake metric",
 		Value:  2,
 		Tags: map[string]string{
@@ -21,7 +22,7 @@ func TestDatapointPublisher(t *testing.T) {
 		},
 	}
 	publisher.Publish(datapoint)
-	var actualDatapoint *listener.Datapoint
+	var actualDatapoint *datatypes.Datapoint
 	select {
 	case actualDatapoint = <-c:
 	case <-time.After(time.Second):

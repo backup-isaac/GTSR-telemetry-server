@@ -3,14 +3,16 @@ package listener
 import (
 	"fmt"
 	"sync"
+
+	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 )
 
 // DatapointPublisher allows threads to subscribe to a particular publisher,
 // in this case the tcp port listener
 type DatapointPublisher interface {
-	Subscribe(c chan *Datapoint) error
-	Unsubscribe(c chan *Datapoint) error
-	Publish(point *Datapoint)
+	Subscribe(c chan *datatypes.Datapoint) error
+	Unsubscribe(c chan *datatypes.Datapoint) error
+	Publish(point *datatypes.Datapoint)
 }
 
 // single(ton) reaccs only :(
@@ -23,8 +25,8 @@ func NewDatapointPublisher() DatapointPublisher {
 		return globalPublisher
 	}
 	publisher := &datapointPublisher{
-		PublishChannel:  make(chan *Datapoint),
-		Subscribers:     []chan *Datapoint{},
+		PublishChannel:  make(chan *datatypes.Datapoint),
+		Subscribers:     []chan *datatypes.Datapoint{},
 		SubscribersLock: new(sync.Mutex),
 	}
 	globalPublisher = publisher
@@ -33,13 +35,13 @@ func NewDatapointPublisher() DatapointPublisher {
 }
 
 type datapointPublisher struct {
-	PublishChannel  chan *Datapoint
-	Subscribers     []chan *Datapoint
+	PublishChannel  chan *datatypes.Datapoint
+	Subscribers     []chan *datatypes.Datapoint
 	SubscribersLock *sync.Mutex
 }
 
 // Subscribe will add a channel to the list of Subscribers
-func (publisher *datapointPublisher) Subscribe(c chan *Datapoint) error {
+func (publisher *datapointPublisher) Subscribe(c chan *datatypes.Datapoint) error {
 	publisher.SubscribersLock.Lock()
 	defer publisher.SubscribersLock.Unlock()
 	publisher.Subscribers = append(publisher.Subscribers, c)
@@ -47,7 +49,7 @@ func (publisher *datapointPublisher) Subscribe(c chan *Datapoint) error {
 }
 
 // Unsubscribe will remove a channel from the list of Subscribers
-func (publisher *datapointPublisher) Unsubscribe(c chan *Datapoint) error {
+func (publisher *datapointPublisher) Unsubscribe(c chan *datatypes.Datapoint) error {
 	publisher.SubscribersLock.Lock()
 	defer publisher.SubscribersLock.Unlock()
 	for i, channel := range publisher.Subscribers {
@@ -60,7 +62,7 @@ func (publisher *datapointPublisher) Unsubscribe(c chan *Datapoint) error {
 }
 
 // Publish data
-func (publisher *datapointPublisher) Publish(point *Datapoint) {
+func (publisher *datapointPublisher) Publish(point *datatypes.Datapoint) {
 	publisher.PublishChannel <- point
 }
 

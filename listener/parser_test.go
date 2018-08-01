@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 	"github.gatech.edu/GTSR/telemetry-server/listener"
 )
 
@@ -38,7 +39,7 @@ func TestPacketParser(t *testing.T) {
 		}
 	}
 	point := parser.ParsePacket()
-	expectedPoint := &listener.Datapoint{
+	expectedPoint := &datatypes.Datapoint{
 		Metric: "Test 1",
 		Value:  12345,
 	}
