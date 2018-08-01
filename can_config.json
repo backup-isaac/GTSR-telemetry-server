@@ -1,0 +1,14 @@
+[
+    {
+        "canID": 0,
+        "datatype": "int32",
+        "name": "Test 1",
+        "offset": 0
+    },
+    {
+        "canID": 1,
+        "datatype": "float",
+        "name": "Test 2",
+        "offset": 0
+    }
+]

@@ -8,9 +8,10 @@ import (
 )
 
 const (
-	connHost = "localhost"
-	connPort = "6001"
-	connType = "tcp"
+	connHost   = "localhost"
+	connPort   = "6001"
+	connType   = "tcp"
+	dataLength = 16
 )
 
 // Datapoint is a container for raw data from the car
@@ -24,8 +25,15 @@ type Datapoint struct {
 	Tags map[string]string
 }
 
-// Init initializes listener
-func Init() {
+func init() {
+	initPublisher()
+	err := loadConfigs()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func initPublisher() {
 	if publisher != nil {
 		return
 	}
@@ -39,7 +47,6 @@ func Init() {
 
 // Listen is the main function of listener which listens to the TCP data port for incoming connections
 func Listen() {
-	Init()
 	listener, err := net.Listen(connType, connHost+":"+connPort)
 	if err != nil {
 		log.Fatal(fmt.Errorf("Error listening on TCP port: %s", err))
