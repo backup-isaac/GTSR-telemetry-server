@@ -58,7 +58,7 @@ func Listen() {
 	}
 	connListener, err := net.Listen(connType, connHost+":"+connPort)
 	if err != nil {
-		log.Fatal(fmt.Errorf("Error listening on TCP port: %s", err))
+		log.Fatalf("Error listening on TCP port: %s", err)
 	}
 	defer connListener.Close()
 	fmt.Printf("Listening on %s:%s\n", connHost, connPort)
@@ -71,7 +71,7 @@ func Listen() {
 			go listener.HandleRequest(conn)
 		} else {
 			consecutiveFailures++
-			fmt.Println("Error accepting connection in function Listen: listener/listen.go")
+			fmt.Println("Error accepting connection in function Listen: listener/listener.go")
 			fmt.Printf("Consecutive connection failures: %d\n", consecutiveFailures)
 			if consecutiveFailures >= 5 {
 				log.Fatal("Consecutive connection failures exceeded maximum limit")
