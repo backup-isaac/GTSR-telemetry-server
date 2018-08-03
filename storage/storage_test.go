@@ -8,7 +8,6 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.gatech.edu/GTSR/telemetry-server/datatypes"
-
 	"github.gatech.edu/GTSR/telemetry-server/storage"
 )
 
@@ -41,5 +40,12 @@ func TestStorage(t *testing.T) {
 	}
 	assert.ElementsMatch(t, datapoints, storedDatapoints)
 	err = store.DeleteMetric("Test 1")
+	assert.NoError(t, err)
+}
+
+func TestInsertEmptyPoints(t *testing.T) {
+	store, err := storage.NewStorage()
+	assert.NoError(t, err)
+	err = store.Insert([]*datatypes.Datapoint{})
 	assert.NoError(t, err)
 }

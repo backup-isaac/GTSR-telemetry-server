@@ -10,10 +10,9 @@ import (
 )
 
 const (
-	connHost   = "localhost"
-	connPort   = "6001"
-	connType   = "tcp"
-	dataLength = 16
+	connHost = "localhost"
+	connPort = "6001"
+	connType = "tcp"
 )
 
 // Listener is the object representing the TCP listener

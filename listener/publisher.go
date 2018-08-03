@@ -10,8 +10,11 @@ import (
 // DatapointPublisher allows threads to subscribe to a particular publisher,
 // in this case the tcp port listener
 type DatapointPublisher interface {
+	// Subscribe will add a channel to the list of Subscribers
 	Subscribe(c chan *datatypes.Datapoint) error
+	// Unsubscribe will remove a channel from the list of Subscribers
 	Unsubscribe(c chan *datatypes.Datapoint) error
+	// Publish data
 	Publish(point *datatypes.Datapoint)
 }
 
@@ -40,7 +43,6 @@ type datapointPublisher struct {
 	SubscribersLock *sync.Mutex
 }
 
-// Subscribe will add a channel to the list of Subscribers
 func (publisher *datapointPublisher) Subscribe(c chan *datatypes.Datapoint) error {
 	publisher.SubscribersLock.Lock()
 	defer publisher.SubscribersLock.Unlock()
@@ -48,7 +50,6 @@ func (publisher *datapointPublisher) Subscribe(c chan *datatypes.Datapoint) erro
 	return nil
 }
 
-// Unsubscribe will remove a channel from the list of Subscribers
 func (publisher *datapointPublisher) Unsubscribe(c chan *datatypes.Datapoint) error {
 	publisher.SubscribersLock.Lock()
 	defer publisher.SubscribersLock.Unlock()
@@ -61,7 +62,6 @@ func (publisher *datapointPublisher) Unsubscribe(c chan *datatypes.Datapoint) er
 	return fmt.Errorf("Unsubscribe: channel not found in subscriber list")
 }
 
-// Publish data
 func (publisher *datapointPublisher) Publish(point *datatypes.Datapoint) {
 	publisher.PublishChannel <- point
 }
