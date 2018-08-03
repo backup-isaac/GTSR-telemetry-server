@@ -33,7 +33,6 @@ func recordData() error {
 	for {
 		select {
 		case point := <-points:
-			point.Time = time.Now()
 			bufferedPoints = append(bufferedPoints, point)
 		case <-ticker.C:
 			err = store.Insert(bufferedPoints)

@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"fmt"
 	"math"
+	"time"
 
 	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
 	"github.gatech.edu/GTSR/telemetry-server/datatypes"
@@ -99,6 +100,7 @@ func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 	for _, config := range configs {
 		point := &datatypes.Datapoint{
 			Metric: config.Name,
+			Time:   time.Now(),
 		}
 		if config.Datatype == uint8Type {
 			point.Value = float64(p.PacketBuffer[8+config.Offset])
