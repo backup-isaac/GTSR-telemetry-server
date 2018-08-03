@@ -109,6 +109,9 @@ func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 		} else if config.Datatype == float32Type {
 			rawValue := binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset])
 			point.Value = float64(math.Float32frombits(rawValue))
+			if math.IsNaN(point.Value) || math.IsInf(point.Value, 0) {
+				continue
+			}
 		} else {
 			fmt.Println("Unrecognized datatype: " + config.Datatype)
 			continue

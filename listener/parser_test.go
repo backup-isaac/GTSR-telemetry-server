@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"math"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
@@ -64,6 +65,9 @@ func TestPacketParser(t *testing.T) {
 			Metric: "Test 2",
 			Value:  2.5,
 		},
+	}
+	for _, point := range points {
+		point.Time = time.Time{}
 	}
 	assert.ElementsMatch(t, expectedPoints, points)
 }
