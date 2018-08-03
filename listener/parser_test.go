@@ -5,12 +5,13 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
 	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 	"github.gatech.edu/GTSR/telemetry-server/listener"
 )
 
 func TestPacketParser(t *testing.T) {
-	canConfig := map[int]*listener.CanConfigType{
+	canConfig := map[int]*canConfigs.CanConfigType{
 		0: {
 			CanID:    0,
 			Datatype: "int32",

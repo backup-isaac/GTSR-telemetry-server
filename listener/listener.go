@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 
+	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
 	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 )
 
@@ -51,7 +52,7 @@ func (listener *Listener) HandleRequest(conn net.Conn) {
 
 // Listen is the main function of listener which listens to the TCP data port for incoming connections
 func Listen() {
-	canConfigs, err := LoadConfigs()
+	canConfigs, err := canConfigs.LoadConfigs()
 	if err != nil {
 		log.Fatalf("Error loading CAN configs: %s", err)
 	}
