@@ -3,6 +3,9 @@
         "canID": 65535,
         "datatype": "float32",
         "name": "Test",
-        "offset": 0
+        "offset": 0,
+        "checkBounds": true,
+        "minValue": 0.0,
+        "maxValue": 100.0
     }
 ]

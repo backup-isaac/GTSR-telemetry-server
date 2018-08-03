@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"path"
 	"runtime"
+	"strconv"
 	"time"
 
 	client "github.com/influxdata/influxdb/client/v2"
@@ -125,9 +126,13 @@ func (s *storageImpl) SelectMetric(metric string) ([]*datatypes.Datapoint, error
 		if err != nil {
 			return nil, err
 		}
+		val, err := strconv.ParseFloat(string(value[valueColumn].(json.Number)), 64)
+		if err != nil {
+			return nil, err
+		}
 		results[i] = &datatypes.Datapoint{
 			Metric: metric,
-			Value:  value[valueColumn],
+			Value:  val,
 			Tags:   response.Results[0].Series[0].Tags,
 			Time:   timestamp,
 		}

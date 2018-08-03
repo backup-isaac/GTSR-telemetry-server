@@ -15,11 +15,11 @@ func TestListener(t *testing.T) {
 	parser := &mocks.PacketParser{}
 	parser.On("ParseByte", uint8(0)).Return(false)
 	parser.On("ParseByte", uint8(1)).Return(true)
-	datapoint := &datatypes.Datapoint{}
+	datapoint := []*datatypes.Datapoint{{}}
 	parser.On("ParsePacket").Return(datapoint)
 
 	publisher := &mocks.DatapointPublisher{}
-	publisher.On("Publish", datapoint).Return()
+	publisher.On("Publish", datapoint[0]).Return()
 
 	l := &listener.Listener{
 		Publisher: publisher,
@@ -37,5 +37,5 @@ func TestListener(t *testing.T) {
 
 	parser.AssertNumberOfCalls(t, "ParseByte", 12)
 	parser.AssertNumberOfCalls(t, "ParsePacket", 1)
-	publisher.AssertCalled(t, "Publish", datapoint)
+	publisher.AssertCalled(t, "Publish", datapoint[0])
 }

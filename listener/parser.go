@@ -23,11 +23,11 @@ type ReceiverState int
 // PacketParser is a interface describe an object which parses incoming packets from the car
 type PacketParser interface {
 	ParseByte(value byte) bool
-	ParsePacket() *datatypes.Datapoint
+	ParsePacket() []*datatypes.Datapoint
 }
 
 // NewPacketParser returns a new PacketParser with the standard implementation
-func NewPacketParser(canConfigs map[int]*canConfigs.CanConfigType) PacketParser {
+func NewPacketParser(canConfigs map[int][]*canConfigs.CanConfigType) PacketParser {
 	return &packetParser{
 		State:        idle,
 		PacketBuffer: make([]byte, 16),
@@ -39,7 +39,7 @@ type packetParser struct {
 	State        ReceiverState
 	PacketBuffer []byte
 	Offset       int
-	CANConfigs   map[int]*canConfigs.CanConfigType
+	CANConfigs   map[int][]*canConfigs.CanConfigType
 }
 
 const (
@@ -92,19 +92,28 @@ func (p *packetParser) ParseByte(value byte) bool {
 }
 
 // ParsePacket returns the datapoint parsed from the current packet saved within the parser
-func (p *packetParser) ParsePacket() *datatypes.Datapoint {
+func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 	canID := int(binary.LittleEndian.Uint16(p.PacketBuffer[4:6]))
-	config := p.CANConfigs[canID]
-	point := &datatypes.Datapoint{
-		Metric: config.Name,
+	configs := p.CANConfigs[canID]
+	points := make([]*datatypes.Datapoint, 0)
+	for _, config := range configs {
+		point := &datatypes.Datapoint{
+			Metric: config.Name,
+		}
+		if config.Datatype == uint8Type {
+			point.Value = float64(p.PacketBuffer[8+config.Offset])
+		} else if config.Datatype == int32Type {
+			point.Value = float64(binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset]))
+		} else if config.Datatype == float32Type {
+			rawValue := binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset])
+			point.Value = float64(math.Float32frombits(rawValue))
+		} else {
+			fmt.Println("Unrecognized datatype: " + config.Datatype)
+			continue
+		}
+		if !config.CheckBounds || (config.MinValue <= point.Value && config.MaxValue >= point.Value) {
+			points = append(points, point)
+		}
 	}
-	if config.Datatype == uint8Type {
-		point.Value = p.PacketBuffer[8+config.Offset]
-	} else if config.Datatype == int32Type {
-		point.Value = int(binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset]))
-	} else if config.Datatype == float32Type {
-		rawValue := binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset])
-		point.Value = math.Float32frombits(rawValue)
-	}
-	return point
+	return points
 }

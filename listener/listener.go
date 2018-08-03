@@ -43,8 +43,10 @@ func (listener *Listener) HandleRequest(conn net.Conn) {
 		}
 		for i := 0; i < reqLen; i++ {
 			if listener.Parser.ParseByte(buf[i]) {
-				point := listener.Parser.ParsePacket()
-				listener.Publisher.Publish(point)
+				points := listener.Parser.ParsePacket()
+				for _, point := range points {
+					listener.Publisher.Publish(point)
+				}
 			}
 		}
 	}

@@ -1,8 +1,6 @@
 package storage_test
 
 import (
-	"encoding/json"
-	"strconv"
 	"testing"
 	"time"
 
@@ -34,10 +32,6 @@ func TestStorage(t *testing.T) {
 	assert.NoError(t, err)
 	storedDatapoints, err := store.SelectMetric("Unit_Test_1")
 	assert.NoError(t, err)
-	for _, point := range storedDatapoints {
-		point.Value, err = strconv.Atoi(string(point.Value.(json.Number)))
-		assert.NoError(t, err)
-	}
 	assert.ElementsMatch(t, datapoints, storedDatapoints)
 	err = store.DeleteMetric("Unit_Test_1")
 	assert.NoError(t, err)
