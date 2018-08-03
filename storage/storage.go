@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"path"
+	"runtime"
 	"time"
 
 	client "github.com/influxdata/influxdb/client/v2"
@@ -30,7 +32,11 @@ type storageImpl struct {
 
 // NewStorage returns an initialized Storage, backed by InfluxDB
 func NewStorage() (Storage, error) {
-	rawJSON, err := ioutil.ReadFile("secrets.json")
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		return nil, fmt.Errorf("Could not find runtime caller")
+	}
+	rawJSON, err := ioutil.ReadFile(path.Join(path.Dir(filename), "secrets.json"))
 	if err != nil {
 		return nil, err
 	}

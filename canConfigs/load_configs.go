@@ -2,7 +2,10 @@ package canConfigs
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"path"
+	"runtime"
 )
 
 // CanConfigType holds CAN configuration information
@@ -15,7 +18,11 @@ type CanConfigType struct {
 
 // LoadConfigs loads the CAN configs from the config file
 func LoadConfigs() (map[int]*CanConfigType, error) {
-	rawJSON, err := ioutil.ReadFile("can_config.json")
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		return nil, fmt.Errorf("Could not find runtime caller")
+	}
+	rawJSON, err := ioutil.ReadFile(path.Join(path.Dir(filename), "can_config.json"))
 	if err != nil {
 		return nil, err
 	}

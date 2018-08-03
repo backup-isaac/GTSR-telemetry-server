@@ -1,14 +1,8 @@
 [
     {
-        "canID": 0,
-        "datatype": "int32",
-        "name": "Test_1",
-        "offset": 0
-    },
-    {
-        "canID": 1,
-        "datatype": "float",
-        "name": "Test_2",
+        "canID": 65535,
+        "datatype": "float32",
+        "name": "Test",
         "offset": 0
     }
 ]
