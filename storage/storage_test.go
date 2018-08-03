@@ -20,26 +20,26 @@ func TestStorage(t *testing.T) {
 	assert.NoError(t, err)
 	datapoints := []*datatypes.Datapoint{
 		{
-			Metric: "Test 1",
+			Metric: "Test_1",
 			Value:  12345,
 			Time:   time.Date(2069, time.April, 20, 4, 20, 0, 0, utc),
 		},
 		{
-			Metric: "Test 1",
+			Metric: "Test_1",
 			Value:  54321,
 			Time:   time.Date(2018, time.May, 21, 0, 0, 0, 0, utc),
 		},
 	}
 	err = store.Insert(datapoints)
 	assert.NoError(t, err)
-	storedDatapoints, err := store.SelectMetric("Test 1")
+	storedDatapoints, err := store.SelectMetric("Test_1")
 	assert.NoError(t, err)
 	for _, point := range storedDatapoints {
 		point.Value, err = strconv.Atoi(string(point.Value.(json.Number)))
 		assert.NoError(t, err)
 	}
 	assert.ElementsMatch(t, datapoints, storedDatapoints)
-	err = store.DeleteMetric("Test 1")
+	err = store.DeleteMetric("Test_1")
 	assert.NoError(t, err)
 }
 
