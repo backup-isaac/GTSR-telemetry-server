@@ -33,6 +33,13 @@ func TestStorage(t *testing.T) {
 	storedDatapoints, err := store.SelectMetric("Unit_Test_1")
 	assert.NoError(t, err)
 	assert.ElementsMatch(t, datapoints, storedDatapoints)
+	storedDatapoints, err = store.SelectMetricTimeRange(
+		"Unit_Test_1",
+		time.Date(2060, time.January, 1, 0, 0, 0, 0, utc),
+		time.Date(2070, time.January, 1, 0, 0, 0, 0, utc),
+	)
+	assert.NoError(t, err)
+	assert.ElementsMatch(t, storedDatapoints, []*datatypes.Datapoint{datapoints[0]})
 	err = store.DeleteMetric("Unit_Test_1")
 	assert.NoError(t, err)
 }

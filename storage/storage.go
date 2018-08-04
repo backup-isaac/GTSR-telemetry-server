@@ -23,6 +23,8 @@ type Storage interface {
 	DeleteMetric(metric string) error
 	// Select all entries for specified metric
 	SelectMetric(metric string) ([]*datatypes.Datapoint, error)
+	// Select entries for metric within specified time range
+	SelectMetricTimeRange(metric string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error)
 	// Close performs cleanup work
 	Close() error
 }
@@ -88,7 +90,7 @@ func getPoint(metric string, tags map[string]string, fields map[string]interface
 
 func (s *storageImpl) DeleteMetric(metric string) error {
 	response, err := s.client.Query(client.Query{
-		Command:  fmt.Sprintf("DROP MEASUREMENT \"%s\"", metric),
+		Command:  fmt.Sprintf("DROP MEASUREMENT %s", metric),
 		Database: tableName,
 	})
 	if err != nil {
@@ -99,7 +101,7 @@ func (s *storageImpl) DeleteMetric(metric string) error {
 
 func (s *storageImpl) SelectMetric(metric string) ([]*datatypes.Datapoint, error) {
 	response, err := s.client.Query(client.Query{
-		Command:  fmt.Sprintf("SELECT * FROM \"%s\"", metric),
+		Command:  fmt.Sprintf("SELECT * FROM %s", metric),
 		Database: tableName,
 	})
 	if err != nil {
@@ -108,6 +110,24 @@ func (s *storageImpl) SelectMetric(metric string) ([]*datatypes.Datapoint, error
 	if response.Error() != nil {
 		return nil, response.Error()
 	}
+	return getDatapoints(metric, response)
+}
+
+func (s *storageImpl) SelectMetricTimeRange(metric string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error) {
+	response, err := s.client.Query(client.Query{
+		Command:  fmt.Sprintf("SELECT * FROM %s WHERE time >= '%s' AND time <= '%s'", metric, start.Format(time.RFC3339Nano), end.Format(time.RFC3339Nano)),
+		Database: tableName,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if response.Error() != nil {
+		return nil, response.Error()
+	}
+	return getDatapoints(metric, response)
+}
+
+func getDatapoints(metric string, response *client.Response) ([]*datatypes.Datapoint, error) {
 	if len(response.Results) == 0 || len(response.Results[0].Series) == 0 {
 		return make([]*datatypes.Datapoint, 0), nil
 	}
