@@ -30,6 +30,17 @@ func TestStorage(t *testing.T) {
 	}
 	err = store.Insert(datapoints)
 	assert.NoError(t, err)
+	metrics, err := store.ListMetrics()
+	assert.NoError(t, err)
+	assert.NotEqual(t, 0, len(metrics))
+	unitTestInMetrics := false
+	for _, metric := range metrics {
+		if metric == "Unit_Test_1" {
+			unitTestInMetrics = true
+			break
+		}
+	}
+	assert.True(t, unitTestInMetrics, "Unit_Test_1 not found in metrics")
 	storedDatapoints, err := store.SelectMetric("Unit_Test_1")
 	assert.NoError(t, err)
 	assert.ElementsMatch(t, datapoints, storedDatapoints)
@@ -39,7 +50,10 @@ func TestStorage(t *testing.T) {
 		time.Date(2070, time.January, 1, 0, 0, 0, 0, utc),
 	)
 	assert.NoError(t, err)
-	assert.ElementsMatch(t, storedDatapoints, []*datatypes.Datapoint{datapoints[0]})
+	assert.ElementsMatch(t, []*datatypes.Datapoint{datapoints[0]}, storedDatapoints)
+	latest, err := store.Latest("Unit_Test_1")
+	assert.NoError(t, err)
+	assert.Equal(t, datapoints[0], latest)
 	err = store.DeleteMetric("Unit_Test_1")
 	assert.NoError(t, err)
 }

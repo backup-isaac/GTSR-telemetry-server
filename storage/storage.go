@@ -25,6 +25,10 @@ type Storage interface {
 	SelectMetric(metric string) ([]*datatypes.Datapoint, error)
 	// Select entries for metric within specified time range
 	SelectMetricTimeRange(metric string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error)
+	// ListMetrics lists all of the metrics in the table
+	ListMetrics() ([]string, error)
+	// Latest returns the most recent datapoint for the given metric
+	Latest(metric string) (*datatypes.Datapoint, error)
 	// Close performs cleanup work
 	Close() error
 }
@@ -158,6 +162,63 @@ func getDatapoints(metric string, response *client.Response) ([]*datatypes.Datap
 		}
 	}
 	return results, nil
+}
+
+func (s *storageImpl) ListMetrics() ([]string, error) {
+	response, err := s.client.Query(client.Query{
+		Command:  "SHOW MEASUREMENTS",
+		Database: tableName,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if response.Error() != nil {
+		return nil, response.Error()
+	}
+	values := response.Results[0].Series[0].Values
+	metrics := make([]string, len(values))
+	for i, value := range values {
+		metrics[i] = value[0].(string)
+	}
+	return metrics, nil
+}
+
+func (s *storageImpl) Latest(metric string) (*datatypes.Datapoint, error) {
+	response, err := s.client.Query(client.Query{
+		Command:  fmt.Sprintf("SELECT * FROM %s ORDER BY DESC LIMIT 1", metric),
+		Database: tableName,
+	})
+	if err != nil {
+		return nil, err
+	}
+	if response.Error() != nil {
+		return nil, response.Error()
+	}
+	if len(response.Results[0].Series[0].Values) == 0 {
+		return nil, nil
+	}
+	value := response.Results[0].Series[0].Values[0]
+	point := &datatypes.Datapoint{
+		Metric: metric,
+		Tags:   response.Results[0].Series[0].Tags,
+	}
+	for i, column := range response.Results[0].Series[0].Columns {
+		switch column {
+		case "time":
+			timestamp, err := time.Parse(time.RFC3339Nano, value[i].(string))
+			if err != nil {
+				return nil, err
+			}
+			point.Time = timestamp
+		case "value":
+			val, err := strconv.ParseFloat(string(value[i].(json.Number)), 64)
+			if err != nil {
+				return nil, err
+			}
+			point.Value = val
+		}
+	}
+	return point, nil
 }
 
 func (s *storageImpl) Close() error {
