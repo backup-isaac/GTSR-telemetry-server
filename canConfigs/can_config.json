@@ -1,11 +1,11 @@
 [
     {
-        "canID": 65535,
+        "can_id": 65535,
         "datatype": "float32",
         "name": "Test",
         "offset": 0,
-        "checkBounds": true,
-        "minValue": 0.0,
-        "maxValue": 100.0
+        "check_bounds": true,
+        "min_value": 0.0,
+        "max_value": 100.0
     }
 ]

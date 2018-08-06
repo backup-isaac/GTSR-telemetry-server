@@ -69,6 +69,7 @@ func Listen() {
 		conn, err := connListener.Accept()
 		if err == nil {
 			consecutiveFailures = 0
+			fmt.Println("Received connection from", conn.RemoteAddr().String())
 			listener := NewListener(NewDatapointPublisher(), NewPacketParser(canConfigs))
 			go listener.HandleRequest(conn)
 		} else {
