@@ -23,7 +23,7 @@
 <div class="panel panel-default">
 <div class= "panel-heading"><h2 style="text-align:center">Download Last Generated CSV</h2></div>
 <div class= "panel-body">
-  <form method="get" action="/csv/telemetry.csv">
+  <form method="get" action="/csv/static/telemetry.csv">
     <button type="submit" class="btn btn-success">Download</button>
   </form>
 </div>
@@ -133,7 +133,7 @@
     var startString = stringFromDate(startDate);
     var endString = stringFromDate(endDate);
     var request = new XMLHttpRequest();
-    request.open("POST", "/csv/generateCSV", true);
+    request.open("POST", "/csv/generateCsv", true);
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     request.send("startDate=" + startString + "&endDate=" + endString + "&resolution=" + resolution);
     window.location = "/csv/static/generating.html";

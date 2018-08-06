@@ -15,7 +15,7 @@
   function checkDone() {
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200 && !JSON.parse(request.responseText).result) {
+      if (this.readyState == 4 && this.status == 200 && !JSON.parse(request.responseText)) {
         clearInterval(interval);
         window.location = "/csv/static/telemetry.csv";
       }

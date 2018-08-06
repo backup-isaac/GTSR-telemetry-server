@@ -7,6 +7,7 @@ import (
 	"path"
 	"runtime"
 	"sync/atomic"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -38,9 +39,12 @@ func (api *API) GenerateCsv(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	generating.Store(true)
-	defer generating.Store(false)
 	// TODO: implement CSV generation
 	http.Error(res, "Not implemented", http.StatusNotFound)
+	go func() {
+		<-time.After(10 * time.Second)
+		generating.Store(false)
+	}()
 }
 
 // RegisterCSVRoutes registers the routes for the CSV service
