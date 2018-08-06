@@ -117,25 +117,10 @@
     */
     startTime -= startDate.getTimezoneOffset() * 60000 + (offsets[0] * 3600000 + offsets[1] * 60000);
     endTime -= endDate.getTimezoneOffset() * 60000 + (offsets[0] * 3600000 + offsets[1] * 60000);
-    startDate.setUTCMilliseconds(startTime);
-    endDate.setUTCMilliseconds(endTime);
-    // Javascript has no native sprintf so this is the best I can do
-    function stringFromDate(date) {
-      var result = "";
-      result += date.getUTCFullYear() + "-";
-      result += ((date.getUTCMonth() + 1) >= 10 ? "" + (date.getUTCMonth() + 1) : "0" + (date.getUTCMonth() + 1)) + "-";
-      result += (date.getUTCDate() >= 10 ? "" + date.getUTCDate() : "0" + date.getUTCDate()) + " ";
-      result += (date.getUTCHours() >= 10 ? "" + date.getUTCHours() : "0" + date.getUTCHours()) + ":";
-      result += (date.getUTCMinutes() >= 10 ? "" + date.getUTCMinutes() : "0" + date.getUTCMinutes()) + ":";
-      result += (date.getUTCSeconds() >= 10 ? "" + date.getUTCSeconds() : "0" + date.getUTCSeconds());
-      return result;
-    }
-    var startString = stringFromDate(startDate);
-    var endString = stringFromDate(endDate);
     var request = new XMLHttpRequest();
     request.open("POST", "/csv/generateCsv", true);
     request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    request.send("startDate=" + startString + "&endDate=" + endString + "&resolution=" + resolution);
+    request.send("startDate=" + startTime + "&endDate=" + endTime + "&resolution=" + resolution);
     window.location = "/csv/static/generating.html";
   }
 </script>

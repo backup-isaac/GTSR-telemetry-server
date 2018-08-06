@@ -126,7 +126,7 @@ func (api *API) StartServer() {
 	router.HandleFunc("/api/latest", api.Latest).Methods("GET")
 	router.HandleFunc("/api/location", api.Location).Methods("GET")
 
-	api.RegisterCSVRoutes(router)
+	api.RegisterCsvRoutes(router)
 
 	fmt.Println("Starting HTTP server...")
 	log.Fatal(http.ListenAndServe(":8080", router))

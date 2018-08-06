@@ -2,10 +2,12 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"path"
 	"runtime"
+	"strconv"
 	"sync/atomic"
 	"time"
 
@@ -39,16 +41,59 @@ func (api *API) GenerateCsv(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	generating.Store(true)
-	// TODO: implement CSV generation
-	http.Error(res, "Not implemented", http.StatusNotFound)
-	go func() {
-		<-time.After(10 * time.Second)
+	err := req.ParseForm()
+	if err != nil {
+		http.Error(res, fmt.Sprintf("Error parsing form: %s", err), http.StatusBadRequest)
 		generating.Store(false)
-	}()
+		return
+	}
+	startDateString := req.Form.Get("startDate")
+	endDateString := req.Form.Get("endDate")
+	resolutionString := req.Form.Get("resolution")
+	if startDateString == "" || endDateString == "" || resolutionString == "" {
+		http.Error(res, "malformatted query", http.StatusBadRequest)
+		fmt.Println("bad query")
+		generating.Store(false)
+		return
+	}
+	startDate, err := unixStringMillisToTime(startDateString)
+	if err != nil {
+		http.Error(res, fmt.Sprintf("Error parsing start date: %s", err), http.StatusBadRequest)
+		generating.Store(false)
+		return
+	}
+	endDate, err := unixStringMillisToTime(endDateString)
+	if err != nil {
+		http.Error(res, fmt.Sprintf("Error parsing end date: %s", err), http.StatusBadRequest)
+		generating.Store(false)
+		return
+	}
+	resolution64, err := strconv.ParseInt(resolutionString, 10, 32)
+	if err != nil {
+		http.Error(res, fmt.Sprintf("Error parsing resolution: %s", err), http.StatusBadRequest)
+		generating.Store(false)
+		return
+	}
+	resolution := int(resolution64)
+	go api.generateCsv(startDate, endDate, resolution)
+	res.WriteHeader(http.StatusOK)
 }
 
-// RegisterCSVRoutes registers the routes for the CSV service
-func (api *API) RegisterCSVRoutes(router *mux.Router) {
+func unixStringMillisToTime(timeString string) (time.Time, error) {
+	timeMillis, err := strconv.ParseInt(timeString, 10, 64)
+	if err != nil {
+		return time.Time{}, err
+	}
+	return time.Unix(0, timeMillis*1e6), nil
+}
+
+func (api *API) generateCsv(start time.Time, end time.Time, resolution int) {
+	defer generating.Store(false)
+	<-time.After(10 * time.Second)
+}
+
+// RegisterCsvRoutes registers the routes for the CSV service
+func (api *API) RegisterCsvRoutes(router *mux.Router) {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("Could not find runtime caller")
