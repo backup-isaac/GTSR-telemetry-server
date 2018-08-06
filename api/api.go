@@ -7,10 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
-
 	"github.com/gorilla/mux"
-
+	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
 	"github.gatech.edu/GTSR/telemetry-server/storage"
 )
 
@@ -94,6 +92,29 @@ func (api *API) Latest(res http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(res).Encode(lastPoint.Value)
 }
 
+// Location returns the current position of the car
+func (api *API) Location(res http.ResponseWriter, req *http.Request) {
+	latpt, err := api.store.Latest("GPS_Latitude")
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	lngpt, err := api.store.Latest("GPS_Longitude")
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if latpt == nil || lngpt == nil {
+		http.Error(res, "Location metrics (GPS_Latitude/GPS_Longitude) not found", http.StatusInternalServerError)
+		return
+	}
+	location := map[string]float64{
+		"lat": latpt.Value,
+		"lng": lngpt.Value,
+	}
+	json.NewEncoder(res).Encode(location)
+}
+
 // StartServer starts the HTTP server
 func (api *API) StartServer() {
 	router := mux.NewRouter()
@@ -103,6 +124,9 @@ func (api *API) StartServer() {
 	router.HandleFunc("/api/lastActive", api.LastActive).Methods("GET")
 	router.HandleFunc("/api/configs", api.Configs).Methods("GET")
 	router.HandleFunc("/api/latest", api.Latest).Methods("GET")
+	router.HandleFunc("/api/location", api.Location).Methods("GET")
+
+	api.RegisterCSVRoutes(router)
 
 	fmt.Println("Starting HTTP server...")
 	log.Fatal(http.ListenAndServe(":8080", router))
