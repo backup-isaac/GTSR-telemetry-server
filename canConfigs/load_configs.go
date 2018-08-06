@@ -10,13 +10,13 @@ import (
 
 // CanConfigType holds CAN configuration information
 type CanConfigType struct {
-	CanID       int
-	Datatype    string
-	Name        string
-	Offset      int
-	CheckBounds bool
-	MinValue    float64
-	MaxValue    float64
+	CanID       int     `json:"can_id"`
+	Datatype    string  `json:"datatype"`
+	Name        string  `json:"name"`
+	Offset      int     `json:"offset"`
+	CheckBounds bool    `json:"check_bounds"`
+	MinValue    float64 `json:"min_value"`
+	MaxValue    float64 `json:"max_value"`
 }
 
 // LoadConfigs loads the CAN configs from the config file

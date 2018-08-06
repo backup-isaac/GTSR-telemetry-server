@@ -194,7 +194,8 @@ func (s *storageImpl) Latest(metric string) (*datatypes.Datapoint, error) {
 	if response.Error() != nil {
 		return nil, response.Error()
 	}
-	if len(response.Results[0].Series[0].Values) == 0 {
+	if len(response.Results) == 0 || len(response.Results[0].Series) == 0 ||
+		len(response.Results[0].Series[0].Values) == 0 {
 		return nil, nil
 	}
 	value := response.Results[0].Series[0].Values[0]

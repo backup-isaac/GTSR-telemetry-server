@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
+
 	"github.com/gorilla/mux"
 
 	"github.gatech.edu/GTSR/telemetry-server/storage"
@@ -28,6 +30,8 @@ func (api *API) Default(res http.ResponseWriter, req *http.Request) {
 }
 
 // Metrics returns a list of the metrics tracked by InfluxDB
+// Keep in mind this is just a list of names; it doesn't
+// have the same functionality as on the old server
 func (api *API) Metrics(res http.ResponseWriter, req *http.Request) {
 	metrics, err := api.store.ListMetrics()
 	if err != nil {
@@ -58,6 +62,38 @@ func (api *API) LastActive(res http.ResponseWriter, req *http.Request) {
 	res.Write([]byte(maxTime.String()))
 }
 
+// Configs returns a list of the CAN configurations
+// This is closer to the functionality of the old server's metrics query
+func (api *API) Configs(res http.ResponseWriter, req *http.Request) {
+	canConfigMap, err := canConfigs.LoadConfigs()
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	var canConfigList []*canConfigs.CanConfigType
+	for _, configs := range canConfigMap {
+		canConfigList = append(canConfigList, configs...)
+	}
+	encoder := json.NewEncoder(res)
+	encoder.SetIndent("", "  ")
+	encoder.Encode(canConfigList)
+}
+
+// Latest returns the last known value of the metric specified by name
+func (api *API) Latest(res http.ResponseWriter, req *http.Request) {
+	name := req.URL.Query().Get("name")
+	lastPoint, err := api.store.Latest(name)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if lastPoint == nil {
+		http.Error(res, fmt.Sprintf("No data found for metric %s", name), http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(res).Encode(lastPoint.Value)
+}
+
 // StartServer starts the HTTP server
 func (api *API) StartServer() {
 	router := mux.NewRouter()
@@ -65,6 +101,8 @@ func (api *API) StartServer() {
 	router.HandleFunc("/api", api.Default).Methods("GET")
 	router.HandleFunc("/api/metrics", api.Metrics).Methods("GET")
 	router.HandleFunc("/api/lastActive", api.LastActive).Methods("GET")
+	router.HandleFunc("/api/configs", api.Configs).Methods("GET")
+	router.HandleFunc("/api/latest", api.Latest).Methods("GET")
 
 	fmt.Println("Starting HTTP server...")
 	log.Fatal(http.ListenAndServe(":8080", router))
