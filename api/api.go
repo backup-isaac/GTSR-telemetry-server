@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sort"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -72,6 +73,9 @@ func (api *API) Configs(res http.ResponseWriter, req *http.Request) {
 	for _, configs := range canConfigMap {
 		canConfigList = append(canConfigList, configs...)
 	}
+	sort.Slice(canConfigList, func(i, j int) bool {
+		return canConfigList[i].CanID < canConfigList[j].CanID
+	})
 	encoder := json.NewEncoder(res)
 	encoder.SetIndent("", "  ")
 	encoder.Encode(canConfigList)
