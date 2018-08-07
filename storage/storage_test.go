@@ -64,3 +64,36 @@ func TestInsertEmptyPoints(t *testing.T) {
 	err = store.Insert([]*datatypes.Datapoint{})
 	assert.NoError(t, err)
 }
+
+func TestInOrder(t *testing.T) {
+	points := []*datatypes.Datapoint{
+		{
+			Metric: "Unit_Test_Order",
+			Value:  0,
+			Time:   time.Unix(3, 0).UTC(),
+		},
+		{
+			Metric: "Unit_Test_Order",
+			Value:  1,
+			Time:   time.Unix(1, 0).UTC(),
+		},
+		{
+			Metric: "Unit_Test_Order",
+			Value:  2,
+			Time:   time.Unix(2, 0).UTC(),
+		},
+	}
+	store, err := storage.NewStorage()
+	assert.NoError(t, err)
+	err = store.Insert(points)
+	assert.NoError(t, err)
+	storedPoints, err := store.SelectMetric("Unit_Test_Order")
+	assert.NoError(t, err)
+	points = []*datatypes.Datapoint{points[1], points[2], points[0]}
+	assert.Equal(t, points, storedPoints)
+	storedPoints, err = store.SelectMetricTimeRange("Unit_Test_Order", time.Unix(0, 0), time.Unix(3, 0))
+	assert.NoError(t, err)
+	assert.Equal(t, points, storedPoints)
+	err = store.DeleteMetric("Unit_Test_Order")
+	assert.NoError(t, err)
+}

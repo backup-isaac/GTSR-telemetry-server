@@ -119,7 +119,8 @@ func (s *storageImpl) SelectMetric(metric string) ([]*datatypes.Datapoint, error
 
 func (s *storageImpl) SelectMetricTimeRange(metric string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error) {
 	response, err := s.client.Query(client.Query{
-		Command:  fmt.Sprintf("SELECT * FROM %s WHERE time >= '%s' AND time <= '%s'", metric, start.Format(time.RFC3339Nano), end.Format(time.RFC3339Nano)),
+		Command: fmt.Sprintf("SELECT * FROM %s WHERE time >= '%s' AND time <= '%s'",
+			metric, start.Format(time.RFC3339Nano), end.Format(time.RFC3339Nano)),
 		Database: tableName,
 	})
 	if err != nil {
