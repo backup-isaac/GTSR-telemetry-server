@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #overlay {
+        position: absolute;
+        top: 100px;
+        left: 10px;
+        z-index: 99;
+      }
+      #data {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        margin-top: 20px;
+        background-color: white;
+        font-family: Arial, Helvetica, sans-serif;
+        display: inline-block;
+      }
+      #map {
+        height: 100%;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <title>GTSR Car Tracker</title>
+  </head>
+  <body>
+    <div id="map"></div>
+    <div id="overlay">
+      <button onclick="toggleUploadData()">Upload Track</button>
+      <div id="uploadData" style="display:none; background-color:white;">
+        <input type="file" id="uploadedFile"><br>
+        <button onclick="submitFile()">Submit</button>
+        <div id="fileSubmitted" style="display:none">
+          <p>File uploaded.</p>
+        </div>
+        <div id="invalidFile" style="display:none">
+          <p style="color:red">Malformed file</p>
+        </div>
+      </div>
+      <br>
+      <div id="data">
+        <p>Speed: <span id="speed"></span> mph</p>
+        <p>Target Speed: <span id="targetSpeed"></span> mph</p>
+        <p>Bus Power: <span id="busPower"></span> W</p>
+        <p>Solar Power: <span id="solarPower"></span> W</p>
+        <p>BMS Power: <span id="batteryPower"></span> W</p>
+        <p>Torque: <span id="torque"></span> Nm</p>
+        <p>Throttle: <span id="throttle"></span>%</p>
+      </div>
+      <br>
+      <button id="centerButton" style="margin-top: 20px" onclick="centerMap()">Center on Track</button>
+    </div>
+    <script>
+      var updateRouteFlag = true;
+      var routeLines = [];
+      var lineSpeeds = [];
+      var routeCenter = {lat: 0, lng: 0};
+      var map;
+      var carMarker;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: {lat: 33.787041, lng: -84.406817}
+        });
+        var icon = {
+          url: "/map/static/datboi.gif",
+          scaledSize: new google.maps.Size(35, 55)
+        }
+        carMarker = new google.maps.Marker({
+          map: map,
+          icon: icon,
+          position: {lat: 0, lng: 0},
+          optimized: false
+        });
+        carMarker.setVisible(false);
+        updateMarker(true);
+        window.setInterval(function() {
+          updateMarker(false);
+        }, 1000);
+        
+        function updateMarker(center) {
+          if (updateRouteFlag) {
+            updateRouteFlag = false;
+            updateRoute();
+          }
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+              var latlng = JSON.parse(xmlHttp.responseText);
+              if (latlng.lat === 0 && latlng.lng === 0) {
+                carMarker.setVisible(false);
+              } else {
+                carMarker.setVisible(true);
+                carMarker.setPosition(latlng);
+
+                var minDistance = Number.MAX_SAFE_INTEGER;
+                var closestLine = null;
+                var closestSpeed = null;
+                for (var i = 0; i < routeLines.length; i++) {
+                  var line = routeLines[i];
+                  var endpoints = line.getPath().getArray();
+                  var latMid = (endpoints[0].lat() + endpoints[1].lat()) / 2;
+                  var lngMid = (endpoints[0].lng() + endpoints[1].lng()) / 2;
+                  var distance = Math.pow(latMid - latlng.lat, 2) + Math.pow(lngMid - latlng.lng, 2);
+                  if (distance < minDistance) {
+                    minDistance = distance;
+                    closestLine = line;
+                    closestSpeed = lineSpeeds[i];
+                  }
+                }
+                if (closestLine != null) {
+                  var targetSpeedLabel = document.getElementById("targetSpeed");
+                  targetSpeedLabel.textContent = Math.round(closestSpeed * 100) / 100;
+                }
+
+                if (center) {
+                  map.setCenter(latlng)
+                }
+              }
+            }
+          }
+          xmlHttp.open("GET", "/api/location", true);
+          xmlHttp.send(null);
+        }
+
+        function updateRoute() {
+          for (var line of routeLines) {
+            google.maps.event.clearListeners(line, 'mouseover');
+            line.setMap(null);
+          }
+          routeLines = [];
+          var routeRequest = new XMLHttpRequest();
+          routeRequest.onreadystatechange = function() {
+            if (routeRequest.readyState == 4 && routeRequest.status == 200) {
+              var route = JSON.parse(routeRequest.responseText);
+              var maxSpeed = 0;
+              var minSpeed = 1000;
+              var latSum = 0;
+              var lngSum = 0;
+              for (var point of route) {
+                point.speed = parseFloat(point.speed);
+                if (point.speed > maxSpeed) {
+                  maxSpeed = point.speed;
+                }
+                if (point.speed < minSpeed) {
+                  minSpeed = point.speed;
+                }
+                latSum += parseFloat(point.latitude);
+                lngSum += parseFloat(point.longitude);
+              }
+              routeCenter.lat = latSum / route.length;
+              routeCenter.lng = lngSum / route.length;
+              function rgb(minimum, maximum, value) {
+                var ratio = 2 * (value - minimum) / (maximum - minimum);
+                b = Math.floor(Math.max(0, 255 * (1 - ratio)));
+                r = Math.floor(Math.max(0, 255 * (ratio - 1)));
+                g = 255 - b - r;
+
+                var hexStr = ("00" + r.toString(16)).slice(-2);
+                hexStr += ("00" + g.toString(16)).slice(-2);
+                hexStr += ("00" + b.toString(16)).slice(-2);
+                hexStr = "#" + hexStr;
+                return hexStr
+              }
+              for (var i = 0; i < route.length - 1; i++) {
+                var avgSpeed = (route[i].speed + route[i+1].speed) / 2;
+                var line = new google.maps.Polyline({
+                  path: [
+                    new google.maps.LatLng(route[i].latitude, route[i].longitude),
+                    new google.maps.LatLng(route[i+1].latitude, route[i+1].longitude)
+                  ], 
+                  geodesic: true,
+                  strokeColor: rgb(minSpeed, maxSpeed, avgSpeed),
+                  strokeOpacity: 1.0,
+                  strokeWeight: 2
+                });
+                line.setMap(map);
+                routeLines.push(line);
+                lineSpeeds.push(avgSpeed);
+                addLineListener(line, avgSpeed);
+              }
+              var infoWindow = new google.maps.InfoWindow({content: ""});
+              function addLineListener(line, speed) {
+                line.addListener('mouseover', function() {
+                  infoWindow.close();
+                  var endpoints = line.getPath().getArray();
+                  var latMid = (endpoints[0].lat() + endpoints[1].lat()) / 2;
+                  var lngMid = (endpoints[0].lng() + endpoints[1].lng()) / 2;
+                  var midpoint = {lat: latMid, lng: lngMid};
+                  var div = document.createElement("div");
+                  var text = document.createElement("p");
+                  text.textContent = "Speed: " + Number.parseFloat(speed).toFixed(2) + " mph";
+                  var button = document.createElement("button");
+                  button.onclick = function() {
+                    infoWindow = new google.maps.InfoWindow({content: ""});
+                    button.style.display = "none";
+                  }
+                  button.textContent = "Lock";
+                  div.appendChild(text);
+                  div.appendChild(button);
+                  infoWindow.setContent(div);
+                  infoWindow.setPosition(midpoint);
+                  infoWindow.open(map);
+                });
+              }
+            }
+          }
+          routeRequest.open("GET", "/map/route", true);
+          routeRequest.send(null);
+        }
+      }
+
+      function toggleUploadData() {
+        var uploadData = document.getElementById('uploadData');
+        if (uploadData.style.display == "none") {
+          uploadData.style.display = "block";
+        } else {
+          uploadData.style.display = "none";
+        }
+      }
+
+      function submitFile() {
+        document.getElementById('fileSubmitted').style.display = "none";
+        document.getElementById('invalidFile').style.display = "none";
+        if (document.getElementById("uploadedFile").value == "") {
+          return;
+        }
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+          if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+            document.getElementById('fileSubmitted').style.display = "block";
+            updateRouteFlag = true;
+          } else if (xmlHttp.readyState == 4 && xmlHttp.status == 400) {
+            document.getElementById('invalidFile').style.display = "block";
+          }
+        }
+        xmlHttp.open("POST", "/map/fileupload");
+        var formData = new FormData();
+        formData.append('uploadedFile', document.getElementById('uploadedFile').files[0]);
+        xmlHttp.send(formData);
+      }
+      
+      updateData();
+      setInterval(updateData, 1000);
+
+      function updateData() {
+        getLatest("Wavesculptor RPM", function(result) {
+          document.getElementById("speed").textContent = (Number.parseFloat(result) * 0.06504).toFixed(2);
+        });
+        getLatest("Bus Power", function(result) {
+          document.getElementById("busPower").textContent = Number.parseFloat(result).toFixed(2);
+        });
+        getLatest("Array Power", function(result) {
+          document.getElementById("solarPower").textContent = Number.parseFloat(result).toFixed(2);
+        });
+        getLatest("Battery Power", function(result) {
+          document.getElementById("batteryPower").textContent = Number.parseFloat(result).toFixed(2);
+        });
+        getLatest("Torque", function(result) {
+          document.getElementById("torque").textContent = Number.parseFloat(result).toFixed(2);
+        });
+        getLatest("Throttle", function(result) {
+          document.getElementById("throttle").textContent = (Number.parseFloat(result) * 100).toFixed(1);
+        });
+      }
+
+      function getLatest(metric, callback) {
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function() {
+          if (request.readyState == 4 && request.status == 200) {
+            callback(request.responseText);
+          } else if (request.readyState == 4 && request.status == 400) {
+            callback('0');
+          }
+        }
+        request.open("GET", "/api/latest?name=" + metric);
+        request.send(null);
+      }
+
+      function centerMap() {
+        var centerButton = document.getElementById("centerButton");
+        if (centerButton.textContent === "Center on Track") {
+          if (routeCenter.lat != 0 && routeCenter.lng != 0) {
+            carMarker.setVisible(false);
+            map.setCenter(routeCenter);
+            map.setZoom(17);
+            centerButton.textContent = "Center on Car";
+            setTimeout(function() {
+              carMarker.setVisible(true);
+            }, 100);
+          }
+        } else {
+          if (carMarker.position.lat != 0 && carMarker.position.lng != 0) {
+            map.setCenter(carMarker.position);
+            map.setZoom(10);
+            centerButton.textContent = "Center on Track";
+          }
+        }
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUuAgXPNZv6AHBjAvQoMHwS57WWY6Ykr4&callback=initMap">
+    </script>
+  </body>
+</html>
