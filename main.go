@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.gatech.edu/GTSR/telemetry-server/api"
+	"github.gatech.edu/GTSR/telemetry-server/computations"
 	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 	"github.gatech.edu/GTSR/telemetry-server/listener"
 	"github.gatech.edu/GTSR/telemetry-server/storage"
@@ -19,6 +20,7 @@ func main() {
 	defer store.Close()
 	apiObj := api.NewAPI(store)
 	go apiObj.StartServer()
+	go computations.RunComputations()
 	err = recordData(store)
 	log.Fatalf("Error recording data: %s", err)
 }
