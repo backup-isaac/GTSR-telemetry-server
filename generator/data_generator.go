@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/binary"
+	"fmt"
 	"log"
 	"math"
 	"math/rand"
@@ -14,6 +15,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error connecting to port: %s", err)
 	}
+	go listen(conn)
 	packet := formPacket()
 	for {
 		value := rand.Float32() * 100
@@ -35,4 +37,34 @@ func formPacket() []byte {
 	packet[4] = 0xFF
 	packet[5] = 0xFF
 	return packet
+}
+
+func listen(conn net.Conn) {
+	isWriting := false
+	buf := make([]byte, 4)
+	valOffset := 0
+	for {
+		conn.Read(buf)
+		if string(buf) == "GTSR" {
+			isWriting = !isWriting
+			valOffset = 0
+		} else {
+			if !isWriting {
+				continue
+			}
+			bits := binary.LittleEndian.Uint32(buf)
+			val := math.Float32frombits(bits)
+			switch valOffset {
+			case 0:
+				fmt.Printf("Distance: %v\n", val)
+			case 1:
+				fmt.Printf("Latitude: %v\n", val)
+			case 2:
+				fmt.Printf("Longitude: %v\n", val)
+			case 3:
+				fmt.Printf("Speed: %v\n\n", val)
+			}
+			valOffset = (valOffset + 1) % 4
+		}
+	}
 }

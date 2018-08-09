@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"sync"
 
 	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
 	"github.gatech.edu/GTSR/telemetry-server/datatypes"
@@ -30,8 +31,12 @@ func NewListener(publisher DatapointPublisher, parser PacketParser) *Listener {
 	}
 }
 
+var connections sync.Map
+
 // HandleRequest handles a new connection
 func (listener *Listener) HandleRequest(conn net.Conn) {
+	connections.Store(conn.RemoteAddr().String(), conn)
+	defer connections.Delete(conn.RemoteAddr().String())
 	buf := make([]byte, 1024)
 	for {
 		reqLen, err := conn.Read(buf)
@@ -81,6 +86,15 @@ func Listen() {
 			}
 		}
 	}
+}
+
+// Write writes the data in buf to all open connections
+func Write(buf []byte) {
+	connections.Range(func(key, value interface{}) bool {
+		conn := value.(net.Conn)
+		conn.Write(buf)
+		return true
+	})
 }
 
 // Subscribe subscribes the channel c to the datapoint publisher

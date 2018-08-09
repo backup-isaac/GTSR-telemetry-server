@@ -1,19 +1,23 @@
 package api
 
 import (
+	"encoding/binary"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
+	"math"
 	"mime/multipart"
 	"net/http"
 	"os"
 	"path"
 	"runtime"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
+	"github.gatech.edu/GTSR/telemetry-server/listener"
 )
 
 // RoutePoint is a point along the uploaded route
@@ -65,6 +69,7 @@ func (api *API) FileUpload(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "Error saving route JSON: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
+	go uploadPoints(points)
 	res.WriteHeader(http.StatusOK)
 }
 
@@ -149,6 +154,29 @@ func verifyColumns(columns map[string]int) error {
 		}
 	}
 	return nil
+}
+
+func uploadPoints(points []*RoutePoint) {
+	tag := []byte("GTSR")
+	listener.Write(tag)
+	for _, point := range points {
+		if point.Critical {
+			writeFloat64As32(point.Distance)
+			writeFloat64As32(point.Latitude)
+			writeFloat64As32(point.Longitude)
+			writeFloat64As32(point.Speed)
+			<-time.After(100 * time.Millisecond)
+		}
+	}
+	listener.Write(tag)
+}
+
+func writeFloat64As32(num float64) {
+	num32 := float32(num)
+	bits := math.Float32bits(num32)
+	buf := make([]byte, 4)
+	binary.LittleEndian.PutUint32(buf, bits)
+	listener.Write(buf)
 }
 
 // RegisterMapRoutes registers the routes for the map service

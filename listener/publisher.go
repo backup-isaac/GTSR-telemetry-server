@@ -20,10 +20,13 @@ type DatapointPublisher interface {
 
 // single(ton) reaccs only :(
 var globalPublisher *datapointPublisher
+var publisherLock sync.Mutex
 
 // NewDatapointPublisher returns a new DatapointPublisher with the standard
 // implementation, and starts the publisher thread
 func NewDatapointPublisher() DatapointPublisher {
+	publisherLock.Lock()
+	defer publisherLock.Unlock()
 	if globalPublisher != nil {
 		return globalPublisher
 	}
