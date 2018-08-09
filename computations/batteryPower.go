@@ -14,7 +14,7 @@ func NewBatteryPower() *BatteryPower {
 	return &BatteryPower{
 		standardComputation{
 			values: make(map[string]float64),
-			fields: []string{"BMS_Current", "Pack_Voltage", "Bus_Voltage"},
+			fields: []string{"BMS_Current", "Pack_Voltage", "Left_Bus_Voltage", "Right_Bus_Voltage"},
 		},
 	}
 }
@@ -27,7 +27,7 @@ func (bp *BatteryPower) Compute() *datatypes.Datapoint {
 	defer bp.Unlock()
 	bmsCurrent := bp.values["BMS_Current"]
 	packVoltage := bp.values["Pack_Voltage"]
-	busVoltage := bp.values["Bus_Voltage"]
+	busVoltage := (bp.values["Left_Bus_Voltage"] + bp.values["Right_Bus_Voltage"]) / 2
 	point := &datatypes.Datapoint{
 		Metric: "Battery_Power",
 	}

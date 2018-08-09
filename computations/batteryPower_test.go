@@ -11,7 +11,12 @@ import (
 func TestBatteryPower(t *testing.T) {
 	bp := computations.NewBatteryPower()
 	done := bp.Update(&datatypes.Datapoint{
-		Metric: "Bus_Voltage",
+		Metric: "Left_Bus_Voltage",
+		Value:  0,
+	})
+	assert.False(t, done)
+	done = bp.Update(&datatypes.Datapoint{
+		Metric: "Right_Bus_Voltage",
 		Value:  0,
 	})
 	assert.False(t, done)
@@ -33,8 +38,13 @@ func TestBatteryPower(t *testing.T) {
 	assert.Equal(t, expectedPoint, actualPoint)
 
 	done = bp.Update(&datatypes.Datapoint{
-		Metric: "Bus_Voltage",
-		Value:  150,
+		Metric: "Left_Bus_Voltage",
+		Value:  100,
+	})
+	assert.False(t, done)
+	done = bp.Update(&datatypes.Datapoint{
+		Metric: "Right_Bus_Voltage",
+		Value:  200,
 	})
 	assert.False(t, done)
 	done = bp.Update(&datatypes.Datapoint{

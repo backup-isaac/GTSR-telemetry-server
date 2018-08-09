@@ -50,6 +50,7 @@ func RunComputations() {
 					if err != nil {
 						log.Printf("Error inserting point into datastore: %s\n", err)
 					}
+					points <- computedPoint // For computations which rely on other computations
 				}(computable)
 			}
 		}
