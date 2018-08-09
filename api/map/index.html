@@ -211,7 +211,7 @@
               }
             }
           }
-          routeRequest.open("GET", "/map/route", true);
+          routeRequest.open("GET", "/map/static/route.json", true);
           routeRequest.send(null);
         }
       }
@@ -250,16 +250,27 @@
       setInterval(updateData, 1000);
 
       function updateData() {
-        getLatest("Wavesculptor RPM", function(result) {
-          document.getElementById("speed").textContent = (Number.parseFloat(result) * 0.06504).toFixed(2);
+        var leftRPM = null
+        var rightRPM = null
+        getLatest("Left_Wavesculptor_RPM", function(result) {
+          leftRPM = result;
+          if (rightRPM != null) {
+            document.getElementById("speed").textContent = (Number.parseFloat((leftRPM + rightRPM) / 2) * 0.06504).toFixed(2);
+          }
         });
-        getLatest("Bus Power", function(result) {
+        getLatest("Right_Wavesculptor_RPM", function(result) {
+          rightRPM = result;
+          if (leftRPM != null) {
+            document.getElementById("speed").textContent = (Number.parseFloat((leftRPM + rightRPM) / 2) * 0.06504).toFixed(2);
+          }
+        });
+        getLatest("Bus_Power", function(result) {
           document.getElementById("busPower").textContent = Number.parseFloat(result).toFixed(2);
         });
-        getLatest("Array Power", function(result) {
+        getLatest("Array_Power", function(result) {
           document.getElementById("solarPower").textContent = Number.parseFloat(result).toFixed(2);
         });
-        getLatest("Battery Power", function(result) {
+        getLatest("Battery_Power", function(result) {
           document.getElementById("batteryPower").textContent = Number.parseFloat(result).toFixed(2);
         });
         getLatest("Torque", function(result) {
