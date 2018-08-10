@@ -26,7 +26,7 @@ func main() {
 }
 
 func recordData(store storage.Storage) error {
-	points := make(chan *datatypes.Datapoint)
+	points := make(chan *datatypes.Datapoint, 1000)
 	err := listener.Subscribe(points)
 	if err != nil {
 		return err

@@ -103,7 +103,7 @@ func (api *API) generateCsv(start time.Time, end time.Time, resolution int) {
 	}
 	colChannels := make([]chan []float64, len(metrics))
 	for i, metric := range metrics {
-		colChannels[i] = make(chan []float64)
+		colChannels[i] = make(chan []float64, 1)
 		go func(metric string, colChan chan []float64) {
 			column, err := api.GetSampledPointsForMetric(metric, start, end, resolution)
 			if err != nil {

@@ -4,12 +4,12 @@ import (
 	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 )
 
-// LeftBusPower is the power of the high voltage bus
+// LeftBusPower is the power of the left high voltage bus
 type LeftBusPower struct {
 	standardComputation
 }
 
-// NewLeftBusPower returns an initialized BusPower
+// NewLeftBusPower returns an initialized LeftBusPower
 func NewLeftBusPower() *LeftBusPower {
 	return &LeftBusPower{
 		standardComputation{
@@ -32,12 +32,12 @@ func (bp *LeftBusPower) Compute() *datatypes.Datapoint {
 	}
 }
 
-// RightBusPower is the power of the high voltage bus
+// RightBusPower is the power of the right high voltage bus
 type RightBusPower struct {
 	standardComputation
 }
 
-// NewRightBusPower returns an initialized BusPower
+// NewRightBusPower returns an initialized RightBusPower
 func NewRightBusPower() *RightBusPower {
 	return &RightBusPower{
 		standardComputation{

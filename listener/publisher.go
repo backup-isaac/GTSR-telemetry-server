@@ -31,7 +31,7 @@ func NewDatapointPublisher() DatapointPublisher {
 		return globalPublisher
 	}
 	publisher := &datapointPublisher{
-		PublishChannel:  make(chan *datatypes.Datapoint),
+		PublishChannel:  make(chan *datatypes.Datapoint, 10000),
 		Subscribers:     []chan *datatypes.Datapoint{},
 		SubscribersLock: new(sync.Mutex),
 	}

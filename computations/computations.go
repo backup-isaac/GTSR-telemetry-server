@@ -38,7 +38,7 @@ func RunComputations() {
 	if err != nil {
 		log.Fatalf("Error initializing storage in computations: %s", err)
 	}
-	points := make(chan *datatypes.Datapoint)
+	points := make(chan *datatypes.Datapoint, 1000)
 	listener.Subscribe(points)
 	for {
 		point := <-points
