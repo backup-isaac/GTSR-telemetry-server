@@ -165,7 +165,7 @@ func uploadPoints(points []*RoutePoint) {
 			writeFloat64As32(point.Latitude)
 			writeFloat64As32(point.Longitude)
 			writeFloat64As32(point.Speed)
-			<-time.After(100 * time.Millisecond)
+			time.Sleep(100 * time.Millisecond)
 		}
 	}
 	listener.Write(tag)

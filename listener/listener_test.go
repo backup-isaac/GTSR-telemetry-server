@@ -31,7 +31,7 @@ func TestListener(t *testing.T) {
 	server.Write(make([]byte, 4))
 	server.Write(make([]byte, 2))
 	server.Write([]byte{0, 0, 0, 1, 0, 0})
-	<-time.After(100 * time.Millisecond)
+	time.Sleep(100 * time.Millisecond)
 	err := server.Close()
 	assert.NoError(t, err)
 

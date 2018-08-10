@@ -28,7 +28,7 @@ func main() {
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}
-		<-time.After(50 * time.Millisecond)
+		time.Sleep(50 * time.Millisecond)
 	}
 }
 
