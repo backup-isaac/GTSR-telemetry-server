@@ -4,6 +4,33 @@ import (
 	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 )
 
+// BusPower is the total bus power across both the left and right busses
+type BusPower struct {
+	standardComputation
+}
+
+// NewBusPower returns an initialized BusPower
+func NewBusPower() *BusPower {
+	return &BusPower{
+		standardComputation{
+			values: make(map[string]float64),
+			fields: []string{"Left_Bus_Power", "Right_Bus_Power"},
+		},
+	}
+}
+
+// Compute computes the bus power as the sum of the left and right bus powers
+func (bp *BusPower) Compute() *datatypes.Datapoint {
+	bp.Lock()
+	defer bp.Unlock()
+	val := bp.values["Left_Bus_Power"] + bp.values["Right_Bus_Power"]
+	bp.values = make(map[string]float64)
+	return &datatypes.Datapoint{
+		Metric: "Bus_Power",
+		Value:  val,
+	}
+}
+
 // LeftBusPower is the power of the left high voltage bus
 type LeftBusPower struct {
 	standardComputation
@@ -61,6 +88,8 @@ func (bp *RightBusPower) Compute() *datatypes.Datapoint {
 }
 
 func init() {
+	bp := NewBusPower()
+	Register(bp, bp.fields)
 	lbp := NewLeftBusPower()
 	Register(lbp, lbp.fields)
 	rbp := NewRightBusPower()

@@ -8,6 +8,31 @@ import (
 	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 )
 
+func TestBusPower(t *testing.T) {
+	bp := computations.NewBusPower()
+	done := bp.Update(&datatypes.Datapoint{
+		Metric: "Left_Bus_Power",
+		Value:  10,
+	})
+	assert.False(t, done)
+	done = bp.Update(&datatypes.Datapoint{
+		Metric: "Right_Bus_Power",
+		Value:  20,
+	})
+	assert.True(t, done)
+	expectedPoint := &datatypes.Datapoint{
+		Metric: "Bus_Power",
+		Value:  30,
+	}
+	point := bp.Compute()
+	assert.Equal(t, expectedPoint, point)
+	done = bp.Update(&datatypes.Datapoint{
+		Metric: "Left_Bus_Power",
+		Value:  10,
+	})
+	assert.False(t, done)
+}
+
 func TestLeftBusPower(t *testing.T) {
 	bp := computations.NewLeftBusPower()
 	done := bp.Update(&datatypes.Datapoint{
