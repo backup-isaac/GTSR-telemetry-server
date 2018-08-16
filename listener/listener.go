@@ -17,15 +17,15 @@ const (
 	connType = "tcp"
 )
 
-// Listener is the object representing the TCP listener
-type Listener struct {
+// ConnectionHandler is the object representing the TCP listener
+type ConnectionHandler struct {
 	Publisher DatapointPublisher
 	Parser    PacketParser
 }
 
-// NewListener returns an initialized Listener
-func NewListener(publisher DatapointPublisher, parser PacketParser) *Listener {
-	return &Listener{
+// NewConnectionHandler returns an initialized ConnectionHandler
+func NewConnectionHandler(publisher DatapointPublisher, parser PacketParser) *ConnectionHandler {
+	return &ConnectionHandler{
 		Publisher: publisher,
 		Parser:    parser,
 	}
@@ -33,8 +33,8 @@ func NewListener(publisher DatapointPublisher, parser PacketParser) *Listener {
 
 var connections sync.Map
 
-// HandleRequest handles a new connection
-func (listener *Listener) HandleRequest(conn net.Conn) {
+// HandleConnection handles a new connection
+func (handler *ConnectionHandler) HandleConnection(conn net.Conn) {
 	connections.Store(conn.RemoteAddr().String(), conn)
 	defer connections.Delete(conn.RemoteAddr().String())
 	buf := make([]byte, 1024)
@@ -47,10 +47,10 @@ func (listener *Listener) HandleRequest(conn net.Conn) {
 			log.Fatalf("Error reading from %s: %s", conn.RemoteAddr().Network(), err)
 		}
 		for i := 0; i < reqLen; i++ {
-			if listener.Parser.ParseByte(buf[i]) {
-				points := listener.Parser.ParsePacket()
+			if handler.Parser.ParseByte(buf[i]) {
+				points := handler.Parser.ParsePacket()
 				for _, point := range points {
-					listener.Publisher.Publish(point)
+					handler.Publisher.Publish(point)
 				}
 			}
 		}
@@ -75,8 +75,8 @@ func Listen() {
 		if err == nil {
 			consecutiveFailures = 0
 			fmt.Println("Received connection from", conn.RemoteAddr().String())
-			listener := NewListener(NewDatapointPublisher(), NewPacketParser(canConfigs))
-			go listener.HandleRequest(conn)
+			handler := NewConnectionHandler(NewDatapointPublisher(), NewPacketParser(canConfigs))
+			go handler.HandleConnection(conn)
 		} else {
 			consecutiveFailures++
 			fmt.Println("Error accepting connection in function Listen: listener/listener.go")

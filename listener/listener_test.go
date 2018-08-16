@@ -11,7 +11,7 @@ import (
 	"github.gatech.edu/GTSR/telemetry-server/listener/mocks"
 )
 
-func TestListener(t *testing.T) {
+func TestConnectionHandler(t *testing.T) {
 	parser := &mocks.PacketParser{}
 	parser.On("ParseByte", uint8(0)).Return(false)
 	parser.On("ParseByte", uint8(1)).Return(true)
@@ -21,12 +21,12 @@ func TestListener(t *testing.T) {
 	publisher := &mocks.DatapointPublisher{}
 	publisher.On("Publish", datapoint[0]).Return()
 
-	l := &listener.Listener{
+	l := &listener.ConnectionHandler{
 		Publisher: publisher,
 		Parser:    parser,
 	}
 	server, client := net.Pipe()
-	go l.HandleRequest(client)
+	go l.HandleConnection(client)
 
 	server.Write(make([]byte, 4))
 	server.Write(make([]byte, 2))
