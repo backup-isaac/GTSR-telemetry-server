@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/gorilla/mux"
@@ -84,6 +85,10 @@ func (api *API) Configs(res http.ResponseWriter, req *http.Request) {
 // Latest returns the last known value of the metric specified by name
 func (api *API) Latest(res http.ResponseWriter, req *http.Request) {
 	name := req.URL.Query().Get("name")
+	if strings.Contains(name, ";") {
+		http.Error(res, "Invalid metric name", 400)
+		return
+	}
 	lastPoint, err := api.store.Latest(name)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
