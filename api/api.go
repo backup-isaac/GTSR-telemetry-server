@@ -9,9 +9,10 @@ import (
 	"strings"
 	"time"
 
+	"telemetry-server/canConfigs"
+	"telemetry-server/storage"
+
 	"github.com/gorilla/mux"
-	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
-	"github.gatech.edu/GTSR/telemetry-server/storage"
 )
 
 // API is the object which handles HTTP API requests
@@ -139,5 +140,5 @@ func (api *API) StartServer() {
 	api.RegisterMapRoutes(router)
 
 	fmt.Println("Starting HTTP server...")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8888", router))
 }

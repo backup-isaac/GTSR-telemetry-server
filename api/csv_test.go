@@ -10,10 +10,11 @@ import (
 	"testing"
 	"time"
 
+	"telemetry-server/api"
+	"telemetry-server/datatypes"
+	"telemetry-server/storage/mocks"
+
 	"github.com/stretchr/testify/assert"
-	"github.gatech.edu/GTSR/telemetry-server/api"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
-	"github.gatech.edu/GTSR/telemetry-server/storage/mocks"
 )
 
 func TestGetSampledPointsForMetric(t *testing.T) {

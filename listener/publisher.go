@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
+	"telemetry-server/datatypes"
 )
 
 // DatapointPublisher allows threads to subscribe to a particular publisher,

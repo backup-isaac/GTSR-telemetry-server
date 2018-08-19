@@ -1,7 +1,7 @@
 package computations
 
 import (
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
+	"telemetry-server/datatypes"
 )
 
 // BatteryPower is the power being output by the pack

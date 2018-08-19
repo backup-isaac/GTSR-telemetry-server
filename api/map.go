@@ -16,8 +16,9 @@ import (
 	"strconv"
 	"time"
 
+	"telemetry-server/listener"
+
 	"github.com/gorilla/mux"
-	"github.gatech.edu/GTSR/telemetry-server/listener"
 )
 
 // RoutePoint is a point along the uploaded route

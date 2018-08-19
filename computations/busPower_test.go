@@ -3,9 +3,10 @@ package computations_test
 import (
 	"testing"
 
+	"telemetry-server/computations"
+	"telemetry-server/datatypes"
+
 	"github.com/stretchr/testify/assert"
-	"github.gatech.edu/GTSR/telemetry-server/computations"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 )
 
 func TestBusPower(t *testing.T) {

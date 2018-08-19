@@ -4,9 +4,10 @@ import (
 	"testing"
 	"time"
 
+	"telemetry-server/datatypes"
+	"telemetry-server/storage"
+
 	"github.com/stretchr/testify/assert"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
-	"github.gatech.edu/GTSR/telemetry-server/storage"
 )
 
 func TestStorage(t *testing.T) {

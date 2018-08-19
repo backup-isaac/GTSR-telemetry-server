@@ -3,7 +3,7 @@ package computations
 import (
 	"sync"
 
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
+	"telemetry-server/datatypes"
 )
 
 // TestComputation is a test computation, which is used to ensure

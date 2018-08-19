@@ -6,10 +6,11 @@ import (
 	"testing"
 	"time"
 
+	"telemetry-server/canConfigs"
+	"telemetry-server/datatypes"
+	"telemetry-server/listener"
+
 	"github.com/stretchr/testify/assert"
-	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
-	"github.gatech.edu/GTSR/telemetry-server/listener"
 )
 
 func TestPacketParser(t *testing.T) {

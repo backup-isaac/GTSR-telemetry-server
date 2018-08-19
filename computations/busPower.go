@@ -1,7 +1,7 @@
 package computations
 
 import (
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
+	"telemetry-server/datatypes"
 )
 
 // BusPower is the total bus power across both the left and right busses

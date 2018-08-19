@@ -4,11 +4,11 @@ import (
 	"log"
 	"time"
 
-	"github.gatech.edu/GTSR/telemetry-server/api"
-	"github.gatech.edu/GTSR/telemetry-server/computations"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
-	"github.gatech.edu/GTSR/telemetry-server/listener"
-	"github.gatech.edu/GTSR/telemetry-server/storage"
+	"telemetry-server/api"
+	"telemetry-server/computations"
+	"telemetry-server/datatypes"
+	"telemetry-server/listener"
+	"telemetry-server/storage"
 )
 
 func main() {

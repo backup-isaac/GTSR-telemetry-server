@@ -9,8 +9,9 @@ import (
 	"strconv"
 	"time"
 
+	"telemetry-server/datatypes"
+
 	client "github.com/influxdata/influxdb/client/v2"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
 )
 
 const tableName = "telemetry"

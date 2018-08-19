@@ -7,8 +7,8 @@ import (
 	"net"
 	"sync"
 
-	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
+	"telemetry-server/canConfigs"
+	"telemetry-server/datatypes"
 )
 
 const (

@@ -5,10 +5,11 @@ import (
 	"testing"
 	"time"
 
+	"telemetry-server/datatypes"
+	"telemetry-server/listener"
+	"telemetry-server/listener/mocks"
+
 	"github.com/stretchr/testify/assert"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
-	"github.gatech.edu/GTSR/telemetry-server/listener"
-	"github.gatech.edu/GTSR/telemetry-server/listener/mocks"
 )
 
 func TestConnectionHandler(t *testing.T) {
