@@ -22,9 +22,9 @@ type DatapointPublisher interface {
 var globalPublisher *datapointPublisher
 var publisherLock sync.Mutex
 
-// NewDatapointPublisher returns a new DatapointPublisher with the standard
-// implementation, and starts the publisher thread
-func NewDatapointPublisher() DatapointPublisher {
+// GetDatapointPublisher creates the global DatapointPublisher
+// if it has not been created and returns it
+func GetDatapointPublisher() DatapointPublisher {
 	publisherLock.Lock()
 	defer publisherLock.Unlock()
 	if globalPublisher != nil {

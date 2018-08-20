@@ -1,6 +1,7 @@
 package storage_test
 
 import (
+	"os"
 	"testing"
 	"time"
 
@@ -10,7 +11,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// These tests are skipped if this is not running in a Docker environment
+// so that the tests can pass in a local environment without an InfluxDB
+// connection
+
 func TestStorage(t *testing.T) {
+	_, ok := os.LookupEnv("IN_DOCKER")
+	if !ok {
+		return
+	}
 	store, err := storage.NewStorage()
 	assert.NoError(t, err)
 	err = store.DeleteMetric("Unit_Test_1")
@@ -60,6 +69,10 @@ func TestStorage(t *testing.T) {
 }
 
 func TestInsertEmptyPoints(t *testing.T) {
+	_, ok := os.LookupEnv("IN_DOCKER")
+	if !ok {
+		return
+	}
 	store, err := storage.NewStorage()
 	assert.NoError(t, err)
 	err = store.Insert([]*datatypes.Datapoint{})
@@ -67,6 +80,10 @@ func TestInsertEmptyPoints(t *testing.T) {
 }
 
 func TestInOrder(t *testing.T) {
+	_, ok := os.LookupEnv("IN_DOCKER")
+	if !ok {
+		return
+	}
 	points := []*datatypes.Datapoint{
 		{
 			Metric: "Unit_Test_Order",

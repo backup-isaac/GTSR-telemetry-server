@@ -11,7 +11,7 @@ import (
 )
 
 func TestDatapointPublisher(t *testing.T) {
-	publisher := listener.NewDatapointPublisher()
+	publisher := listener.GetDatapointPublisher()
 	c := make(chan *datatypes.Datapoint)
 	err := publisher.Subscribe(c)
 	assert.NoError(t, err)
