@@ -1,0 +1,25 @@
+version: "3"
+services:
+  influxdb:
+    image: influxdb
+    environment:
+      - INFLUXDB_DB="telemetry"
+    volumes:
+      - db-data:/var/lib/influxdb
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+  server: 
+    build: .
+    depends_on:
+      - "influxdb"
+    ports:
+      - "8888:8888"
+      - "6001:6001"
+    command: ["go", "run", "main.go"]
+volumes:
+  db-data:
+  grafana-storage:
