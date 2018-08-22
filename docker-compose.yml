@@ -24,7 +24,6 @@ services:
     ports:
       - "8888:8888"
       - "6001:6001"
-    command: ["go", "run", "main.go"]
 volumes:
   db-data:
   grafana-storage:
