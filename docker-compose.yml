@@ -7,6 +7,7 @@ services:
       - INFLUXDB_DB="telemetry"
     volumes:
       - db-data:/var/lib/influxdb
+    restart: unless-stopped
   grafana:
     image: grafana/grafana
     container_name: grafana
@@ -14,6 +15,7 @@ services:
       - "3000:3000"
     volumes:
       - grafana-storage:/var/lib/grafana
+    restart: unless-stopped
   server: 
     build: .
     container_name: server
@@ -24,6 +26,7 @@ services:
     ports:
       - "8888:8888"
       - "6001:6001"
+    restart: unless-stopped
 volumes:
   db-data:
   grafana-storage:
