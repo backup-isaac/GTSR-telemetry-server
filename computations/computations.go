@@ -4,9 +4,9 @@ import (
 	"log"
 	"sync"
 
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
-	"github.gatech.edu/GTSR/telemetry-server/listener"
-	"github.gatech.edu/GTSR/telemetry-server/storage"
+	"telemetry-server/datatypes"
+	"telemetry-server/listener"
+	"telemetry-server/storage"
 )
 
 // Computable is the base interface which every computation must implement

@@ -4,13 +4,14 @@ import (
 	"testing"
 	"time"
 
+	"telemetry-server/datatypes"
+	"telemetry-server/listener"
+
 	"github.com/stretchr/testify/assert"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
-	"github.gatech.edu/GTSR/telemetry-server/listener"
 )
 
 func TestDatapointPublisher(t *testing.T) {
-	publisher := listener.NewDatapointPublisher()
+	publisher := listener.GetDatapointPublisher()
 	c := make(chan *datatypes.Datapoint)
 	err := publisher.Subscribe(c)
 	assert.NoError(t, err)

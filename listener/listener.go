@@ -7,8 +7,8 @@ import (
 	"net"
 	"sync"
 
-	"github.gatech.edu/GTSR/telemetry-server/canConfigs"
-	"github.gatech.edu/GTSR/telemetry-server/datatypes"
+	"telemetry-server/canConfigs"
+	"telemetry-server/datatypes"
 )
 
 const (
@@ -75,7 +75,7 @@ func Listen() {
 		if err == nil {
 			consecutiveFailures = 0
 			fmt.Println("Received connection from", conn.RemoteAddr().String())
-			handler := NewConnectionHandler(NewDatapointPublisher(), NewPacketParser(canConfigs))
+			handler := NewConnectionHandler(GetDatapointPublisher(), NewPacketParser(canConfigs))
 			go handler.HandleConnection(conn)
 		} else {
 			consecutiveFailures++
@@ -99,10 +99,10 @@ func Write(buf []byte) {
 
 // Subscribe subscribes the channel c to the datapoint publisher
 func Subscribe(c chan *datatypes.Datapoint) error {
-	return NewDatapointPublisher().Subscribe(c)
+	return GetDatapointPublisher().Subscribe(c)
 }
 
 // Unsubscribe unsubscribes the channel c from the datapoint publisher
 func Unsubscribe(c chan *datatypes.Datapoint) error {
-	return NewDatapointPublisher().Unsubscribe(c)
+	return GetDatapointPublisher().Unsubscribe(c)
 }
