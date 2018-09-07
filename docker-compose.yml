@@ -29,12 +29,25 @@ services:
       - "8888:8888"
       - "6001:6001"
     restart: unless-stopped
+  chatbot:
+    image: "node:8"
+    container_name: chatbot
+    user: "node"
+    working_dir: /home/node/app
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./chatbot/:/home/node/app
+    command: "npm start"
+    ports:
+      - "3001:3001"
   nginx:
     image: nginx
     container_name: nginx
     depends_on:
       - "server"
       - "grafana"
+      - "chatbot"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
     ports:

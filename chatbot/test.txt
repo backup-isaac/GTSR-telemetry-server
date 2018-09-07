@@ -1,0 +1,1030 @@
+lol, I was in the middle of looking up how to nuke this, thanks for pulling the plug
+ can you send it a malicious virus written in binary as the score?
+better than that PoS calendar bot
+wow scorebot is allowed to play? It's 3rd on the leaderboard
+hell is truly infinite then
+ :triggered: = To be fair, you have to have a very high IQ to understand Rick and Morty. The humour is extremely subtle, and without a solid grasp of theoretical physics most of the jokes will go over a typical viewer’s head.
+:cancer::cancer::cancer::cancer::cancer::cancer::cancer::cancer::cancer::cancer::cancer::cancer::cancer::cancer:
+Pretty sure they won't have access to every building. I think the main garage is more likely
+Technically it'd be the 0.4 mile diagonal where you may also have buildings in the way
+One sec
+Under electrical team, aux array. It's in the network drive so someone will have to access it for you
+true freedom units that any hard working american can understand
+I've put together a preliminary full ASC route and started running SRsim on it. Gonna post more details about the anticipated route and performance tomorrow, but in the meantime here's what the elevation and our velocity profiles look like in terms of football fields.
+I'll be by in 30 minutes
+Any luck balancing
+You don't need to be hooked up then right? At least to bleed
+Could probably do it with just one other if you have to, lifting the side to slide in
+I'll be there later around 5
+yup, there's nothing of this earth that can properly destroy it
+Is he saying he's got spot welds by them or did he see "welds" and thought ME
+:wewlad:
+ tubes yet?
+How many copies did you get again?
+benghazi
+bazoopadoop
+*seinfeld theme*
+what a hero
+I feel like it's just gonna be some bbq sauce mixed with sweet &amp; sour or mustard
+only _true_ rick and morty fans would have an iq high enough to see through this ruse
+oh man that's gonna be a clusterfuck
+Why does it say at 2? Is it only during a limited window in the day?
+should also distribute some tattoos
+ you :b:etter not steal my meme
+The post cure is going to be another fun issue to deal with
+Do we have the gel coat spec sheet on hand btw?
+ You're right, but I wanted to talk about that with them in person instead of trying to explain over email. Mainly just wanted to get them on the phone, so I just put in specs matching the Toray cure to avoid confusion and give them a sense of time per visit.
+:wewlad:
+ya like trying to get SJ1 up CotA with a marand
+It doesn't seem to hurt us that badly. It'd be a pain under 15mph, but at 25mph there's like a 0.25mph difference, so not that huge of a loss
+ya, that sounds right..about 80RPM?
+What was the old transition? Like 1mph?
+on the net drive
+btw, all of the data and post processed figures are in \Team Folders\Electrical Team\Telemetry\SJ1\2017-10-01 Regen Testing
+Looks like the higher rms kicks in a little after 10mph, but it's close. Jumps from ~50 to ~60-62.
+I'll be sending this to our contacts at Delta around 2 to get the ball rolling. I've been to their facility before, but since nobody else has I wanted to lead in with a visit first before we show up with tools, equipment, and molds. Either way, I don't envision the layup happening over fall break. Possible within the month, but I think this could take more than 1 or 2 weeks to fully arrange. I'll call them tomorrow if I don't get a response today.
+For reference, that's about twice the torque we were getting at CotA. Would have to double check that, but I remember it being around 25-30 Nm instead
+it'll be enough for RPoM, we thinks
+Looked at some of the data from the regen test. Not completely done, but it looks like we decelerated at ~0.8393 m/s^2 with regen. Removing friction's contribution to stopping, that leaves *~210N or 60Nm of regen torque.*
+I'm mostly hanging out in the office today (usual spot) although I will dipping out since KSU's new team is visiting. I've made some changes to the design (sorry lol) so just stop by when you guys get here.
+no
+Top notch security
+ what's the login info for the grafana platform?
+You guys ready? Should be coming up in 40 minutes
+from ms
+what was the question?
+probably going to show their sys architects
+fuck ya he might
+"whose idea was windows 7?"
+how so?
+wew
+makes it easier to compare to the pack
+or Wh
+I recommend converting your energy from J to kWh
+At 8, not 7
+Starting at 5
+The presentations are happening there
+I'll be there at 7, but you guys are welcome to get there first.
+Aesthetic photos incoming
+I'll be with you after the meeting with Dr L
+nice, acting like you don't already have one
+"hey bernie can still win guys"
+anyone calls you out, be like "oh no that's michael dong he wears glasses"
+wear glasses to one, none to the other, and pretend to be blind at the last one
+I don't where or when but I'm pretty sure you will
+No antifa because you said they have "5/5 pizza"
+everyone wins
+great way to trick the FBI into a raid
+see that's code for child prostitution
+pretend you confused them with anticos or something
+needs to be on TruTV
+Shitposting IRL with Michael Lin
+Man you're taking shitposting to a whole new level
+I wonder what those meetings are about. Like they don't have any influence in any real government, so do they just complain for an hour? Are there dues? Do people pay $25 to complain together?
+you're gonna cause another riot
+yeh
+Should ask them what their Crr2 is. They'll be like "what? can't hear you over our 4000kW diesel motors"
+Where is that btw?
+off the table*
+But will it yield?
+L A P M A S S
+Just to clarify, the event happening at 6 is an info session for 2nd round recruits. Those of you going through recruitment now just need to be here at 6:30 for the general meeting.
+so do you have any new members?
+They're IRC tubes but I'm not sure if they're the right size. I Don't remember off the top of my head
+ Get the ones max linked instead. I don't have time to to check right now, but they might not be correct for our rim size. Max's fit a wider range, so they should be a safer bet
+ no boba-bolas needed, just was wondering since we keep hitting our storage limit on slack
+Any reason you guys are passing the files around on slack?
+cool
+You turned the car off, right?
+thx
+Plugging in the cluster doesn't necessarily connect all of the andersons. Some of them are like ~1mm apart
+ Could you guys devote some time to fixing the anderson umbilical on the array? Talking about the one that connects the E-stop
+make sure to bring your laptops if you weren't planning on doing so
+But he's the business guy we usually interface email with
+Would have to dig up his office phone number
+Marcello, I believe
+Functionally, the array will be an additional zone
+Where does he do it?
+Cool, this might be a good motive for a joint outreach/business/testing event. Depends on what his timeline for wanting to visit looked like.
+Lol, adding a wing to the F350. Does he have any leverage at nearby tracks?
+How'd it go ?
+:boba_bola::dagger_knife::face_with_head_bandage:
+Was talking about this with Ryan. Probably won't be a problem. I think Ryan mentioned having some replication on the test pieces if those get done in time. Overall, I think with the way the layup was done that's as good as it's gonna get in terms of air bubbles
+Checked out the bellypan sunday evening and these were some spots that I and others pointed out still need to be worked on. Otherwise, I think it's smooth enough, but I don't think these spots are smooth enough yet. All else seems fine, though.
+Close enough, just hang there
+If you can get to the invention studio I can find you
+Where are you?
+Room 2404
+Oh ok, you here yet
+I'm heading to the MRDC now
+Not initially
+Also
+can you guys make it to the MRDC at 6 (near room 2404) for a group meeting now that the general meeting is cancelled?
+Millennials sure love their guacamoles and fidget spinners
+I mean you'll need like 4 boxes of 20 each or so. Alternatively you can cellophane wrap them. That's what we did with the K2's since we couldn't unweld the modules
+\Team Folders\Electrical Team\Telemetry\Post-Test Reconstruction Tools
+For reference we didn't get any solar power in testing, so I hope nothing happened in between then and the race. Likely plugs, but still something we haven't verified
+You can't? What if you clamped them all together with 2 clamps?
+I think if you just glue the joints together it should be fine
+Have you guys checked that the driveteks are ok?
+A little delayed, but drive testing in about 20-30 minutes for anyone about to head to shop
+Characterization while waiting?
+Fookn legends
+It (and all of the tires ~wheel~ we'll need) are on the table with the posters.
+It's cool, we're just starting up. I'm in a hangouts meeting right (at SCC) but we can start by seating the half-seated NR77 to the NGM wheel
+  When will you guys be getting here?
+Wax Off - Future
+Also, good news. I found an NGM that's half-seated already and another that's fully seated, so we can make that swap pretty quickly.
+Hence why we had to make a different rear suspension for the marand
+Reminder that we're aiming to do some testing of the car later today (if not, tomorrow). Likely toward the afternoon after the electrical training sessions since setup and tire swaps will have to happen first beforehand
+I think the tabs with individual gauges should have an overview chart first that plots all of them (min-max bolded on bounds). That's what I'd personally care about first before checking individual values. Looks pretty cool though
+Yeah probably not
+oh, nvm then
+How long will you guys be at shop?
+They preferred to do the full disposal themselves
+They really didn't care
+I'd recommend you just do that. Let Jason know we want to get rid of them. That's how we disposed of the K2's
+You don't need to, you can hand them over to ehs as is
+So whered we leave off with characterizing the samples?
+What was the issue before? They weren't placing the order or they kept turning you away?
+Kelsey said they were
+ did the lithium ion batteries get ordered?
+I mean apparently it's still unknown if it did or didnt
+Ok,  said it happened
+ did the cells get ordered?
+no, am lower than dirt
+Still on my way. Sorry for the wait...meetings
+Heading over now, should be there in 15
+Assuming a constant load?
+I want to show you guys our panels, so if you can go I'll meet you there.  are you going?
+Were you told you can't?
+I'll be at shop. Hang out with Justin instead. You can brief Xushai on our discussion as well
+of a heart attack, probably
+But if we could actually negotiate a deal with Cookout for even steeper discounts on their trays I'd die
+"Our car might consume very little power, but we're still higher energy than Jeb. Sad!"
+Tweet donald trump
+Just thinking about this now, but this should be avoidable with SR2's bearings. Since they're not tapered I don't think they need as much preload
+No snapchat?
+Sure, that works
+Hang out by the satellite dishes
+room #'s say 1?
+1st floor, room 117. I can let you in if you're outside.
+Yup, that sounds reasonable
+MCA?
+So the lower gets charged until the voltages are equal
+The higher voltage battery will discharge into the other
+cool I'll hold you to that, thx
+Ok. Also, would testing in 3 weeks be too aggressive?
+start and end are absolute?
+That too, although none of those will likely be more than 2-4 lines a piece. I meant being able to essentially run my recontool as we're getting data in.
+I need to work with you at some point on the server-to-sim aspect of this
+How's work on the 4G rig going?
+We can meet in my office at Weber (building next to Skiles, with the satellite dishes)
+Let me know by ~5, then. Are you guys west or east?
+How would 6 work for the two of you? I've tried contacting Tara, also, but no response, so I'm assuming it'll just be you two working with me.
+  as mentioned in , there's an unofficial shop day today. Would either of you be able to make it today? I can show you guys our solar cells, build materials, and we can decide on a storage solution. If not, we could just meet on campus.
+wonder where that thing is nowadays
+wew lad
+I'm protected by fair use laws, pls dont sue
+:stuck_out_tongue: sorry, if you guys want to use these pictures that I stole from Ruchi's video
+Ya, that's where I got it from
+going from MDF -&gt; Primed -&gt; FG layup
+I was going through some presentations I made for SpaceX last year and found this picture. Thought you guys might find it useful in describing the layup process
+He's a GT alum and a hiring manager, so I do recommend talking to him if you want to work for GM
+Oh shit, that's my old boss. Might go then
+Is there a guy from GM there that looks like Red from that 70s show?
+What time?
+So scientific
+How's ordering going?
+Just saying they never gave us any kind of answer, so it might not be worth it to hold out for an answer
+They never gave us an answer on price last time either, even at the end. Not like that'll change our decision to ship it back anyway
+So if the ASC coordinators stay true to what they said at the race and pick this track, the track TM system would only need to reach about 0.5 miles across with pretty direct field of view
+I think I found the race track being considered for ASC and it's pretty flat.  Raceway Park of the Midlands (tentative). The max grade is 2.9%, which even stella can handle from rest with a marand. Bigger challenge is the tight turns. Turning models (w/r rubbing) will have more of an influence on our performance than transient models like at CotA. Overall, should be boring with 4.5 minute laps at 31MPH, cruising at like 8 Nm per motor and ~700W of total power draw. The latitude losses will be significant (We'd see like 500W solar with their average seasonal weather, too). We could achieve 100 laps (~220 miles) in one day, which would be enough to blitz our way into ASC in one day (205 miles required), assuming good weather. SJ-1, however, actually wouldn't be able to qualify (just barely), even for a 2-day qual.
+
+Some interesting stuff. Also found some blurry pics of the ASC route and the elevation profile of "the long climb" which is ~3000' in 20 miles. That's 2.8% average, but the middle is like 6% for 10 miles. With our weight breakdown we should be ok. Gonna have to find it on google earth. If anyone wants to try finding it, the route is b/w Omaha, NB and ends in Bend, OR. Might try piecing together the route here in a week or so.
+I think screaming at a lightning storm like zuko would be more appropriate
+that was like 20 minutes from where I lived
+oh man, their location is in torrance
+Ya, that's one of my pics but I haven't added them to the drive yet
+1v1 ruchi in nuketown to get headshot'ed
+I'd recommend you guys try to get them to agree to fix it in AUS unless you're really sure you know what the problem is
+:+1:
+That's fine, just need to present the lightest of the bunch. Was mainly worried we might have a consistent offset like the older headways
+Re weighed them?
+Did you guys weigh any of these cells yet?
+Never tried doing that from Matlab, can probably figure it out though
+Lol
+Csv?
+To avoid having to update a cab?
+Porque
+We can also run them while we wait for the order. I just wanted to get some statistical uncertainty for when we're analyzing the full set
+Tested that is. 7?
+That'd put us at how many total?
+Could all be done realistically before the end of tomorrow?
+Ya, they look in family. Doing all of them?
+:+1:
+hmm
+Ya
+Do they only go to 4.2?
+Cool, that'll confirm if it's in family. Have we done any full discharges from topped off to cutoff?
+It does come out lower, though.  that sounds like a good idea
+Yes, and cross checked with that other page from batteryspace
+Pretty sure they'd line up if shifted
+Oh wait sorry, scale, more like 0.25
+3V for example. Maybe closer to 0.4Ahr
+Find equivalent points on the graph and compare
+No they don't have the same capacity
+Seems undercharged by 0.5 Ahr
+See how it looks offset
+Doesn't look like it
+Did you fully charge these?
+Sounds ok then
+But the edges are good? Do you think it's worth it to cross check the edge dimensions between the plug and molds?
+I guess you could double check by measuring out the length and width
+How's the lateral alignment? Sort of looks off from this angle
+Nice!
+Cotton says "Suh"
+Resume pt 2 b-school boogaloo happening up in the Culc 317 at noon. Sorry for the last minute notice, been stuck in an OHR waiting room for most of my morning.
+Ya, there will be one for friday
+Might want to consider move that battery time to a little earlier if you're aiming to charge also since there will be a lot of shunting and balancing
+ha, sunnice bro
+I also couldn't find anything on their temp limits
+haha, ya, except it's probably not very robust
+That's actually without sun (6.6A at 133.2V, so ~850W)
+actually, more like this, so honestly not that bad
+like this is what life would look like for us trying to ramp up them RPM'z
+Not sure if we're meme'ing around, but SR2 could go 23MPH with SJ1's mechanical specs (factoring smaller array and lighter weight). Could go 28 with anticipated specs. But no accelerating or hills.
+They also appear next flashlights and vapes a lot
+I can't find a spec sheet, but the optimal config for max energy and voltage would be 36S11P which is an impressive ~7.3kWh at 133.2V nominal, but based on what I can find they can't discharge very well. Only report I found was 0.6A, so like 6.6A for a whole pack
+lel
+Also drop a :page_facing_up: if you plan to go so I can get a feel for the head count
+The resume workshop dealio is going to be tomorrow (not today, I got my days mixed up yesterday). I've reserved Culc 342 from 3-5. The idea is to give you guys some general tips on resume writing, career fair pitches, and 1st round interviews in the beginning and then go over individuals' resumes/pitches if they want advice (assuming the group isn't too huge). Also going to focus on how you can frame and present your GTSR work to different companies. Should be pretty casual, so just show up when you can with a hard copy of your resume and names of the companies at the career fairs that you want to visit and some idea of what you might like to do.
+
+Let me know if you can't go but could come on Friday. If there's good interest I can do another on Friday or even the following week. Career fairs are in 2 weeks, so there's plenty of time. If any other vets on the team want to come to offer advice, feel free.
+roboi
+Did you guys know these were here? These were the unused spare cells from the first order of 140 last summer that I mentioned earlier this month. I'm going to use these instead of the extras you guys found since I know with more certainty that these are from the same headway order. There are 8 in total in the "spare headways" box under the battery table.
+Ya, just DM me if interested
+Ryan, Jared, and I just did a full charge and discharge of that same cell that produced ~7A-hr instead of 10. The new test is Test #2, the previous test (~7Ahr) is Test #1. Compared to the headway model from their spec sheets, it looks like the cell matches well and is healthy. Any duds with significant issues should show higher/lower capacity, which the manzanitas should catch. This just confirms we don't have a performance deficit.  We think we're good to start moving on to pack construction to charge with the manzanitas protecting.
+use the fire hydrants
+some shittyfoodporn material right there
+this isn't twitter michael
+I'll be visiting my dog back in louisiana, sorry
+I'll head over around 6, probably get there about 6:30. I'll see if I can set it up
+I can still come though
+Ya, someone who knows how to run it should go. Just trying to save time here since you can't do an HG2 cycle until we've done a headway cycle. Realistically it'd be one or the other tomorrow unless there's another rig.
+I think just a new one should be fine. We have race data for the old ones. I'd be fine with working on that tonight, otherwise would we not be doing any SJ1 pack construction tomorrow?
+Is that from yesterday or did we retest a new cell from full? I think we'd need to double check on that
+Some pics of the info session for your records
+ran the numbers, if you multiply our laps by our mass we got 3rd. ya
+who will oppose
+michael lin makes a claim for the title of michael
+there's two michael L's ffs
+too many of you
+we have to resolve this shit
+A cover in the SCC is probably the easiest thing. Might be worth it to measure the individual Voc's of each module and record. That'll tell us where local damage has been done. Otherwise I just suspect leaning, dropping shit, etc. If the ones near the middle front or canopy are the worst that'd support this idea.
+So many posers on the line nowadays I swear
+browse more memes probably
+I own that meme format now that's my thing
+ya cumulonimboi is better. Gonna sue
+oh no
+It's all good tho, the Moon is fake anyway
+Nimrods
+Hard to look on the bright side when you're being shaded by these nimbois
+So that's pretty good
+It's like a double eclipse with the clouds in the way
+Gotta make a sacrifice
+the absolute lunatic
+Sick of their shit
+Final presentation?
+some me_irl shit
+poor middle astronaut
+Do you still have it on
+I just realized that you still had your FSGP tag on in that picture
+Monday as the last day?
+pokemon go to the polls
+nah, we've been dancing on their grave for a while now
+So this NZ launch company, Rocket Lab, failed to make orbit two months ago in their first launch attempt. Turns out it was due to the Range's telemetry hardware failing; no fault of the rocket or rocket lab. The Range's telemetry didn't have forward error correction causing the telemetry to go dark and for the flight officials to activate the onboard explosives for flight termination. Really sad, the rocket and its ground hardware were perfectly good and they would've succeeded in their first attempt but didn't through no fault of their own. Sad!
+Lifting bars?
+Please I want to know the shenanigans
+Not if it was new after graduation
+What was that?
+otherwise this is just fake news
+need video
+If you guys are continuing the search, let's make the "deadline" for deciding how many need to be ordered and where to buy them from by tomorrow night
+?
+Did you guys check which cells had labels on the Orion test bench, or did you only look for a box of cells?
+Before you do that, can you send a picture of the electrical rack with all of the subteam stuff on it?
+Did you check all of the totes?
+List off the main areas?
+If they don't assume they're no good (could be very old, near dead cells). Did you check the shelves in the electrical closet?
+Make sure they have labels on them from a label maker
+But OK, I'll think of a way. Maybe we can have a meeting later this week
+Ya, airhose will fix that
+I think it'd be good to have a meeting about this. There's definitely a way to make both work.
+I've seen what the space looks like with both in it. In the alternative, you'd be sanding the gel coat right next to the test bench, right?
+Pretty sure there's a way to share the tent space and not move the car in the trailer while maintaining that efficiency
+Ya, how often are you going to be literally parallel processing at the exact same time?
+Or cover the belly pan with a tarp while you sand the array. How often do you want to be dividing work at the exact same time? Takes an airhose to clear out the sawdust
+You talking about doing two motors?
+For integrating BMS master a tabletop work station might be preferable (just for installation), but in general I dont see trailer storage as a good long term answer. SJ1 should stay in peak racing condition until SR2 is donezo and ready for electronics
+I'm not a fan of putting SJ1 in a trailer and moving her electronics test bench, given that the whole point of last year was to make SJ1 the test bench. If the only issue is space I think there are ways around it. Given that we have 2x the space of any SCC team Id think there's a way to make both fit. For example: build separate array mounts (ie. Sawhorses) that let the array hover over the car.
+It also has facts for SR2 which might be a little less commonly known than SJ1 since they're technically in flux until it's built
+Just wanted to say to make sure you cross check with the quick facts document if you're not sure (e.g. weight is actually ~700lbs for the car but ~880 with driver)
+You can also mention the big items in the immediate future, like layup, pack construction, array construction, etc. They'll end up having a part in that. When people ask for specs are you guys drawing from a common source?
+How have those been going in terms of answering questions?
+Because our car was allowed to race on an F1 track and was deemed safe enough by the officials to be displayed publicly, and that requires more info than the fire Marshall will even want. It really doesn't make any sense that we suddenly have to jump through new hoops. If we call him instead of emailing maybe this can go faster.
+Does this guy have a phone number?
+If you guys did take the car, who would drive the trailer?
+What kind of testing would that involve?
+Ya, how much harder is that to dev? Would two separate ones that you can switch between (if you want) be easier?
+I meant the dev process more than operation (i.e. making it agnostic takes longer). So would it be two independent systems with a switch, or one platform that tries to do both?
+I guess other than possibly money for the data
+Why is that better exactly?
+Like thinking about the scenario in FSGP where you'd lose 3G but somehow still have RF...that's potentially a very narrow window (~20 sec at cota) where you'd want that capability. If it's easy and one extra step beyond MVP, sure, just wondering if it'd be worth the effort
+More like would having the redundancy make it more complicated
+Ya, you mentioned you'd use the RF for ASC. Why the combo on the track?
+How is using an RF/hotspot hybrid more robust than just using the hotspot?
+Google "spinner"
+I'm still a fan of transmitting cut out data in dumps when connection is regained. Might help make the RF cut out less bad. You're talking about intermittent cut outs right?
+Would highly recommend it to be robust against any track. CotA is definitely one of the worst for direct transmissions, though
+As a side note, our set up would work well for a road race (mock races are similar to ASC). But then again for a road race you don't need to modulate speed as strategically as you do in a track race
+The data logger also didn't log some times but got most of the runs. We think it's because it was removed a couple of time without the car power cycling
+Ya
+It served a valuable purpose. As expected, a continuous connection around the track wasn't possible. We didn't place an antenna on the roof, so only about 20 seconds of data would come in during hot laps. It's main function was to check the SoC as it passed and verify that it matched my simulations. We raced the first day without it, but for the 2nd and 3rd days it was used. Even in the limited capacity it was pretty useful. On the first day we'd have to wait for the SD card during pit stops to do data to sim comparison, which we still did, but the SoC check every lap helped with being able to stay on the track as long as possible. Luckily the sims and data matched pretty well so we didn't need to do SD card checks very often. A data dump every lap wouldve still been nice, though. One team recommended using 3G to transmit TM to a server at their school that they could access remotely and they had almost no connection issues, so a pretty good idea.
+Neat
+How independent can that platform be?
+There's potential for a sanding equivalent of a "no XP waste" joke here somewhere, but I'm too lazy to put it together
+At previous FASETs there have been spots, usually at a corner of tech green. Also I'd think trailering would be fine even with our tires unless the summer crew wants to try changing them (pain in the ass of you don't know how)
+Car being in grass shouldn't be a problem unless it's like weeds or something. Who told you it'd be in grass though?
+Should be. You can either reach from the driver compartment or through the rear (do last if you have to).
+With long arms maybe. You can also remove the rear fairings to avoid removing the array
+Lower priority, but would be nice to know root cause
+Any discussion about the suspected poly fuse?
+Could you get a pic of the michelins?
+Lol, ya
+could someone take a picture of our tire treads on the front and rear? If possible, a pic of our spares treads too? Trying to get a before/after of what &gt;300 miles will do to them
+also  we have a poster of an SR2 rendering hanging up in the shop. You talking about that?
+Definitely wouldn't just keep upstairs though
+Pretty sure they would work if charged. They're just not very powerful
+Do you want to specifically allocate space for parts we could sell or dispose of in a more "environmentally conscious" way?
+But it got the Steve Stamp of Approval
+or nussey sold it all on craigslist
+or on fire
+if I check the SCC cam I wonder if everything will be gone
+hmm, no word since
+I can probably answer texts, but no calls. Would recommend only asking me if nobody else is quite sure what something is
+The battery box is Kevlar with divinycell core
+Fair enough. Maybe making the work spaces usable again at a bare minimum?
+Whats the goal for this session?
+justin: lol, definitely didn't produce more than 1000W. When did you read 1400 W/m^2
+justin: bro it's 1000W
+Careful, don't get too comfortable. You have a lot less than 360 days if you want it to work reliably. Gotta fix known problems as early as possible to save time for the problems you don't even know about yet.
+
+I'd still recommend moving the board to another location that's more than just a few inches away from the main bus lines. I suspect the board itself is what's being affected. Going from its current location to ~3' away should theoretically drop interference by orders of magnitude.
+Other than the bugs we ran into in the first hour, Stella has not broken down once. Tons of other cars have. So our focus on reliability this year is paying off
+21 laps net, 54 total. I think we're 6th or 7th. Weather was pretty torrential this evening. If tomorrow morning is clear we should have a full pack of pure solar energy. If Jason, Michael, and I can each pull off ~2.7 hour drives without pit stopping, it's possible to hit :100: laps with each of us doing 16 laps. Jason did 17 today in one sitting using 20% of the pack, so it's totally possible with a full pack and faster speed. If you're interested I can post an overview with data and stuff
+So far we're ~7th~ 6th out of 18 teams (12 that have passed tech inspection). Jason just got done with his first set of laps and Michael is going in for his second. Should be able to squeeze in one more racing segment before we go to the charging bay
+If ALL goes well, definitely over :100: by the end, but we'll see how the day goes
+Finishing our first hour, gonna have 8 laps total and 3 net. Almost on point with prediction. If all goes well, ~40 laps by the end of the day
+Here's the speed circuit we're running
+we got positive laps muthafuckas!
+Ya, no point in stopping it now.
+For the following fiscal year I mean. Just keep a note, what we spend could be used to drive a bill.
+So just to recap: going with Michael's reservation regardless of funding source, correct?  have you looked at our travel allocation in the budget?
+Are you copying them on the emails to Jason about the F350 status
+Ya, I was actually there when we did it in 2014 and it's not a good idea. We only did it because the F350 broke down half way to Austin. I'd recommend shelling out for an option that has safety and security for getting to CotA in one piece and in top shape. We've been aggressively preparing for this all year and have been ready for this race for months now so it'd be a real shame if we showed up under equipped to what should be our most successful FSGP.
+So we can't reserve it right ? Also, are the agency and foundation accounts drained or inaccessible?
+Magnesium fidget spinners
+And how's that supposed to buy anything  ?
+Chances are other options won't be significantly better. Where would the funds come from?
+Drivers
+Regardless of cost there should be 2
+Or just reserve?
+Are you calling them to make a payment?
+So no reservation?
+The list with cars in race ops says lilys car and the F350
+Not enough tires
+Maybe, could call them
+Pretty sure it's fleet vehicles only
+Should be static
+Enterprise will rent pickups for $350 a week
+Anyone going to shop that could throw the data from the SD card on the drive?
+Figure out why it's so shit
+Should put a data logger on the 350
+I would think no since today was spent testing. Might be more valuable to do it tomorrow since we can talk about the test &amp; results.
+How is testing going?
+Sounds good
+Get enough to sustain someone for 1-1.5 hours in 110F
+New phone who dis?
+Wrong chat?
+Ya Im being replaced
+Also Elon's son is interning with our group now, so that's neat
+Front and center boi
+Launch in 3 minutes if anyone is interested btw. Gonna be a droneship landing with a reflown booster that never left the cape for full refurb
+ryan.babaie: When you guys do drive try to keep it as continuous as possible except for 10 minutes pit stops every 1-1.5 hours (ie. don't do 3 hours in the morning, break for lunch, and come back) like the race. Also for thermal reasons to see if we're on margin for anything here that would get us in TX
+Cool, thanks for the confirmation! Is it hilly from your house to there or on the loop? Google was showing +/- 1% grade on the path to the loop but up to ~5% on the loop at certain parts. Does that sound sort of right?
+OK
+
+5 minutes for me
+I can tune in for tomorrow
+Can't make it to this either
+Too much traffic? Any risk of that being a deeper problem?
+Did you guys record the data from the draining?
+Here in my garage
+Should put a giant GT rug over it
+That looks so bad
+Forgot to send this yesterday, but if you guys need for future FASETs this contains brief info and specs of the vehicles and team history
+Yeah, I don't think that's very likely
+No, in Russia. Also, the risk of roll-off isnt a thing I'd say. The tethers are more for preventing the array from flying off which is more likely to happen front-back. The quarter turns are for shifting. To move tethers all you need is a hole which the front ribs have
+russian one
+also there was a launch at 2:20 here
+since it's metal
+front one? I just meant move the rear array tether away from the inductors
+dont u question my life decisions
+also consider moving the array tether to the other rib
+but it probably will
+unless you measure it and it doesn't
+Also yall should put the anti-oxidant paste on those connections between the washers if you haven't. Will help to remove gaps and reduce resistance a little further.
+Didn't we decide not to run the motor free-spinning?
+or program that torque to go to the motor instead
+Would definitely recommend fastening those wires down though. Something to kill any torque on the board caused by tension
+Nice!
+Noice, I'll look at dat data when I get home tonight
+Also there's a GTSR quick facts page somewhere on the drive. I can try to find it if you guys would like to have it
+Has the data from this past weekend been out on the drive yet?
+If they could figure out how to operate their machine
+am intern , lower than dirt
+I'll add it when they make his wikipedia page
+Dude who sits a few cubes down from me just became an astronaut. Pretty cool. His name is Robb Kulin for any interested
+And a cone for safety
+Live by the green route you die by the green route
+jared: S1 landings on land happen when there's enough fuel to do it because it has to do a boostback burn to get itself back to the pad. If the payload is too heavy or the orbit is too high, they land on ship that'll just hangout where the rocket would naturally fall, so no boostback burn. The one 2 weeks ago had no landing because it was a heavy payload to GTO, so no room for legs or landing fuel.
+Also if the space you'd want (to avoid shade) is usually filled, you might want to put cones out tonight. Not sure how dead the SCC is
+Any prep issues?
+
+Don't have any good ones with me
+Would it be possible for someone to send me a picture of the composites tent (the vehicle plug and mold, not the tent itself), frame, and suspension parts?
+Also I've confirmed the people sitting next to me are part of the Boring Company.  They're literally browsing boring machines on eBay
+One somewhere on the front half of the array, middle, and rear would be good I think. If not, use a thermistor for consistent logging and just temp gun it every 15-30 minutes from different regions
+ is there only going to be one thermistor or will you have multiple around the array
+Do you want to make a functional schematic or something of the setup in case we use it again at the race?
+Ya ok, never mind. So we'll have the mpp values, irradiance, and final energy to the batteries along with array temp and cloud cover footage &amp; times to back up with NOAA. That'll do it
+I was just thinking the output would be the optimized current and the input would be the raw solar current. Do you know where the manual is? Is it the 10 page one?
+oh, I_in is (Impp)?  Wouldn't I_out be Impp?
+No explicit Iout?
+Got a ~light~ link?
+ Were you or Hayden ballasted when driving?
+So one of the figure 8's is hayden and another is you?
+Who else drove?
+Surgical dremel'ing.  That's good then, hopefully no need to add clearance stiffeners.  Ryan mentioned a loose caliper when he called me. Did you guys figure out why?
+Oh so you already shaved off a bit of the PVC?
+Was there any fairing contact?
+Ya, as you said in a real scenario you'd be able to release to roll the wheels again and recontact. But the fact that the data includes skidding means it can be scaled out without being too unrealistic
+that's actually really good
+Ok, but wheel locking and skidding happened?
+aight
+  Did you guys need to adjust the brake bias at all?
+Galaxy expansion: sleep _with_ the car
+More expansion: sleep in the car
+Expanding brain: camp out in the MRDC parking lot so you can't oversleep
+Were you able to find any other material?
+Given that the NCR's are moped/motorcycle tires and they fit the rim profile, I'd like to think the Michelins which are also for the same vehicles would follow whatever the norm is. The 80/90-14 geo also pretty much sets that they'll fit over the wheel.  Should probably come to a decision of buying NCR's or Michelins in the next few days so they'll be here for the pre-race road test.
+ Did the UK company say what the shipping time would be? Hopefully not more than a week if they've got them in stock.
+also well shit
+woah the thread feature neat. It didn't pop up on mobile for some reason
+Im pretty sure it'll fit any way, but maybe he could check
+What if you sent him info on our rim profile to have him check?
+So regarding the wet brake test, that'll require having some continually wet pavement for the car to brake on at 31MPH. The SCC parking lot isn't big enough to get to 31, so we'll need some ideas for spots on campus (MRDC is already in the running of course).  One that might work would be to find a place on campus where we could hook up a hose and plan around that. Would need a hose, though.  Alternate idea that's even more jank is to bring buckets, fill them up in the MRDC bathrooms, and dump them on the pavement. Basically one person just doing bucket-filling full time during the test.
+Also also, has anyone looked into whether or not you guys can do the wet brake test at the MRDC? Like ideally you'd hook up a hose to keep the pavement as wet as possible like dynamics.  Considering all of the improvements we've been making to the car have been to make it go faster and reduce brake interference I'd say that the wet brake test is the one we're the most likely to fail. As a point of reference, we have to be able to brake at 0.5g's on wet pavement and we can barely do that on dry pavement.
+Also I'm pretty sure stiffeners are on the scrap "tree" thing near the door
+How likely is it that the brake rub issue will be worked on before mock dynamics?
+Most of the people in the  channel are. It's a public channel so you can see who's in it
+I doubt you'll get a response unless it's someone's personal email or you try calling them to find a person to talk to. We're sort of a niche market :/
+Get back to work
+Glad they're finally being used for something
+I'll still be at work when the meeting happens, so I just want to recommend only keeping essentials in each column and moving non-critical things to the icebox. That's just so you can look at a major testing goal and know, at a glance, what are the big items that need to be done.
+ what are you thinking of for a new load?  At noon you'll be getting like 8A
+But if the array was hot and it was close to sunset having 110W per array is pretty reasonable
+Slight sigh of relief there
+AA's on the temp gun right?  That's pretty great that the DT's worked tho
+How hot did it get?
+Ok so nothing logged yet?
+Oh man, how'd that happen?  Got any data from it or just those initial numbers
+How's testing going?
+I've got a thing I have to go to at 7 ET, so if you guys want to have the meeting earlier, maybe 6 ET, I'd be game
+or you just combine the parts of each scenario you like
+good ole aerospace
+Saw a requirement today that specified that, of three design scenarios, we had to be compliant "with more than one but less than three"
+That'd be good
+ do you have a screen shot or some visual showing the current layout of info on the dash screen?
+The neoprene probably doesn't need to compress a ton to be air tight enough for the requirement. Rubber gasket could work too. Any material that even slightly seals it will probably do fine
+ Is that possible to get on the data logger? The torque decrease happened during parking lot tests, so it should be possible to recreate it
+ that was during a break in orientation. Also, there's a launch today at 7:20 Eastern...good timing for first day
+No, it has DSP temp on the WS22, but I also tried estimating the q_dot from phase line resistance and it wasn't that large
+From what I can tell there's no distinct change between tests and no significant relation
+Who asked about the influence of C-phase temperature on torque reduction?
+oxford program peeps
+if someone gets me the kmz's for ATL to LA we can figure out how long it'd take the car
+strap a chainsaw motor to that bike
+fricking physics majors and their units
+8 days to bike...nonstop
+8
+yup
+I actually looked at how long it would take to walk to LA from ATL....31 days
+if youd flown delta youd be here by now
+im already here man
+that's what you get for walking all of the way to california, brian
+where the link at
+Sometime later tonight when get I back from baton rouge I'm gonna try to put out a performance summary dealio along with necessary info for doing mock-dynamics. A good target to try running that would be the last week of May, both to detect any race-ruining bugs early and because Hayden might be able to come to oversee people actually driving the trailer in tight scenarios as well as offer advice for slalom and figure 8
+Yup, I'd agree that just the wires would need to be shielded
+ Is that for shielding the car from the MPPT or the internal wires from each other?  Externally I think most of the noise from the MPPTs is going to be in the wires from the RLC circuit switching sending ripples down the line.
+I think it's like 1" T H I C C uncompressed, maybe 0.125-0.25" compressed
+Does McMaster specify ferritic vs austenitic stainless steel (wouldn't want to mix those up)?  I think for this application Velcro would probably tight enough since the air is just going to run parallel to it.  Probably simple enough to test before buying ferritic steel
+For the battery box, though, we've usually just attached the vent to the rib which isn't great considering so much air leaks from the space caused by the battery box cradle. Having one of those pieces be able to attach and detach from the box when we impound the batteries would be a good idea. I think we might've talked about the use of magnets or maybe velcro
+I would agree with something like that, specifically the circular flanged piece which your CAD seems to reflect. You can just epoxy the vent tube to the inside of that piece
+Also on the side where the battery exhaust feeds in, are you making an attachment for the vent tube to bolt on there?
+So you could have a similar lid to the last one, except on the inside of the flange have neoprene
+You could probably use the neoprene foam as gasket material
+ I saw you updated some stuff on the MPPT enclosure lid in the network drive just now. I emailed Steve before I left just to double check that the current design idea is good and the only stipulation he added was to make sure it was as air tight as possible. "Air tight" would mean no easily detectable flow of air, so if you stuck your hand by the lid you shouldn't feel or hear any air leaking out.  This might make a hinged design obsolete unless we put tape over the hinge gap or something.
+Maybe another hour
+Hayden and I are in the office rn btw
+Like in the next few minutes?
+The matte black and gold lettering is classy as fuck
+You still at MRDC?
+Where u at boi?
+Go down the stairs in front of the invention studio and go to the right
+ is anyone here able to go pick up the MPPTs from the MRDC?
+Never mind, just removed the the spring attachment to the lever so it retracts underneath the array without engaging the brake
+ I'm gonna have to remove the plate unfortunately so we can put the array on for testing
+How's the range of motion?
+For the record, they were out of balance the same way the whole time I was charging them.  The graph's shape didn't change.  If it was a bad cell it would grow and deplete at different rates which I'm not seeing.
+I'm not concerned about the string being higher as a whole, I'm more concerned about how it "internally" got so unbalanced
+On the curved portions of the SoC, yes
+Resting
+Also, I mentioned the ~26 A-hr absolute because right now the BMS internally thinks we're at 46, so that plot was Coulomb counting just this session
+Charged the pack up by about 25 A-hr. Given that the rest of the pack was on the low-side, an absolute SoC of ~26 A-hr is reasonable. From the voltage distribution it looks like 1-8 are not only the most out of balance with the rest of the pack but that set is also out of balance within itself, which is interesting. Any knowledge of sparking that may have happened on that set?
+I ran into a SpaceX dude at the airport today who is a CS guy reworking their HR database using a program he made using SQL. He said they heavily use SQL, C#, and Python, so if you guys get a chance to interview with them you should make sure to reserve a bullet on your resume for the SQLite used in the telemetry dashboard
+I was going through some of my old photos from when I lived in Detroit for the summer and wanted to share this. Front page of the local news. Things were so much more wholesome back then.
+I see potential for an "expanding brain" meme here. Take a unit like 1F and morph it into a mix of english and SI base units
+If it can be done earlier then I'd say go for it, but that sounds good at least
+Is someone replacing the fairing covering?
+aight thx
+woah done already
+If it'd be possible to mask the throttle values corresponding to regen as negative that'd be useful too since solar will also register as negative current
+Just in data logging and TM
+Is it possible to have regen throttle registered as negative?
+Just pulled some of these graphs from one of the loops we ran. You can see regen working when the current goes below zero (no solar during this test), but the throttle stays within [0,1]
+or are they both positive?
+It'd probably be fine if it's the same.  &lt;0 would just mean regen, right?
+Are you saying it doesn't distinguish the driver's command vs. the command the WS acts upon?
+During the test I could see when he was flooring it and it often matched with the max torque being applied
+Ya
+Yea
+throttle and target RPM
+I should be able to come
+It's located in the drive under Race Ops -&gt; Mock Races
+hit me up with a couple kg's of that :arrow_up::arrow_right: my dude
+Ryan or Lindsey
+Nein. Groups will be made so people are sanding together as often as possible with someone from aero there to demonstrate what to do. Blocks of time where you're free during the week will be fine (e.g. I'm free all day Wednesday and after 5 on Thursday).
+In the last run on Loop 2, we managed to get the car from near 0 to 40 MPH. I didn't start the log until we were at ~12.5 MPH, but we actually accelerated faster than I'd predicted, hitting 35 MPH in ~0.2 miles. That's ridiculously close to being feasible for CoTA....so ya, pretty good shit - this kind of info is exactly what we needed.
+
+In a few days we should be able to pinpoint with a ton of confidence what we need to do to conquer the hill at turn one.  So thank you to everyone who was a part of conducting this test.  Things are starting to shape up for a really successful FSGP 2017.
+Data from the mock race is on the network drive.  Tomorrow and Wednesday data analysis should be done with another recap summary (like from the first mock race) of how the car performed.  However, I do have some initial data that's pretty exciting.
+We'll arrive in 15 minutes
+Ok cool, we'll just need at least one for the chase car to keep TM and route simulations available
+Ok, sure go for it. Trailer is going to take longer to get there anyway so it'll probably even out
+err, magnets
+You don't have stickers?
+and do chase and lead have their magnets?
+Did anyone pack the power inverters for the cars?
+Driving directions to location
+Google my maps of the routes
+This will be the channel we use to coordinate logistics for the mock race tomorrow. In this channel I'll post the test document plan as well as relevant route maps, testing plans, etc. in the next hour or so.First of a few announcements is a reminder to *be at the shop at 6am*.  We'll be loading the car into the trailer, triple checking packing, and then debriefing the test plan. The plan is to leave with wheels rolling at 7 am. We'll be driving to Sunset Village near Macon where the roads are very flat and should arrive around 8:30-9. Once there, we'll unload the car and begin the tests in caravan with initial testing lasting from 9-11, followed by solar charging and data analysis from 11-1, and then additional testing from 1-3. At 3, we'll load up and head back to shop hoping to arrive by ~4:30.More details will follow as the test document is assembled. Just be sure to set your alarms and get here on time!
+man fuck yelp
+she's a vegan
+Also rotten tomato. Score has been getting low.
+Big announcement folks. We just got rated 5/5 stars on FB. Make sure to hit us up and rate us on Yelp and Uber, too.
+I'll be working on mock race planning today around 4:30 probably in the Culc if anyone would like to join me to help out or learn about how the last one was planned, feel free to drop by and find me. Having Google Earth would be a plus.
+ Will we be able to purchase tomorrow? Is SOFO's credit card issue resolved?
+Thought you guys used wash boards and clothes lines over there
+Sun doesn't shine at woodies
+Won't work
+While you were busy partying, I was studying *The Blade*
+take that, recursion
+Could we solve this problem by filming jason getting the footage in a room where all the walls are mirrors?
+Yup, that's the SCC waterjet. Pretty sure Jason could get the footage of the footage being made
+Almost forgot about this one. Made it on June 2nd, 2015. A legit solar meme
+ka'ching
+not even their final form
+don't pretend like you don't already know the answer to that
+I see your shitty multimeter meme justin
+
+There's also going to be a similar deal going on tomorrow, same'ish time.  If you can't make it tonight, tomorrow would be good too as a "substitute" for Saturday since a lot of people will be gone.
+lookinGood.exe
+what like add in the brian kuo pic as one of the running programs?
+ya, me too thanks haha
+Cool, thanks for the feedback
+is the edge icon a solid choice though?
+figured I'd give it a beta test before going to meirl
+what do you guys think of this custom meme, hot off the presses?
+You guys might want to open the garage door if you want to keep the tent fans on, otherwise they're not really doing anything super useful ventilation-wise
+Ah, I see. I'll be there later (senior design T/R this semester). Saw the commit included setting Regen to 100% so I thought maybe you were adding the response saturation
+ Did your push include saturating the rate of the regen commands?
+That's what you get for having a complicated name like Brian
+Yup
+Boost converters are mounted in the car now
+7/10 good effort tho
+Watt in solar irradiation*
+Both of the modems came in?
+ what's going on here?
+33"x19.5"
+have a seat
+felt a disturbance in the force
+no michael don't
+ When using those readers are you taking your card out of your wallet?  Might be the card reader.
+Oh god pls it looks so bad
+Ya imma go to sofo tomorrow and get it ordered
+Would you need 2?
+Well, the big thing is possibly no need to be reimbursed, so we could get 2
+so I imagine a few days
+they offer expedited shipping
+what about this source
+but ya, I'll see about getting a replacement
+and the emails
+ill delete them
+oh shit
+lol it wasn't me I promise
+Ready*
+We're read to the conference room
+Ya I'm on my way now
+Did you just test the one?
+Sure, we can do that. I'll probably be 15 minutes late, then.  will you be able to get there on time?
+We'll meet in the MRDC next to or inside of the usual gen body meeting room (2407) depending on if it's taken. unless anyone else has location suggestions.
+Some of them aren't valid, such as him suggesting we put a diagonal truss member across the entrance/exit to the battery compartment which would prevent us from removing the batteries.  Some of them were him suggesting removing gussets. Looked at both of them?
+Portion of Dick Roberto's comments about the frame.  These are his suggestions of structural modifications to make.  I recommend that we either make them now in the next few weeks, or never make them at all (i.e. don't plan on changing the frame after the car is built...)
+Unfortunately 128V is as high as a max-energy headway pack can go (smaller 18650 Li-ions that we're looking at won't have this problem), but it's good to know. Wanted to make sure you guys knew.
+At the conference, we had a 1-on-1 with one of the inspectors and, after seeing the mock race analysis report, recommended that the pack voltage might be factoring into the torque output.  In previous acceleration tests 55 N-m appeared to be the maximum the motor would output, and this was later verified during the Mock Race when the car's performance matched models assuming this torque. After working to factor the voltage back into the models, it looks like for our nominal voltage (128V) roughly ~59 N-m is what we should expect to see.
+ do you have the response link for the whenisgood?  Would be useful for knowing when to schedule times for repairs in the next two weeks
+Is that one broken now?
+For SR2, mounting on the main vertical member of the rear half of the roll cage (same spot we'd been assuming) should have enough clearance between it and the canopy to fit that.  For SJ1 there might be clearance in essentially the same space, but not sure.
+Oh ya, I think I met that guy who actually bought them at the conference
+(small separate discussion) Did you guys already verify that your LG vendor can provide the lot # of the cells?
+Getting mass too
+12 right?
+Overall, though, it was decently productive. Didn't really get a solid number on what our max range capability is. Mainly verified that a decent connection can be held at 1000 ft. away even with trees and other outside objects in the way. Also found that radiation from the PTT radio might be causing interference with both the TM and other parts of the car depending on the frequency. Doing a catch-up dump any time comms are lost then regained will be useful, whether it involves the transmitter detecting a loss or the receiver requesting a data dump from the time of the lost connection to present time. Some other issues with the motor in early PWM were found, too. Regen. also works decently.
+Testing plan is located here so you can see what we were hoping to do:
+that's not bad
+MRDC bridge balcony thing?
+
+ realistically (pessimistically) how quickly do you think those sheets can be cut?
+oh right I forgot
+Can't tell what's dirtier: burning coal or these memes
+woah the conference kind of brought it to life
+On average, the pack went from mid-60s F to lower-mid 80s F drawing about 10-15A on average for about 2 hours
+If you want to know what the temperature will likely be based on past measurements, you can reference the BMS recorded temperature of each module over the course of the mock race found here: Team Folders\Electrical Team\Telemetry\SJ1\Arduino Logs\drive test logs\Mock Race 1-14-17\Mock Race 1-14-17\Raw_Plots
+Yup, q = integral(R_equivalent * I(t)^2 dt)
+^work done on determining if a non-power-optimized wide range Buck-Boost conversion could work as a temporary MPPT substitute
+Isn't the IEEE that fake news tech website?  Don't believe the media so easily, Justin.  SAD!
+Ok then, so really we just need to make a connection for it on the 12V line from the MeanWell converter on the Pb-Acid test bench
+It receives power from the voltage sense connections to the modules, right?
+SJ1's area-drag coefficient (C_D_A) is 0.13m^2.  SR2's, via CFD, should be around 0.1m^2
+6 weeks from now maybe, so around the end of February.  They're 6-8 weeks of lead time right?
+are you happy with the conversation you've started  ?
+about 5
+that was actually a commissioned piece by Bharat
+oh wow you found it
+I guess this means you guys haven't discovered the very first memes folder hidden away in the archives of the previous drive, untouched since the great drive fire of January 2016
+holy shit
+^ Sunday is just for this week because we didn't want the mock race to interfere with the shop day (and give us MLK day to re-test anything that fails). Aside from this week, the new leadership voted for Saturday to be the communal shop day.
+ Sorry for not responding to your DM.  I'd actually email Melinda Wilson or, if she doesn't answer, Carry Ogletree.  Ms. Wilson is listed in the ME school as "posters &amp; banners".
+If you guys would like to talk about the route over hangouts, I'm free until about 5 ET to do so, otherwise this route seems solid enough to me for a driving inspection.
+ How would you advise going around Conyers then?  We'd aim to start at 10 a.m. and that route would be about a 2 hour drive (as shown by the graphs)
+When the route is finalized we can.  Google Earth gives very good hill grade estimates, so I wanted to go through the proposed routes and record all hill grades at every intersection, make sure it isn't too steep, and reroute if necessary.  Then once that problem is out of the way we can save road quality checks and recording speed limits for an inspection drive.
+For a general overview, I'd agree. These routes can be modified (I just gave it a first pass when making them), so we could route around city centers. One issue with Six Flags is we have a pretty steep hill to deal with early on that would require at least a 30 MPH runup. We can narrow it down to these three for now, but stuff like intersections on steep hills or low speed limits in hilly areas where we'll need a lot of momentum will be the next thing to look at.
+Looks like the latter.  Saw some announcements from September saying that google maps might be able to do it.  Looks like we'll have to try looking up roads or highways, streetview, and educated guessing if neither of those work.
+Just as an FYI, the KML/KMZ files in the folder can be uploaded to Google Earth to see the route, including the elevation/grade. We should be able to glean everything but road quality and pot holes from that.
+Ya, as long as we can narrow down a final route by the 28th that we check out later, that'd be fine.
+I was hoping we could have a prep-discussion sometime before New Years, but I don't think anyone would have time to do road inspection beforehand with Christmas.  Since we're considering a few different routes, inspecting the "top candidate" by the end of break probably be good.
+In the pdf I set the weekend of the 14th to be a good date as we apparently have a 3 day weekend then.  As for the time, having us driving around noon would be fine for potentially more solar power if we're able to work out a fix, but earlier in the morning is probably better on the weekend to avoid traffic.
+
+I've mapped out and simulated several routes in that folder.  Some of them are near/in Atlanta for convenience, but the best candidates are going to the be ones outside of Atlanta, named "Southern GA" and "Lithonia".  Could you guys organize among yourselves and the race ops group to look at the following items:
+
+.) If our desired speeds are in violation of local speed limits, over or under
+.) How busy are the roads we’re travelling on (Google Earth)?
+.) If the car has to come to a complete stop (intersection), will we be able to static start the motor (i.e. do  we have to stop on hill greater than 5% grade)
+.) Are there good parking areas nearby that we’d need to get permission for?
+E.g. one route has us in a church parking lot.  Would they be cool with us using it on Saturday?
+
+We may also want to take some time to investigate the route beforehand, especially for more rural areas, to determine if it will be safe for us to drive.  It'd be good if we could get some opinions on these routes ready by around the 28th.
+I've started compiling information about the mock race in the following folder.  Before trying to design a route, make sure to read over the Mock Race Readiness pdf. The routes need to comply with a &lt;50 mile maximum range just for insurance so that, if we have to, we can last off of no solar power.  If you make a route, try to do it in Google Earth and save as KMZ or KML, that way I can extract the geographic data and run it through my race models to see if the route will be doable, both in range and hills.
+Where's your high school?
+Do they have the ability to do the GT "Old Gold" or whatever color?  The yellow on the card looks kind of like UM of colors.
+Also, if this hasn't been pointed out, the code that goes on the simulation side can be found in the network drive under team folders in a folder called 'strategy'.  I imagine some of you have probably seen it already, but that's where it is.
+You guys can see the math that goes into post-driving analytics based on _reconTool2.m_ in the post test reconstructions folder.  The actual computation isn't very intensive with the most complex numerical part being the differencing and integration schemes, so I would not worry about the scale being a problem.
+  Let me know when you fire it off.  Might want to just go ahead and do that so it's timely.
+Fair enough, thanks for edits!
+also, the TEFGA picture is actually from CMS...couldn't find a good looking TEFGA photo, but it fits the description
+  Possibly send this to the Chic Fil A rep if you think it covers his question well.  Also,  and , CFA wanted a 1 page summary of our Outreach efforts to get an idea of our scope and influence in the local community. I went ahead and threw this together since I had half an hour to spare, hope you don't mind.  The editable word doc is in the following location in the drive: \Team Folders\Outreach Team
+Let him know that we'll try to get a sheet of info to him by the end of the day. The main delay not being that we have to prepare it, but finals &amp; stuff :P
+Chic Fil A
+
+- Create an Outreach summary  (1 page) for local Atlanta stuff
+- Has contacts for AMS, Richard Petty MS, Jack Ralph (?) MS
+ .) Use CFA's contact info as a name drop
+- Scheller CBA business database (?)
+Did they also say if they were hoping for the car to be there, or just posters?  Previously we've just done posters and brought a solar cell or two for tabling.
+Got a final at ~11.  I could do in the morning around 9
+Thursday right?
+Sure
+ok
+Should it technically say 2017 since we're not using this until 2017?
+ I just realized I took the SD card with me... I'm giving it to Sanmesh to give back tomorrow
+Fair enough, I've updated the document to match what's on the website.
+That document looks pretty good.  I found some minor corrections to make:
+
+*1.)* In the mechanical team section, the "brakes &amp; pedals" team is spelled "breaks and pedals".  Should be the former.
+*2.)* In the overall mission section at the beginning, change the part saying that we're "designing" SR2 to "building" it.  We finished 90% of the design last year.
+*3.)* SJ-1 is not technically the first solar race car created by the team. Like I linked in the general chat a few weeks ago, there were two cars before it. Not that this matters to companies, but if we were to send this packet to established alumni from the 2003 and 2005 car teams for donations, which has happened, I don't think they'd appreciate being left out.  Neither of those cars were race-eligible, though, so we shouldn't dedicate a lot of time on them.  Instead, say SJ-1 is our first Challenger-class solar car or that it is our first "race-proven" car.
+*4.)* Not sure where the specific number of 0.133 came from on the drag coefficient for specs, but it should be changed to "Area Drag Coefficient" with a value of 0.13m^2.
+*5.)* In the section talking about ASC, the distances for the cross country race are written to be "&gt;300 mi", but it actually spans over &gt;1000mi.  While &gt;300mi as written is technically correct, &gt;1000mi is more impressive.
+*6.)* In the section talking about FSGP, you should change the description of Challenger class to be "cars that are optimized entirely for maximum speed &amp; endurance" instead of saying "for cars built from scratch".  Technically all of the classes, including Cruiser &amp; Adventurer, are built from scratch.
+^ Link to the general meeting ppt
+As a side note, the answers to the last question of "How is your Hell Week going?" came back as
+Yes, I spoke with Sanmesh more about it last night and the inaccessibility and possibility of damage isn't worth it.  We seem to be able to hit max torque as we are, so anything further is just tuning power performance.  Having the airgap be adjustable by a motor would just allow us to optimize motor output for hills vs. flats.  Most motors that I've seen allow for adjustable airgaps, so I do want to ask him why it doesn't have that option.
+Because none of the candidates have decided to change running positions, the roster I first posted is the official candidate roster. As a result, the only contested position is for Electrical Lead which is a position that only the electrical team can vote for, meaning that *only electrical team members will be required to vote*. This means that anyone who can't make it that isn't on the electrical team won't need to worry about absentee ballots.  Just wanted to make sure everyone is on the same page.
+
+Again, the last general meeting of the semester will be at 7PM in MRDC2404 with voting happening after general announcements (around 7:15PM).
+To clarify, the election will be happening during the usual general meeting at 7PM at MRDC2404.  If you can't make it, message me about sending in an absentee ballot.
+I've gone ahead and closed the candidacy application.  So far, the list of people running for positions can be found below:
+
+*President:*              Naim Vasaya
+*Chief Engineer:*       Ryan Babaie
+*Mechanical Lead:*         Lindsey Berger
+*Outreach Lead:*       Tiffany Chau
+*Business Lead:*       Kelsey Pepper
+*Race Operations Lead:*  Alana Homa
+
+*Electrical Lead:*      Brian Kuo
+                      Jared Duncan
+
+The only contested position so far is for the Electrical Lead position, however a final roster will be posted later this afternoon (Nov. 28th).  All candidates need to be prepared to give a speech outlining their platform &amp; goals, regardless of whether or not the position is contested.  More details to come when the roster is finalized.
+We've placed the orders for the new MPPTs which will be the time-limiting factor in determining when we mock race, and they will not be available until the start of the Spring semester, so the mock race will not be this semester, but will be one of the first big things we accomplish in the first couple of weeks in Spring 2017.
+Could we start working on creating an alumni / history page for the team, perhaps over the break or after finals?  Considering two alumni have reached out already asking for it (one of them is trying to get Li-ion batteries for us, btw), I figure that's a decent excuse to add it.  When you guys are ready, I could help with providing the content for it.
+No idea. That alumni might know, but I doubt it. I'd be impressed if they still had any design docs for the old cars.
+Check out this motor from the 2003 car's drivetrain.  Some hardcore BLDC action going on with gears, drivebelts, and a duct taped high voltage warning
+Sorry for the late night message, but we were recently contacted by a very old alumni from when the team was originally founded (the first time) back in 2002. He sent us some pictures of the very first solar cars made by Solar Jackets back in 2003.  Last year I actually searched for this very same info and managed to only find two pictures, so this is pretty cool.  It's a 2-seater car that was actually driveable and was named "The Good Word".  I put the pictures on the Google Drive for any interested (link below).
+just a reminder that we're gonna be having shop work session this evening starting around 7.
+According to the ME facilities team, everyone who successfully paid dues several weeks ago should now have buzzcard access to the SCC.  For those who are still on the trial periods, you'll be given the info you need soon.  For any further access issues, *please use the public  channel instead of *.
+No meeting in person, just review the slides on your own to stay updated with what's going on.
+ Just a reminder that the general shop work day is set for Sunday.
+We appear to be missing some of the radios.  Have any of you accidentally taken any of them with you or remember where they might be?
+Hey team, this is a reminder that tomorrow will be a shop night (no general meeting) starting around 7 P.M.  Make sure to double check with your subteams later tonight &amp; tomorrow to see when they'll be working.
+W:\Team Folders\Electrical Team\Drive Train\Jackson Force Sim
+Car is still at McCamish in the trailer btw
+we also had GTPD act as chase to get us back to McCamish.  I got a pic of us riding with them and they got some pics with the car too.  The officer that drove is actually in charge of their outreach/social media, so I can give you his info.  He asked for me to send over the pics I took of them helping us anyway
+Brian got some sweet pics &amp; vids
+mhmm
+ who has the padlock key?  Just wanted to make sure somebody has it beforehand
+We'd have to be rolling out around then.  I just remember for the drive test at MRDC we took quit a bit of additional time to get everything ready.  Is everything else already ready to go?  Is it actually just show up and go?
+Like 6:30
+If we still have to move everything me might want to shoot for earlier than 7 just to make sure we're not late
+I can get one when I'm near my computer, but if steady state torque at the MRDC was ~80N-m and drew 2kW on a ~103V pack under load, then T/I would be ~4Nm/A
+drivetrain efficiency isn't included, and LaTeX sucks
+Did your GT login change recently?  I'm able to access it with no problem
+Hey team, this is a reminder that tomorrow will be a shop night (no general meeting) starting around 7 P.M.  Make sure to double check with your subteams later tonight &amp; tomorrow to see when they'll be working.
+I'm revoking your access because of your comment
+yes, michael
+The diagram implies they just drag a phone around attached to some string near the rear
+Nothing has changed
+I was actually just thinking about replacing the motors with more rear wheels, too.  The motor is actually our biggest source of power loss.  Getting rid of it will save us tons.
+I like it.
+going with BMW wheels because American manufacturing is inherently inferior?
+can you send me the video of sanmesh reacting to the radio?
+Nothing planned
+You'll have to take that up with GTSRHR
+I think  had a list of steps for linux users too at some point
+Linux OS
+
+1. Stop pretending to be better than everyone else and use Windows
+2. ls
+Cool slack fact that I just found out from this.  Even though message restricted pinned items only preview part of the pinned item's text, it actually contains all of it, so if you just CTRL+A in the text preview window, you get all of the text again.
+No credit cards.  You'll pay them to Kelsey or Kenny.
+Lol, if those are 18650's they have nearly 3x as much as we're allowed to have
+You'll need a signed, written excuse from the surgeon general, obama, and Rob Manfred, the current Commissioner of Baseball
+No general meetings, but work at shop will be ongoing over the break for those that are in town.
+I haven't finished doing a robust post-drive data reconstruction, so some of the theoretical results and torque values might seem off, although most of the reconstruction has been done for the 12 minute drive (17_4_3)
+W:\Team Folders\Electrical Team\Telemetry\drive test logs\10-2-2016 Tests\MRDC Parking Lot
+Preliminary results of the test drive can be found in:
+Yes
+4/10 is the highest score I can give
+Not in crayon or on construction paper
+6:30-8
+
+I have a potential race-ops assignment involving test driving the car this week.  We need to test drive the car at a constant speed of about 20MPH and are looking for a good location on or off campus to do it cheaply and with the least amount of logistical effort.  Trying to aim for Thursday, but anywhere from now to Sunday is fair game if it gives us a good location
+Send direct messages if you have any conflicts and we can work on a case-by-case basis.
+Just a reminder that the meeting is at 7PM in MRDC 2404 (the usual spot).  The regs quiz will happen near the middle of the meeting after general announcements, but try to arrive as on time as possible to not miss it.  It will consist of 12 questions and will take 10 minutes.  The quiz will be completed via google forms, so *you will need your laptop, so bring your laptop*.  Also, just to clarify when results will be out, the trial period results will likely be sent out on Wednesday (not before the meeting).
+"New member info package" is what you guys should have access to so far unless your subteam has given you access to specific things to work on
+Also, make sure to bring your laptops tomorrow to take it.  It'll probably take about 5-10 minutes.
+social experiment*
+I see your pointless debate and raise it with an even worse one
+Just a reminder that the communal shop day will be on Saturday (tomorrow), mainly because:
+(1) No football
+(2) Ray Day is on Sunday and most of last year's members are going to be there for most of the day.
+
+Like before, times to show up vary depending on when your subteam plans to show up, but most people get there between 10-12
+Fits like a glove
+Let your subteam lead know you'll be late because of the test and they can either debrief you or give you a copy of the slides
+ your order of small wire, D-subs, switches, and tubing came in and is on electrical's delivery rack
+It's mainly the electrical subteam leads with the target of finishing re-assembly and debugging of the drivetrain starting at 8.  You can come if you like, but be warned that there's not going to be a whole lot of work/time for explaining things for this session, unfortunately.  Trying to get the systems working for CMS as fast as possible.
+6-8.  I think they're still doing on-campus interviews.
+ we can one-up them if we can figure out how to get us on the cover of a Wheaties box.
+they were in their superbowl commercial, too
+a spherical hot dog
+do we really want someone representing us that doesn't even know how to microwave a hot dog?
+yup.
+I'm registered.  I enjoyed the adrenaline rush of being timed when making the account.
+Anyone know if we have sticker nametags?
+since we're gonna be doing for free, I don't think you need to enter it.  Should be a non-essential field
+Student orgs can use the SC plasmas for static slides for free up to 2 weeks.
+Like the board looks brown
+The brown ones that is
+One with red LEDs.   I believe they're all of similar size
+Molly and I made a word doc about sponsorship levels with SR2 items on it.  Might need to update that.  Some of the FedEx ppts about SR2 at a high level can also be repurposed.
+Change Eagle to CadSoft
+Atlantic station, maybe.  Or cookout
+  It looks like we already submitted an order for 30 bypass diodes on 6/14 from Mouser (required to finish the array).  Can we confirm that they've arrived?
+No, we should be good
+Apparently extra solar cells are in, will swing by and get those tomorrow.
+ This pdf contains all of the reports related to the electrical systems of the car.  Please read through it and let me know if you can find anything wrong.       especially.  The mech sections are blank as we are writing the mech report now, but will send in the electrical reports ahead of time.  The electrical documentation begins in Section 4, page 9 of this version.  Looking to send this out preferably tomorrow
+Cool, just wanted to make sure
+ Can whoever has the BMS from Manzanita post the contents of the delivery here to make sure it all came in?
+Can't guarantee that, Dr. Cheung hasn't responded.  Will Edo still be there?
+Every livestock company has a branding office
+We could've bought eco car
+That's the price of a camaro
+The smaller one couldn't handle the load running through it
+Same one posted in here
+Windows OS will just be for programming
+ Yes
+Batteries are also set to come in next week on June 14th
+Otherwise that topology &amp; configuration I showed you guys should work
+   :  Some useful information I got from Rich (BMS guy).  The idea to hook up the BMS's non-sequentially is a no-go.  Definitely don't do that, they don't work like that.  The start-up time for the MKs to latch the main contactors is something we'll need to experiment with, but according to him, it could be ~15 seconds.  We should revisit the car start-up mechanisms to adjust for this.  Also, in the system topology I made, I drew the SoC and MK's on separate chains.  They recommend that we keep them all chained together instead.
+I asked him to in order to keep us under $2500 so we can deal with less of GT bureaucracy.  He said they didn't have a budget aside for anything larger (they probably don't, it's a small company).  I also spoke with him for an hour about his idea to recreate the ASC, but to make solar powered ATV's that ride across Alaska, so ya, some kind of a discount was in order.
+10%, by the way, won't qualify him for anything (total cost is ~$2500 pre-discount)
+   BMS ordering is good to go.  Just got off the phone with Rich and convinced him to give us 10% off plus some additional hardware that we'll need to work around the no-CAN problem.  I'm going to email them tomorrow, and when they've confirmed the discount we can order.
+Kind of, SBM was waiting to send me costs until after they'd manufactured.   but if you need an invoice for the 10th deadline I can see about it
+Yes
+ASC does need to be on
+No fancy colors, just the models
+Hayden and I are gonna get some finished (from the outside anyway) models today to be used for it.
+who watches the watchmen...someone has to care about SBM :stuck_out_tongue:
+^ correct, eagle is just the product/program.  The logo you showed me is fine though, Ruchi
+:flag-us::flag-us::flag-us::flag-us::flag-us::flag-us:
+Correct, they're still being flipped.  The schematics are just functional other than physical E-stop locations
+think this might be similar if not about the same. Found this in the shop
+PN: ACS758, LCB-100B, 310DXAA
+No, the motor takes in 3-phase AC as the input.  The batteries output DC.  The MC acts as an inverter to change the current type.  Need to have it attached to the line going from batteries to motor
+What do we feed it to sense current?
+How exactly is that current sensor going to be mounted?  Is it intended for a board?
+Should be visible coming up to the campanile now.  If you're not there, start going to the campanile
+ETA likely 12:10
+This waterjetting session brought to you by the letter "O"
+^ strike 2
+^This is for full team, btw.  Also, last meeting of the semester tonight.  Same time, same place.
+ Final picture postponement: We're moving it to *tomorrow (Wed.) at noon by the Campanile*.  Wear blue shirts or GTSR polos if you have one.  If you show up late, you'll have to photoshop yourself in.  We will be bringing the car with us and will be unloading near the Culc circle, so if you're early, be on the look out for the trailer to help unload Stella.
+On our way back with the motor controller materials
+Yup
+Yup, got the receipt
+ As a reminder, general meeting tonight at 7 in MRDC 2404
+3.3V
+also, apparently it works best with salt water.  maybe we can add them when we retrofit SR2 into a solar boat
+By the time they get the efficiency from 6.53% to un-doped Si's level (maybe 27% by then) we'll probably be on SR8, but maybe
+The current that goes to the motor does go through the controller to be inverted from DC to AC.  The current sensors we need are for the main power lines, so 100A.  We don't necessarily need to know the power lowering the controller
+#TBT
+On the website it says a 10-pack will get quantity discount, lowering it to $64.60, but that isn't reflected in the final checkout window.  Part seems correct, though
+I have the converter now
+  full antennae kit (with modems and boards) arrived.  I have them sitting next to me in the office.
+Do you guys have any use for the old Solar Jackets banner that used to hang up in the shop?  Otherwise we're gonna throw it out
+even if you've already told me, re-confirm to ensure you're included
+ If you're here over spring break and want to do work, please message me, kenny, or hayden
+Hayden and I are on our way with the trailer.  Should be there right around 2 in the back
+Updated with stuff for SR2 for TEFGA (don't judge me being awake at 4 am)
+for all of the designed brackets, at least.
+do we have all of the metal we need otherwise?
+ya sure, beat my hi-score and then _maybe_ we can start talking about my severance package
+  what's the deal with rides to the event?
+as a note,   himself made this
+Outreach team, start making posters featuring this ASAP and put them around Klaus.  Guaranteed recruitment strategy for CS majors
+I was looking for specs for Iowa State's solar car (their team is named PRISUM) and found this.  Apparently there is a manga about solar car racing called "Donten Prism Solar Car".  Just thought I'd throw this out there
+The 4th one is at Comprent
+Other potential media material of us building the MDF plugs
+hmm, seems to only break there if you've never navigated to the teams page before.  Try it in incognito to see what I mean
+ah, if you navigate to "our teams" and do it, it works fine.  However, if you click on the images on the homepage, those are the ones that are broken for me
+Is it still updating to the rolled back version?  Seems like the links to individual teams like electrical or mechanical are broken
+tried emailing him?
+    what's the progress on the website?
+ Reminder that there's a meeting tonight at 7 in the usual place.  Topics will include updates on progress for the major systems of the car as well as information about the race team, what positions are available, and how to apply a few weeks down the road.
+ This is a reminder that we'll be having the weekly general body meeting at 7.  This is also the due date for the extra $15 dues that we mentioned 2 weeks ago.
+Sub-team / project leads and up
+I am in the conference room right now and will be keeping my stuff there.  If I'm not there, I am probably near the composites area.  Goes without saying, but make sure you give the money to me in person and don't just leave it on my laptop :stuck_out_tongue:
+For those interested, I found some pictures of the team from 2003.  After 2003, the team was disbanded until around 2008 when the SAEV Audi project started, giving momentum to the team to start building competitive cars around 2011-2012 (SJ1).  Anyway, I managed to find some pictures of the car they built back then called "The Good Word" as well as some other pictures of '03 Atlanta in the album linked.  Cool stuff, yo
+website up
+Website is back up!  Shout out to  and any who helped.
+why yes.  yes it is.
+this is why we can't have nice things
+The car is now capable of distributing power from the batteries to all auxiliary electrical systems and can be charged with the solar array.
+Small repairs to the motor controller controller board are holding up the motor from spinning, but otherwise SR1 is electrically functional
+ Are you taking it out of shipping today or tomorrow?
+me irl....
+The rest of SR2's cf is in
+Their official hours of operation are 8am-4:30pm (pretty sure they always leave a little before 4).  I'd imagine 8-10:30 or 1:00-3:30 would be good hours.  You can also call/email Kenny Garrick to check if it's open
+party like it's 1989
+chill
+3/8" A-36 HR Steel Plate from Metals Depot (1' W, 2' L) has arrived in shop.
+Carbon fiber tubes from Rockwest composites are in (Bharat's possession).
+Yes, I was going to announce it in just a bit.  Except at 6:30
+To clarify for anyone confused, by "6 o'clock meeting", I mean a leaders meeting at 6 with the general meeting at 7
+ hey guys, there's gonna be a 6 o'clock meeting today.  Sorry for the last-minute update
+Not impressed
+&gt;still using fluorescent lights and not LEDs
+&gt;2015
+spooky
+ Did you know that you and Cam Newton are the same age?
+for josh.preissle after that packers v. lions game
+:+1:
+Shouldn't take long, but be available from 10-11
+   Since you guys weren't able to make the mechanical meeting yesterday, you have been selected to represent GTSR at the IS waterjet clean out at 10am on Friday (Dec. 4).  This is a great honor that we expect you to uphold.  If you cannot make it due to class conflict, let me know *today*.  Otherwise, see you there!
+something something something
+Should be
+for all teams
+420
+Delaying to 11, classroom doesn't open until then
+If you have a structured presentation ready, go ahead and put it in "Critical Systems PPTs" folder under mechanical on the drive
+you non-louisianians crack me up
+pffft, you call this weather bad?  you telling me you people don't own your own life rafts?
+ pictures tonight, show up at 6:30 with your polo if you have one
+It gets better....just wait
+Yo yo yo, no pre-meeting meeting today, just a heads up
+ mech meeting happening?
+always remember to leave room in your life for the based god
+i dont see any lil' b, zack
+ Just like last week, I'd appreciate it if everyone in charge of a project group or sub-team could be in MRDC2404 at 6:30.  Thanks.
+Because Michigan would then just heli-drop in their spare car and win
+We could also put a large EMP device in our car and detonate it at the starting line and ruin everyone's electronics.  Except for ours.  Because they never worked?  No.  They were shielded in our trailer which is wrapped in a faraday cage sandwiched with boPET polyester film.  Replace electronics.  Game set match 2nd place guaranteed
+Heading there in just a sec
+Wingate is the machine design professor?
+Who is at shop right now?
+Don't provoke my inhuman side, Kenny.  Nobody is above sorting resistors in the electrical gulag
+pretty much the whole day, Hayden too
+I'll be there in the morning as well
+Similar transaction conversion to using g dogecoin
+Gotcha, thanks Kenny
+ya
+figuring out hangouts
+one sec
+aint none of yall even close to brains's email:  whewlad69
+this is just disgusting
+People also have the right to be exiled to the GTSR Gulag
+ can be your first target
+Treat them as lesser human beings until they change their ways
+I was going to wait until the meeting tonight to announce this, but I would like to start a campaign of bigotry and intolerance toward people that use yahoo mail
+for you guys to see as well
+:birthday::crossed_flags::anchor::beers::beers::beers:
+ Happy birthday dood
+Doing the solar car overview thing tomorrow at 11 in the MRDC btw if any of you want to go
+cool^3
+So you think it'd be good to send after we do a group critique at the Mech meeting tonight?
+you've got the wheels rolling through*
+Is it close enough?  The things they'll be looking for are co-planar faces and easy to access holes ( ͡° ͜ʖ ͡°).  To my knowledge we haven't updated it with what they've initially told us when we met them last week.  Are you saying the dimensions and layout are pretty much set?
+Cool, that's what I was hoping to hear.  Just get it close enough for them to evaluate it and give suggestions on the overall design.  The FEA is more for us, so if we can just run the worst cases and gauge that the design is "good to ship" we can look at any intermediate cases on our own time.  Thanks d00ds
+We need to be designing the uprights in tandem with their suggestions which means this process can't be done last minute.  At the very least I'd say we need a full week of business days of correspondence to do this properly
+That's not enough time
+Is it against policy for them to do so?  Also, does that mean the stuff we've ordered before and "lost" was never signed for too, or is that just for this case?
+Does anyone know why we can't ship to the SCC?  I still don't understand
+ Meeting tonight in MRDC 2404.  Sub-team leads &amp; mentors meeting at 6.
+(c00l).^3
+And that's cool.  I met with Mitsuba over the Summer actually (they came by GM and I spoke with them in Jankanese).  The people I know in CalSol said Mitsuba often broke on them, although Tokai used them on their Challenger.  Do you know if your new friend deals with any other collegiate teams?
+Don't watch an anime called boku
+So just to clarify (I'll send an email to the mentors mail chain for those not on Slack), those of you that are mentors only need to be there *for your group*.  The people that need to be there for the entire eval duration are sub-team leads and up.  Mentors are more than welcome to sit in on the evals and contribute to the discussion, but it's not mandatory for them to be there.
+Classic suspension team
+mmm, Papa Kenny's apartment
+ Make sure you have your teams somewhere on the eval schedule
+TBD, but it'll either be central campus or MRDC
+go home, john, you're drunk
+what meeting?
+.......get da water
+we could either make it out of anti-matter, or we just don't make it.  But not making it isn't enough.  We have to *really* not make it.  Like she has to not exist harder than things that don't normally exist
+idk, ask Piper if she can get us some
+we'd have to make her out of anti-matter
+taking up negative space
+she'd have to negatively not exist to break a record
+even with the power of the sun at her disposal....nope
+even with 100% efficient cells
+the answer is no
+just ran some calculations to see if stella could ever break a world record for speed
+If it comes to it, we can machine it in-house.  But we should gun as hard as we can to get it machined elsewhere.  I don't like thinking of that as a plan B, because I don't want us to rely on it.  But if we have to...*have to*...we can
+the sentiment that I got from the mechanical team in the equivalent of giant, size 72 all caps bolded text was that they don't want to machine anything that'll be on the motor or motor assembly
+Can anyone be at shop around 4 to watch my group?  I have a research meeting then and can't go
+so I'm not talking about just the waterjet.  This is for cleaning in general, IS, SCC, anything we use and need to take care of
+so, just to clarify, the next mandatory sub-team for waterjet is going to be Metals, for PCB milling: Hardware.  If we have enough notice, we'll announce it and take volunteers
+Just a quick quip about cleaning facilities: we're going to institute a policy of having a rolling roster of sub-teams that will be responsible for cleaning when we are called upon to do it.  If we have enough notice to plan, we'll do volunteer sign-ups.  However, if the notice is last minute, we'll have sub-teams and upper leads go to cleaning, and it will be *mandatory*.  The cleaning will be sub-team specific, so for waterjet, the list will be Metals, Composites, Logistics, Power Systems, so if power did it last week, composites goes this week.  For PCB milling, it'll be teams like hardware, power, software.  If we have enough volunteer sign ups, we won't make it mandatory, but it is *absolutely crucial* that Solar Racing plays a part in maintaining our facilities.  If we lose access to the IS and other facilities right in the middle of our build cycle, we're boned.
