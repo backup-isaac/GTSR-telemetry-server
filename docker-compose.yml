@@ -45,6 +45,7 @@ services:
     command: bash -c "npm install && node chatbot.js"
     ports:
       - "3001:3001"
+    restart: unless-stopped
   nginx:
     image: nginx
     container_name: nginx
@@ -57,6 +58,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    restart: unless-stopped
 volumes:
   db-data:
   grafana-storage:
