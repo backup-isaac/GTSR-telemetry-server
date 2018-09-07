@@ -1028,3 +1028,870 @@ Can anyone be at shop around 4 to watch my group?  I have a research meeting the
 so I'm not talking about just the waterjet.  This is for cleaning in general, IS, SCC, anything we use and need to take care of
 so, just to clarify, the next mandatory sub-team for waterjet is going to be Metals, for PCB milling: Hardware.  If we have enough notice, we'll announce it and take volunteers
 Just a quick quip about cleaning facilities: we're going to institute a policy of having a rolling roster of sub-teams that will be responsible for cleaning when we are called upon to do it.  If we have enough notice to plan, we'll do volunteer sign-ups.  However, if the notice is last minute, we'll have sub-teams and upper leads go to cleaning, and it will be *mandatory*.  The cleaning will be sub-team specific, so for waterjet, the list will be Metals, Composites, Logistics, Power Systems, so if power did it last week, composites goes this week.  For PCB milling, it'll be teams like hardware, power, software.  If we have enough volunteer sign ups, we won't make it mandatory, but it is *absolutely crucial* that Solar Racing plays a part in maintaining our facilities.  If we lose access to the IS and other facilities right in the middle of our build cycle, we're boned.
+Using springs is not a bad idea. Probably wouldn't bother with torsional. Would just use hinges and a normal spring.
+Reminder that we have shop today. Couple of highlights that we'll be focusing on:
+&gt; *Frame:* Mule chassis construction and prep for SR-2 rear bracket welding
+&gt; *Aero*: Tool cleaning, battery box kevlar rebonding, preparing staging for the MDF stack-up
+&gt; *Suspension*: Uninstall the rear suspension - prepare for cutting and welding this weekend
+&gt; *Steering*: Steering wheel prototyping
+&gt; *Batteries*: Get BoM ready _tonight_ so we can prepare purchasing process. Begin laying out components in the box mock-up
+&gt; *Aux Systems*: Check in with me about aux array - need to finalize wiring diagram (sicheng)
+&gt; *Powertrain*: Check out steering's wheel - discuss upgrades and changes
+&gt; *Solar*: Check in again about aux array. Need to find a way for us to be able to use that aux array with SR-2 potentially for mock racing
+&gt; *Telemetry*: RF testing and start scoping out SMS texting
+
+These are items at the minimum that I'd like for us to focus on. There's more to do, but these are some critical items to either start, do, or discuss. If you're an owner for one of these items and won't be here, please send me a DM.
+I'm trying to describe it to sanmesh and can't do it jus:ti:ce
+Hey does anyone have the brisket pic of jus:ti:n lee
+It's like 2 weeks old, but just seeing it now
+you _could_ taper it like the body will be, but we can always just get that milled out.
+1" on either side (2" total) on the stackup
+% thickness is relative - if it was multiplied by the wrong length, you'll get the wrong absolute width
+For the mule chassis
+Same % thickness, or same absolute width
+Also  what's the order of cuts you're preparing with respect to position on the car?
+ 6" bending die radius, correct?
+Also 
+Regarding the draft angle - yes, I can include more of a draft. We're actually running low on solar array space when taking into account SBM's encapsulation on our most recent sunpower batch, so I'm likely going to narrow the bottom/widen the top, and try to create shoulders along the edge anyway. That should provide a lateral draft angle when pulling the part up.
+
+Regarding the wheel space - we'll see what we can do. The options are to make the body wider (explained below, not very bueno), bring the trackwidth in (not great for stability), or bring the front wheels rearward (reduces egress space by bringing steering tube toward the driver). I'll pursue them in reverse order, which is my preference. Making the aerobody more narrow in the front is not fantastic - it can have pretty huge impacts on our drag (if you're curious, the imgur link shows the progression of the first 5 lower hull iterations. From 1-5 the drag was cut in half by extending the length of the body that has a "rising" profile).
+It's definitely an improvement concept-wise. Just need to make sure the planform stays the same
+enclosure dims are linked a few pictures up the chat
+simplest thing we can work with first, maybe upgrade later if we like it
+^ This is like a semi-meme pet project btw... most of it was done as a break from main SR-3 work on Saturday. Mostly just keeping everyone up to do date in the event we decide we want to buy/make these. We'll have a review before anything is purchased on the team's dime.
+
+It's been kept simple enough that the odds of working/not working are entirely tied to the barometer and Rx/Tx setup, so it's a pretty minimum viable product. But again, it's an accessory not on our main mission list, so before we dedicate anyone's time assembly/test we'll review it first
+Do you guys want to meet up later today to finalize the BoM? If we can't, I can throw whatever has been left out together, including the kevlar/core, tonight, but it'd be good for everyone to know what we're about to purchase. It'd also be a good chance to make sure everyone is aware of the construction process (including the box) and caveats that will come with this design (e.g. we need much smaller fans...)
+If we could tack on getting an exhaustive list of necessary tooling for every component in its most complex potential form (i.e. if we have 1.5" swing arms instead of 0.75") I think that'd make for a good use of this week.
+Considering the frame will use ~8 and the suspension and other brackets will require several others, too, that seems fine with me.  for awareness
+We don't have to keep them either - if it sits pretty snuggly in your hand while reaching for buttons we could just cover it with padding. Thought it might be interesting to try out
+ Just curious - how are the little finger bumps in terms of comfort? They were eyeballed, but just curious if they're actually ok here.
+You can buy them alone...should be on their website 
+We are in 2404 for the meeting 
+Good job on the kick off everyone. I know it was a lot of work getting everything together after only 2 weeks of working in-person, but I think we've done a really good job thinking through our options, coming up with solutions, and keeping this design simple, flexible, and practical. It's amazing how much more detailed this was compared to the soft kick off one month ago. At this point I'd argue our  design is even more detailed/thought out than SR-2's was last January. I think we've got a lot to be excited about with this car and I can't wait to see it start materializing. I think we're going to be pretty amazed at how quick and easy this can be.
+
+With the kick off behind us, we have a good baseline to iterate off of. At this point it's critical that _everyone_ understands this design and stays  up to date on the changes. Development  is going to continue to be quick, so now is the best chance to catch up and stay up to date by reading the ppts, watching the recording, and asking tons of questions. Tomorrow I'll send out some updates on refocused efforts to close out our "big three" designs/send them to ASC, as well as starting prefab and fab of our prototypes and battery pack.
+
+Once again, well done everyone - both to the presenters and those of you in the audience thinking critically about each system's choices. If you have any concerns or questions (even "dumb" ones) feel free to shoot a message in the subteam's channel or just shoot me a DM.
+Links about to be posted, hang tight
+Hey everyone, SR-3 kick-off will be today at 2:30 PM in MRDC 2404 and will likely last until 7. Each subteam will be discussing their current designs, manufacturing plans, and timeline, so it'll be a long meeting. However, I don't expect everyone to be there the entire time. I'll be posting up an agenda of when subteams will be going up to talk. It's perfectly fine for you to dip in for the subteams you're immediately interested in, although I encourage to you to listen in on as many as you can. Each subteam will be open for questions, so this is a good chance to double check their work. While this is not an official design closeout for all systems, we will begin prefab for a lot of our larger systems and begin prototype building for many of the others, so make sure to turn out and give your comments.
+
+If you can't make it in person, I'll be recording everything on our YouTube account and broadcasting over Hangouts. Hope to see you guys there!
+From talking around it seems most of us are in consensus on sticking with the 5x7 configuration for the immediate next revision
+Good for you
+Escaping the mcwastle cooking pit is really hard
+It's been a ride
+Still working on it
+ we goin to Fellini's, Wendy's is broken 
+Okily dokily, let's come to a consensus on what to do for SR-3. The test, while confidence-building, certainly doesn't confirm this pack is completely fixed. The removal of the voltage offsets does more for me personally to give hope that it's not a fundamental design issue. The other issue of bus bar contact seen at the race should be covered by the garolite switch and addition of the spacers. Right now the strings are rock solid stiff, even with the poly. To confirm the problem is _gone_ is going to require tons of drive time that only builds confidence instead of offering an absolute gaurantee it's fixed. Even after 320 miles of driving, if the "run-away" of BMS shut-offs happens, then pretty much any confidence we had that we fixed the issue is shattered...so setting that drive time criteria is going to be really arbitrary unless we do some bayesian update black magic probability to calculate a statistical target. This becomes a decent threat to our schedule if we gate SR-3 pack development to meeting that drive time target.
+
+If we started with $3000 of new cells, we could probably pursue other configurations, but with the constraint of re-using what we have I think this 5x7 setup is our best option for a stable pack that we can build and test quickly with enough time left over to start entirely from scratch without bleeding into the summer.
+
+In general, are we confident to proceed with the above design concept along with the improvements we've made? The above concept being to still press the contacts and stand the modules upright using garolite sheets and metal bolts with VHB applied to the intrastring connections.
+Should be good now
+Thoughts on lid mechanisms? Thinking hinges will be nice for sure, although there's some discussion on that front to be had on whether it should open sideways or longways. I'm a fan of sideways, but while in the car the ribs will stop it from going past 90 degrees, so it'll probably fall back on you while working on it. Length-wise has some issues of easily ripping out the hinges or blocking a ton of stuff when flipped open toward the tail (it'd block the MPPTs and connectors, for example).
+^ Images of the pack that should be useful for creating functional maps of wires. This'll be useful to make sure we've allocated enough space for everything or if the box needs to somehow be made larger
+An interesting consequence of this is that to move the WS more rearward, we need to shrink the footprint of the precharge battery (see pack image in the album) 
+It's the radius where the base of the canopy intersects with the array
+at the base of the airfoil
+You'd have to increase the thickness of the airfoil to get more space - I just recommend increase the radius at the base
+Checking that it won't explode from the tire's pressure compared to ambient. As a side note, I goofed in a good way and put the full 70 psi instead of the delta b/w that and ambient, making it more like ~55 psi, so making this from 3D printed material with solid infill might actually work
+Under 70 psi it seems like it'll be reasonable for it to live
+The orifices could also be moved to the ABS piece so it's just a simple bore and tap for the adapter
+As a side note, the valve stem pusher could be replaced by a smol bolt through the top of the adapter if lathing the extrusion is too difficult.
+Ya, same one as used for the soft kick off and the presentations thus far (the one you made)
+Go ahead create some slides based on the deliverables using that same template. We'll figure out how to best compile them tomorrow
+Basically
+  Thoughts?
+Another solution might be to go with a non-circular rotation path (like an ellipse) or follow the profile of a hook
+Sorry for the late night announcement. A lot of subteams are very close to having their kick-off deliverables met, but could definitely use some final reviews/discussions before being presented. Since we have the 3-day weekend ahead of us, *we'll be moving the kickoff to Monday, 9/3*.
+
+The purpose of the kick-off is to ensure that our baseline designs will both satisfy our performance/reg requirements, but also confirm that we have the flexibility within those designs to improve/iterate with later revs and ensure that we haven't locked ourselves into a risky situation (e.g. before locking down a leading arm suspension, confirm our frame/steering/aerobody allow us to modify/adapt to any foreseeable issues we might have). The key here is for us to make sure we know what we're getting into, make sure we thoroughly understand the risks associated with each system, and confirm that we have contingencies if we're not able to beat those risks. The format of the kick-off will be just like the soft presentation I gave one month ago, except we will also include a timeline for remaining design and manufacturing for the year and each subteam will present their system, requirements, design, and manufacturing process (see the deliverables in the previously linked slides). The kick-off will be recorded and made accessible over hangouts for anybody out of town to tune in and present.
+
+Once again, sorry for the late announcement. For those that'll be here we'll be *having regular shop on Sunday* with a focus on kick-off preparation. I'll also be here all day today (9/1) fleshing out designs and supporting battery testing. Feel free to shoot me any questions you might have.
+Let me know if you want me to direct you to CAD. Do you have solidworks ?
+Could we throw together a diagram showing the physical routing path tonight?
+Ok good, thanks
+And an initial idea for how to reach the pack connectors
+Included in the imgur link is the battery cradle structure that will attach the pack to the frame
+Ya each layer - sorry, so the perimeter of your layers consists of entirely straight lines?
+The natural consequence here is that you'll need to take out the 4th string to get to the 5th string...I personally don't think that's a deal-breaker, but it's worth discussing.
+One thing to note on the content above - going with the 5x7 configuration does result in the positive and negative sides of the pack being on opposite ends (since the number of strings is odd). I discussed this with  the other day and we explored a couple of options including having a copper plate run underneath the final string to route the positive end back, but a wire over the top seems the easiest.
+Since it's so condensed, doing a vehicle-wide wiring diagram with detail to the connector level might be too dense, especially since 90% of the action is in the dashboard. I think a vehicle-wide diagram of harnesses going to a "black box" dashboard that then has its own diagram would make sense.
+If we go with the tablesaw method, do we know what our stack-ups would look like?  
+ Could you give a quick update on aux systems kickoff readiness? I think the only thing that we're missing is the high voltage, low voltage wiring diagrams - not sure if we've started on those
+ Mind giving a quick update on powertrain kickoff readiness?
+Any chance we could format that drawing to physically match the wiring layout per board connector? Basically what you've got here, but with each block's connectors/pins defined
+shows what I know
+ah
+hey are you in california by any chance?
+/advice 
+thanks 
+maybe this has something to do with our emails?
+it doesn't work anymore
+/advice is dead
+Was $400/hr their quoted price? If so that is incredibly steep. At our fastest we could do maybe 2 sheets an hour last year, so even with that lower bound that's incredibly expensive (it does validate your estimate, though)
+Rotationally lock
+If we locked the nut in physically, you would need to get a socket back there. You could just line the nut up to the hole and then rotate the bolt head from the outside. If we did it right the nut wouldn't be able to free spin
+From the array to the MPPT's, we could have the box come up to the same height as the battery box floor and have a harness connector for array power. Within, would recommend we give preference to what we're most comfortable with. If we think terminal blocks are good for power distribution and easy to access, we can just go for that.
+Separate slides would make more sense
+ Did you get any pics of the photon stack-up you CAD'ed yesterday?
+One improvement could be to show how the parts would be oriented when doing the operation on them. Like for the holes, indicating that you have the flat back of the control arm's "neck" to give you a stable surface for drilling all of the holes
+Just an example of what you could do (I think this level of detail is aight for the kick-off) - here I just covered the entire part with an extrude of its bounding size
+Also ya, maybe for those you can just cover up the cuts with an extrude
+never
+Ok, I'll head over in a few
+Anyone else able to come in?
+Ok, I'll probably go in around 7'ish after talking with suspension
+ ?
+Additionally,  have you had a chance to try out any steering effort calculations? Do you want to sit down and go over it some time?
+Gotcha, sounds fine - thanks for checking
+Dang, ok so, 9/4 and 9/10
+  Any updates on if we were able to get a prototype steering wheel in to print?
+Good with 6?
+How about MRDC
+I'm thinking of mixing it up
+Be there in 10
+Probably biggest thing to discuss is loading philosophy, remaining brake mount, and manufacturing plan. Probably like 1-2 hours tbh, maybe less
+Other than 3-4, any time works for me
+Honestly, we're going to probably implicitly follow a '"standard" anyway (e.g. "make your bracket look more like these"). Question is if you'd like to compile it so bracket design is incredibly predictable. I think it'd be very worth.
+Is it possible for us to continue pack work today maybe some time around 6 or 7 for a couple hours?
+  (and anyone else who wants to join) would you guys have time today to talk about remainder of kick off objectives for suspension?
+Is that a jojo reference?
+why
+lol
+I can come by for about 30 minutes
+would anyone be willing to give a couple of late night battery lads a ride home from shop?
+Classic Obama-era weakness
+They did wreck us in that robot battle 
+Steven in solar is going to CAD up the concepts prior to Saturday so we can choose which ones to try out
+Yes, we have two options - go with another four bar linkage with smaller rods attached to the frame (they'll stay there, so no deployment) or put a locking hinge system at the aerobody wall
+_Another diplomat said that he could not explain Trump’s Pearl Harbor reference but added that the president relishes historical references and frequently brings up Japan's “samurai past.”_
+It's included in the reaction loads from the spindle
+I did some initial hand calcs for sizing it. And no we do assume everything takes the bump load with the arms. All the uprights will see, though, are reaction loads at the spindle mount and a steering load that the knuckle mount 
+Is it possible to include the connector locations/orientation in the diagram for each board?
+  With the frame FEA mostly run (without roll cage), do we have bandwidth to hit the other kickoff target of identifying locations for all major brackets for regs-required systems (ballast, seat, seatbelts, etc.)? Would it help to meet tomorrow to discuss this?
+
+As a side note, the waterjet was online yesterday and we used it to cut battery pack parts, however we encountered an issue with it that I'm hoping Jason can resolve in time for shop, so we might be able to get the suspension brackets cut and prefabbed (weld the brackets themselves) for frame attachment this week.
+Sounds good
+Something is blocking the waterflow so instead of all going out of the nozzle, it's going through the garnet feed hole
+It's not the solenoid, it's the venturi on the probe side
+If you can do 2017, that's preferred rn
+W:\Team Folders\Mechanical Team\CAD
+Added a shortcut in the mechanical CAD folder
+When do we think we can get a physically-representative functional 2-D schematic drawn up of the dashboard interior?
+Gotcha
+Like we don't have a few extra inches?
+Did we order to that level of precision with our lengths of tube?
+Order another bar? You could just use the one that was going to be straight
+How bad is the twisting? If you're applying all of the stub-adapter loads on the bottom through the bolt holes it might be under-estimating the torsion we'll see both from bumping (since the swing arm is offset to the wheel's vertical axis) and turning. In that case it'd be applying the loads right where I have that main outer load path. Instead it'd actually distribute the force across the face of the stub adapter (so that entire face before the webbing)
+Ya, if it was just the box we could maybe get around it by making the box provide that angle instead, but with roof-mounted pedals we definitely need the mule chassis to have the correct profile, otherwise the pedals could be like 6" off vertically
+The reason I bring that up is that you're seeing no stress on the part that actually holds the caliper. It looks like you could theoretically make those load paths incredibly small and far less thick which doesn't really match what I'd expect.
+Ya, the scenario that I think of is one where we've just bottomed out the shock to its max stroke and can't rotate anymore but are still taking the full bump, so in this case it'd be like 800 lbs down at the spring bracket holes and along with the full bump-induced moments.
+Oh ok, I can kind of see that now in how it's bending the base bracket. One thing that I thought about when doing the front brake knuckle FEA was about how, when I only constrained the holes, it made the base where those holes were deflect when in reality they have a solid surface (the upright) behind them to transfer those loads. I applied a custom constraint to the base face (the side facing the solid surface) so it couldn't deflect into the solid. Got very different results that made a lot more sense.
+Nah, did reply to them, but need a shipping address
+Also, shoulder width
+Is this with the spring load, braking load, or both?
+ I just realized that since we want to have a roof-mounted pedal rack and since the dashboard relies on the frame to provide its viewing angle (wrt to the driver) we may need to make the front of the mule chassis have the same profile as the real frame (from a side-view)
+Ok, we could load up the car tomorrow night then. I don't think we'll be needing it for anything between the end of Tuesday and start of Thursday
+You mean hooking it to the F350 or loading up the car? We can load up the car the night before at the end of shop.
+An estimate to within half a foot is totally fine
+     Could you guys approximate your torso height (hip to top of your head) and "leg" length (hip to foot) to within like half a foot in a thread below this message?
+I haven't really sat down to do the full FBD if you want to look at it. It really should just be a direct reaction of moment into the stub axle mounting holes
+Just to clarify, we cleaned the solenoid and feeding tube. The issue seems to be that the hole for garnet feeding on the nozzle-side is driving water into the tube instead of operating like a Venturi, so we think either that hole is clogged (already tried blowing it out) or maybe some of the orifices in the nozzle are
+Modified the dashboard to be more like the box mock-up (easier to make without the drooped snoot). The angle of the main longitudinal frame members does in fact work out where we won't need the droop, so we should be good to just make box, mount it directly, and call it good.
+How direct is directly behind? In that picture it's 2" behind the display. And are we using that for each LCD, or one to drive all of them?
+Those long aluminum parts actually are the pedals 
+We'll do our best, but I'm curious if you see a feasible (easy) alternative that can guarantee water tightness to that IP standard you usually source to.
+
+If we make a box that fits together well enough that we actually need our tolerancing, I think by default it will aptly protect against spraying. We can have holes at the back for drainage since the entire thing slopes down. Otherwise I think building to a tight fit should probably do very well.
+ HyTech actually has a pretty simple pedal rack that you could look at too. It even has the whole platform on a rail so you can adjust the position pretty easily.
+The other board was the display board (not sure if we'd have one for each)
+I think just building a box is fine. I know we think we can't figure it out from a data point over a year ago, but I'm pretty sure we can build a box like this out of plastic sheets.
+ wanted to consolidate RF and 4G to a mega
+We could avoid the weird droop in the middle of the box by having the dash panel hang back behind the green tube. It'd be further away from the driver (would need to test if that distance is un-usable), but then the enclosure becomes a lot simpler to make.
+My arteries would beg to differ
+:cookout: :f:
+Spread the word
+The Chipotle and Zaxby's behind Ikea are both real, although I don't think the Zaxby's has officially opened yet
+No, the wood is in our new space though
+Sounds good!
+Wanna swing by around 3:30?
+I'll be hanging around shop doing follow ups with a few teams if anyone wants to join in. In general we're going to keep official shop times dedicated to physical work outside of our office, so off-days/hours like this are good opportunities to do computer and design work.
+:triggered: 
+  do you guys have time to swing by shop and talk about frame follow-ups from Wednesday? Additionally I'd like to come to a consensus on the wing designs and maybe run some load cases with and without them.
+Basic principle to calculate the sideward moment that steering would have to fight in a sidewind is to
+&gt; Estimate the location of the center of pressure (it's the area centroid of the top)
+&gt; Calculate the distance between the center of pressure and center of gravity
+&gt; Idealize the bottom hull as an airfoil - pull from the CAD and import into XFOIL
+&gt; Calculate the sideslip angle as *atan(V_side / V_freestream)*
+&gt; Run XFOIL with the airfoil at that wind angle
+&gt; Extract the CL and CM
+&gt; Calculate the dynamic pressure as (0.5*rho*V^2)
+&gt; Calculate the lift-induced moment and yaw moment from the airfoil (using CM)
+&gt; Combine the two to get total moment induced at the center of pressure
+
+We'll then see what that value looks like and decide if we need to run CFD to get a more detailed answer. This is semi-conservative since the real center of pressure will be closer to the CG.
+I'm wearing the solar polo and jeans
+It's a little rough, but I'm hoping it should be sufficient to support whatever discussions we end up having
+ How compatible with frunk storage would you say your current aux array design is?
+Also, you can see how the steering knuckle hardware would fit in - should be double in those spaces if we keep that structure
+Bolts are just going through them - they're just there so the top/bottom plates can't deflect downward when we bolt them together
+I'm thinking we'll just hold it up, cut to a drawn length that overestimates slightly, and then just eyeball until we're good, then use that one as a baseline for the others
+:wewlad:
+I have a meeting at 4, can catch you after, though
+no, my apartment
+FYI it runs, but it's filled with garnet, so we need to do the clean out
+I'll need a ride to pick them up. I'd be fine with doing that if we have a waterjet that we can use.
+Not sure
+login info?
+So what do you need for "access"
+I see how you play the game
+wow what an elaborate ploy, taking our server hostage
+shieeeet
+oops
+_m u l e   c h a s s i s_
+Noice, thanks my dude!
+ Did you get any pictures of Novum's array stand (or Novum in charging configuration)?
+All good ?
+Sorry about that - gsuite has extra settings that I had to change. Should be able to view them now
+So no big decision making, just general info? I'm trying to set up official ones for kick off prep, so if your meeting isn't trying to be that, then it's good/no worries, otherwise we'll want to make the invite roster more formal
+From dynamics
+Did we get any good pics of destroyed tires?
+Noice!
+Could someone find the videos of us nyooming through figure 8 before we started scrutineering?
+Could you just DM a quick link to one of the pics if you can find a good one?
+Does anyone have pictures of the array damage from the race?
+This is just for general awareness, but I measured out what 5083-H116 stock we had lying around shop and got these dimensions:
+17x17x6
+6x11x3
+8.5x4.5x2.5
+(two of these ^^)
+17.5x8.5x3.25
+6.5x5x3.5 (from leftover upright stock, x2)
+
+This is actually enough to make everything except for the uprights with enough left over for multiple tries. The front bottom control arms and rear swingarm, for example, are 3/4" aluminum, so there's enough to make two of each piece for each side from that one 17" square block and still have stock left over for hub adapters, upright brackets, etc. Depending on what we get donated and when, we may or may not use it, but I just want to make sure we keep track of that stock and how we use it.
+The earliest I was expecting the bill to take effect would be late October, so I'd argue that's likely too late. We will want to have sleds built as we're stacking up MDF and to ship out to Comprent
+Yep
+I did, and they should have hundreds of them so slow shipping can work
+_(edited)_ 
+That's the plan currently, I'm evaluating if other options are available and making sure we aren't closed out of them.
+I want to know how large the boards are so I can make sure we have room in sensible locations in various areas of the car.
+Ya could you approximate the increased dimensions so we have upper bounds on size?
+Are those the increased dimensions? If not try to approximate those - want to know the bounding dimensions
+That was more of a "fight me irl fuckers" than a job invite
+"they call awkwardly putting your arm around someone _The Mitchell_, because you sit there like a Mitchell doing _The Mitchell_"
+Quite the poet
+"There’s a reason for the word ‘stoned.’ You just sit there like a stone on weed.”
+   Could one of you provide rough bounding dimensions in physical size of the following boards based on the most advanced rev that we have made actual plans to build:
+&gt; Peripheral
+&gt; MC^2
+&gt; Telem
+&gt; Display board
+ have you run any rear impact scenarios on the above change?
+Probably within the first or second week and over the course of a single shop day. I'll give enough of a heads up before it happens for them to be moved - anticipate the weekend of the 25th at the latest. We don't have anything more critical electrically that needs to be tested before it happens, so probably a 3 days or so heads-up can be expected if it changes.
+ Yes it's $100 because we determined we needed to repair 2 strings instead of 1, so it doubled my estimate. I will probably just order it myself for now and we can do official purchasing later.
+Ok, just checking. Overall looks good. I was going to ask if someone could tie back the individual components to their system and criticality, but you've pretty much done that already.
+ Made some edits, but overall looks good.
+ I think you should keep brand names. Nobody is going to care in the worst case, or someone Googles it and becomes interested.
+Who wrote that?
+What is the telemetry master interface board?
+When bud does
+SEC served Elon a subpoena for the Tesla tweet
+I think the Thai governor or president or whatever emailed him directly. Somehow they got in direct correspondence and became their primary poc. Ya it was made from spare prop raceway tubes with some welded endcaps. Imagine an oil drum with a transparent cap, two oxygen bottles, and some handles on the side.
+Honestly there's not enough to the actual design for failure to be a real concern. It's just a tube with a hatch and some oxygen bottles strapped to the side.
+Classic
+They did all of the documentation after the first sub was on its way
+ Basic dimensions, a few drawings, and they went straight to machining
+There's virtually no CAD of it actually
+Rescuing someone from Hastings, NE is the most worthwhile thing anyone can do
+It's very reminiscent of the :runescape_reax: 
+Ya they had the NX human model scaled to kid size inside of it
+Ya it's called the "Thai Kid Submarine"
+I found the design doc for that on our confluence
+So the 1-2
+I'm only talking in context of the rebuild
+Hand drilling this without guiding holes will probably be a nightmare anyway. Tons of stories of ruined mill bits on those forums.
+
+I'm personally ok with ordering a big sheet and going for it. I'm not sure if I could do tests on a small piece and, in the event it works, be 100% certain it will work at scale (or that we won't mess it up). From these larger vids, some of which were at 1/8", I feel confident that it's feasible and up to us to not screw it up.
+All of our poly pieces were waterjet, so yes it can handle it. I only hand drilled to get to the connectors using the poly for hole matching.
+The stuff looks like solid plastic
+We might've jumped a bit early on the G10 delamination hysteria train. I'm finding a ton of videos of people using waterjets (some omax) to cut it
+Ya nevermind, everything plastic is within a factor of each other.
+Hmm ok
+According to the last time we discussed this you had 6/6 as 3x stiffer
+I don't know why the conversation drifted to the strength of acrylic or even acrylic as the lead choice. It's hardly any stiffer than poly so we probably won't use it anyway. General strength of any of these materials is incredibly low priority IMO.
+
+ is Nylon 6/6 still the stiffest thing we found that's not a laminate structure?
+Is that wrt to me saying vibe breakage isn't a concern?
+We really just want stiffness/rigidity, not worried about vibe-induced fracture or breaking or anything
+Acrylic is relatively not much stiffer 
+We still gotta check the price of 1/8"
+Also is that spin off just as stiff, because that's the main driver for getting a different material instead of doubling the poly thickness (and weight and cost).
+Got all the same parts there
+You can also see it on the rev 1 BoM on the Google drive
+Did you change relays too?
+Real acid hours
+am
+He still sent it out at like 9
+But fukn lol this guy
+At least in a way where acid made the choice
+The email he sent out to Tesla was too well composed to be done while on acid
+The last one right?
+Which string was the problem string?
+We don't want horn on there?
+Brought the rear wheel forward
+Si
+Debatable if the bonding is better in theory, but in practice it will be easier to control.
+I'm still not sold on avoiding ribs for the _weight_, but I do want to avoid them for the extra work they add, the extra brackets, and in this case the precision required to get it right with ribs. Just wanting to clarify intention there.
+
+Cool, we left the floor of the frame to be a simple rectangle with no height changes, so we'll have a ton of surface area to bond to. I think it will be equally as annoying to reach as with ribs, so not losing much there. Will also bring the cg and general height of the car down more.
+Thoughts on bonding the bottom of the frame to the floor of the aerobody? I was initially thinking of having small ribs under the tubes, but now thinking of just bringing the frame to the floor and wet bonding over those tubes with cf. Disadvantage is we can't really take the frame out if we ever wanted to swap in a composite rib chassis (or at least the swap would be messy), but if we want to pick the car up from its bottom that's probably a very secure way of doing it and it means less fuckery with making ribs.
+You surrealed that way too hard friend
+oh that's interesting
+ Can you post those screwed spot weld components you mentioned?
+I'm gonna lol if he gives us like a 3 hour heads up on his new tattoo before telling Twitter, but told Tesla about privatizing like an hour after tweeting about 
+Emailed the whole company about it
+Like full forearm
+Lol Elon got a fuckin rocket tattoo on his arm
+Yup, we shouldn't have to buy any this year, but we can at least start talking to Michelin or other teams to get a lower rate.
+Yep, that's why we can at least try asking for more
+Probably next year if we buy them outright. Can certainly open talks for free, but we'll need maybe 3 sets for FSGP if all goes well and I believe we have 4. We do still have Kentucky's set. We could try seating those and if they work maybe buy from them since they actually have hundreds and would probably be forgiving on the price.
+Sure now that we've established we _have_ to have something, this seems fine
+Hmm, ya I think you're right. So we still need 3 switches at minimum
+Using springs is not a bad idea. Probably wouldn't bother with torsional. Would just use hinges and a normal spring.
+Reminder that we have shop today. Couple of highlights that we'll be focusing on:
+&gt; *Frame:* Mule chassis construction and prep for SR-2 rear bracket welding
+&gt; *Aero*: Tool cleaning, battery box kevlar rebonding, preparing staging for the MDF stack-up
+&gt; *Suspension*: Uninstall the rear suspension - prepare for cutting and welding this weekend
+&gt; *Steering*: Steering wheel prototyping
+&gt; *Batteries*: Get BoM ready _tonight_ so we can prepare purchasing process. Begin laying out components in the box mock-up
+&gt; *Aux Systems*: Check in with me about aux array - need to finalize wiring diagram (sicheng)
+&gt; *Powertrain*: Check out steering's wheel - discuss upgrades and changes
+&gt; *Solar*: Check in again about aux array. Need to find a way for us to be able to use that aux array with SR-2 potentially for mock racing
+&gt; *Telemetry*: RF testing and start scoping out SMS texting
+
+These are items at the minimum that I'd like for us to focus on. There's more to do, but these are some critical items to either start, do, or discuss. If you're an owner for one of these items and won't be here, please send me a DM.
+I'm trying to describe it to sanmesh and can't do it jus:ti:ce
+Hey does anyone have the brisket pic of jus:ti:n lee
+It's like 2 weeks old, but just seeing it now
+you _could_ taper it like the body will be, but we can always just get that milled out.
+1" on either side (2" total) on the stackup
+% thickness is relative - if it was multiplied by the wrong length, you'll get the wrong absolute width
+For the mule chassis
+Same % thickness, or same absolute width
+Also  what's the order of cuts you're preparing with respect to position on the car?
+ 6" bending die radius, correct?
+Also 
+Regarding the draft angle - yes, I can include more of a draft. We're actually running low on solar array space when taking into account SBM's encapsulation on our most recent sunpower batch, so I'm likely going to narrow the bottom/widen the top, and try to create shoulders along the edge anyway. That should provide a lateral draft angle when pulling the part up.
+
+Regarding the wheel space - we'll see what we can do. The options are to make the body wider (explained below, not very bueno), bring the trackwidth in (not great for stability), or bring the front wheels rearward (reduces egress space by bringing steering tube toward the driver). I'll pursue them in reverse order, which is my preference. Making the aerobody more narrow in the front is not fantastic - it can have pretty huge impacts on our drag (if you're curious, the imgur link shows the progression of the first 5 lower hull iterations. From 1-5 the drag was cut in half by extending the length of the body that has a "rising" profile).
+It's definitely an improvement concept-wise. Just need to make sure the planform stays the same
+enclosure dims are linked a few pictures up the chat
+simplest thing we can work with first, maybe upgrade later if we like it
+^ This is like a semi-meme pet project btw... most of it was done as a break from main SR-3 work on Saturday. Mostly just keeping everyone up to do date in the event we decide we want to buy/make these. We'll have a review before anything is purchased on the team's dime.
+
+It's been kept simple enough that the odds of working/not working are entirely tied to the barometer and Rx/Tx setup, so it's a pretty minimum viable product. But again, it's an accessory not on our main mission list, so before we dedicate anyone's time assembly/test we'll review it first
+Do you guys want to meet up later today to finalize the BoM? If we can't, I can throw whatever has been left out together, including the kevlar/core, tonight, but it'd be good for everyone to know what we're about to purchase. It'd also be a good chance to make sure everyone is aware of the construction process (including the box) and caveats that will come with this design (e.g. we need much smaller fans...)
+If we could tack on getting an exhaustive list of necessary tooling for every component in its most complex potential form (i.e. if we have 1.5" swing arms instead of 0.75") I think that'd make for a good use of this week.
+Considering the frame will use ~8 and the suspension and other brackets will require several others, too, that seems fine with me.  for awareness
+We don't have to keep them either - if it sits pretty snuggly in your hand while reaching for buttons we could just cover it with padding. Thought it might be interesting to try out
+ Just curious - how are the little finger bumps in terms of comfort? They were eyeballed, but just curious if they're actually ok here.
+You can buy them alone...should be on their website 
+We are in 2404 for the meeting 
+Good job on the kick off everyone. I know it was a lot of work getting everything together after only 2 weeks of working in-person, but I think we've done a really good job thinking through our options, coming up with solutions, and keeping this design simple, flexible, and practical. It's amazing how much more detailed this was compared to the soft kick off one month ago. At this point I'd argue our  design is even more detailed/thought out than SR-2's was last January. I think we've got a lot to be excited about with this car and I can't wait to see it start materializing. I think we're going to be pretty amazed at how quick and easy this can be.
+
+With the kick off behind us, we have a good baseline to iterate off of. At this point it's critical that _everyone_ understands this design and stays  up to date on the changes. Development  is going to continue to be quick, so now is the best chance to catch up and stay up to date by reading the ppts, watching the recording, and asking tons of questions. Tomorrow I'll send out some updates on refocused efforts to close out our "big three" designs/send them to ASC, as well as starting prefab and fab of our prototypes and battery pack.
+
+Once again, well done everyone - both to the presenters and those of you in the audience thinking critically about each system's choices. If you have any concerns or questions (even "dumb" ones) feel free to shoot a message in the subteam's channel or just shoot me a DM.
+Links about to be posted, hang tight
+Hey everyone, SR-3 kick-off will be today at 2:30 PM in MRDC 2404 and will likely last until 7. Each subteam will be discussing their current designs, manufacturing plans, and timeline, so it'll be a long meeting. However, I don't expect everyone to be there the entire time. I'll be posting up an agenda of when subteams will be going up to talk. It's perfectly fine for you to dip in for the subteams you're immediately interested in, although I encourage to you to listen in on as many as you can. Each subteam will be open for questions, so this is a good chance to double check their work. While this is not an official design closeout for all systems, we will begin prefab for a lot of our larger systems and begin prototype building for many of the others, so make sure to turn out and give your comments.
+
+If you can't make it in person, I'll be recording everything on our YouTube account and broadcasting over Hangouts. Hope to see you guys there!
+From talking around it seems most of us are in consensus on sticking with the 5x7 configuration for the immediate next revision
+Good for you
+Escaping the mcwastle cooking pit is really hard
+It's been a ride
+Still working on it
+ we goin to Fellini's, Wendy's is broken 
+Okily dokily, let's come to a consensus on what to do for SR-3. The test, while confidence-building, certainly doesn't confirm this pack is completely fixed. The removal of the voltage offsets does more for me personally to give hope that it's not a fundamental design issue. The other issue of bus bar contact seen at the race should be covered by the garolite switch and addition of the spacers. Right now the strings are rock solid stiff, even with the poly. To confirm the problem is _gone_ is going to require tons of drive time that only builds confidence instead of offering an absolute gaurantee it's fixed. Even after 320 miles of driving, if the "run-away" of BMS shut-offs happens, then pretty much any confidence we had that we fixed the issue is shattered...so setting that drive time criteria is going to be really arbitrary unless we do some bayesian update black magic probability to calculate a statistical target. This becomes a decent threat to our schedule if we gate SR-3 pack development to meeting that drive time target.
+
+If we started with $3000 of new cells, we could probably pursue other configurations, but with the constraint of re-using what we have I think this 5x7 setup is our best option for a stable pack that we can build and test quickly with enough time left over to start entirely from scratch without bleeding into the summer.
+
+In general, are we confident to proceed with the above design concept along with the improvements we've made? The above concept being to still press the contacts and stand the modules upright using garolite sheets and metal bolts with VHB applied to the intrastring connections.
+Should be good now
+Thoughts on lid mechanisms? Thinking hinges will be nice for sure, although there's some discussion on that front to be had on whether it should open sideways or longways. I'm a fan of sideways, but while in the car the ribs will stop it from going past 90 degrees, so it'll probably fall back on you while working on it. Length-wise has some issues of easily ripping out the hinges or blocking a ton of stuff when flipped open toward the tail (it'd block the MPPTs and connectors, for example).
+^ Images of the pack that should be useful for creating functional maps of wires. This'll be useful to make sure we've allocated enough space for everything or if the box needs to somehow be made larger
+An interesting consequence of this is that to move the WS more rearward, we need to shrink the footprint of the precharge battery (see pack image in the album) 
+It's the radius where the base of the canopy intersects with the array
+at the base of the airfoil
+You'd have to increase the thickness of the airfoil to get more space - I just recommend increase the radius at the base
+Checking that it won't explode from the tire's pressure compared to ambient. As a side note, I goofed in a good way and put the full 70 psi instead of the delta b/w that and ambient, making it more like ~55 psi, so making this from 3D printed material with solid infill might actually work
+Under 70 psi it seems like it'll be reasonable for it to live
+The orifices could also be moved to the ABS piece so it's just a simple bore and tap for the adapter
+As a side note, the valve stem pusher could be replaced by a smol bolt through the top of the adapter if lathing the extrusion is too difficult.
+Ya, same one as used for the soft kick off and the presentations thus far (the one you made)
+Go ahead create some slides based on the deliverables using that same template. We'll figure out how to best compile them tomorrow
+Basically
+  Thoughts?
+Another solution might be to go with a non-circular rotation path (like an ellipse) or follow the profile of a hook
+Sorry for the late night announcement. A lot of subteams are very close to having their kick-off deliverables met, but could definitely use some final reviews/discussions before being presented. Since we have the 3-day weekend ahead of us, *we'll be moving the kickoff to Monday, 9/3*.
+
+The purpose of the kick-off is to ensure that our baseline designs will both satisfy our performance/reg requirements, but also confirm that we have the flexibility within those designs to improve/iterate with later revs and ensure that we haven't locked ourselves into a risky situation (e.g. before locking down a leading arm suspension, confirm our frame/steering/aerobody allow us to modify/adapt to any foreseeable issues we might have). The key here is for us to make sure we know what we're getting into, make sure we thoroughly understand the risks associated with each system, and confirm that we have contingencies if we're not able to beat those risks. The format of the kick-off will be just like the soft presentation I gave one month ago, except we will also include a timeline for remaining design and manufacturing for the year and each subteam will present their system, requirements, design, and manufacturing process (see the deliverables in the previously linked slides). The kick-off will be recorded and made accessible over hangouts for anybody out of town to tune in and present.
+
+Once again, sorry for the late announcement. For those that'll be here we'll be *having regular shop on Sunday* with a focus on kick-off preparation. I'll also be here all day today (9/1) fleshing out designs and supporting battery testing. Feel free to shoot me any questions you might have.
+Let me know if you want me to direct you to CAD. Do you have solidworks ?
+Could we throw together a diagram showing the physical routing path tonight?
+Ok good, thanks
+And an initial idea for how to reach the pack connectors
+Included in the imgur link is the battery cradle structure that will attach the pack to the frame
+Ya each layer - sorry, so the perimeter of your layers consists of entirely straight lines?
+The natural consequence here is that you'll need to take out the 4th string to get to the 5th string...I personally don't think that's a deal-breaker, but it's worth discussing.
+One thing to note on the content above - going with the 5x7 configuration does result in the positive and negative sides of the pack being on opposite ends (since the number of strings is odd). I discussed this with  the other day and we explored a couple of options including having a copper plate run underneath the final string to route the positive end back, but a wire over the top seems the easiest.
+Since it's so condensed, doing a vehicle-wide wiring diagram with detail to the connector level might be too dense, especially since 90% of the action is in the dashboard. I think a vehicle-wide diagram of harnesses going to a "black box" dashboard that then has its own diagram would make sense.
+If we go with the tablesaw method, do we know what our stack-ups would look like?  
+ Could you give a quick update on aux systems kickoff readiness? I think the only thing that we're missing is the high voltage, low voltage wiring diagrams - not sure if we've started on those
+ Mind giving a quick update on powertrain kickoff readiness?
+Any chance we could format that drawing to physically match the wiring layout per board connector? Basically what you've got here, but with each block's connectors/pins defined
+shows what I know
+ah
+hey are you in california by any chance?
+/advice 
+thanks 
+maybe this has something to do with our emails?
+it doesn't work anymore
+/advice is dead
+Was $400/hr their quoted price? If so that is incredibly steep. At our fastest we could do maybe 2 sheets an hour last year, so even with that lower bound that's incredibly expensive (it does validate your estimate, though)
+Rotationally lock
+If we locked the nut in physically, you would need to get a socket back there. You could just line the nut up to the hole and then rotate the bolt head from the outside. If we did it right the nut wouldn't be able to free spin
+From the array to the MPPT's, we could have the box come up to the same height as the battery box floor and have a harness connector for array power. Within, would recommend we give preference to what we're most comfortable with. If we think terminal blocks are good for power distribution and easy to access, we can just go for that.
+Separate slides would make more sense
+ Did you get any pics of the photon stack-up you CAD'ed yesterday?
+One improvement could be to show how the parts would be oriented when doing the operation on them. Like for the holes, indicating that you have the flat back of the control arm's "neck" to give you a stable surface for drilling all of the holes
+Just an example of what you could do (I think this level of detail is aight for the kick-off) - here I just covered the entire part with an extrude of its bounding size
+Also ya, maybe for those you can just cover up the cuts with an extrude
+never
+Ok, I'll head over in a few
+Anyone else able to come in?
+Ok, I'll probably go in around 7'ish after talking with suspension
+ ?
+Additionally,  have you had a chance to try out any steering effort calculations? Do you want to sit down and go over it some time?
+Gotcha, sounds fine - thanks for checking
+Dang, ok so, 9/4 and 9/10
+  Any updates on if we were able to get a prototype steering wheel in to print?
+Good with 6?
+How about MRDC
+I'm thinking of mixing it up
+Be there in 10
+Probably biggest thing to discuss is loading philosophy, remaining brake mount, and manufacturing plan. Probably like 1-2 hours tbh, maybe less
+Other than 3-4, any time works for me
+Honestly, we're going to probably implicitly follow a '"standard" anyway (e.g. "make your bracket look more like these"). Question is if you'd like to compile it so bracket design is incredibly predictable. I think it'd be very worth.
+Is it possible for us to continue pack work today maybe some time around 6 or 7 for a couple hours?
+  (and anyone else who wants to join) would you guys have time today to talk about remainder of kick off objectives for suspension?
+Is that a jojo reference?
+why
+lol
+I can come by for about 30 minutes
+would anyone be willing to give a couple of late night battery lads a ride home from shop?
+Classic Obama-era weakness
+They did wreck us in that robot battle 
+Steven in solar is going to CAD up the concepts prior to Saturday so we can choose which ones to try out
+Yes, we have two options - go with another four bar linkage with smaller rods attached to the frame (they'll stay there, so no deployment) or put a locking hinge system at the aerobody wall
+_Another diplomat said that he could not explain Trump’s Pearl Harbor reference but added that the president relishes historical references and frequently brings up Japan's “samurai past.”_
+It's included in the reaction loads from the spindle
+I did some initial hand calcs for sizing it. And no we do assume everything takes the bump load with the arms. All the uprights will see, though, are reaction loads at the spindle mount and a steering load that the knuckle mount 
+Is it possible to include the connector locations/orientation in the diagram for each board?
+  With the frame FEA mostly run (without roll cage), do we have bandwidth to hit the other kickoff target of identifying locations for all major brackets for regs-required systems (ballast, seat, seatbelts, etc.)? Would it help to meet tomorrow to discuss this?
+
+As a side note, the waterjet was online yesterday and we used it to cut battery pack parts, however we encountered an issue with it that I'm hoping Jason can resolve in time for shop, so we might be able to get the suspension brackets cut and prefabbed (weld the brackets themselves) for frame attachment this week.
+Sounds good
+Something is blocking the waterflow so instead of all going out of the nozzle, it's going through the garnet feed hole
+It's not the solenoid, it's the venturi on the probe side
+If you can do 2017, that's preferred rn
+W:\Team Folders\Mechanical Team\CAD
+Added a shortcut in the mechanical CAD folder
+When do we think we can get a physically-representative functional 2-D schematic drawn up of the dashboard interior?
+Gotcha
+Like we don't have a few extra inches?
+Did we order to that level of precision with our lengths of tube?
+Order another bar? You could just use the one that was going to be straight
+How bad is the twisting? If you're applying all of the stub-adapter loads on the bottom through the bolt holes it might be under-estimating the torsion we'll see both from bumping (since the swing arm is offset to the wheel's vertical axis) and turning. In that case it'd be applying the loads right where I have that main outer load path. Instead it'd actually distribute the force across the face of the stub adapter (so that entire face before the webbing)
+Ya, if it was just the box we could maybe get around it by making the box provide that angle instead, but with roof-mounted pedals we definitely need the mule chassis to have the correct profile, otherwise the pedals could be like 6" off vertically
+The reason I bring that up is that you're seeing no stress on the part that actually holds the caliper. It looks like you could theoretically make those load paths incredibly small and far less thick which doesn't really match what I'd expect.
+Ya, the scenario that I think of is one where we've just bottomed out the shock to its max stroke and can't rotate anymore but are still taking the full bump, so in this case it'd be like 800 lbs down at the spring bracket holes and along with the full bump-induced moments.
+Oh ok, I can kind of see that now in how it's bending the base bracket. One thing that I thought about when doing the front brake knuckle FEA was about how, when I only constrained the holes, it made the base where those holes were deflect when in reality they have a solid surface (the upright) behind them to transfer those loads. I applied a custom constraint to the base face (the side facing the solid surface) so it couldn't deflect into the solid. Got very different results that made a lot more sense.
+Nah, did reply to them, but need a shipping address
+Also, shoulder width
+Is this with the spring load, braking load, or both?
+ I just realized that since we want to have a roof-mounted pedal rack and since the dashboard relies on the frame to provide its viewing angle (wrt to the driver) we may need to make the front of the mule chassis have the same profile as the real frame (from a side-view)
+Ok, we could load up the car tomorrow night then. I don't think we'll be needing it for anything between the end of Tuesday and start of Thursday
+You mean hooking it to the F350 or loading up the car? We can load up the car the night before at the end of shop.
+An estimate to within half a foot is totally fine
+     Could you guys approximate your torso height (hip to top of your head) and "leg" length (hip to foot) to within like half a foot in a thread below this message?
+I haven't really sat down to do the full FBD if you want to look at it. It really should just be a direct reaction of moment into the stub axle mounting holes
+Just to clarify, we cleaned the solenoid and feeding tube. The issue seems to be that the hole for garnet feeding on the nozzle-side is driving water into the tube instead of operating like a Venturi, so we think either that hole is clogged (already tried blowing it out) or maybe some of the orifices in the nozzle are
+Modified the dashboard to be more like the box mock-up (easier to make without the drooped snoot). The angle of the main longitudinal frame members does in fact work out where we won't need the droop, so we should be good to just make box, mount it directly, and call it good.
+How direct is directly behind? In that picture it's 2" behind the display. And are we using that for each LCD, or one to drive all of them?
+Those long aluminum parts actually are the pedals 
+We'll do our best, but I'm curious if you see a feasible (easy) alternative that can guarantee water tightness to that IP standard you usually source to.
+
+If we make a box that fits together well enough that we actually need our tolerancing, I think by default it will aptly protect against spraying. We can have holes at the back for drainage since the entire thing slopes down. Otherwise I think building to a tight fit should probably do very well.
+ HyTech actually has a pretty simple pedal rack that you could look at too. It even has the whole platform on a rail so you can adjust the position pretty easily.
+The other board was the display board (not sure if we'd have one for each)
+I think just building a box is fine. I know we think we can't figure it out from a data point over a year ago, but I'm pretty sure we can build a box like this out of plastic sheets.
+ wanted to consolidate RF and 4G to a mega
+We could avoid the weird droop in the middle of the box by having the dash panel hang back behind the green tube. It'd be further away from the driver (would need to test if that distance is un-usable), but then the enclosure becomes a lot simpler to make.
+My arteries would beg to differ
+:cookout: :f:
+Spread the word
+The Chipotle and Zaxby's behind Ikea are both real, although I don't think the Zaxby's has officially opened yet
+No, the wood is in our new space though
+Sounds good!
+Wanna swing by around 3:30?
+I'll be hanging around shop doing follow ups with a few teams if anyone wants to join in. In general we're going to keep official shop times dedicated to physical work outside of our office, so off-days/hours like this are good opportunities to do computer and design work.
+:triggered: 
+  do you guys have time to swing by shop and talk about frame follow-ups from Wednesday? Additionally I'd like to come to a consensus on the wing designs and maybe run some load cases with and without them.
+Basic principle to calculate the sideward moment that steering would have to fight in a sidewind is to
+&gt; Estimate the location of the center of pressure (it's the area centroid of the top)
+&gt; Calculate the distance between the center of pressure and center of gravity
+&gt; Idealize the bottom hull as an airfoil - pull from the CAD and import into XFOIL
+&gt; Calculate the sideslip angle as *atan(V_side / V_freestream)*
+&gt; Run XFOIL with the airfoil at that wind angle
+&gt; Extract the CL and CM
+&gt; Calculate the dynamic pressure as (0.5*rho*V^2)
+&gt; Calculate the lift-induced moment and yaw moment from the airfoil (using CM)
+&gt; Combine the two to get total moment induced at the center of pressure
+
+We'll then see what that value looks like and decide if we need to run CFD to get a more detailed answer. This is semi-conservative since the real center of pressure will be closer to the CG.
+I'm wearing the solar polo and jeans
+It's a little rough, but I'm hoping it should be sufficient to support whatever discussions we end up having
+ How compatible with frunk storage would you say your current aux array design is?
+Also, you can see how the steering knuckle hardware would fit in - should be double in those spaces if we keep that structure
+Bolts are just going through them - they're just there so the top/bottom plates can't deflect downward when we bolt them together
+I'm thinking we'll just hold it up, cut to a drawn length that overestimates slightly, and then just eyeball until we're good, then use that one as a baseline for the others
+:wewlad:
+I have a meeting at 4, can catch you after, though
+no, my apartment
+FYI it runs, but it's filled with garnet, so we need to do the clean out
+I'll need a ride to pick them up. I'd be fine with doing that if we have a waterjet that we can use.
+Not sure
+login info?
+So what do you need for "access"
+I see how you play the game
+wow what an elaborate ploy, taking our server hostage
+shieeeet
+oops
+_m u l e   c h a s s i s_
+Noice, thanks my dude!
+ Did you get any pictures of Novum's array stand (or Novum in charging configuration)?
+All good ?
+Sorry about that - gsuite has extra settings that I had to change. Should be able to view them now
+So no big decision making, just general info? I'm trying to set up official ones for kick off prep, so if your meeting isn't trying to be that, then it's good/no worries, otherwise we'll want to make the invite roster more formal
+From dynamics
+Did we get any good pics of destroyed tires?
+Noice!
+Could someone find the videos of us nyooming through figure 8 before we started scrutineering?
+Could you just DM a quick link to one of the pics if you can find a good one?
+Does anyone have pictures of the array damage from the race?
+This is just for general awareness, but I measured out what 5083-H116 stock we had lying around shop and got these dimensions:
+17x17x6
+6x11x3
+8.5x4.5x2.5
+(two of these ^^)
+17.5x8.5x3.25
+6.5x5x3.5 (from leftover upright stock, x2)
+
+This is actually enough to make everything except for the uprights with enough left over for multiple tries. The front bottom control arms and rear swingarm, for example, are 3/4" aluminum, so there's enough to make two of each piece for each side from that one 17" square block and still have stock left over for hub adapters, upright brackets, etc. Depending on what we get donated and when, we may or may not use it, but I just want to make sure we keep track of that stock and how we use it.
+The earliest I was expecting the bill to take effect would be late October, so I'd argue that's likely too late. We will want to have sleds built as we're stacking up MDF and to ship out to Comprent
+Yep
+I did, and they should have hundreds of them so slow shipping can work
+_(edited)_ 
+That's the plan currently, I'm evaluating if other options are available and making sure we aren't closed out of them.
+I want to know how large the boards are so I can make sure we have room in sensible locations in various areas of the car.
+Ya could you approximate the increased dimensions so we have upper bounds on size?
+Are those the increased dimensions? If not try to approximate those - want to know the bounding dimensions
+That was more of a "fight me irl fuckers" than a job invite
+"they call awkwardly putting your arm around someone _The Mitchell_, because you sit there like a Mitchell doing _The Mitchell_"
+Quite the poet
+"There’s a reason for the word ‘stoned.’ You just sit there like a stone on weed.”
+   Could one of you provide rough bounding dimensions in physical size of the following boards based on the most advanced rev that we have made actual plans to build:
+&gt; Peripheral
+&gt; MC^2
+&gt; Telem
+&gt; Display board
+ have you run any rear impact scenarios on the above change?
+Probably within the first or second week and over the course of a single shop day. I'll give enough of a heads up before it happens for them to be moved - anticipate the weekend of the 25th at the latest. We don't have anything more critical electrically that needs to be tested before it happens, so probably a 3 days or so heads-up can be expected if it changes.
+ Yes it's $100 because we determined we needed to repair 2 strings instead of 1, so it doubled my estimate. I will probably just order it myself for now and we can do official purchasing later.
+Ok, just checking. Overall looks good. I was going to ask if someone could tie back the individual components to their system and criticality, but you've pretty much done that already.
+ Made some edits, but overall looks good.
+ I think you should keep brand names. Nobody is going to care in the worst case, or someone Googles it and becomes interested.
+Who wrote that?
+What is the telemetry master interface board?
+When bud does
+SEC served Elon a subpoena for the Tesla tweet
+I think the Thai governor or president or whatever emailed him directly. Somehow they got in direct correspondence and became their primary poc. Ya it was made from spare prop raceway tubes with some welded endcaps. Imagine an oil drum with a transparent cap, two oxygen bottles, and some handles on the side.
+Honestly there's not enough to the actual design for failure to be a real concern. It's just a tube with a hatch and some oxygen bottles strapped to the side.
+Classic
+They did all of the documentation after the first sub was on its way
+ Basic dimensions, a few drawings, and they went straight to machining
+There's virtually no CAD of it actually
+Rescuing someone from Hastings, NE is the most worthwhile thing anyone can do
+It's very reminiscent of the :runescape_reax: 
+Ya they had the NX human model scaled to kid size inside of it
+Ya it's called the "Thai Kid Submarine"
+I found the design doc for that on our confluence
+So the 1-2
+I'm only talking in context of the rebuild
+Hand drilling this without guiding holes will probably be a nightmare anyway. Tons of stories of ruined mill bits on those forums.
+
+I'm personally ok with ordering a big sheet and going for it. I'm not sure if I could do tests on a small piece and, in the event it works, be 100% certain it will work at scale (or that we won't mess it up). From these larger vids, some of which were at 1/8", I feel confident that it's feasible and up to us to not screw it up.
+All of our poly pieces were waterjet, so yes it can handle it. I only hand drilled to get to the connectors using the poly for hole matching.
+The stuff looks like solid plastic
+We might've jumped a bit early on the G10 delamination hysteria train. I'm finding a ton of videos of people using waterjets (some omax) to cut it
+Ya nevermind, everything plastic is within a factor of each other.
+Hmm ok
+According to the last time we discussed this you had 6/6 as 3x stiffer
+I don't know why the conversation drifted to the strength of acrylic or even acrylic as the lead choice. It's hardly any stiffer than poly so we probably won't use it anyway. General strength of any of these materials is incredibly low priority IMO.
+
+ is Nylon 6/6 still the stiffest thing we found that's not a laminate structure?
+Is that wrt to me saying vibe breakage isn't a concern?
+We really just want stiffness/rigidity, not worried about vibe-induced fracture or breaking or anything
+Acrylic is relatively not much stiffer 
+We still gotta check the price of 1/8"
+Also is that spin off just as stiff, because that's the main driver for getting a different material instead of doubling the poly thickness (and weight and cost).
+Got all the same parts there
+You can also see it on the rev 1 BoM on the Google drive
+Did you change relays too?
+Real acid hours
+am
+He still sent it out at like 9
+But fukn lol this guy
+At least in a way where acid made the choice
+The email he sent out to Tesla was too well composed to be done while on acid
+The last one right?
+Which string was the problem string?
+We don't want horn on there?
+Brought the rear wheel forward
+Si
+Debatable if the bonding is better in theory, but in practice it will be easier to control.
+I'm still not sold on avoiding ribs for the _weight_, but I do want to avoid them for the extra work they add, the extra brackets, and in this case the precision required to get it right with ribs. Just wanting to clarify intention there.
+
+Cool, we left the floor of the frame to be a simple rectangle with no height changes, so we'll have a ton of surface area to bond to. I think it will be equally as annoying to reach as with ribs, so not losing much there. Will also bring the cg and general height of the car down more.
+Thoughts on bonding the bottom of the frame to the floor of the aerobody? I was initially thinking of having small ribs under the tubes, but now thinking of just bringing the frame to the floor and wet bonding over those tubes with cf. Disadvantage is we can't really take the frame out if we ever wanted to swap in a composite rib chassis (or at least the swap would be messy), but if we want to pick the car up from its bottom that's probably a very secure way of doing it and it means less fuckery with making ribs.
+You surrealed that way too hard friend
+oh that's interesting
+ Can you post those screwed spot weld components you mentioned?
+I'm gonna lol if he gives us like a 3 hour heads up on his new tattoo before telling Twitter, but told Tesla about privatizing like an hour after tweeting about 
+Emailed the whole company about it
+Like full forearm
+Lol Elon got a fuckin rocket tattoo on his arm
+Yup, we shouldn't have to buy any this year, but we can at least start talking to Michelin or other teams to get a lower rate.
+Yep, that's why we can at least try asking for more
+Probably next year if we buy them outright. Can certainly open talks for free, but we'll need maybe 3 sets for FSGP if all goes well and I believe we have 4. We do still have Kentucky's set. We could try seating those and if they work maybe buy from them since they actually have hundreds and would probably be forgiving on the price.
+Sure now that we've established we _have_ to have something, this seems fine
+Hmm, ya I think you're right. So we still need 3 switches at minimum
+How's it saving anything compared to just removing the precharge contactor?
+You wouldn't have feedback, but then it probably wouldn't really be necessary with that much charge time
+Ya I was thinking we could just put a resistor in parallel with the motor contactor and apply a 3s delay between the ground and motor contactor. Pretty sure because they're non-latching they wouldn't have a problem unless power to them cut out or something.
+Am I reading correctly that you're replacing the precharge contactor with the precharge board?
+Ya I know why it hasn't been fully tested yet. I wanted to know how confident are we that we can get this to work in a reasonable timeframe to make Arduino experimentation with a prototype dashboard unnecessary
+How certain are we that it will work?
+Did we confirm display board works?
+Take a look at the CAD that I showed in the kick off video. It's entirely underneath the canopy so that constraint does not exist. Even if it did, depth of dashboard enclosure does not mean the entire dashboard panel has to lean backward - the dash can have walls (if we go with something like what's in the video)
+We've entertained the idea of using sms texting to communicate with the driver. Could be that, could be a map of their location on the track, etc.
+That would be a height limit
+The dashboard depth is negotiable though, so you can potentially have both anyway. No need to necessarily trade screens for enclosure space.
+It shouldn't be that much though
+Volume limitation 
+How does the screen, which is in the panel, drive that directly?
+How are you equating 1 less screen to more enclosure space? Flank the dashboard with an enclosure?
+I believe  is familiar with some of the people there and could be an in-person follow-up to any exchanges. Unless  cares, go ahead and draft something up and just copy max, arvin, and me at minimum. Would definitely recommend asking:
+
+If we need to go through their training process and when we can do that
+
+What hours that would give us access
+
+What CAM they use just to see if it's the same and if we could reasonably ask for help if needed
+
+Temporary storage of MDF over a day or two if we can't get a truck to haul our stuff is another one, but that's probably left best as a "when it happens" discussion.
+Happy birthday !
+For reference we're shooting for a 200kg car
+Any other thoughts on the idea? Think it's worth it? Easier or harder than a rack and pinion? Ideas for improvements?
+The tie rods are going to mount to TBD brackets that bolt onto the upright, so the connection will be:
+Upright rod end --- threads into weld nut welded to tube --- tie rod tube --- weld nut on other side --- drag bracket --- steering column --- pillow blocks --- aluminum frame brackets
+
+It goes about 2" down and 1" into it
+Ya, or it could be that they're straight and droop or rise when fully extended, but it's ~1 deg and not super noticeable 
+Flamethrowers and pedo settlements 
+No, this was an estimate.
+With a lot of these things we can sub in lighter weight material as replacements once we know it works and if it avoids saturating machines (e.g. making the swingarm adapter welded steel for now, maybe milled aluminum later). Same for the tie rods being carbon. To be completely fair, though, the 1/16" steel tubes are only about 0.3 lbs with weld nuts, so our gains might be very marginal compared to the cost (still down for it). For something like this, steel would be necessary for the steering column (again, talking 0.15 lbs as steel).
+As a general cockpit integration note, because the links need to mount below the column since we'll have the knuckles aft of the upright (this way a left steering wheel turn yields a left turn of the front wheels), that opens up more dashboard space at the level of the tube instead of above. Additionally, we could use that dashboard space as the "shroud" that helps isolate the moving links from the driver.
+Some more detailed elaboration on the drag-link idea. I think it packages pretty nicely, should be very easy to build, and is potentially $200+ cheaper considering the rack and pinion is being replaced by a small welded steel bracket of &lt;2" waterjet parts each. Additionally the whole assembly is only 1.4 lbs and can route the rods to fit underneath the driver compartment tubes while reaching ideal locations for ackermann geometry - it packages very well. Only issue that I had is that I couldn't make the tie rod "links" align on the same axial axis otherwise they would follow uneven arcs (turning the wheels unevenly), but the misalignment in the rod ends should cover that. They'll also experience ~1 degree of "droop" since it's a sine function, but it poses no significant structural risk and in our range of travel shouldn't soften steering input. This can all be made out of steel with pretty high FoS of &gt;2 even in a 2G turn or a hulk-strength-to-avoid-an-oncoming-truck scenario the scrutineers were worried about. The relation of steering wheel turn to front wheel turn is also fairly linear up to 60 degrees which would likely be the lock-point which can also be adjusted pretty easily by changing the drag length wrt to the knuckle length on the upright. All-in-all, should be really easy to make, holds up structurally pretty well, and weighs hardly anything even as steel. Would like some comments or negative feedback on the concept as a whole, otherwise I think we should make it our baseline and test it on the mule car.
+Needs a money sloth variant
+In this timeline if you have the ability to _really_ roast someone on Twitter you can manipulate everything they do
+9:50
+He posted to Twitter before he told you guys I think
+ $420/share, eh
+It wouldn't necessarily impact steering effort, just the  amount that 1 deg of steering wheel translates to front wheel rotation. I believe the mechanical advantage aspect of it could be handled separately so it could feel the same.
+Do we think the full +/- 90 of wheel rotation is vital or intuitive for safe driving? What if it was +/- 60 instead lock to lock? Would people be freaked out by that? Maybe too sensitive?
+You can see it under mechanical's folder in the network drive. You might recognize the graph from some general meetings
+I had a placeholder for wiring, not a detailed one
+We sort of caught it when it arrived because a weight was labelled on the packages, but we were unsure of the accuracy. Plus we were getting the cells for 1.5 cars. We would likely have never caught it prior because we hadn't considered the density of EVA as being a real player. Not much procedurally could've been done to prevent this other than being hyperaware of every gram that could go on the car. I even had a weight tracker going that included bolts and nuts in our weight estimate, but failing to include all of the EVA, the last minute FG add ons, the clear coat paint (I estimate 10 lbs), vinyl, etc added up.
+They gave us what we asked for because we definitely didn't check. SBM definitely didn't do anything wrong here.
+Either way, that'll fuckin do it. EVA is 926 kg/m^3. At 1/16" that's another 33 or so lbs of weight (22 main array), and I would estimate that's on the conservatively low side.  Seeing an extra 11 lbs on the main array for every 1/32" added.
+Ya sure maybe 1/16
+No
+Would we say the encapsulation is 1/8" thick?
+Any locations that just kind of sucked that you doubt they'll ever want to visit again?
+Would also be curious to know why you guys think they might be considering re-running it. MPH was pretty average, but did everyone really like the route for its difficulty, the views, the hospitality at the checkpoints and stage stops, etc.? Was the weather beautiful the whole time? Just kind of curious why they'd entertain doing it or something similar so early .
+For the SR-3 section do I need to leave comments then or can I just edit it directly?
+Are we allowed to make edits?
+Agreed on getting bearings to go inside the shock mounts. If it came to it we could mount the shock so it's in the in the "proper" orientation where the bolts pinning it are perpendicular to the arms. It would require a possibly more complex mounting bracket on the frame, but it could be done so it must cantilevers right over the LCA so it barely is bent.
+One of the solutions I've been messing with. Effectively adding a welded steel (or milled aluminum if we think we can hack it) adapter. Trouble is making sure the hole for wires remains unobstructed. Mounting the swing-arm at the centerline makes this difficult unless we do something similar to Michigan's setup and have a bolted "roof" that you can take on and off again to access the wires. In this setup the swing-arm mounts above the centerline and 2/6 stub-axle bolts go through the swing arm while 4/6 go through the red adapter. The triangle pieces on the adapter allow for twisting loads from turning to be rigidly transferred downward into the swing arm. Each one should be able to handle the load with ease.
+
+I have it mounted on the bottom so the springs can have a bracket also at the center line (avoids turning the swingarm into a 1st class lever) and so they share hardware. The stub-axle interface plate on the adapter can also be made more complex to grab the calipers which would mount at 6 and 9 to avoid interfering with the shocks. Additionally in an inboard turning load (i.e. I bank to the left, the force comes into the car from the left) the adapter is loaded in compression on the triangles, so that's also good.
+
+In this set up, the assembly consists of waterjetting a 3/4" swingarm about 14" x 7", waterjetting the adapter plate, the two triangles, and the red piece that lays flat on the swingarm (4 steel pieces), welding them together, making a welded spring bracket, and then bolting it all together. Haven't done the FEA, but using very basic def bods and first principles this kind of setup should structurally be ok. Suspension weight of one corner (not including the motor) is about 7 lbs.
+We use 6 AWG wire for the phase power lines correct?
+Did they have pics too?
+Ya I guess that'd be the only alternative. I could see that being reasonable if we didn't let any designs fall into the grey zone - either &lt;3/4" with a ton of webbing complexity or thicker with fewer features so it's easier to work with on the Hass or manual mills
+How many did we get? I think there were like 3 in the discussion?
+ Did SBM end up sending us those foldable panels
+So just to check back up on our machining capabilities, is waterjetting 3/4" aluminum billets out of the question for what we're willing to do? I know we saw ~50% mortality in the 1" thick control arms, but about half of that was setup error that later was fixed, the other half waterjet snafus that we might not be able to control...so somewhere around a 25% chance of messing up a cut.
+
+Would going to 3/4" dramatically improve the odds? Are we just against using the SCC jet? I don't think we saw a ton of blowout issues with &lt;=1", so maybe the only issue is travel error of the jet. Would be good to know if we think we can commit to that method used for the previous control arms in future designs.
+As opposed to like, 12 and 9 or something
+Think there's any advantage to having uprights mounted at "10 and 2" for example for an independent rear system?
+I think that's a little high, but that's still 60% of 50% failures, so 30% of the time. Make two lower control arms and two swingarms, maybe see one of them get messed up because of the waterjet and not us. For the arms I'd call that fine. If we really don't have faith in the waterjet for control arms we'll probably want to talk about that, because it's a really common way to make them and we need to figure that out.
+
+For the uprights, which will be &gt;2" in any direction, sure I agree mostly because it's not the most efficient way of doing it operations-wise now that we have some ability on the Haas.
+On anything &gt;=1" sure, but that's not a good "rule" to follow. Majority of the fuck ups on the control arms were our fault.
+Yes I can. By "actual" numbers do you still mean with respect to the gimp pack and array number? Probably should just completely leave that out of the picture.
+
+What's on the website is accurate. The discrepancy comes from the change in pack size per Steve's comments, so the data sheet values that pulled from the VDR I submitted in December should be reflective of a 37S instead of 35. The array is also slightly different due to Sunpower giving us wider array cells - possible a different AM standard was used. The basic calculation for full transparency is:
+
+&gt; Pack Energy = (Rated Capacity) x (# in parallel) x (_Nominal_ Voltage) x (# in series) = (3Ahr) x (12) x (3.6V) x (35) = 4536 Wh ~ *4.5 kWh*
+&gt; Solar Power = (Irradiance) x (Area) x (Array efficiency ~ Cell efficiency) = (1000 W/m^2) x (4m^2) x (22.5%) = *900W*
+Solar power is using the 1.5AM standard for flat plate modules and the C60-J's rated efficiency of 22.5%
+
+Whether we want to go with what matches our race brochure or not is another discussion since it shows the datasheet values, but these are justifiable and accurate numbers.
+
+For SR-3, where do you guys have the current sponsorship doc? I could just add them in wherever you have it.
+If anyone with any basic knowledge of the technology we work with sees that we've listed our 4m^2 Silicon array as generating 300W they're going to assume we don't know what we're talking about. Much easier to put the mathematically correct values on paper and then, in person, discuss why qualifying for ASC was a big deal due to our handicaps (if it even comes up). I think that level of "honesty" isn't really necessary. Additionally, we should be using the empty car weight instead of fully laden. It's a lower value and it answers the question "honestly" that people will ask which is "how much does _it_ weigh". Again, don't want them assuming we built a half-ton car, we actually built a 770 lb car that, when the driver is in and ballasted, weighs 950 lbs.
+The swing arm is pretty notional in terms of machining btw. There's a not-so-fun problem with making it easy to make (water jet I assume would be the best) but keeping it thin enough (&lt;3/4") to be water-jet-able and also having part of it include the stub-axle bolt pattern of the marand. Right now I've got some bull shit in there, but I was thinking of the idea of having the swing arm be like three parts: the arm itself (the y shaped part), spring bracket, and then a stub-axle adapter that bolts into the arm so they can be made separately on the waterjet. Thots? Pics needed?
+CAD: \Team Folders\Strategy\Jackson\Advanced Concepts\Challenger (ASC 2020)\Monohull\Rolling Chassis Assembly
+Included here is initial rev bracketing of the attachments btw
+Well maybe...thinking back to it I left it hanging back further toward the driver to because the tube drives rack placement...so would that even help? If we have a way to actually have it help then there are pretty much only positives since it also makes egress easier.
+Yup, moving it forward is fine
+Actually the other concern is the knuckle hitting that tube
+Ya that works too. Obviously the big concern there is if the driver might hit it with their knees getting out (could check it in a mule chassis)
+My only reason is it puts the bolt at two points of contact in the upright, so it helps when opposing bending. I saw a few teams do that too and in the initial CAD at the kick-off I had a cylindrical bearing kind of deal going on with the top and then a rod end actually hanging out of the upright for the bottom that the control arm bolts to like a clevis. Thought about it more and just wasn't sure about it structurally. It's definitely on the table, I just figured I'd make sure we were compatible with something familiar to us first.
+No it just brings them really close to the aerobody
+Got code here if you want to see how I did it and check it: \Team Folders\Strategy\Jackson\Advanced Concepts\Challenger (ASC 2020)\Monohull\Steering\Matlab Scripts
+A 1.2m wide aerobody
+And it's the outer turning radius, so this is Y wheel turn required for the body to remain in a circle of a X radius
+As drawn there's not a whole lot of moment arm for turning though
+shit ya that was it
+hey justin, what was that meme you posted a while ago that made people concerned about your health?
+Checked with Jason and that looks good guys. Thanks for coming in and getting this done!
+The graphing calculators carry the TI stock tho
+ were there any other visualization platforms that let you plot variables against variables or do web-side custom metrics? Grafana is great but I was just curious. Apparently its most common use is for monitoring servers.
+Borrowing a power supply for now is a good idea, can definitely ask
+FYI most of the people tomorrow said they had to leave by 11, so I put the chances of that happening as described as slim. _Maybe_ the car can get out and charge off the aux array, but we'll see.
+
+What about short term direct purchases?
+
+Also, I'm not worried about it going to 0, more worried that sitting at a low enough voltage just does damage, like if the electrolyte has been squeezed out and hasn't wicked back in, etc.
+Did we start putting together a list of power supplies to buy? With the pack at pretty low SoC I'm low-key nervous about going too long without charging it up at least to nominal (should never leave Li-ions resting at top or bottom too long...degrades it hard). Probably fine since it's really at 3.0V, but still.
+Not seeing how this is really a solution though
+The plan is to decide on which option to go with by the end of the month, the expense will be whatever we buy in garolite to try it out plus minor costs in spacers and metal bolts.
+
+Bolted is fine, the unknowns are minimal, I just think this will fix the issues we saw and let us keep the majority of the work we've already done. By end of the month we'll have done enough work to whether or not to commit to this idea.
+Not sure what you're suggesting , the connectors already have a recession that the bus bars fit in. They also have support between each other, so not sure what support you mean.
+We're going to _try_, and if it doesn't work change configurations and lay them flat. That latter will take more work and add a lot more unknowns. It'd be ideal if we could just swap plastic, and spacers to the fasteners, swap the tiny nylon bolts with metal for the taps, and then rearrange it to 5 columns of seven modules.
+Sounds like garolite is a winner if we can find a good supplier. Grainger sells them and could ship by August 20. We only need effectively two 18"x36" sheets (that's the area anyway). At considering this is at 1/8" instead of the 1/4" for poly it should be cheaper.
+And garolite was only 1.5x heavier?
+We don't necessarily care about them equally
+Your stiffness to weight ratio was? The %'s are fine, I'm talking about that metric specifically not being useful.
+The ratio needs to relative to poly btw (stiff/weight of the material is less important). And it's stiffness we care about, but would like to not make thicker.
+Garolite, Nylon, HDPE, and Delrin seemed the most promising
+From what we have so far, what has the highest stiffness % compared to poly and what has the lowest weight %. I'm kind of assuming the costs won't be insane between any of them, but not sure
+Ok I hadn't mentioned garolite so I thought you were asking for polycarb. I don't remember if I chose 1/4" or 1/8", but it shouldn't matter for picking a material.
+It'll be the same thickness. Can compare if you get the youngs modulus and divide it by polycarb's. Have we used HDPE before? Seems fine, I imagine it can be waterjet cut
+Looks like it's about 17% heavier. How much stiffer is it?
+Like I said, nice to have but not necessary
+Not huge honestly 
+Strongs
+Yup strings
+Steve liked that you could see through it - I think it's nice too, but not necessary 
+Would be a plus
+Anyone is welcome to btw
+ could you try to find some stiffer alternatives to polycarb? Ideally just as light, but negotiable. Ideally also waterjet machineable, but it can be worked around (at least drillable) and non-conductive
+Doomed from the start
+Our history is a cursed one
+69
+The remainder went to the only runner up
+It had 3/4 of the vote
+One of my roommates was a freshman when the team voted on 49 as the number 
+Aight, that's fair. I'd recommend a follow-up email too if you haven't done that already 
+How'd those go? Did they mention anything about donation racks of pre-allocated material to give away to universities?
+This is a good Christian slack, please refrain from cursing thank you
+Friend, you ride the Marta bus*
+We need a Marta react
+Thank you guys! I'm sure it won't take too much time - really appreciate it!
+Aight, so it'll be a 10AM deal on Saturday to move the molds either to the aero tent space or outside and the tools, canopy plug, and MDF box to our space featuring:
+
+Arvin, Eri, Stephanie, Isaac, ~Tiffany~, and Brian
+Gotcha, if you can at least help with the big molds you should be good to dip out right after - thanks my dude
+So tiffany what's your availability?
+Aight, for insurance we'll probably want at least one more:  good for Saturday ~10? I'd ask Mitch too but I know he's out of town
+:eyes: 
+Jason is asking for everything in eco's space (beyond the wall) to move either out of the space or as far northward as possible. Our largest objects in that space are the molds and rib tooling, so we'll need at least four people to come in and help move them this weekend. The best home for them might just be in the former aero tent space or outside next to the dyno area. The rib tooling and canopy should be able to go against the wall, but bringing it into our area is safer. The MDF box (if it's still there) should probably be disposed of or placed outside.
+
+Given that we had the F350 goof earlier this week, it'll be important that we get this done on time (by Monday). Do I have any volunteers?
+ Do we need more welding gas? Jason is about to place an order.
+In the couple of times I've done it, I've called first (if it's small) and then followed up with an email and a packet (did that for sunstone and Thermopro). I believe we have some email templates and a "call script", but maybe not a workflow. Definitely would advocate that calling first typically works well when creating it. I believe  may have done something similar with those many small donations we got last semester.
+The epoxy at the rack and pinion 
+Ya that's correct, the nub on the column is 25% of the knuckle's moment arm about the vertical axis of the wheel.
+
+I'll try to find my math for it and post it later
+The steering columns made of cf also broke at the epoxy and had to be replaced with steel
+Couple of updates since this was made:
+I agree self centering matters little. At the time I thought it would play an influence, but I spoke to Dick and several other teams and the general mantra is just no angles except kingpin so you don't scrub like crazy. I agree no caster is needed in the design. With a leading arm suspension we'll get some caster anyway in the form of gain due to bumps and spring sag.
+
+With a composite chassis it was awkward to mount it, with the tube there's definitely space for it without being too wonky.
+
+Biggest takeaway I got is that I think this is potentially a lot cheaper and far more customizeable than a rack and pinion. You get more direct control over the gear ratio for the steering wheel basically, although with paddles instead of pedals making sure full travel is only a quarter turn of the wheel doesn't matter as much.
+How urgent?
+Could only replace your last letter though, right? Dibs on the waluigi L
+That metric might be on the ASC website
+:micron: atthew :micron: arting
+I can't phone in, but if you guys are still going it'd be good to make a list of who to thank and send our race updates to. I understand not wanting to tack on too much to a different meeting, but this might be appropriate to figure out.
+You just want to move it closer? I think that's ok as long as the conditions are good enough where you think you can drive it with no risk hitting something.
+I want to start getting people on the ball for calling companies now that we have a baseline and a target of getting in immediate material for the big 3 items (frame, suspension, aero) by the end of the month.
+Do we want to pair your meeting with a discussion of company contacts in the short term?
+Mostly for rear impact protection so we have almost even load paths into the top and bottom longitudinal tubes. The triangle part that sticks out (goes the furthest to the back) is there for the springs on the swingarms to mount to. That whole back area might need to change slightly, though. When moving the frame around I forgot that lower tube and the stub axle are at pretty disimilar heights.
+
+You're asking why not have half of the wing (just the triangle) and then just the parts that attach to the tubes near the rear roll hoop? You need the entire backing of the crush zone to be connected to the chassis, so right now it's just extended as a square the whole way (not sure if I answered your question). Some of Lindsey's earlier models (v5 maybe) had what I think you're asking about.
+
+It can, but I kind of want to do a test to see if that's enough space. That tube is going to the best spot for the steering arms to mount to either the rack or the drag link (depending on what we choose) so it's in a decent place for connecting to the upright at a point convenient for Ackerman steering. Could move it further up though, just might have to make the steering knuckle jut forward and outboard instead of rearward and inside.
+I can try to start up conversation again with Sunstone for HyTech's benefit at least. Tbh I'm ok with what we have. How urgently do they need it? Should be able to know if we need better spot welders by end of August when we lock down the pack if they're ok with waiting that long.
+Waluigi text to speech converter using our 120dB speakers that will replace the aooga horn
+In the event of screen glare making it hard to read texts
+And any time the radio cuts out or dies
+One thing Michigan does that I noticed after the race is they have a system set up where they can actual text their driver via SMS and have yes/no buttons on the steering wheel for them to respond.
+
+Thoughts?
+They don't interfere, but FYI they're both spinning anyway so they're not moving with respect to each other
+Ya I understand, part B extends and becomes all of Part A that doesn't grip the wheel.
+
+Ok, as long as you think we can do that reliably then I'm fine with it. I initially kept them separate since I wasn't sure how well they'd do on a lathe and I wasn't planning for incredibly tight tolerances on the bearings. I agree it'll be more convenient to swap this way, just as long as it's in our ability to build.
+Yes I understand - is that something we can easily manufacture though? I figure a lathe might be able to do it, but gripping it is the only thing I'm unsure about.
+Needing an arbor press for leverage feels overkill
+And the general diameter of the grooves
+Also I think we might be overestimating the amount of press fitting required for these bearings based on SR-2's very overdone tolerancing.
+You can just have the step in the spindle contact
+"pressed" in this case could be far less than in SR-2
+For suspension the idea is to build something initially just to test out the geometry, initial assumptions, etc.  Effectively get it really close to what we think would work well for a race and then swap it out if we think we can replace a component to be more intuitive or easier to make. I'm curious what the thoughts are though on manufacturability.
+Red is about 1.5", green is closer to 1". I don't think pressing it in is too crazy. Can leave an extra 1/4" or so of threads on the castle nut side that can make sure you have enough thread to really press it together.
+Thoughts on the hub adapter though?
