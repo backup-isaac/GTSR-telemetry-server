@@ -19,12 +19,16 @@ services:
       - grafana-storage:/var/lib/grafana
     restart: unless-stopped
   server: 
-    build: .
+    image: "golang:1.9.2"
     container_name: server
     environment:
       - IN_DOCKER=true
     depends_on:
       - "influxdb"
+    working_dir: /go/src/telemetry-server
+    volumes: 
+      - ./:/go/src/telemetry-server
+    command: bash -c "go get -v -t ./... && go run main.go"
     ports:
       - "8888:8888"
       - "6001:6001"
