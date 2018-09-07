@@ -38,7 +38,7 @@ services:
       - NODE_ENV=production
     volumes:
       - ./chatbot/:/home/node/app
-    command: "npm start"
+    command: bash -c "npm install && node chatbot.js"
     ports:
       - "3001:3001"
   nginx:
