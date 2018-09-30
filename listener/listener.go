@@ -12,7 +12,7 @@ import (
 )
 
 const (
-	connHost = "localhost"
+	connHost = "0.0.0.0"
 	connPort = "6001"
 	connType = "tcp"
 )
