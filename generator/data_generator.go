@@ -7,11 +7,18 @@ import (
 	"math"
 	"math/rand"
 	"net"
+	"os"
 	"time"
 )
 
 func main() {
-	conn, err := net.Dial("tcp", "localhost:6001")
+	var host string
+	if len(os.Args) > 1 && os.Args[1] == "remote" {
+		host = "18.221.138.32"
+	} else {
+		host = "localhost"
+	}
+	conn, err := net.Dial("tcp", fmt.Sprintf("%s:6001", host))
 	if err != nil {
 		log.Fatalf("Error connecting to port: %s", err)
 	}
