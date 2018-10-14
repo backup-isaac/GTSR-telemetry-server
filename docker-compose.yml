@@ -53,6 +53,7 @@ services:
       - "server"
       - "grafana"
       - "chatbot"
+      - "jenkins"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
     ports:
