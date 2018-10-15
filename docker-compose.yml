@@ -66,7 +66,6 @@ services:
     volumes:
       - jenkins-home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
       - .:/opt/telemetry-server
     ports:
       - "8080:8080"
