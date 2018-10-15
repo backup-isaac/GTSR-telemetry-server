@@ -10,6 +10,6 @@ RUN echo "jenkins  ALL = (root) NOPASSWD: /usr/local/bin/copy.docker" >> /etc/su
 
 RUN apk add sudo
 
-RUN groupadd jenkins docker
 RUN addgroup -S jenkins docker
+RUN chown jenkins:docker /var/run/docker.sock
 USER jenkins 
