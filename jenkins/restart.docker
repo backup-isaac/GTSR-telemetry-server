@@ -1,4 +1,0 @@
-#!/bin/bash
-pushd /opt/telemetry-server
-docker-compose restart
-popd
