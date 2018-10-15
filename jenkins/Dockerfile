@@ -13,6 +13,8 @@ RUN chmod +x /usr/local/bin/change-socket.docker
 
 
 RUN echo "jenkins  ALL = (root) NOPASSWD: /usr/local/bin/copy.docker" >> /etc/sudoers
+RUN echo "jenkins  ALL = (root) NOPASSWD: /usr/local/bin/change-socket.docker" >> /etc/sudoers
+
 
 RUN apk add sudo
 RUN addgroup -S jenkins docker
