@@ -9,4 +9,7 @@ RUN chmod +x /usr/local/bin/copy.docker
 RUN echo "jenkins  ALL = (root) NOPASSWD: /usr/local/bin/copy.docker" >> /etc/sudoers
 
 RUN apk add sudo
+
+RUN groupadd jenkins docker
+RUN addgroup -S jenkins docker
 USER jenkins 
