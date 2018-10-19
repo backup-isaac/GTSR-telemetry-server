@@ -53,12 +53,23 @@ services:
       - "server"
       - "grafana"
       - "chatbot"
+      - "jenkins"
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
     ports:
       - "80:80"
       - "443:443"
     restart: unless-stopped
+  jenkins:
+    build: ./jenkins
+    container_name: jenkins
+    volumes:
+      - jenkins-home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - .:/opt/telemetry-server
+    ports:
+      - "8080:8080"
 volumes:
   db-data:
   grafana-storage:
+  jenkins-home:

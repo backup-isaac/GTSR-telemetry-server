@@ -3,9 +3,6 @@ package storage
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"path"
-	"runtime"
 	"strconv"
 	"time"
 
@@ -40,23 +37,8 @@ type storageImpl struct {
 
 // NewStorage returns an initialized Storage, backed by InfluxDB
 func NewStorage() (Storage, error) {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		return nil, fmt.Errorf("Could not find runtime caller")
-	}
-	rawJSON, err := ioutil.ReadFile(path.Join(path.Dir(filename), "secrets.json"))
-	if err != nil {
-		return nil, err
-	}
-	secrets := make(map[string]string)
-	err = json.Unmarshal(rawJSON, &secrets)
-	if err != nil {
-		return nil, err
-	}
 	c, err := client.NewHTTPClient(client.HTTPConfig{
-		Addr:     secrets["address"],
-		Username: secrets["username"],
-		Password: secrets["password"],
+		Addr: "http://influxdb:8086",
 	})
 	if err != nil {
 		return nil, err
