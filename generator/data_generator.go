@@ -14,7 +14,7 @@ import (
 func main() {
 	var host string
 	if len(os.Args) > 1 && os.Args[1] == "remote" {
-		host = "18.221.138.32"
+		host = "solarracing.me"
 	} else {
 		host = "localhost"
 	}
