@@ -1,11 +1,12 @@
 package main
 
 import (
-      "github.com/tarm/serial"
-      "log"
-	  "os"
-	  "fmt"
-	  "net"
+	"fmt"
+	"log"
+	"net"
+	"os"
+
+	"github.com/tarm/serial"
 )
 
 func main() {
@@ -26,18 +27,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("Serial Error: %s", err)
 	} else {
-		log.Printf("Successfully connected to %s\n",serialPort)
+		log.Printf("Successfully connected to %s\n", serialPort)
 	}
 
 	// set if we are uploading to the production server or localhost
 	if len(os.Args) > 2 && os.Args[2] == "remote" {
 		host = "solarracing.me"
 	} else {
-		log.Println("remote not specified. Relaying to localhost")
+		log.Println("Argument \"remote\" not specified. Relaying to localhost.")
 		host = "localhost"
 	}
 
-	log.Printf("Attempting to connect to %s\n", host);
+	log.Printf("Attempting to connect to %s\n", host)
 
 	// attempt to listen to the server
 	conn, err := net.Dial("tcp", fmt.Sprintf("%s:6001", host))
@@ -47,7 +48,6 @@ func main() {
 	} else {
 		log.Printf("Successfully connected to %s\n", host)
 	}
-
 
 	// listen for incoming TCP messages, and print out
 	go listen(conn)
