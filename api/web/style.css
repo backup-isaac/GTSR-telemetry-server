@@ -1,0 +1,117 @@
+
+body{
+background: black
+url(https://www.autoguide.com/blog/wp-content/gallery/mercedes-amg-cigarette-racing-515-project-one-boat/mercedes-amg-cigarette-racing-515-project-one-01.jpg)
+no-repeat ;
+background-attachment: local;
+background-size: auto;
+font-family: "Times New Roman Light", "Apple LiSung Light";
+color: white;
+font-weight: 200;
+font-size: 18px;
+}
+
+
+ul{
+    list-style-type: none;
+    margin: 0;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+li{
+    float: left;
+    font-size: 20px;
+    text-align: center;
+    width: 25%
+}
+li a{
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+li a:hover{
+    color: silver;
+}
+
+
+
+div.link1 a:link{
+  color:white
+}
+div.link1 a:visited{
+ color: #404040;
+}
+div.link1 a:hover{
+  color:silver;
+}
+ div.link1 a:active{
+  color: gold;
+}
+div.link1 a{
+  float: left;
+   font-size: 50px;
+   margin-left: 20px;
+   margin-top: 50px;
+   text-decoration: none;
+}
+
+
+div.link2 a{
+  float: right;
+  margin-right: 50px;
+  margin-top: 50px;
+}
+
+
+
+div.intro{
+  float: left;
+  color: white;
+  text-align: left;
+  font-weight: 100;
+  font-family: "Apple LiSung Light","Gill Sans","Helvetica Light";
+  margin-left: 20px;
+  line-height: 65%;
+  margin-top: 70px;
+}
+
+div.img2{
+  float: left;
+  margin-left: 50px;
+  margin-top: -140px;
+  opacity: 0.6;
+  filter: alpha(opacity=50);
+}
+.img2:hover{
+  -ms-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+table{
+  float: right;
+  font-family: "Gill Sans";
+  margin-top: 720px;
+  margin-left: 400px;
+  border-collapse: collapse;
+  width: 100%;
+  font-weight: 100;
+  font-size: 18px;
+  align-items: center;
+}
+th, td{
+  text-align: center;
+  padding: 15px;
+    border-bottom: 0.5px solid #ddd;
+}
+
+th{
+  background-color: #333;
+  color: white;
+}
