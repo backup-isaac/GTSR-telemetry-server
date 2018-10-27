@@ -253,15 +253,15 @@
         var leftRPM = null
         var rightRPM = null
         getLatest("Left_Wavesculptor_RPM", function(result) {
-          leftRPM = result;
+          leftRPM = Number.parseFloat(result);
           if (rightRPM != null) {
-            document.getElementById("speed").textContent = (Number.parseFloat((leftRPM + rightRPM) / 2) * 0.06504).toFixed(2);
+            document.getElementById("speed").textContent = ((leftRPM + rightRPM) / 2 * 0.06504).toFixed(2);
           }
         });
         getLatest("Right_Wavesculptor_RPM", function(result) {
-          rightRPM = result;
+          rightRPM = Number.parseFloat(result);
           if (leftRPM != null) {
-            document.getElementById("speed").textContent = (Number.parseFloat((leftRPM + rightRPM) / 2) * 0.06504).toFixed(2);
+            document.getElementById("speed").textContent = ((leftRPM + rightRPM) / 2 * 0.06504).toFixed(2);
           }
         });
         getLatest("Bus_Power", function(result) {
