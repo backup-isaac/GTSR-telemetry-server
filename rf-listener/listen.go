@@ -42,12 +42,13 @@ func main() {
 
 	// attempt to listen to the server
 	conn, err := net.Dial("tcp", fmt.Sprintf("%s:6001", host))
-	defer conn.Close()
 	if err != nil {
 		log.Fatalf("Error connecting to port: %s", err)
 	} else {
 		log.Printf("Successfully connected to %s\n", host)
 	}
+	defer conn.Close()
+
 
 	// listen for incoming TCP messages, and print out
 	go listen(conn)
