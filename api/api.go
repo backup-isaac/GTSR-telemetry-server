@@ -90,7 +90,6 @@ func enableCors(w *http.ResponseWriter) {
 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
-
 // Latest returns the last known value of the metric specified by name
 func (api *API) Latest(res http.ResponseWriter, req *http.Request) {
 	name := req.URL.Query().Get("name")
@@ -146,7 +145,6 @@ func (api *API) StartServer() {
 
 	api.RegisterCsvRoutes(router)
 	api.RegisterMapRoutes(router)
-  api.RegisterWebRoutes(router)
 	api.RegisterDataRoutes(router)
 	fmt.Println("Starting HTTP server...")
 	log.Fatal(http.ListenAndServe(":8888", router))
