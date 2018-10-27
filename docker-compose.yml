@@ -19,7 +19,7 @@ services:
       - grafana-storage:/var/lib/grafana
     restart: unless-stopped
   server: 
-    image: "golang:1.9.2"
+    image: "golang:1.11.1"
     container_name: server
     environment:
       - IN_DOCKER=true
