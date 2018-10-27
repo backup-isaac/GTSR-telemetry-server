@@ -67,9 +67,6 @@ func (api *API) LastActive(res http.ResponseWriter, req *http.Request) {
 // This is closer to the functionality of the old server's metrics query
 func (api *API) Configs(res http.ResponseWriter, req *http.Request) {
 	canConfigMap, err := canConfigs.LoadConfigs()
-
-	enableCors(&res)
-
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
@@ -84,10 +81,6 @@ func (api *API) Configs(res http.ResponseWriter, req *http.Request) {
 	encoder := json.NewEncoder(res)
 	encoder.SetIndent("", "  ")
 	encoder.Encode(canConfigList)
-}
-
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }
 
 // Latest returns the last known value of the metric specified by name

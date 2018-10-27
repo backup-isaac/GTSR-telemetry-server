@@ -14,7 +14,7 @@ func (api *API) DataDefault(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/data/static/data.html", http.StatusFound)
 }
 
-// RegisterCsvRoutes registers the routes for the CSV service
+// RegisterDataRoutes registers the routes for the data service
 func (api *API) RegisterDataRoutes(router *mux.Router) {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
@@ -24,5 +24,4 @@ func (api *API) RegisterDataRoutes(router *mux.Router) {
 	router.PathPrefix("/data/static/").Handler(http.StripPrefix("/data/static/", http.FileServer(http.Dir(path.Join(dir, "data")))))
 
 	router.HandleFunc("/data", api.DataDefault).Methods("GET")
-
 }
