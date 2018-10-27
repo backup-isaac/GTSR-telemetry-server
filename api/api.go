@@ -138,7 +138,7 @@ func (api *API) StartServer() {
 
 	api.RegisterCsvRoutes(router)
 	api.RegisterMapRoutes(router)
-
+	api.RegisterDataRoutes(router)
 	fmt.Println("Starting HTTP server...")
 	log.Fatal(http.ListenAndServe(":8888", router))
 }
