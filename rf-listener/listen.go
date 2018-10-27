@@ -49,7 +49,6 @@ func main() {
 	}
 	defer conn.Close()
 
-
 	// listen for incoming TCP messages, and print out
 	go listen(conn)
 
