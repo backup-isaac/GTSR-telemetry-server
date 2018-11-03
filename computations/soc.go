@@ -22,17 +22,18 @@ var Q = [][]float64{
 
 // SOCPercentage is the estimated state of charge of the pack
 type SOCPercentage struct {
-	standardComputation
+	values map[string]float64
 }
 
 // NewBatteryPower returns a SOCPercentage initialized with the proper values
 func NewSOCPercentage() *SOCPercentage {
-	return &SOCPercentage{
-		standardComputation{
-			values: make(map[string]float64),
-			fields: []string{"Min_Voltage", "BMS_Current"},
-		},
+	return &SOCPercentage {
+		values: make(map[string]float64),
 	}
+}
+
+func (sp *SOCPercentage) GetMetrics() []string {
+	return []string{"Min_Voltage", "BMS_Current"}
 }
 
 // Since min voltage updates so infrequently relative to BMS_Current,
@@ -40,7 +41,7 @@ func NewSOCPercentage() *SOCPercentage {
 // So we override Update accordingly
 func (sp *SOCPercentage) Update(point *datatypes.Datapoint) bool {
 	sp.values[point.Metric] = point.Value
-	return (len(sp.values) >= len(sp.fields)) && point.Metric == "Min_Voltage"
+	return (len(sp.values) == 2) && point.Metric == "Min_Voltage"
 }
 
 // Returns the current percentage remaing using linear interpolation of current and voltage
