@@ -2,6 +2,7 @@ FROM jenkinsci/blueocean
 
 USER root
 RUN apk add py-pip
+RUN apk add rsync
 RUN pip install docker-compose 
 
 COPY ./copy.docker /usr/local/bin/copy.docker	

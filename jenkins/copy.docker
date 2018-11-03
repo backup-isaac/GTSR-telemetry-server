@@ -1,4 +1,4 @@
 #!/bin/bash	
 pushd /opt/telemetry-server	
-cp -r /var/jenkins_home/workspace/'deploy telemetry'/* .
+rsync -r /var/jenkins_home/workspace/'deploy telemetry'/* . --delete
 popd
