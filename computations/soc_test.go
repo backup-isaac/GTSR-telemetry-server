@@ -13,7 +13,7 @@ func TestSOCPercentage(t *testing.T) {
 	sp := computations.NewSOCPercentage()
 	done := sp.Update(&datatypes.Datapoint{
 		Metric: "BMS_Current",
-		Value:  3.2,
+		Value:  38.4,
 	})
 	assert.False(t, done)
 	done = sp.Update(&datatypes.Datapoint{
@@ -50,7 +50,7 @@ func TestSOCPercentage(t *testing.T) {
 	assert.InDelta(t, expectedPoint.Value, actualPoint.Value, 0.001)
 	done = sp.Update(&datatypes.Datapoint{
 		Metric: "BMS_Current",
-		Value:  3.2,
+		Value:  38.4,
 	})
 	assert.False(t, done)
 	done = sp.Update(&datatypes.Datapoint{
