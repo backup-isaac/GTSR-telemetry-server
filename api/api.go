@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"telemetry-server/canConfigs"
+	"telemetry-server/configs"
 	"telemetry-server/storage"
 
 	"github.com/gorilla/mux"
@@ -66,12 +66,12 @@ func (api *API) LastActive(res http.ResponseWriter, req *http.Request) {
 // Configs returns a list of the CAN configurations
 // This is closer to the functionality of the old server's metrics query
 func (api *API) Configs(res http.ResponseWriter, req *http.Request) {
-	canConfigMap, err := canConfigs.LoadConfigs()
+	canConfigMap, err := configs.LoadConfigs()
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	var canConfigList []*canConfigs.CanConfigType
+	var canConfigList []*configs.CanConfigType
 	for _, configs := range canConfigMap {
 		canConfigList = append(canConfigList, configs...)
 	}

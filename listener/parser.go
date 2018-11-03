@@ -6,7 +6,7 @@ import (
 	"math"
 	"time"
 
-	"telemetry-server/canConfigs"
+	"telemetry-server/configs"
 	"telemetry-server/datatypes"
 )
 
@@ -28,7 +28,7 @@ type PacketParser interface {
 }
 
 // NewPacketParser returns a new PacketParser with the standard implementation
-func NewPacketParser(canConfigs map[int][]*canConfigs.CanConfigType) PacketParser {
+func NewPacketParser(canConfigs map[int][]*configs.CanConfigType) PacketParser {
 	return &packetParser{
 		State:        idle,
 		PacketBuffer: make([]byte, 16),
@@ -40,7 +40,7 @@ type packetParser struct {
 	State        ReceiverState
 	PacketBuffer []byte
 	Offset       int
-	CANConfigs   map[int][]*canConfigs.CanConfigType
+	CANConfigs   map[int][]*configs.CanConfigType
 }
 
 const (

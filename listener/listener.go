@@ -7,7 +7,7 @@ import (
 	"net"
 	"sync"
 
-	"telemetry-server/canConfigs"
+	"telemetry-server/configs"
 	"telemetry-server/datatypes"
 )
 
@@ -59,7 +59,7 @@ func (handler *ConnectionHandler) HandleConnection(conn net.Conn) {
 
 // Listen is the main function of listener which listens to the TCP data port for incoming connections
 func Listen() {
-	canConfigs, err := canConfigs.LoadConfigs()
+	canConfigs, err := configs.LoadConfigs()
 	if err != nil {
 		log.Fatalf("Error loading CAN configs: %s", err)
 	}

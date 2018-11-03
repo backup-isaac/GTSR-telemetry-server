@@ -1,4 +1,4 @@
-package canConfigs
+package configs
 
 import (
 	"encoding/json"

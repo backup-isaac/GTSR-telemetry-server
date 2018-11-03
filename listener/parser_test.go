@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"telemetry-server/canConfigs"
+	"telemetry-server/configs"
 	"telemetry-server/datatypes"
 	"telemetry-server/listener"
 
@@ -14,7 +14,7 @@ import (
 )
 
 func TestPacketParser(t *testing.T) {
-	canConfig := map[int][]*canConfigs.CanConfigType{
+	canconfig := map[int][]*configs.CanConfigType{
 		0: {
 			{
 				CanID:       0,
@@ -32,7 +32,7 @@ func TestPacketParser(t *testing.T) {
 			},
 		},
 	}
-	parser := listener.NewPacketParser(canConfig)
+	parser := listener.NewPacketParser(canconfig)
 	packet := make([]byte, 12)
 	// Can ID 0
 	packet[0] = 0
@@ -74,7 +74,7 @@ func TestPacketParser(t *testing.T) {
 }
 
 func TestInvalidValues(t *testing.T) {
-	canConfig := map[int][]*canConfigs.CanConfigType{
+	canConfig := map[int][]*configs.CanConfigType{
 		0: {
 			{
 				CanID:       0,
