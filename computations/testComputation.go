@@ -1,8 +1,6 @@
 package computations
 
 import (
-	"sync"
-
 	"telemetry-server/datatypes"
 )
 
@@ -12,22 +10,17 @@ import (
 // It computes the average of the last 10 Test values
 type TestComputation struct {
 	values []float64
-	sync.Mutex
 }
 
 // Update appends the value to the list and returns true if the list size
 // is at least 10
 func (tc *TestComputation) Update(point *datatypes.Datapoint) bool {
-	tc.Lock()
-	defer tc.Unlock()
 	tc.values = append(tc.values, point.Value)
 	return len(tc.values) >= 10
 }
 
 // Compute computes the average of the values tracked by the TestComputation
 func (tc *TestComputation) Compute() *datatypes.Datapoint {
-	tc.Lock()
-	defer tc.Unlock()
 	sum := float64(0)
 	for _, value := range tc.values {
 		sum += value
@@ -45,6 +38,11 @@ func (tc *TestComputation) Compute() *datatypes.Datapoint {
 	}
 }
 
+// GetMetrics returns the Test metric
+func (tc *TestComputation) GetMetrics() []string {
+	return []string{"Test"}
+}
+
 func init() {
-	Register(&TestComputation{}, []string{"Test"})
+	Register(&TestComputation{})
 }

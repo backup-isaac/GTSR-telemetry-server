@@ -23,8 +23,6 @@ func NewBatteryPower() *BatteryPower {
 // and the bus voltage if the bus voltage value is nominal; otherwise,
 // the pack voltage measurement is used
 func (bp *BatteryPower) Compute() *datatypes.Datapoint {
-	bp.Lock()
-	defer bp.Unlock()
 	bmsCurrent := bp.values["BMS_Current"]
 	packVoltage := bp.values["Pack_Voltage"]
 	busVoltage := (bp.values["Left_Bus_Voltage"] + bp.values["Right_Bus_Voltage"]) / 2
@@ -41,6 +39,5 @@ func (bp *BatteryPower) Compute() *datatypes.Datapoint {
 }
 
 func init() {
-	bp := NewBatteryPower()
-	Register(bp, bp.fields)
+	Register(NewBatteryPower())
 }

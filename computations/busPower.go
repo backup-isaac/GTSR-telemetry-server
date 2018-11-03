@@ -21,8 +21,6 @@ func NewBusPower() *BusPower {
 
 // Compute computes the bus power as the sum of the left and right bus powers
 func (bp *BusPower) Compute() *datatypes.Datapoint {
-	bp.Lock()
-	defer bp.Unlock()
 	val := bp.values["Left_Bus_Power"] + bp.values["Right_Bus_Power"]
 	bp.values = make(map[string]float64)
 	return &datatypes.Datapoint{
@@ -49,8 +47,6 @@ func NewLeftBusPower() *LeftBusPower {
 // Compute computes the bus power as the product of the bus voltage
 // and the bus current
 func (bp *LeftBusPower) Compute() *datatypes.Datapoint {
-	bp.Lock()
-	defer bp.Unlock()
 	val := bp.values["Left_Bus_Voltage"] * bp.values["Left_Bus_Current"]
 	bp.values = make(map[string]float64)
 	return &datatypes.Datapoint{
@@ -77,8 +73,6 @@ func NewRightBusPower() *RightBusPower {
 // Compute computes the bus power as the product of the bus voltage
 // and the bus current
 func (bp *RightBusPower) Compute() *datatypes.Datapoint {
-	bp.Lock()
-	defer bp.Unlock()
 	val := bp.values["Right_Bus_Voltage"] * bp.values["Right_Bus_Current"]
 	bp.values = make(map[string]float64)
 	return &datatypes.Datapoint{
@@ -88,10 +82,7 @@ func (bp *RightBusPower) Compute() *datatypes.Datapoint {
 }
 
 func init() {
-	bp := NewBusPower()
-	Register(bp, bp.fields)
-	lbp := NewLeftBusPower()
-	Register(lbp, lbp.fields)
-	rbp := NewRightBusPower()
-	Register(rbp, rbp.fields)
+	Register(NewBusPower())
+	Register(NewLeftBusPower())
+	Register(NewRightBusPower())
 }
