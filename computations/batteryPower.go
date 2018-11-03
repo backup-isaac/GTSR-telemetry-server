@@ -39,6 +39,5 @@ func (bp *BatteryPower) Compute() *datatypes.Datapoint {
 }
 
 func init() {
-	bp := NewBatteryPower()
-	Register(bp, bp.fields)
+	Register(NewBatteryPower())
 }

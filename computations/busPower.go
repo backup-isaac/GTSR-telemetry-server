@@ -82,10 +82,7 @@ func (bp *RightBusPower) Compute() *datatypes.Datapoint {
 }
 
 func init() {
-	bp := NewBusPower()
-	Register(bp, bp.fields)
-	lbp := NewLeftBusPower()
-	Register(lbp, lbp.fields)
-	rbp := NewRightBusPower()
-	Register(rbp, rbp.fields)
+	Register(NewBusPower())
+	Register(NewLeftBusPower())
+	Register(NewRightBusPower())
 }

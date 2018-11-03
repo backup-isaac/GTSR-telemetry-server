@@ -38,6 +38,11 @@ func (tc *TestComputation) Compute() *datatypes.Datapoint {
 	}
 }
 
+// GetMetrics returns the Test metric
+func (tc *TestComputation) GetMetrics() []string {
+	return []string{"Test"}
+}
+
 func init() {
-	Register(&TestComputation{}, []string{"Test"})
+	Register(&TestComputation{})
 }

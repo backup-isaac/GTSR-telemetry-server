@@ -9,31 +9,26 @@ import (
 type Computable interface {
 	Update(point *datatypes.Datapoint) bool
 	Compute() *datatypes.Datapoint
+	GetMetrics() []string
 }
 
-// standardComputation is a container for the normal computation which just needs one
-// point of each metric type to perform its computation
-type standardComputation struct {
-	values map[string]float64
-	fields []string
+var registry []Computable
+
+// Register registers a computation
+func Register(computation Computable) {
+	registry = append(registry, computation)
 }
 
-// Update of standardComputation simply puts the point into the metrics map
-// and returns whether the map is full
-func (c *standardComputation) Update(point *datatypes.Datapoint) bool {
-	c.values[point.Metric] = point.Value
-	return len(c.values) >= len(c.fields)
-}
-
-// RunComputations is the main function, which runs all the computations in the registry based on incoming points
+// RunComputations is the main function, which spawns goroutines for every computation and routes
+// incoming data points to their associated computations
 func RunComputations() {
 	streams := make(map[string][]chan *datatypes.Datapoint)
-	for computation, metrics := range registry {
+	for _, computation := range registry {
 		stream := make(chan *datatypes.Datapoint, 100)
-		for _, metric := range metrics {
+		for _, metric := range computation.GetMetrics() {
 			streams[metric] = append(streams[metric], stream)
 		}
-		go computationThread(computation, stream)
+		go compute(computation, stream)
 	}
 
 	points := make(chan *datatypes.Datapoint, 1000)
@@ -47,7 +42,7 @@ func RunComputations() {
 	}
 }
 
-func computationThread(computation Computable, stream chan *datatypes.Datapoint) {
+func compute(computation Computable, stream chan *datatypes.Datapoint) {
 	publisher := listener.GetDatapointPublisher()
 	for {
 		point := <-stream
