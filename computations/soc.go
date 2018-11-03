@@ -27,7 +27,7 @@ type SOCPercentage struct {
 
 // NewBatteryPower returns a SOCPercentage initialized with the proper values
 func NewSOCPercentage() *SOCPercentage {
-	return &SOCPercentage {
+	return &SOCPercentage{
 		values: make(map[string]float64),
 	}
 }
