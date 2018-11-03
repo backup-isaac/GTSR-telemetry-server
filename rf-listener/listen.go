@@ -23,12 +23,12 @@ func main() {
 
 	c := &serial.Config{Name: serialPort, Baud: 115200}
 	s, err := serial.OpenPort(c)
-	defer s.Close()
 	if err != nil {
 		log.Fatalf("Serial Error: %s", err)
 	} else {
 		log.Printf("Successfully connected to %s\n", serialPort)
 	}
+	defer s.Close()
 
 	// set if we are uploading to the production server or localhost
 	if len(os.Args) > 2 && os.Args[2] == "remote" {
