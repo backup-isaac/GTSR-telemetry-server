@@ -63,6 +63,14 @@ ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
 
+# re-add musl-dev and gcc so we can compile go code
+RUN apk add gcc
+RUN apk add musl-dev
+
+# Grant jenkins write access to /go, because builds don't work
+# when everything isn't directly copied to $GOHOME :(
+RUN chown -R jenkins:jenkins /go
+
 RUN apk add py-pip
 RUN apk add rsync
 RUN pip install docker-compose 
