@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'cp -r telemetry-server/* /go/src/telemetry-server'
+        sh 'cp -r . /go/src/telemetry-server'
       }
     }
   }
