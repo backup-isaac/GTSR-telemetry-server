@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'golang:1.11.1'
-      args '-e IN_DOCKER="true" -v ${PWD}/:/opt/telemetry-server'
+      args '-v ${PWD}/:/opt/telemetry-server'
     }
 
   }
@@ -23,5 +23,8 @@ pipeline {
         sh 'cd $GOPATH/src/telemetry-server && ../../bin/golint ./...'
       }
     }
+  }
+  environment {
+    IN_DOCKER = 'true'
   }
 }
