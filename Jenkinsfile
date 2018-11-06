@@ -12,7 +12,9 @@ pipeline {
         sh 'cp -r /opt/telemetry-server /go/src/telemetry-server'
         sh 'cd /go/src/telemetry-server'
         sh 'ls'
-        sh 'go get -v -t ./...'
+        sh 'go get github.com/tools/godep'
+        sh '''godep save
+'''
       }
     }
     stage('Test') {
