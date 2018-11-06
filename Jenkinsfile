@@ -17,10 +17,10 @@ pipeline {
     }
     stage('Test') {
       steps {
-        sh 'cd $GOHOME/src/telemetry-server && go fmt ./...'
-        sh 'cd $GOHOME/src/telemetry-server && go test ./...'
-        sh 'cd $GOHOME/src/telemetry-server && go get golang.org/x/lint/golint'
-        sh 'cd $GOHOME/src/telemetry-server && ../../bin/golint ./...'
+        sh 'cd $GOPATH/src/telemetry-server && go fmt ./...'
+        sh 'cd $GOPATH/src/telemetry-server && go test ./...'
+        sh 'cd $GOPATH/src/telemetry-server && go get golang.org/x/lint/golint'
+        sh 'cd $GOPATH/src/telemetry-server && ../../bin/golint ./...'
       }
     }
   }
