@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-// GenerateJacksonSpeech uses data.txt, a file containing
+// GenerateJacksonSpeech uses jackson_samples.txt, a file containing
 // all of Jackson's Slack messages, to generate sagely advice
 func (api *API) GenerateJacksonSpeech(res http.ResponseWriter, req *http.Request) {
 	_, filename, _, ok := runtime.Caller(0)
