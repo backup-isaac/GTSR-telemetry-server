@@ -10,6 +10,15 @@ pipeline {
     stage('Build') {
       steps {
         sh 'cp -r /opt/telemetry-server /go/src/telemetry-server'
+        sh 'go get -t ./...'
+      }
+    }
+    stage('Test') {
+      steps {
+        sh 'go fmt ./...'
+        sh 'go test ./...'
+        sh 'go get golang.org/x/lint/golint'
+        sh '../../bin/golint ./...'
       }
     }
   }
