@@ -17,6 +17,7 @@ pipeline {
     }
     stage('Deploy') {
       steps {
+        dir(path: '/opt/telemetry-server')
         sh 'sudo change-socket.docker'
         sh 'sudo copy.docker'
         sh 'docker-compose build'
