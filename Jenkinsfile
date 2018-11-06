@@ -12,8 +12,8 @@ pipeline {
         sh 'cp -r /opt/telemetry-server /go/src/telemetry-server'
         sh 'cd /go/src/telemetry-server'
         sh 'ls'
-        sh 'go get github.com/tools/godep'
-        sh '''godep save
+        sh 'cd $GOPATH && go get github.com/tools/godep'
+        sh '''cd $GOPATH/telemetry-server godep save
 '''
       }
     }
