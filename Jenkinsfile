@@ -1,11 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'golang:1.11.1'
-      args '-v ${PWD}/:/opt/telemetry-server'
-    }
-
-  }
+  agent any
   stages {
     stage('Build') {
       steps {
