@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'cp -r . /go/src/telemetry-server'
+        sh 'rsync -r . /go/src/telemetry-server --delete'
         sh 'cd $GOPATH/src/telemetry-server && go get -v -t ./...'
       }
     }
