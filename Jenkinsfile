@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'golang:1.11.1'
-      args '-e IN_DOCKER=\'true\' -v ${PWD}/:/opt/telemetry-server'
+      args '-e IN_DOCKER="true" -v ${PWD}/:/opt/telemetry-server'
     }
 
   }
