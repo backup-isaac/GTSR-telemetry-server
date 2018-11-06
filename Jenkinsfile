@@ -17,14 +17,14 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        sh '''sudo change-socket.docker &&
-sudo copy.docker &&
-
-docker-compose build &&
-docker-compose up -d --force-recreate influxdb
-&& docker-compose up -d --force-recreate grafana
-&& docker-compose up -d --force-recreate server
-&& docker-compose restart nginx'''
+        sh 'sudo change-socket.docker'
+        sh 'sudo copy.docker'
+        sh 'docker-compose build'
+        sh '''docker-compose up -d --force-recreate influxdb
+'''
+        sh 'docker-compose up -d --force-recreate grafana'
+        sh 'docker-compose up -d --force-recreate server'
+        sh 'docker-compose restart nginx'
       }
     }
   }
