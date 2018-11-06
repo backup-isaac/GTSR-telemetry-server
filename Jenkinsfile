@@ -2,8 +2,8 @@ pipeline {
   agent {
     docker {
       image 'golang:1.11.1'
-      args '''-w /go/src/telemetry-server 
--v "$(pwd)":/go/src/telemetry-server'''
+      args '''-w /go/src/telemetry-server \\
+-v ./:/go/src/telemetry-server'''
     }
 
   }
