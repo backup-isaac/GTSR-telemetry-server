@@ -10,8 +10,6 @@ pipeline {
     stage('Build') {
       steps {
         sh 'cp -r . /go/src/telemetry-server'
-        sh 'cd /go/src/telemetry-server'
-        sh 'ls'
         sh 'cd $GOPATH/src/telemetry-server && go get -v -t ./...'
       }
     }
