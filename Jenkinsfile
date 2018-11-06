@@ -21,5 +21,17 @@ pipeline {
         sh 'cd $GOPATH/src/telemetry-server && ../../bin/golint ./...'
       }
     }
+    stage('Deploy') {
+      steps {
+        sh '''sudo change-socket.docker &&
+sudo copy.docker &&
+
+docker-compose build &&
+docker-compose up -d --force-recreate influxdb
+&& docker-compose up -d --force-recreate grafana
+&& docker-compose up -d --force-recreate server
+&& docker-compose restart nginx'''
+      }
+    }
   }
 }
