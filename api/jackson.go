@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 	"path"
@@ -20,8 +21,13 @@ func (api *API) GenerateJacksonSpeech(res http.ResponseWriter, req *http.Request
 	}
 	dir := path.Dir(filename)
 	dataFile := path.Join(dir, "jackson_samples.txt")
+
+	response := make(map[string]string)
+	response["response_type"] = "in_channel"
 	chain := margopher.New()
-	res.Write([]byte(chain.ReadFile(dataFile)))
+	response["text"] = chain.ReadFile(dataFile)
+	res.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(res).Encode(response)
 }
 
 // RegisterJacksonRoutes registers the POST request route
