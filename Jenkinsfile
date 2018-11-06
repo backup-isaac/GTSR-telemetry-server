@@ -17,15 +17,16 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        dir(path: '/opt/telemetry-server')
         sh 'sudo change-socket.docker'
         sh 'sudo copy.docker'
-        sh 'docker-compose build'
-        sh '''docker-compose up -d --force-recreate influxdb
-'''
-        sh 'docker-compose up -d --force-recreate grafana'
-        sh 'docker-compose up -d --force-recreate server'
-        sh 'docker-compose restart nginx'
+        dir(path: '/opt/telemetry-server') {
+          sh 'sudo docker-compose build'
+          sh 'docker-compose up -d --force-recreate influxdb'
+          sh 'docker-compose up -d --force-recreate grafana'
+          sh 'docker-compose up -d --force-recreate server'
+          sh 'docker-compose restart nginx'
+        }
+
       }
     }
   }
