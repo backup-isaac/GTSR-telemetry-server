@@ -9,8 +9,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh '''go get -v -t ./... && 
-go run main.go'''
+        sh 'rsync -r . /go/src/telemetry-server --delete'
       }
     }
   }
