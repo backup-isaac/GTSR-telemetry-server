@@ -20,7 +20,7 @@ pipeline {
         sh 'sudo change-socket.docker'
         sh 'sudo copy.docker'
         dir(path: '/opt/telemetry-server') {
-          sh 'sudo docker-compose build'
+          sh 'docker-compose build'
           sh 'docker-compose up -d --force-recreate influxdb'
           sh 'docker-compose up -d --force-recreate grafana'
           sh 'docker-compose up -d --force-recreate server'
