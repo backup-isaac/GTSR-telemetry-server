@@ -24,7 +24,4 @@ pipeline {
       }
     }
   }
-  environment {
-    IN_DOCKER = 'true'
-  }
 }
