@@ -9,7 +9,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
-        sh 'rsync -r . /go/src/telemetry-server --delete'
+        sh 'cp -r . /go/src/telemetry-server'
       }
     }
   }
