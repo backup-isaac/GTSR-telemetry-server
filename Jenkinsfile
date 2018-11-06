@@ -12,7 +12,7 @@ pipeline {
         sh 'cp -r /opt/telemetry-server /go/src/telemetry-server'
         sh 'cd /go/src/telemetry-server'
         sh 'ls'
-        sh 'go get -t ./...'
+        sh 'go get -v -t ./...'
       }
     }
     stage('Test') {
