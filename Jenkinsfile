@@ -24,8 +24,4 @@ pipeline {
       }
     }
   }
-  environment {
-    IN_DOCKER = 'true'
-    GOPATH = '/go'
-  }
 }
