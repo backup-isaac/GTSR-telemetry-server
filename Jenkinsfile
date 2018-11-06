@@ -19,14 +19,11 @@ pipeline {
       steps {
         sh 'sudo change-socket.docker'
         sh 'sudo copy.docker'
-        dir(path: '/opt/telemetry-server') {
-          sh 'docker-compose build'
-          sh 'docker-compose up -d --force-recreate influxdb'
-          sh 'docker-compose up -d --force-recreate grafana'
-          sh 'docker-compose up -d --force-recreate server'
-          sh 'docker-compose restart nginx'
-        }
-
+        sh 'cd /opt/telemetry-server && docker-compose build'
+        sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate influxdb'
+        sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate grafana'
+        sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate server'
+        sh 'cd /opt/telemetry-server && docker-compose restart nginx'
       }
     }
   }
