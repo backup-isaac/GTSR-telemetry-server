@@ -3,6 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
+        slackSend color: "#439FE0", message: "Build Started: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
         sh 'rsync -r . /go/src/telemetry-server --delete'
         sh 'cd $GOPATH/src/telemetry-server && go get -v -t ./...'
       }
