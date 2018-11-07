@@ -3,6 +3,7 @@ pipeline {
   stages {
     stage('Build') {
       steps {
+        slackSend color: "#439FE0", message: "Build Started: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
         sh 'rsync -r . /go/src/telemetry-server --delete'
         sh 'cd $GOPATH/src/telemetry-server && go get -v -t ./...'
       }
@@ -28,6 +29,16 @@ pipeline {
         sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate server'
         sh 'cd /opt/telemetry-server && docker-compose restart nginx'
       }
-    }
+    } 
+  }
+  post {
+       // only triggered when blue or green sign
+       success {
+           slackSend color: "good", message: "Build Succeeded: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+       }
+       // triggered when red sign
+       failure {
+           slackSend color: "danger", message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
+       }
   }
 }
