@@ -29,8 +29,9 @@ pipeline {
         sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate server'
         sh 'cd /opt/telemetry-server && docker-compose restart nginx'
       }
-    }
-    post {
+    } 
+  }
+  post {
        // only triggered when blue or green sign
        success {
            slackSend color: "good", message: "Build Succeeded: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
@@ -39,6 +40,5 @@ pipeline {
        failure {
            slackSend color: "danger", message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER}"
        }
-    }
   }
 }
