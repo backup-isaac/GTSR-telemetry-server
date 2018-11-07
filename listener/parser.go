@@ -10,6 +10,14 @@ import (
 	"telemetry-server/datatypes"
 )
 
+// These constants are used to map between
+// Valid datatypes and their string representation
+const (
+	Uint8Type   = "uint8"
+	Int32Type   = "int32"
+	Float32Type = "float32"
+)
+
 const (
 	idle          ReceiverState = 0
 	pre1          ReceiverState = 1
@@ -42,12 +50,6 @@ type packetParser struct {
 	Offset       int
 	CANConfigs   map[int][]*configs.CanConfigType
 }
-
-const (
-	uint8Type   = "uint8"
-	int32Type   = "int32"
-	float32Type = "float32"
-)
 
 // ParseByte maintains the parser state machine, parsing one byte at a time
 // It returns true when the full packet has been received
@@ -95,18 +97,18 @@ func (p *packetParser) ParseByte(value byte) bool {
 // ParsePacket returns the datapoint parsed from the current packet saved within the parser
 func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 	canID := int(binary.LittleEndian.Uint16(p.PacketBuffer[4:6]))
-	configs := p.CANConfigs[canID]
+	canConfigs := p.CANConfigs[canID]
 	points := make([]*datatypes.Datapoint, 0)
-	for _, config := range configs {
+	for _, config := range canConfigs {
 		point := &datatypes.Datapoint{
 			Metric: config.Name,
 			Time:   time.Now(),
 		}
-		if config.Datatype == uint8Type {
+		if config.Datatype == Uint8Type {
 			point.Value = float64(p.PacketBuffer[8+config.Offset])
-		} else if config.Datatype == int32Type {
+		} else if config.Datatype == Int32Type {
 			point.Value = float64(binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset]))
-		} else if config.Datatype == float32Type {
+		} else if config.Datatype == Float32Type {
 			rawValue := binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset])
 			point.Value = float64(math.Float32frombits(rawValue))
 			if math.IsNaN(point.Value) || math.IsInf(point.Value, 0) {

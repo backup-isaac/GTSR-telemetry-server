@@ -4,3 +4,4 @@ This program will also listen for uploaded track data from the map API. It will 
 
 To run the generator, run:
 $ docker exec -it server go run generator/data_generator.go
+

@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
+	"fmt"
+	"github.com/stretchr/testify/assert"
 	"telemetry-server/configs"
 	"telemetry-server/datatypes"
 	"telemetry-server/listener"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestPacketParser(t *testing.T) {
@@ -109,4 +109,24 @@ func TestInvalidValues(t *testing.T) {
 	}
 	points := parser.ParsePacket()
 	assert.Equal(t, 0, len(points))
+}
+
+func TestParseConfigs(t *testing.T) {
+	configsMap, err := configs.LoadConfigs() // test loading the JSON file
+	assert.NoError(t, err)
+	for canID, configTypes := range configsMap {
+		for _, config := range configTypes {
+			assert.Equal(t, canID, config.CanID,
+				fmt.Sprintf("Config %+v \nhas CanID  that does not match CanID in canConfigs", *config))
+			assert.True(t, config.CanID >= 0,
+				fmt.Sprintf("Config %+v \nhas CanID less than 0 : %d", *config, config.CanID))
+			assert.True(t, config.Offset >= 0,
+				fmt.Sprintf("Config %+v \nhas offset less than 0: %d", *config, config.Offset))
+			assert.True(t, config.Offset <= 7,
+				fmt.Sprintf("Config %+v \nhas offset greater than 7: %d", *config, config.Offset))
+			assert.True(t, config.Datatype == listener.Uint8Type ||
+				config.Datatype == listener.Int32Type ||
+				config.Datatype == listener.Float32Type, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
+		}
+	}
 }
