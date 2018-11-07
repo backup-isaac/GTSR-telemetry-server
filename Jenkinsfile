@@ -8,10 +8,14 @@ pipeline {
         sh 'cd $GOPATH/src/telemetry-server && go get -v -t ./...'
       }
     }
-    stage('Test') {
+    stage('Test- Unit') {
       steps {
         sh 'cd $GOPATH/src/telemetry-server && go fmt ./...'
         sh 'cd $GOPATH/src/telemetry-server && go test ./...'
+      }
+    }
+    stage('Test - Lint') {
+      steps {
         sh 'cd $GOPATH/src/telemetry-server && go get golang.org/x/lint/golint'
         sh 'cd $GOPATH/src/telemetry-server && ../../bin/golint ./...'
       }
