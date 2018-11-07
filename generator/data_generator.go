@@ -8,8 +8,11 @@ import (
 	"math/rand"
 	"net"
 	"os"
+	"sync"
 	"time"
 )
+
+var sendLock sync.Mutex
 
 func main() {
 	var host string
@@ -23,8 +26,18 @@ func main() {
 		log.Fatalf("Error connecting to port: %s", err)
 	}
 	go listen(conn)
-	packet := formPacket()
+	// every 10 seconds, send driver ack status
+	go sendDriverStatuses(conn)
+	// every 50 milliseconds, send test computation
+	sendTestComputation(conn)
+}
+
+func sendTestComputation(conn net.Conn) {
 	for {
+		packet := formPacket()
+		sendLock.Lock()
+		packet[4] = 0xFF
+		packet[5] = 0xFF
 		value := rand.Float32() * 100
 		valueBytes := make([]byte, 4)
 		binary.LittleEndian.PutUint32(valueBytes, math.Float32bits(value))
@@ -32,46 +45,44 @@ func main() {
 			packet[8+i] = valueBytes[i]
 		}
 		_, err := conn.Write(packet)
+		sendLock.Unlock()
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}
 		time.Sleep(50 * time.Millisecond)
 	}
+
+}
+
+func sendDriverStatuses(conn net.Conn) {
+	for {
+		packet := formPacket()
+		sendLock.Lock()
+		packet[4] = 0x05
+		packet[5] = 0x07
+		packet[8] = 0x00
+		_, err := conn.Write(packet)
+		sendLock.Unlock()
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		time.Sleep(10000 * time.Millisecond)
+	}
 }
 
 func formPacket() []byte {
 	packet := append([]byte("GTSR"), make([]byte, 12)...)
-	packet[4] = 0xFF
-	packet[5] = 0xFF
 	return packet
 }
 
+// Receive dashboard messages.
 func listen(conn net.Conn) {
-	isWriting := false
-	buf := make([]byte, 4)
-	valOffset := 0
+	buf := make([]byte, 128)
 	for {
-		conn.Read(buf)
-		if string(buf) == "GTSR" {
-			isWriting = !isWriting
-			valOffset = 0
-		} else {
-			if !isWriting {
-				continue
-			}
-			bits := binary.LittleEndian.Uint32(buf)
-			val := math.Float32frombits(bits)
-			switch valOffset {
-			case 0:
-				fmt.Printf("Distance: %v\n", val)
-			case 1:
-				fmt.Printf("Latitude: %v\n", val)
-			case 2:
-				fmt.Printf("Longitude: %v\n", val)
-			case 3:
-				fmt.Printf("Speed: %v\n\n", val)
-			}
-			valOffset = (valOffset + 1) % 4
+		n, err := conn.Read(buf)
+		if err != nil {
+			log.Fatalf("Error reading from connection: %s", err)
 		}
+		log.Printf("Received message from server: %q", buf[:n])
 	}
 }
