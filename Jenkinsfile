@@ -8,13 +8,13 @@ pipeline {
         sh 'cd $GOPATH/src/telemetry-server && go get -v -t ./...'
       }
     }
-    stage('Test- Unit') {
+    stage('Test') {
       steps {
         sh 'cd $GOPATH/src/telemetry-server && go fmt ./...'
         sh 'cd $GOPATH/src/telemetry-server && go test ./...'
       }
     }
-    stage('Test - Lint') {
+    stage('Lint') {
       steps {
         sh 'cd $GOPATH/src/telemetry-server && go get golang.org/x/lint/golint'
         sh 'cd $GOPATH/src/telemetry-server && ../../bin/golint ./...'
@@ -38,11 +38,11 @@ pipeline {
   post {
        // only triggered when blue or green sign
        success {
-           slackSend color: "good", message: "Build Succeeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
+           slackSend color: "good", message: "Job Succeeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
        }
        // triggered when red sign
        failure {
-           slackSend color: "danger", message: "Build Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
+           slackSend color: "danger", message: "Job Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
        }
   }
 }
