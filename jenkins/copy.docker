@@ -1,4 +1,2 @@
 #!/bin/bash	
-pushd /opt/telemetry-server	
-rsync -r /var/jenkins_home/workspace/'deploy telemetry'/* . --delete
-popd
+rsync -r . /opt/telemetry-server --delete
