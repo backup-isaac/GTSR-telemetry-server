@@ -1,30 +1,52 @@
 pipeline {
-  agent any
+  agent none
   stages {
     stage('Build') {
-      steps {
-        slackSend color: "#439FE0", message: "Build Started: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
-        sh 'rsync -r . /go/src/telemetry-server --delete'
-        sh 'cd $GOPATH/src/telemetry-server && go get -v -t ./...'
-      }
+        agent {
+            docker {
+                image 'golang:1.11.1'
+                args '--mount source=go-cache,target=/go'
+            }
+        }
+        steps {
+            slackSend color: "#439FE0", message: "Build Started: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
+            sh 'rm -r -f $GOPATH/src/telemetry-server'
+            sh 'mkdir -p $GOPATH/src/telemetry-server'
+            sh 'cp -r . $GOPATH/src/telemetry-server'
+            sh 'cd $GOPATH/src/telemetry-server && go get -v -t ./...'
+        }
     }
     stage('Test') {
+      agent {
+        docker {
+                image 'golang:1.11.1'
+                args '--mount source=go-cache,target=/go'
+            }
+      }
       steps {
         sh 'cd $GOPATH/src/telemetry-server && go fmt ./...'
         sh 'cd $GOPATH/src/telemetry-server && go test ./...'
       }
     }
     stage('Lint') {
+      agent {
+            docker {
+                image 'golang:1.11.1'
+                args '--mount source=go-cache,target=/go'
+            }
+      }
       steps {
         sh 'cd $GOPATH/src/telemetry-server && go get golang.org/x/lint/golint'
         sh 'cd $GOPATH/src/telemetry-server && ../../bin/golint ./...'
       }
     }
     stage('Deploy') {
+      agent any
       when {
         branch 'master'
       }
       steps {
+        sh 'go fmt ./...'
         sh 'sudo change-socket.docker'
         sh 'sudo copy.docker'
         sh 'cd /opt/telemetry-server && docker-compose build'
