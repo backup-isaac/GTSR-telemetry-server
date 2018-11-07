@@ -16,6 +16,9 @@ pipeline {
       }
     }
     stage('Deploy') {
+      when {
+        branch 'master'
+      }
       steps {
         sh 'sudo change-socket.docker'
         sh 'sudo copy.docker'
