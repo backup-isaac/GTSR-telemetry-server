@@ -1278,6 +1278,15 @@
     "max_value": 200
   },
   {
+    "can_id": 1797,
+    "datatype": "uint8",
+    "name": "Driver_ACK_Status",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 255
+  },
+  {
     "can_id": 65535,
     "datatype": "float32",
     "name": "Test",
