@@ -64,7 +64,7 @@
     Sort by can_id </button>
     <button class="sort" data-sort="hex_id">
     Sort by hex_id </button>
-		<button class="sort" data-sort="max_value">
+    <button class="sort" data-sort="max_value">
     Sort by max_value </button> 
     <button class="sort" data-sort="min_value">
     Sort by min_value </button>
@@ -74,7 +74,7 @@
     <table>
       <tr><th>Name</th>
       <th>Can_id</th>
-			<th>Hex_id</th>
+      <th>Hex_id</th>
       <th>Check_bounds</th>
       <th>Datatype</th>
       <th>Max_value</th>
@@ -90,13 +90,13 @@
     let url = '/api/configs';
     fetch(url)
     .then(res => res.json())
-		.then((canConfigs) => {
-			// add the hex variant for every CAN Config
-			return canConfigs.map(function(canConfig) {
-				canConfig.hex_id = "0x" + canConfig.can_id.toString(16);
-				return canConfig
-			})
-		})
+    .then((canConfigs) => {
+      // add the hex variant for every CAN Config
+      return canConfigs.map(function(canConfig) {
+        canConfig.hex_id = "0x" + canConfig.can_id.toString(16);
+        return canConfig
+      })
+    })
     .then((canConfigs) => {
       var options = {
         valueNames: [ 'can_id', 'hex_id', 'check_bounds', 'datatype', 'max_value', 'min_value', 'name', 'offset' ],
