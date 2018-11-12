@@ -4,7 +4,7 @@ pipeline {
     stage('Build') {
         agent {
             docker {
-                image 'golang:1.11.1'
+                image 'golang:1.11.2'
                 args '--mount source=go-cache,target=/go'
             }
         }
@@ -19,7 +19,7 @@ pipeline {
     stage('Test') {
       agent {
         docker {
-                image 'golang:1.11.1'
+                image 'golang:1.11.2'
                 args '--mount source=go-cache,target=/go'
             }
       }
@@ -31,7 +31,7 @@ pipeline {
     stage('Lint') {
       agent {
             docker {
-                image 'golang:1.11.1'
+                image 'golang:1.11.2'
                 args '--mount source=go-cache,target=/go'
             }
       }
