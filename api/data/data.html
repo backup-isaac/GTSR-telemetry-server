@@ -62,6 +62,8 @@
     Sort by name </button>
     <button class="sort" data-sort="can_id">
     Sort by can_id </button>
+    <button class="sort" data-sort="hex_id">
+    Sort by hex_id </button>
     <button class="sort" data-sort="max_value">
     Sort by max_value </button> 
     <button class="sort" data-sort="min_value">
@@ -72,6 +74,7 @@
     <table>
       <tr><th>Name</th>
       <th>Can_id</th>
+      <th>Hex_id</th>
       <th>Check_bounds</th>
       <th>Datatype</th>
       <th>Max_value</th>
@@ -88,9 +91,16 @@
     fetch(url)
     .then(res => res.json())
     .then((canConfigs) => {
+      // add the hex variant for every CAN Config
+      return canConfigs.map(function(canConfig) {
+        canConfig.hex_id = "0x" + canConfig.can_id.toString(16);
+        return canConfig
+      })
+    })
+    .then((canConfigs) => {
       var options = {
-        valueNames: [ 'can_id', 'check_bounds', 'datatype', 'max_value', 'min_value', 'name', 'offset' ],
-        item: '<tr><td class="name"></td><td class="can_id"></td><td class="check_bounds"></td><td class="datatype"></td><td class="max_value"></td><td class="min_value"></td><td class="offset"></td></tr>'
+        valueNames: [ 'can_id', 'hex_id', 'check_bounds', 'datatype', 'max_value', 'min_value', 'name', 'offset' ],
+        item: '<tr><td class="name"></td><td class="can_id"></td><td class="hex_id"></td><td class="check_bounds"></td><td class="datatype"></td><td class="max_value"></td><td class="min_value"></td><td class="offset"></td></tr>'
       };
       var userList = new List('users', options, canConfigs);
     })
