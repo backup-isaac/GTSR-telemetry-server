@@ -830,16 +830,16 @@
   {
     "can_id": 837,
     "datatype": "float32",
-    "name": "V12_Line_Current",
+    "name": "V12_Vicor_Current",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -1,
-    "max_value": 2
+    "min_value": -10,
+    "max_value": 10
   },
   {
     "can_id": 837,
     "datatype": "float32",
-    "name": "V12_Line_Voltage",
+    "name": "V12_Vicor_Voltage",
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
@@ -853,6 +853,33 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200
+  },
+  {
+    "can_id": 839,
+    "datatype": "float32",
+    "name": "V12_Critical_Voltage",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 20
+  },
+  {
+    "can_id": 840,
+    "datatype": "float32",
+    "name": "V12_Common_Voltage",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 20
+  },
+  {
+    "can_id": 841,
+    "datatype": "float32",
+    "name": "Auxiliary_Battery_Voltage",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 20
   },
   {
     "can_id": 1026,
