@@ -65,13 +65,13 @@ pipeline {
         sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate grafana'
         sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate server'
         sh 'cd /opt/telemetry-server && docker-compose restart nginx'
+        slackSend color: "good", message: "Deploy Succeeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
       }
     } 
   }
   post {
        // only triggered when blue or green sign
        success {
-           slackSend color: "good", message: "Job Succeeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
        }
        // triggered when red sign
        failure {
