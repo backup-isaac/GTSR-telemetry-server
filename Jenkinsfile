@@ -70,9 +70,6 @@ pipeline {
     } 
   }
   post {
-       // only triggered when blue or green sign
-       success {
-       }
        // triggered when red sign
        failure {
            slackSend color: "danger", message: "Job Failed: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
