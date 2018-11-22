@@ -60,6 +60,7 @@ And then navigate to your web browser to localhost:8088 to access Jenkins jobs. 
 CAN data is first parsed by the telemetry subsystem on the car. The microcontroller connected to the Cellular LTE modem will convert each CAN frame into a basic 15-byte format, and forward it via TCP to port 6001 on the server.
 
 | Bytes 0-3 | Bytes 4-5 | Bytes 6-7 | Bytes 8-15 |
+|  ---      |  ---      |    ---    |   ---      |
 |  'GTSR'   | Unused    | CAN_ID    | Payload    |
 
 All data is transmitted in little-endian format. Can Frames that do not use the whole 8 byte payload must still transmit the fixed 8 byte size. Perhaps the unusued two bytes may be useful for a size specifier or a checksum in this instance.
