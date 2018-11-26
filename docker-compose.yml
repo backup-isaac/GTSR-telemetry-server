@@ -41,7 +41,8 @@ services:
       - "grafana"
       - "jenkins"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/conf.d/prod:/etc/nginx/conf.d
+      - /etc/letsencrypt/:/etc/letsencrypt
     ports:
       - "80:80"
       - "443:443"

@@ -60,11 +60,11 @@ pipeline {
         sh 'go fmt ./...'
         sh 'sudo change-socket.docker'
         sh 'sudo copy.docker'
-        sh 'cd /opt/telemetry-server && docker-compose build'
-        sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate influxdb'
-        sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate grafana'
-        sh 'cd /opt/telemetry-server && docker-compose up -d --force-recreate server'
-        sh 'cd /opt/telemetry-server && docker-compose restart nginx'
+        sh 'cd /opt/telemetry-server && docker-compose -f docker-compose.yml build'
+        sh 'cd /opt/telemetry-server && docker-compose -f docker-compose.yml up -d --force-recreate influxdb'
+        sh 'cd /opt/telemetry-server && docker-compose -f docker-compose.yml up -d --force-recreate grafana'
+        sh 'cd /opt/telemetry-server && docker-compose -f docker-compose.yml up -d --force-recreate server'
+        sh 'cd /opt/telemetry-server && docker-compose -f docker-compose.yml restart nginx'
         slackSend color: "good", message: "Deploy Succeeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
       }
     } 
