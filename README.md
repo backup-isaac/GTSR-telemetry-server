@@ -11,6 +11,37 @@ Handles listening to TCP data port, interfacing with InfluxDB for storage, and s
 
 Note that modern Docker requires Windows 10 Pro. If you're on Windows 10 Basic or older version sof Windows, you're going to have to install a virtual machine or try to get it working with older versions of docker engine (not tested)
 
+## Initial Setup
+Make sure to install above. Also, if you are running OSx, and would like to run the RF relay to allow you to connect to the RF antenna, 
+you will also need to install go.
+
+First you should build and update all containers
+
+```
+docker-compose build --pull
+```
+
+Then you should initialize all contianers
+
+```
+docker-compose up -d
+```
+
+Then, once all the containers are initialized, go to your web browser and navigate to http://grafana.localhost/ use admin/admin as your credentials.
+
+Next, add a data source. The URL will be http://influxdb:8086 and the database name will be `telemetry` with no username or password. Name it what you'd like.
+
+Now run
+
+```
+docker exec -it server go run generator/data_generator.go
+```
+
+This will create test data, to verify your pipeline is properly running, navigate to grafana, add a new dashboard, add a new panel, and select `Test` as your metric name.
+
+If you see data being generated, then you have configured your development environment.
+
+
 ## Running
 ```
 docker-compose up -d
@@ -39,8 +70,6 @@ We run a Jenkins Server in production that automatically manages deployments and
 The Jenkins *container* actually has full access to the Docker daemon on production. As a precaution against user error (but not necessarily making the system more secure), the jenkins user does not have direct root access to the server. Therefore, we have some pre-defined scripts `change-socket.docker` and `copy.docker` that run privledged to grant the dockerd unix socket and copy to /opt/telemetry-server on production. Note that since Jenkins has access to the Docker daemon, which runs as root, it should be treated as having root access.
 
 Installing packages, running unit tests, and linting all occur in Docker containers as specified in the Jenkins pipeline. Actually copying the files occurs outside of the Docker containers
-
-Also note that due to the way the go docker container works, we copy our go files into $GOPATH before we run our tests in docker. It is probably worth looking at fixing/avoiding this step to clean up the Jenkins code in the future.
  
 ## Connecting to Jenkins
 
@@ -92,6 +121,8 @@ In addition to metrics reported by the car, we provide functionality for small c
 We interface with our RF subsystem by relaying our RF data to the tcp input of a server. The intention is that we can run all relevant parts of our server locallying on a laptop while trailering the car, and relay the RF data to localhost port 6001. We also provide the capability, if an internet connection is available, to relay the data to the server in production. This is primarily done via the Raspberry Pi in shop for debugging purposes.
 
 The RF listener will also relay any chat messages to the car, to mirror functionality for LTE
+
+Please see the README.md in rf-listener for more information on running the rf-listener. The rf-listener cannot be run in docker on OSX.
 
 ## Generator
 
