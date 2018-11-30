@@ -73,18 +73,26 @@ Each inbound TCP connection is assigned a `ConnectionHandler` struct in `listene
 
 Our CAN configurations are stored in `configs/can_config.json`. This JSON file stores the mappings between each metric and an offset/datatype for an appropriate CAN_ID. The parser state machines validates the data parsed and sees if the incoming CAN_ID contains a valid metric. If it does, extracts the approprate data, and forwards it to a global DatapointPublisher channel
 
+A human readable table of all of our can configs can be found at `https://solarracing.me/data`
+
 ## Storage
 
-All published datapoints are inserted into our influxdb database.
+All published datapoints are inserted into our influxdb database. We have a very simple schema which is only composed of the metric name, a timestamp, and a floating point value.
 
 ## Grafana
 
 Grafana has built-in support for InfluxDB, and queries can be made via the Grafana dashboard. Note that a Datasource must be added that connects to http://influxdb:8086.
 
-## Computational Clients
+## Computations
 
-In addition to metrics reported by the car. We provide functionality for small programs to compute new metrics formed from the transformation of 1 or more other metrics. This is accomplished by subscribing to the datapoint publisher and fanning out a subset of relevant metric names to a channel to each computation client, which updates each computation client one data point at a time. Then, each computational client has the ability to write new metrics back into the global datapoint publisher channel, which can then be stored back into the storage layer.
+In addition to metrics reported by the car, we provide functionality for small composable types to compute new metrics formed from the transformation of 1 or more other metrics. This is accomplished by subscribing to the datapoint publisher and fanning out a subset of relevant metric names to a channel to each computation client, which updates each computation client one data point at a time. Then, each computational client has the ability to write new metrics back into the global datapoint publisher channel, which can then be stored back into the storage layer.
 
 ## RF Listener
 
 We interface with our RF subsystem by relaying our RF data to the tcp input of a server. The intention is that we can run all relevant parts of our server locallying on a laptop while trailering the car, and relay the RF data to localhost port 6001. We also provide the capability, if an internet connection is available, to relay the data to the server in production. This is primarily done via the Raspberry Pi in shop for debugging purposes.
+
+The RF listener will also relay any chat messages to the car, to mirror functionality for LTE
+
+## Generator
+
+For debugging purposes, we have a generator which will create Test Computations and Driver ACK/NACK messages and send them to either a local server or the production server. It will also print out any chat messages recieved from the server.
