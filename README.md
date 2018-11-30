@@ -51,7 +51,7 @@ Will automatically pull and build all relevant docker containers, and initialize
 ## Exposed Ports
 
 These ports are forwarded onto the docker host machine
-Note that in production, only port 6001 and 80 are exposed to the internet. 
+Note that in production, only port 6001, 80, and 443 are exposed to the internet. 
 
 We rely on nginx as a reverse proxy to proxy traffic to the relevant local sockets
 
@@ -61,8 +61,10 @@ We rely on nginx as a reverse proxy to proxy traffic to the relevant local socke
 | server    | 8888 | API entrypoint for solarracing.me api calls|
 | server    | 6001 | TCP port exposed to internet for car to send data |
 | nginx     | 80   | HTTP port exposed to internet |
-| nginx     | 443  | HTTPS port exposed to internet (TODO once we get cert)|
+| nginx     | 443  | HTTPS port exposed to internet |
 | jenkins   | 8080 | Accessible at jenkins.solarracing.me |
+
+Note that the server telemetry API is available on HTTP and HTTPS, but grafana and jenkins can only be accessed via HTTPS
 
 ## Jenkins
 We run a Jenkins Server in production that automatically manages deployments and runs tests before merges into master and pushes to branches.
