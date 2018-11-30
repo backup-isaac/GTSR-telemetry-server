@@ -62,7 +62,7 @@ We rely on nginx as a reverse proxy to proxy traffic to the relevant local socke
 | server    | 6001 | TCP port exposed to internet for car to send data |
 | nginx     | 80   | HTTP port exposed to internet |
 | nginx     | 443  | HTTPS port exposed to internet (TODO once we get cert)|
-| jenkins   | 8080 | Only accessible via tunnelling. See connecting to Jenkins below |
+| jenkins   | 8080 | Accessible at jenkins.solarracing.me |
 
 ## Jenkins
 We run a Jenkins Server in production that automatically manages deployments and runs tests before merges into master and pushes to branches.
@@ -73,15 +73,16 @@ Installing packages, running unit tests, and linting all occur in Docker contain
  
 ## Connecting to Jenkins
 
-This Jenkins server is only accessible by reverse tunneling into production.First you *must* connect to the Georgia Tech VPN (ssh traffic is only accessible within the Georgia Tech network, so eduroam/gtwifi won't work). Then, proxy-jenkins.sh will tunnel traffic on port 8080 to localhost:8088. *Note the final digit is different.*
+The Jenkins server in production can be accessed either at https://jenkins.solarracing.me or via an ssh tunnel.
+
+To tunnel, you *must* connect to the Georgia Tech VPN (ssh traffic is only accessible within the Georgia Tech network, so eduroam/gtwifi won't work). Then, proxy-jenkins.sh will tunnel traffic on port 8080 to localhost:8088. *Note the final digit is different.*
 
 Run
 
 ```
 ./proxy-jenkins.sh PRISM_ID
 ```
-And then navigate to your web browser to localhost:8088 to access Jenkins jobs. We may in the future expose Jenkins to Georgia Tech IPs once we get an SSL cert and we deem it safe enough
-
+And then navigate to your web browser to localhost:8088 to access Jenkins jobs. We may in the future restrict Jenkins to Georgia Tech IPs via https://jenkins.solarracing.me
 ## Architecture
 
 ## Data Protocol
