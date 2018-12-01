@@ -1229,7 +1229,7 @@
     "name": "Photon_Channel_0_Temperature",
     "offset": 4,
     "check_bounds": true,
-    "min_value": 0,
+    "min_value": -40,
     "max_value": 200
   },
   {
@@ -1265,7 +1265,7 @@
     "name": "Photon_Channel_1_Temperature",
     "offset": 4,
     "check_bounds": true,
-    "min_value": 0,
+    "min_value": -40,
     "max_value": 200
   },
   {
