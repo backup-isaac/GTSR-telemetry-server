@@ -374,7 +374,7 @@
     "name": "Cell_Temperature_1",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -383,7 +383,7 @@
     "name": "Cell_Temperature_2",
     "offset": 1,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -392,7 +392,7 @@
     "name": "Cell_Temperature_3",
     "offset": 2,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -401,7 +401,7 @@
     "name": "Cell_Temperature_4",
     "offset": 3,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -410,7 +410,7 @@
     "name": "Cell_Temperature_5",
     "offset": 4,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -419,7 +419,7 @@
     "name": "Cell_Temperature_6",
     "offset": 5,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -428,7 +428,7 @@
     "name": "Cell_Temperature_7",
     "offset": 6,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -437,7 +437,7 @@
     "name": "Cell_Temperature_8",
     "offset": 7,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -446,7 +446,7 @@
     "name": "Cell_Temperature_9",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -455,7 +455,7 @@
     "name": "Cell_Temperature_10",
     "offset": 1,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -464,7 +464,7 @@
     "name": "Cell_Temperature_11",
     "offset": 2,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -473,7 +473,7 @@
     "name": "Cell_Temperature_12",
     "offset": 3,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -482,7 +482,7 @@
     "name": "Cell_Temperature_13",
     "offset": 4,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -491,7 +491,7 @@
     "name": "Cell_Temperature_14",
     "offset": 5,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -500,7 +500,7 @@
     "name": "Cell_Temperature_15",
     "offset": 6,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -509,7 +509,7 @@
     "name": "Cell_Temperature_16",
     "offset": 7,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -518,7 +518,7 @@
     "name": "Cell_Temperature_17",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -527,7 +527,7 @@
     "name": "Cell_Temperature_18",
     "offset": 1,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -536,7 +536,7 @@
     "name": "Cell_Temperature_19",
     "offset": 2,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -545,7 +545,7 @@
     "name": "Cell_Temperature_20",
     "offset": 3,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -554,7 +554,7 @@
     "name": "Cell_Temperature_21",
     "offset": 4,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -563,7 +563,7 @@
     "name": "Cell_Temperature_22",
     "offset": 5,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -572,7 +572,7 @@
     "name": "Cell_Temperature_23",
     "offset": 6,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -581,7 +581,7 @@
     "name": "Cell_Temperature_24",
     "offset": 7,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -590,7 +590,7 @@
     "name": "Cell_Temperature_25",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -599,7 +599,7 @@
     "name": "Cell_Temperature_26",
     "offset": 1,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -608,7 +608,7 @@
     "name": "Cell_Temperature_27",
     "offset": 2,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -617,7 +617,7 @@
     "name": "Cell_Temperature_28",
     "offset": 3,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -626,7 +626,7 @@
     "name": "Cell_Temperature_29",
     "offset": 4,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -635,7 +635,7 @@
     "name": "Cell_Temperature_30",
     "offset": 5,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -644,7 +644,7 @@
     "name": "Cell_Temperature_31",
     "offset": 6,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -653,7 +653,7 @@
     "name": "Cell_Temperature_32",
     "offset": 7,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -662,7 +662,7 @@
     "name": "Cell_Temperature_33",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -671,7 +671,7 @@
     "name": "Cell_Temperature_34",
     "offset": 1,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -680,7 +680,7 @@
     "name": "Cell_Temperature_35",
     "offset": 2,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -689,7 +689,7 @@
     "name": "Cell_Temperature_36",
     "offset": 3,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -698,7 +698,7 @@
     "name": "Cell_Temperature_37",
     "offset": 4,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -707,7 +707,7 @@
     "name": "Cell_Temperature_38",
     "offset": 5,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -716,7 +716,7 @@
     "name": "Cell_Temperature_39",
     "offset": 6,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -725,7 +725,7 @@
     "name": "Cell_Temperature_40",
     "offset": 7,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -770,7 +770,7 @@
     "name": "Min_Temperature",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -779,7 +779,7 @@
     "name": "Max_Temperature",
     "offset": 4,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -788,7 +788,7 @@
     "name": "Heatsink_Temperature_1",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -797,7 +797,7 @@
     "name": "Heatsink_Temperature_2",
     "offset": 1,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -806,7 +806,7 @@
     "name": "Heatsink_Temperature_3",
     "offset": 2,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -815,7 +815,7 @@
     "name": "Heatsink_Temperature_4",
     "offset": 3,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -824,7 +824,7 @@
     "name": "Heatsink_Temperature_5",
     "offset": 4,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
@@ -1292,7 +1292,7 @@
     "name": "Aux_Drivetek_Temperature",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -40,
+    "min_value": 0,
     "max_value": 200
   },
   {
