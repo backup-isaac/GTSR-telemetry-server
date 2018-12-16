@@ -14,6 +14,7 @@ import (
 // Valid datatypes and their string representation
 const (
 	Uint8Type   = "uint8"
+	Uint16Type  = "uint16"
 	Int32Type   = "int32"
 	Float32Type = "float32"
 )
@@ -106,6 +107,8 @@ func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 		}
 		if config.Datatype == Uint8Type {
 			point.Value = float64(p.PacketBuffer[8+config.Offset])
+		} else if config.Datatype == Uint16Type {
+			point.Value = float64(binary.LittleEndian.Uint16(p.PacketBuffer[8+config.Offset : 10+config.Offset]))
 		} else if config.Datatype == Int32Type {
 			point.Value = float64(binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset]))
 		} else if config.Datatype == Float32Type {
