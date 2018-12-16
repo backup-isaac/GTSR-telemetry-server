@@ -13,10 +13,16 @@ import (
 // These constants are used to map between
 // Valid datatypes and their string representation
 const (
+	Float32Type = "float32"
+	Float64Type = "float64"
+	Int8Type    = "int8"
+	Int16Type   = "int16"
+	Int32Type   = "int32"
+	Int64Type   = "int64"
 	Uint8Type   = "uint8"
 	Uint16Type  = "uint16"
-	Int32Type   = "int32"
-	Float32Type = "float32"
+	Uint32Type  = "uint32"
+	Uint64Type  = "uint64"
 )
 
 const (
@@ -109,11 +115,27 @@ func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 			point.Value = float64(p.PacketBuffer[8+config.Offset])
 		} else if config.Datatype == Uint16Type {
 			point.Value = float64(binary.LittleEndian.Uint16(p.PacketBuffer[8+config.Offset : 10+config.Offset]))
-		} else if config.Datatype == Int32Type {
+		} else if config.Datatype == Uint32Type {
 			point.Value = float64(binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset]))
+		} else if config.Datatype == Uint64Type {
+			point.Value = float64(binary.LittleEndian.Uint64(p.PacketBuffer[8+config.Offset : 16+config.Offset]))
+		} else if config.Datatype == Int8Type {
+			point.Value = float64(int8(p.PacketBuffer[8+config.Offset]))
+		} else if config.Datatype == Int16Type {
+			point.Value = float64(int16(binary.LittleEndian.Uint16(p.PacketBuffer[8+config.Offset : 10+config.Offset])))
+		} else if config.Datatype == Int32Type {
+			point.Value = float64(int32(binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset])))
+		} else if config.Datatype == Int64Type {
+			point.Value = float64(int64(binary.LittleEndian.Uint64(p.PacketBuffer[8+config.Offset : 16+config.Offset])))
 		} else if config.Datatype == Float32Type {
 			rawValue := binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset])
 			point.Value = float64(math.Float32frombits(rawValue))
+			if math.IsNaN(point.Value) || math.IsInf(point.Value, 0) {
+				continue
+			}
+		} else if config.Datatype == Float64Type {
+			rawValue := binary.LittleEndian.Uint64(p.PacketBuffer[8+config.Offset : 16+config.Offset])
+			point.Value = math.Float64frombits(rawValue)
 			if math.IsNaN(point.Value) || math.IsInf(point.Value, 0) {
 				continue
 			}

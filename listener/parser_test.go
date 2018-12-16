@@ -19,7 +19,7 @@ func TestPacketParser(t *testing.T) {
 		0: {
 			{
 				CanID:       0,
-				Datatype:    "int32",
+				Datatype:    "uint32",
 				Name:        "Test 1",
 				Offset:      0,
 				CheckBounds: false,
@@ -79,7 +79,7 @@ func TestInvalidValues(t *testing.T) {
 		0: {
 			{
 				CanID:       0,
-				Datatype:    "int32",
+				Datatype:    "uint32",
 				Name:        "Test 1",
 				Offset:      0,
 				CheckBounds: true,
@@ -125,10 +125,16 @@ func TestParseConfigs(t *testing.T) {
 				fmt.Sprintf("Config %+v \nhas offset less than 0: %d", *config, config.Offset))
 			assert.True(t, config.Offset <= 7,
 				fmt.Sprintf("Config %+v \nhas offset greater than 7: %d", *config, config.Offset))
-			assert.True(t, config.Datatype == listener.Uint8Type ||
+			assert.True(t, config.Datatype == listener.Float32Type ||
+				config.Datatype == listener.Float64Type ||
+				config.Datatype == listener.Int8Type ||
+				config.Datatype == listener.Int16Type ||
 				config.Datatype == listener.Int32Type ||
-				config.Datatype == listener.Float32Type ||
-				config.Datatype == listener.Uint16Type, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
+				config.Datatype == listener.Int64Type ||
+				config.Datatype == listener.Uint8Type ||
+				config.Datatype == listener.Uint16Type ||
+				config.Datatype == listener.Uint32Type ||
+				config.Datatype == listener.Uint64Type, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
 		}
 	}
 }
