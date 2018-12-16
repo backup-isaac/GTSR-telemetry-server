@@ -7,10 +7,11 @@ import (
 	"time"
 
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"telemetry-server/configs"
 	"telemetry-server/datatypes"
 	"telemetry-server/listener"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPacketParser(t *testing.T) {
@@ -126,7 +127,8 @@ func TestParseConfigs(t *testing.T) {
 				fmt.Sprintf("Config %+v \nhas offset greater than 7: %d", *config, config.Offset))
 			assert.True(t, config.Datatype == listener.Uint8Type ||
 				config.Datatype == listener.Int32Type ||
-				config.Datatype == listener.Float32Type, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
+				config.Datatype == listener.Float32Type ||
+				config.Datatype == listener.Uint16Type, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
 		}
 	}
 }
