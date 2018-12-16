@@ -892,12 +892,17 @@
   },
   {
     "can_id": 1025,
-    "datatype": "uint32",
-    "name": "Right_Wavesculptor_Status_Flags",
+    "datatype": "uint16",
+    "name": "Right_Wavesculptor_Limit_Flags",
     "offset": 0,
-    "check_bounds": true,
-    "min_value": 0,
-    "max_value": 33554432
+    "check_bounds": false
+  },
+  {
+    "can_id": 1025,
+    "datatype": "uint16",
+    "name": "Right_Wavesculptor_Error_Flags",
+    "offset": 2,
+    "check_bounds": false
   },
   {
     "can_id": 1026,
@@ -1027,12 +1032,17 @@
   },
   {
     "can_id": 1057,
-    "datatype": "uint32",
-    "name": "Left_Wavesculptor_Status_Flags",
+    "datatype": "uint16",
+    "name": "Left_Wavesculptor_Limit_Flags",
     "offset": 0,
-    "check_bounds": true,
-    "min_value": 0,
-    "max_value": 33554432
+    "check_bounds": false
+  },
+  {
+    "can_id": 1057,
+    "datatype": "uint16",
+    "name": "Left_Wavesculptor_Error_Flags",
+    "offset": 2,
+    "check_bounds": false
   },
   {
     "can_id": 1058,
