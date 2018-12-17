@@ -135,6 +135,18 @@ func TestParseConfigs(t *testing.T) {
 				config.Datatype == listener.Uint16Type ||
 				config.Datatype == listener.Uint32Type ||
 				config.Datatype == listener.Uint64Type, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
+			if config.Datatype == listener.Int16Type || config.Datatype == listener.Uint16Type {
+				assert.True(t, config.Offset < 7,
+					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
+			} else if config.Datatype == listener.Float32Type ||
+				config.Datatype == listener.Int32Type || config.Datatype == listener.Uint32Type {
+				assert.True(t, config.Offset < 5,
+					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
+			} else if config.Datatype == listener.Float64Type ||
+				config.Datatype == listener.Int64Type || config.Datatype == listener.Uint64Type {
+				assert.True(t, config.Offset < 1,
+					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
+			}
 		}
 	}
 }
