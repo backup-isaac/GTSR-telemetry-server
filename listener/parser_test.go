@@ -125,26 +125,18 @@ func TestParseConfigs(t *testing.T) {
 				fmt.Sprintf("Config %+v \nhas offset less than 0: %d", *config, config.Offset))
 			assert.True(t, config.Offset <= 7,
 				fmt.Sprintf("Config %+v \nhas offset greater than 7: %d", *config, config.Offset))
-			assert.True(t, config.Datatype == listener.Float32Type ||
-				config.Datatype == listener.Float64Type ||
-				config.Datatype == listener.Int8Type ||
-				config.Datatype == listener.Int16Type ||
-				config.Datatype == listener.Int32Type ||
-				config.Datatype == listener.Int64Type ||
-				config.Datatype == listener.Uint8Type ||
-				config.Datatype == listener.Uint16Type ||
-				config.Datatype == listener.Uint32Type ||
-				config.Datatype == listener.Uint64Type, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
-			if config.Datatype == listener.Int16Type || config.Datatype == listener.Uint16Type {
-				assert.True(t, config.Offset < 7,
+			_, ok := listener.PayloadParsers[config.Datatype]
+			assert.True(t, ok, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
+			if config.Datatype == "int16" || config.Datatype == "uint16" {
+				assert.True(t, config.Offset <= 6,
 					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
-			} else if config.Datatype == listener.Float32Type ||
-				config.Datatype == listener.Int32Type || config.Datatype == listener.Uint32Type {
-				assert.True(t, config.Offset < 5,
+			} else if config.Datatype == "float32" ||
+				config.Datatype == "int32" || config.Datatype == "uint32" {
+				assert.True(t, config.Offset <= 4,
 					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
-			} else if config.Datatype == listener.Float64Type ||
-				config.Datatype == listener.Int64Type || config.Datatype == listener.Uint64Type {
-				assert.True(t, config.Offset < 1,
+			} else if config.Datatype == "float64" ||
+				config.Datatype == "int64" || config.Datatype == "uint64" {
+				assert.True(t, config.Offset == 0,
 					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
 			}
 		}
