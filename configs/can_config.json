@@ -9,6 +9,15 @@
     "max_value": 10
   },
   {
+    "can_id": 105,
+    "datatype": "uint8",
+    "name": "SD_Card_Status",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 1
+  },
+  {
     "can_id": 768,
     "datatype": "float32",
     "name": "Cell_Voltage_1",
@@ -882,6 +891,20 @@
     "max_value": 20
   },
   {
+    "can_id": 1025,
+    "datatype": "uint16",
+    "name": "Right_Wavesculptor_Limit_Flags",
+    "offset": 0,
+    "check_bounds": false
+  },
+  {
+    "can_id": 1025,
+    "datatype": "uint16",
+    "name": "Right_Wavesculptor_Error_Flags",
+    "offset": 2,
+    "check_bounds": false
+  },
+  {
     "can_id": 1026,
     "datatype": "float32",
     "name": "Right_Bus_Voltage",
@@ -1006,6 +1029,20 @@
     "check_bounds": true,
     "min_value": -1000,
     "max_value": 1000
+  },
+  {
+    "can_id": 1057,
+    "datatype": "uint16",
+    "name": "Left_Wavesculptor_Limit_Flags",
+    "offset": 0,
+    "check_bounds": false
+  },
+  {
+    "can_id": 1057,
+    "datatype": "uint16",
+    "name": "Left_Wavesculptor_Error_Flags",
+    "offset": 2,
+    "check_bounds": false
   },
   {
     "can_id": 1058,
@@ -1147,6 +1184,15 @@
     "datatype": "float32",
     "name": "Throttle",
     "offset": 4,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 1
+  },
+  {
+    "can_id": 1385,
+    "datatype": "uint8",
+    "name": "NOS_Mode_Active",
+    "offset": 0,
     "check_bounds": true,
     "min_value": 0,
     "max_value": 1

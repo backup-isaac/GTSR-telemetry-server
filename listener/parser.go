@@ -10,14 +10,6 @@ import (
 	"telemetry-server/datatypes"
 )
 
-// These constants are used to map between
-// Valid datatypes and their string representation
-const (
-	Uint8Type   = "uint8"
-	Int32Type   = "int32"
-	Float32Type = "float32"
-)
-
 const (
 	idle          ReceiverState = 0
 	pre1          ReceiverState = 1
@@ -50,6 +42,9 @@ type packetParser struct {
 	Offset       int
 	CANConfigs   map[int][]*configs.CanConfigType
 }
+
+// PayloadParsers maps datatype strings to methods to parse a value in bytes at a given offset
+var PayloadParsers map[string]func([]byte, int) (float64, error)
 
 // ParseByte maintains the parser state machine, parsing one byte at a time
 // It returns true when the full packet has been received
@@ -104,23 +99,64 @@ func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 			Metric: config.Name,
 			Time:   time.Now(),
 		}
-		if config.Datatype == Uint8Type {
-			point.Value = float64(p.PacketBuffer[8+config.Offset])
-		} else if config.Datatype == Int32Type {
-			point.Value = float64(binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset]))
-		} else if config.Datatype == Float32Type {
-			rawValue := binary.LittleEndian.Uint32(p.PacketBuffer[8+config.Offset : 12+config.Offset])
-			point.Value = float64(math.Float32frombits(rawValue))
-			if math.IsNaN(point.Value) || math.IsInf(point.Value, 0) {
-				continue
-			}
-		} else {
+		converter, ok := PayloadParsers[config.Datatype]
+		if !ok {
 			fmt.Println("Unrecognized datatype: " + config.Datatype)
 			continue
 		}
+		value, err := converter(p.PacketBuffer[8:], config.Offset)
+		if err != nil {
+			fmt.Printf("Error parsing %s: %s\n", config.Datatype, err)
+			continue
+		}
+		point.Value = value
 		if !config.CheckBounds || (config.MinValue <= point.Value && config.MaxValue >= point.Value) {
 			points = append(points, point)
 		}
 	}
 	return points
+}
+
+func init() {
+	PayloadParsers = make(map[string]func([]byte, int) (float64, error))
+	PayloadParsers["uint8"] = func(bytes []byte, offset int) (float64, error) {
+		return float64(bytes[offset]), nil
+	}
+	PayloadParsers["uint16"] = func(bytes []byte, offset int) (float64, error) {
+		return float64(binary.LittleEndian.Uint16(bytes[offset : offset+2])), nil
+	}
+	PayloadParsers["uint32"] = func(bytes []byte, offset int) (float64, error) {
+		return float64(binary.LittleEndian.Uint32(bytes[offset : offset+4])), nil
+	}
+	PayloadParsers["uint64"] = func(bytes []byte, offset int) (float64, error) {
+		return float64(binary.LittleEndian.Uint64(bytes[offset : offset+8])), nil
+	}
+	PayloadParsers["int8"] = func(bytes []byte, offset int) (float64, error) {
+		return float64(int8(bytes[offset])), nil
+	}
+	PayloadParsers["int16"] = func(bytes []byte, offset int) (float64, error) {
+		return float64(int16(binary.LittleEndian.Uint16(bytes[offset : offset+2]))), nil
+	}
+	PayloadParsers["int32"] = func(bytes []byte, offset int) (float64, error) {
+		return float64(int32(binary.LittleEndian.Uint32(bytes[offset : offset+4]))), nil
+	}
+	PayloadParsers["int64"] = func(bytes []byte, offset int) (float64, error) {
+		return float64(int64(binary.LittleEndian.Uint64(bytes[offset : offset+8]))), nil
+	}
+	PayloadParsers["float32"] = func(bytes []byte, offset int) (float64, error) {
+		rawValue := binary.LittleEndian.Uint32(bytes[offset : offset+4])
+		value := float64(math.Float32frombits(rawValue))
+		if math.IsNaN(value) || math.IsInf(value, 0) {
+			return value, fmt.Errorf("invalid float value parsed from packet")
+		}
+		return value, nil
+	}
+	PayloadParsers["float64"] = func(bytes []byte, offset int) (float64, error) {
+		rawValue := binary.LittleEndian.Uint64(bytes[offset : offset+8])
+		value := math.Float64frombits(rawValue)
+		if math.IsNaN(value) || math.IsInf(value, 0) {
+			return value, fmt.Errorf("invalid float value parsed from packet")
+		}
+		return value, nil
+	}
 }
