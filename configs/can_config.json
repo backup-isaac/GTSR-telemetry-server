@@ -873,7 +873,7 @@
     "max_value": 20
   },
   {
-    "can_id": 840,
+    "can_id": 839,
     "datatype": "float32",
     "name": "V12_Common_Voltage",
     "offset": 4,
@@ -882,7 +882,7 @@
     "max_value": 20
   },
   {
-    "can_id": 841,
+    "can_id": 840,
     "datatype": "float32",
     "name": "Auxiliary_Battery_Voltage",
     "offset": 0,
