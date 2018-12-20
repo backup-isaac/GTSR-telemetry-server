@@ -62,7 +62,7 @@ func main() {
 	defer conn.Close()
 
 	// listen for incoming TCP messages, and print out
-	go listen(conn)
+	go listen(conn, s)
 
 	// receive messages from serial port
 	buf := make([]byte, 128)
@@ -80,12 +80,7 @@ func main() {
 }
 
 // Dashboard messages and prints them out
-// TODO: Relay via Serial back to the car
-<<<<<<< Updated upstream
-func listen(conn net.Conn) {
-=======
 func listen(conn net.Conn, s serial.Port) {
->>>>>>> Stashed changes
 	buf := make([]byte, 128)
 	for {
 		n, err := conn.Read(buf)
@@ -93,5 +88,11 @@ func listen(conn net.Conn, s serial.Port) {
 			log.Fatalf("Error reading from connection: %s", err)
 		}
 		log.Printf("Received message from server: %q", buf[:n])
+
+		// relay the message via serial
+		_, err = s.Write(buf[:n])
+		if err != nil {
+			log.Fatalf("Error writing to Serial Port :%s", err)
+		}
 	}
 }

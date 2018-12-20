@@ -140,6 +140,7 @@ func (api *API) StartServer() {
 	api.RegisterMapRoutes(router)
 	api.RegisterDataRoutes(router)
 	api.RegisterJacksonRoutes(router)
+	api.RegisterChatRoutes(router)
 	fmt.Println("Starting HTTP server...")
 	log.Fatal(http.ListenAndServe(":8888", router))
 }

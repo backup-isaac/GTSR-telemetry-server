@@ -7,10 +7,11 @@ import (
 	"time"
 
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"telemetry-server/configs"
 	"telemetry-server/datatypes"
 	"telemetry-server/listener"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPacketParser(t *testing.T) {
@@ -18,7 +19,7 @@ func TestPacketParser(t *testing.T) {
 		0: {
 			{
 				CanID:       0,
-				Datatype:    "int32",
+				Datatype:    "uint32",
 				Name:        "Test 1",
 				Offset:      0,
 				CheckBounds: false,
@@ -78,7 +79,7 @@ func TestInvalidValues(t *testing.T) {
 		0: {
 			{
 				CanID:       0,
-				Datatype:    "int32",
+				Datatype:    "uint32",
 				Name:        "Test 1",
 				Offset:      0,
 				CheckBounds: true,
@@ -124,9 +125,20 @@ func TestParseConfigs(t *testing.T) {
 				fmt.Sprintf("Config %+v \nhas offset less than 0: %d", *config, config.Offset))
 			assert.True(t, config.Offset <= 7,
 				fmt.Sprintf("Config %+v \nhas offset greater than 7: %d", *config, config.Offset))
-			assert.True(t, config.Datatype == listener.Uint8Type ||
-				config.Datatype == listener.Int32Type ||
-				config.Datatype == listener.Float32Type, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
+			_, ok := listener.PayloadParsers[config.Datatype]
+			assert.True(t, ok, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
+			if config.Datatype == "int16" || config.Datatype == "uint16" {
+				assert.True(t, config.Offset <= 6,
+					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
+			} else if config.Datatype == "float32" ||
+				config.Datatype == "int32" || config.Datatype == "uint32" {
+				assert.True(t, config.Offset <= 4,
+					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
+			} else if config.Datatype == "float64" ||
+				config.Datatype == "int64" || config.Datatype == "uint64" {
+				assert.True(t, config.Offset == 0,
+					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
+			}
 		}
 	}
 }

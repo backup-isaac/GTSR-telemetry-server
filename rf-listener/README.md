@@ -9,7 +9,7 @@ the current implementation does not support hypervisor usb pass through
 https://docs.docker.com/docker-for-mac/faqs/#can-i-pass-through-a-usb-device-to-a-container
 
 ## On Linux:
-To run the via docker to send to the local server on docker:
+To run the rf-listener to send to the local server on docker:
 ```
 ./listen-linux-docker.sh /dev/ttyUSB0 server
 ```
@@ -18,7 +18,6 @@ For sending data to production run on docker:
 ```
 ./listen-linux-docker.sh /dev/ttyUSB0 remote
 ```
-
 
 ## On OSX
 Mac OSX and Windows users must either run or build locally. To build locally via docker, run `build.sh`

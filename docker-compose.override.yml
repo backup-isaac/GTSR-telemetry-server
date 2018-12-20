@@ -3,3 +3,6 @@ services:
   nginx:
     volumes:
       - ./nginx/conf.d/dev:/etc/nginx/conf.d
+      - letsencrypt:/etc/letsencrypt #hack to override prod /etc/letsencrypt
+volumes:
+    letsencrypt:
