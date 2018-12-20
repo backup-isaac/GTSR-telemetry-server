@@ -32,7 +32,7 @@ Send to production
 ```
 
 ## On Windows
-Mac OSX and Windows users must either run or build locally. To build locally via docker, run `\.build.bat` in Powershell
+Mac OSX and Windows users must either run or build locally. To build locally via docker, run `.\build.bat` in Powershell
 
 Send to local server
 ```
