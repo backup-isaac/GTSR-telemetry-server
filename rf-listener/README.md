@@ -24,21 +24,21 @@ Mac OSX and Windows users must either run or build locally. To build locally via
 
 Send to local server
 ```
-/bin/listen.app /dev/ttyUSB0 localhost
+./bin/listen.app /dev/ttyUSB0 localhost
 ```
 Send to production
 ```
-/bin/listen.app /dev/ttyUSB0 remote
+./bin/listen.app /dev/ttyUSB0 remote
 ```
 
 ## On Windows
-Mac OSX and Windows users must either run or build locally. To build locally via docker, run `build.sh`
+Mac OSX and Windows users must either run or build locally. To build locally via docker, run `\.build.bat` in Powershell
 
 Send to local server
 ```
-/bin/listen.exe /dev/ttyUSB0 localhost
+.\bin\listen.exe COM4 localhost
 ```
 Send to production
 ```
-/bin/listen.exe /dev/ttyUSB0 remote
+.\bin\listen.exe COM4 remote
 ```
