@@ -1272,7 +1272,7 @@
   {
     "can_id": 1577,
     "datatype": "float32",
-    "name": "Raw Acceleration X",
+    "name": "Raw_Acceleration_X",
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
@@ -1281,7 +1281,7 @@
   {
     "can_id": 1577,
     "datatype": "float32",
-    "name": "Raw Acceleration Y",
+    "name": "Raw_Acceleration_Y",
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
@@ -1290,7 +1290,7 @@
   {
     "can_id": 1578,
     "datatype": "float32",
-    "name": "Raw Acceleration Z",
+    "name": "Raw_Acceleration_Z",
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
@@ -1299,7 +1299,7 @@
   {
     "can_id": 1578,
     "datatype": "float32",
-    "name": "Accleration Scale",
+    "name": "Acceleration_Scale",
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
@@ -1308,7 +1308,7 @@
   {
     "can_id": 1581,
     "datatype": "float32",
-    "name": "IMU Temperature",
+    "name": "IMU_Temperature",
     "offset": 0,
     "check_bounds": true,
     "min_value": -80,
