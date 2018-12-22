@@ -7,7 +7,7 @@ pipeline {
             slackSend color: "#439FE0", message: "Build Started: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
             // necessarry to grant jenkins the mounted docker socket
             // in order to spin up more docker containers below
-            sh 'sudo change-socket.docker' 
+            sh 'sudo change-socket.docker'
         }
     }
     stage('Build') {
@@ -52,7 +52,7 @@ pipeline {
       steps {
         sh 'cd $GOPATH/src/telemetry-server && go get golang.org/x/lint/golint'
         sh 'cd $GOPATH/src/telemetry-server && $GOPATH/bin/golint ./...'
-        slackSend color: "good", message: "Build Suceeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
+        slackSend color: "good", message: "Build Succeeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
       }
     }
     stage('Deploy') {
