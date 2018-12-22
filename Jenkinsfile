@@ -52,7 +52,7 @@ pipeline {
       steps {
         sh 'cd $GOPATH/src/telemetry-server && go get golang.org/x/lint/golint'
         sh 'cd $GOPATH/src/telemetry-server && $GOPATH/bin/golint ./...'
-        slackSend color: "#439FE0", message: "Build Suceeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
+        slackSend color: "good", message: "Build Suceeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
       }
     }
     stage('Deploy') {
