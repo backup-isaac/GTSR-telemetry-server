@@ -1243,6 +1243,78 @@
     "max_value": 365
   },
   {
+    "can_id": 1573,
+    "datatype": "float32",
+    "name": "Yaw",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 6.284
+  },
+  {
+    "can_id": 1573,
+    "datatype": "float32",
+    "name": "Pitch",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 6.284
+  },
+  {
+    "can_id": 1574,
+    "datatype": "float32",
+    "name": "Roll",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 6.284
+  },
+  {
+    "can_id": 1577,
+    "datatype": "float32",
+    "name": "Raw_Acceleration_X",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 8
+  },
+  {
+    "can_id": 1577,
+    "datatype": "float32",
+    "name": "Raw_Acceleration_Y",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 8
+  },
+  {
+    "can_id": 1578,
+    "datatype": "float32",
+    "name": "Raw_Acceleration_Z",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 8
+  },
+  {
+    "can_id": 1578,
+    "datatype": "float32",
+    "name": "Acceleration_Scale",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 8
+  },
+  {
+    "can_id": 1581,
+    "datatype": "float32",
+    "name": "IMU_Temperature",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": -80,
+    "max_value": 120
+  },
+  {
     "can_id": 1680,
     "datatype": "float32",
     "name": "Photon_Channel_0_Array_Voltage",
@@ -1358,78 +1430,6 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 255
-  },
-  {
-    "can_id": 2049,
-    "datatype": "float32",
-    "name": "Yaw",
-    "offset": 0,
-    "check_bounds": true,
-    "min_value": 0,
-    "max_value": 6.284
-  },
-  {
-    "can_id": 2049,
-    "datatype": "float32",
-    "name": "Pitch",
-    "offset": 4,
-    "check_bounds": true,
-    "min_value": 0,
-    "max_value": 6.284
-  },
-  {
-    "can_id": 2050,
-    "datatype": "float32",
-    "name": "Roll",
-    "offset": 0,
-    "check_bounds": true,
-    "min_value": 0,
-    "max_value": 6.284
-  },
-  {
-    "can_id": 2053,
-    "datatype": "float32",
-    "name": "Raw Acceleration X",
-    "offset": 0,
-    "check_bounds": true,
-    "min_value": 0,
-    "max_value": 8
-  },
-  {
-    "can_id": 2053,
-    "datatype": "float32",
-    "name": "Raw Acceleration Y",
-    "offset": 4,
-    "check_bounds": true,
-    "min_value": 0,
-    "max_value": 8
-  },
-  {
-    "can_id": 2054,
-    "datatype": "float32",
-    "name": "Raw Acceleration Z",
-    "offset": 0,
-    "check_bounds": true,
-    "min_value": 0,
-    "max_value": 8
-  },
-  {
-    "can_id": 2054,
-    "datatype": "float32",
-    "name": "Accleration Scale",
-    "offset": 4,
-    "check_bounds": true,
-    "min_value": 0,
-    "max_value": 8
-  },
-  {
-    "can_id": 2057,
-    "datatype": "float32",
-    "name": "IMU Temperature",
-    "offset": 0,
-    "check_bounds": true,
-    "min_value": -80,
-    "max_value": 120
   },
   {
     "can_id": 65535,
