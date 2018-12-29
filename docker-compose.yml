@@ -25,10 +25,11 @@ services:
       - IN_DOCKER=true
     depends_on:
       - "influxdb"
-    working_dir: /go/src/telemetry-server
+    working_dir: /app
     volumes: 
-      - ./:/go/src/telemetry-server
-    command: bash -c "go get -v -t ./... && go run main.go"
+      - ./server:/app
+      - cache:/go
+    command: bash -c "go run main.go"
     ports:
       - "8888:8888"
       - "6001:6001"
@@ -57,6 +58,7 @@ services:
     ports:
       - "8080:8080"
 volumes:
+  cache:
   db-data:
   grafana-storage:
   jenkins-home:
