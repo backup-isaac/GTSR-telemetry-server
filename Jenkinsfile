@@ -45,7 +45,7 @@ pipeline {
             steps {
                 sh 'go get golang.org/x/lint/golint'
                 sh '$GOPATH/bin/golint ./...'
-                slackSend color: "good", message: "Build Suceeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
+                slackSend color: "good", message: "Build Succeeded: ${env.JOB_NAME} ${env.BUILD_NUMBER} (${env.BUILD_URL})"
             }
         }
         stage('Deploy') {
