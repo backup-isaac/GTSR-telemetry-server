@@ -4,7 +4,7 @@ set -e
 for fn in $(find . -name go.mod); do
     dn=$(dirname $fn)
     cd $dn
-    go mod download
-    go mod tidy
+    go build -o main
+    rm main
     cd ..
 done
