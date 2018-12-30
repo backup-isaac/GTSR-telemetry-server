@@ -864,6 +864,15 @@
     "max_value": 200
   },
   {
+    "can_id": 838,
+    "datatype": "float32",
+    "name": "Pack_Capacity",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 200
+  },
+  {
     "can_id": 839,
     "datatype": "float32",
     "name": "V12_Critical_Voltage",
@@ -1248,8 +1257,8 @@
     "name": "Yaw",
     "offset": 0,
     "check_bounds": true,
-    "min_value": 0,
-    "max_value": 6.284
+    "min_value": -3.15,
+    "max_value": 3.15
   },
   {
     "can_id": 1573,
@@ -1257,8 +1266,8 @@
     "name": "Pitch",
     "offset": 4,
     "check_bounds": true,
-    "min_value": 0,
-    "max_value": 6.284
+    "min_value": -3.15,
+    "max_value": 3.15
   },
   {
     "can_id": 1574,
@@ -1266,8 +1275,8 @@
     "name": "Roll",
     "offset": 0,
     "check_bounds": true,
-    "min_value": 0,
-    "max_value": 6.284
+    "min_value": -3.15,
+    "max_value": 3.15
   },
   {
     "can_id": 1577,
@@ -1275,8 +1284,8 @@
     "name": "Raw_Acceleration_X",
     "offset": 0,
     "check_bounds": true,
-    "min_value": 0,
-    "max_value": 8
+    "min_value": -16,
+    "max_value": 16
   },
   {
     "can_id": 1577,
@@ -1284,8 +1293,8 @@
     "name": "Raw_Acceleration_Y",
     "offset": 4,
     "check_bounds": true,
-    "min_value": 0,
-    "max_value": 8
+    "min_value": -16,
+    "max_value": 16
   },
   {
     "can_id": 1578,
@@ -1293,8 +1302,8 @@
     "name": "Raw_Acceleration_Z",
     "offset": 0,
     "check_bounds": true,
-    "min_value": 0,
-    "max_value": 8
+    "min_value": -16,
+    "max_value": 16
   },
   {
     "can_id": 1578,
