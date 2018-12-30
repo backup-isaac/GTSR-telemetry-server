@@ -1257,8 +1257,8 @@
     "name": "Yaw",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -3.14159,
-    "max_value": 3.14159
+    "min_value": -3.15,
+    "max_value": 3.15
   },
   {
     "can_id": 1573,
@@ -1266,8 +1266,8 @@
     "name": "Pitch",
     "offset": 4,
     "check_bounds": true,
-    "min_value": -3.14159,
-    "max_value": 3.14159
+    "min_value": -3.15,
+    "max_value": 3.15
   },
   {
     "can_id": 1574,
@@ -1275,8 +1275,8 @@
     "name": "Roll",
     "offset": 0,
     "check_bounds": true,
-    "min_value": -3.14159,
-    "max_value": 3.14159
+    "min_value": -3.15,
+    "max_value": 3.15
   },
   {
     "can_id": 1577,
