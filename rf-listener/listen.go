@@ -80,7 +80,6 @@ func main() {
 }
 
 // Dashboard messages and prints them out
-// TODO: Relay via Serial back to the car
 func listen(conn net.Conn, s serial.Port) {
 	buf := make([]byte, 128)
 	for {
