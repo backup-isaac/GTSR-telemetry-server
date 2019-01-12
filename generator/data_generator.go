@@ -19,7 +19,7 @@ func main() {
 	if len(os.Args) > 1 && os.Args[1] == "remote" {
 		host = "solarracing.me"
 	} else {
-		host = "localhost"
+		host = "server"
 	}
 	conn, err := net.Dial("tcp", fmt.Sprintf("%s:6001", host))
 	if err != nil {
