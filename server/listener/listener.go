@@ -5,7 +5,10 @@ import (
 	"io"
 	"log"
 	"net"
+	"server/storage"
 	"sync"
+	"sync/atomic"
+	"time"
 
 	"server/configs"
 	"server/datatypes"
@@ -32,11 +35,33 @@ func NewConnectionHandler(publisher DatapointPublisher, parser PacketParser) *Co
 }
 
 var connections sync.Map
+var activeConnectionCount uint32
+
+func reportConnections() {
+	store, err := storage.NewStorage()
+	if err != nil {
+		log.Println("Error getting storage for connection reporting.")
+		return
+	}
+	ticker := time.NewTicker(time.Second * 5)
+	for {
+		<-ticker.C
+		store.Insert([]*datatypes.Datapoint{
+			&datatypes.Datapoint{
+				Metric: "Active_TCP_Connections",
+				Value:  float64(atomic.LoadUint32(&activeConnectionCount)),
+				Time:   time.Now(),
+			},
+		})
+	}
+}
 
 // HandleConnection handles a new connection
 func (handler *ConnectionHandler) HandleConnection(conn net.Conn) {
 	connections.Store(conn.RemoteAddr().String(), conn)
+	atomic.AddUint32(&activeConnectionCount, 1)
 	defer connections.Delete(conn.RemoteAddr().String())
+	defer atomic.AddUint32(&activeConnectionCount, ^uint32(0)) // This is the documented way to decrement a uint atomically
 	buf := make([]byte, 1024)
 	for {
 		reqLen, err := conn.Read(buf)
@@ -59,6 +84,7 @@ func (handler *ConnectionHandler) HandleConnection(conn net.Conn) {
 
 // Listen is the main function of listener which listens to the TCP data port for incoming connections
 func Listen() {
+	go reportConnections()
 	canConfigs, err := configs.LoadConfigs()
 	if err != nil {
 		log.Fatalf("Error loading CAN configs: %s", err)
