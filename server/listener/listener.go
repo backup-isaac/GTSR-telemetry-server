@@ -120,7 +120,7 @@ var writeChannel = make(chan []byte, 100)
 
 // Write writes the data in buf to all open connections
 func Write(buf []byte) {
-	writeChannel <- buf
+	writeChannel <- append(make([]byte, 0, len(buf)), buf...)
 }
 
 func writerThread() {
