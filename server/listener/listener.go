@@ -1,9 +1,9 @@
 package listener
 
 import (
-	"fmt"
 	"io"
 	"log"
+	"math/rand"
 	"net"
 	"server/storage"
 	"sync"
@@ -58,18 +58,21 @@ func reportConnections() {
 
 // HandleConnection handles a new connection
 func (handler *ConnectionHandler) HandleConnection(conn net.Conn) {
-	connections.Store(conn.RemoteAddr().String(), conn)
+	defer conn.Close()
+	connectionKey := conn.RemoteAddr().String() + ";" + string(rand.Intn(1000000))
+	connections.Store(connectionKey, conn)
 	atomic.AddUint32(&activeConnectionCount, 1)
-	defer connections.Delete(conn.RemoteAddr().String())
+	defer connections.Delete(connectionKey)
 	defer atomic.AddUint32(&activeConnectionCount, ^uint32(0)) // This is the documented way to decrement a uint atomically
 	buf := make([]byte, 1024)
 	for {
 		reqLen, err := conn.Read(buf)
 		if err != nil {
-			if err == io.EOF {
-				return
+			if err != io.EOF {
+				log.Printf("Error reading from %s: %s\n", conn.RemoteAddr().String(), err)
 			}
-			log.Fatalf("Error reading from %s: %s", conn.RemoteAddr().Network(), err)
+			log.Printf("Connection to %s lost\n", conn.RemoteAddr().String())
+			return
 		}
 		for i := 0; i < reqLen; i++ {
 			if handler.Parser.ParseByte(buf[i]) {
@@ -94,19 +97,19 @@ func Listen() {
 		log.Fatalf("Error listening on TCP port: %s", err)
 	}
 	defer connListener.Close()
-	fmt.Printf("Listening on %s:%s\n", connHost, connPort)
+	log.Printf("Listening on %s:%s\n", connHost, connPort)
 	consecutiveFailures := 0
 	for {
 		conn, err := connListener.Accept()
 		if err == nil {
 			consecutiveFailures = 0
-			fmt.Println("Received connection from", conn.RemoteAddr().String())
+			log.Println("Received connection from", conn.RemoteAddr().String())
 			handler := NewConnectionHandler(GetDatapointPublisher(), NewPacketParser(canConfigs))
 			go handler.HandleConnection(conn)
 		} else {
 			consecutiveFailures++
-			fmt.Println("Error accepting connection in function Listen: listener/listener.go")
-			fmt.Printf("Consecutive connection failures: %d\n", consecutiveFailures)
+			log.Println("Error accepting connection in function Listen: listener/listener.go")
+			log.Printf("Consecutive connection failures: %d\n", consecutiveFailures)
 			if consecutiveFailures >= 5 {
 				log.Fatal("Consecutive connection failures exceeded maximum limit")
 			}

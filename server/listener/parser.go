@@ -3,6 +3,7 @@ package listener
 import (
 	"encoding/binary"
 	"fmt"
+	"log"
 	"math"
 	"time"
 
@@ -83,7 +84,7 @@ func (p *packetParser) ParseByte(value byte) bool {
 			return true
 		}
 	default:
-		fmt.Println("Unrecognized packet parser state: ", p.State)
+		log.Println("Unrecognized packet parser state: ", p.State)
 		p.State = idle
 	}
 	return false
@@ -101,12 +102,12 @@ func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 		}
 		converter, ok := PayloadParsers[config.Datatype]
 		if !ok {
-			fmt.Println("Unrecognized datatype: " + config.Datatype)
+			log.Println("Unrecognized datatype: " + config.Datatype)
 			continue
 		}
 		value, err := converter(p.PacketBuffer[8:], config.Offset)
 		if err != nil {
-			fmt.Printf("Error parsing %s: %s\n", config.Datatype, err)
+			log.Printf("Error parsing %s: %s\n", config.Datatype, err)
 			continue
 		}
 		point.Value = value
