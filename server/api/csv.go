@@ -54,7 +54,6 @@ func (api *API) GenerateCsv(res http.ResponseWriter, req *http.Request) {
 	resolutionString := req.Form.Get("resolution")
 	if startDateString == "" || endDateString == "" || resolutionString == "" {
 		http.Error(res, "malformatted query", http.StatusBadRequest)
-		fmt.Println("bad query")
 		generating.Store(false)
 		return
 	}
