@@ -107,7 +107,7 @@ func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 		}
 		value, err := converter(p.PacketBuffer[8:], config.Offset)
 		if err != nil {
-			log.Printf("Error parsing %s: %s\n", config.Datatype, err)
+			log.Printf("Error parsing %s from CAN id 0x%x at offset %d: %s\n", config.Datatype, config.CanID, config.Offset, err)
 			continue
 		}
 		point.Value = value
