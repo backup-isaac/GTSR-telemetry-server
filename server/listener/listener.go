@@ -87,7 +87,6 @@ func (handler *ConnectionHandler) HandleConnection(conn net.Conn) {
 
 // Listen is the main function of listener which listens to the TCP data port for incoming connections
 func Listen() {
-	go reportConnections()
 	canConfigs, err := configs.LoadConfigs()
 	if err != nil {
 		log.Fatalf("Error loading CAN configs: %s", err)
@@ -117,13 +116,26 @@ func Listen() {
 	}
 }
 
+var writeChannel = make(chan []byte, 100)
+
 // Write writes the data in buf to all open connections
 func Write(buf []byte) {
-	connections.Range(func(key, value interface{}) bool {
-		conn := value.(net.Conn)
-		conn.Write(buf)
-		return true
-	})
+	writeChannel <- append(make([]byte, 0, len(buf)), buf...)
+}
+
+func writerThread() {
+	for {
+		buf := <-writeChannel
+		connections.Range(func(key, value interface{}) bool {
+			conn := value.(net.Conn)
+			_, err := conn.Write(buf)
+			if err != nil {
+				conn.Close()
+				log.Printf("Error writing to %s - closing\n", conn.RemoteAddr().String())
+			}
+			return true
+		})
+	}
 }
 
 // Subscribe subscribes the channel c to the datapoint publisher
@@ -134,4 +146,9 @@ func Subscribe(c chan *datatypes.Datapoint) error {
 // Unsubscribe unsubscribes the channel c from the datapoint publisher
 func Unsubscribe(c chan *datatypes.Datapoint) error {
 	return GetDatapointPublisher().Unsubscribe(c)
+}
+
+func init() {
+	go reportConnections()
+	go writerThread()
 }
