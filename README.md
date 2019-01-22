@@ -5,7 +5,7 @@ Handles listening to TCP data port, interfacing with InfluxDB for storage, and s
 
 ## Prerequisites
 
-* Windows 10 Pro/Linux/OS X
+* Windows 10 Home/Pro/Linux/OS X
 * [Docker](https://docs.docker.com/install/)
 * [Docker-compose](https://docs.docker.com/compose/install/)
 
@@ -26,6 +26,12 @@ Then you should initialize all contianers
 ```
 docker-compose up -d
 ```
+
+If you are using Windows 10 Home, follow these steps, else continue past this section and go to "Then, once all the containers are initialized..."
+
+Open "Oracle VM VirtualBox Manager" and open the "Settings" tab. Navigate to the "Network" tab and click on "Advanced" then "Port Forwarding".
+
+There should already be a port here. Add ports corresponding to the "Exposed Ports" in this README.md file. When filling out the ports, use the same Host IP as the inital port and use the Port in the Exposed Port section for both the "Host Port" and "Guest Port". Click "Ok" till you get back to the main screen, and you can close the application.
 
 Then, once all the containers are initialized, go to your web browser and navigate to http://grafana.localhost/ use admin/admin as your credentials.
 
