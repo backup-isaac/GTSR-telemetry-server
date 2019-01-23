@@ -13,10 +13,7 @@ import (
 
 const (
 	idle          ReceiverState = 0
-	pre1          ReceiverState = 1
-	pre2          ReceiverState = 2
-	pre3          ReceiverState = 3
-	preambleRecvd ReceiverState = 4
+	preambleRecvd ReceiverState = 1
 )
 
 // ReceiverState is the enumerated type for receiver state
@@ -31,17 +28,19 @@ type PacketParser interface {
 // NewPacketParser returns a new PacketParser with the standard implementation
 func NewPacketParser(canConfigs map[int][]*configs.CanConfigType) PacketParser {
 	return &packetParser{
-		State:        idle,
-		PacketBuffer: make([]byte, 16),
-		CANConfigs:   canConfigs,
+		State:          idle,
+		PacketBuffer:   make([]byte, 10),
+		PreambleBuffer: make([]byte, 0),
+		CANConfigs:     canConfigs,
 	}
 }
 
 type packetParser struct {
-	State        ReceiverState
-	PacketBuffer []byte
-	Offset       int
-	CANConfigs   map[int][]*configs.CanConfigType
+	State          ReceiverState
+	PacketBuffer   []byte
+	PreambleBuffer []byte
+	Offset         int
+	CANConfigs     map[int][]*configs.CanConfigType
 }
 
 // PayloadParsers maps datatype strings to methods to parse a value in bytes at a given offset
@@ -52,29 +51,14 @@ var PayloadParsers map[string]func([]byte, int) (float64, error)
 func (p *packetParser) ParseByte(value byte) bool {
 	switch p.State {
 	case idle:
-		if value == byte('G') {
-			p.State = pre1
-		} else {
-			p.State = idle
-		}
-	case pre1:
-		if value == byte('T') {
-			p.State = pre2
-		} else {
-			p.State = idle
-		}
-	case pre2:
-		if value == byte('S') {
-			p.State = pre3
-		} else {
-			p.State = idle
-		}
-	case pre3:
-		if value == byte('R') {
+		// append the value into the PreambleBuffer
+		p.PreambleBuffer = append(p.PreambleBuffer, value)
+		if len(p.PreambleBuffer) == 2 && p.PreambleBuffer[0] == 'G' && p.PreambleBuffer[1] == 'T' {
 			p.State = preambleRecvd
-			p.Offset = 4 // Preamble offset
+			p.Offset = 2 // Preamble offset
 		} else {
-			p.State = idle
+			// pop off the first element of preamble buffer, continue waiting.
+			p.PreambleBuffer = p.PreambleBuffer[1:]
 		}
 	case preambleRecvd:
 		p.PacketBuffer[p.Offset] = value
@@ -92,7 +76,7 @@ func (p *packetParser) ParseByte(value byte) bool {
 
 // ParsePacket returns the datapoint parsed from the current packet saved within the parser
 func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
-	canID := int(binary.LittleEndian.Uint16(p.PacketBuffer[4:6]))
+	canID := int(binary.LittleEndian.Uint16(p.PacketBuffer[2:4]))
 	canConfigs := p.CANConfigs[canID]
 	points := make([]*datatypes.Datapoint, 0)
 	for _, config := range canConfigs {
@@ -105,7 +89,7 @@ func (p *packetParser) ParsePacket() []*datatypes.Datapoint {
 			log.Println("Unrecognized datatype: " + config.Datatype)
 			continue
 		}
-		value, err := converter(p.PacketBuffer[8:], config.Offset)
+		value, err := converter(p.PacketBuffer[4:], config.Offset)
 		if err != nil {
 			log.Printf("Error parsing %s from CAN id 0x%x at offset %d: %s\n", config.Datatype, config.CanID, config.Offset, err)
 			continue

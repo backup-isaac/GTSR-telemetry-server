@@ -41,13 +41,13 @@ func TestPacketParser(t *testing.T) {
 	valueBytes := make([]byte, 4)
 	binary.LittleEndian.PutUint32(valueBytes, value)
 	for i := 0; i < 4; i++ {
-		packet[4+i] = valueBytes[i]
+		packet[2+i] = valueBytes[i]
 	}
 	binary.LittleEndian.PutUint32(valueBytes, math.Float32bits(2.5))
 	for i := 0; i < 4; i++ {
-		packet[8+i] = valueBytes[i]
+		packet[6+i] = valueBytes[i]
 	}
-	bytes := append([]byte("GTSR"), packet...)
+	bytes := append([]byte("GT"), packet...)
 	for i := 0; i < len(bytes); i++ {
 		ok := parser.ParseByte(bytes[i])
 		if i == len(bytes)-1 {
@@ -97,12 +97,12 @@ func TestInvalidValues(t *testing.T) {
 		},
 	}
 	parser := listener.NewPacketParser(canConfig)
-	packet := append([]byte("GTSR"), make([]byte, 12)...)
-	packet[8] = 12
+	packet := append([]byte("GT"), make([]byte, 10)...)
+	packet[6] = 12
 	valueBytes := make([]byte, 4)
 	binary.LittleEndian.PutUint32(valueBytes, math.Float32bits(3.14159))
 	for i := 0; i < 4; i++ {
-		packet[12+i] = valueBytes[i]
+		packet[6+i] = valueBytes[i]
 	}
 	for i := 0; i < len(packet); i++ {
 		parser.ParseByte(packet[i])
