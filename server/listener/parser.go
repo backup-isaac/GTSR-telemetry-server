@@ -29,7 +29,7 @@ type PacketParser interface {
 func NewPacketParser(canConfigs map[int][]*configs.CanConfigType) PacketParser {
 	return &packetParser{
 		State:          idle,
-		PacketBuffer:   make([]byte, 10),
+		PacketBuffer:   make([]byte, 12),
 		PreambleBuffer: make([]byte, 0),
 		CANConfigs:     canConfigs,
 	}
@@ -53,12 +53,15 @@ func (p *packetParser) ParseByte(value byte) bool {
 	case idle:
 		// append the value into the PreambleBuffer
 		p.PreambleBuffer = append(p.PreambleBuffer, value)
-		if len(p.PreambleBuffer) == 2 && p.PreambleBuffer[0] == 'G' && p.PreambleBuffer[1] == 'T' {
-			p.State = preambleRecvd
-			p.Offset = 2 // Preamble offset
-		} else {
-			// pop off the first element of preamble buffer, continue waiting.
-			p.PreambleBuffer = p.PreambleBuffer[1:]
+		if (len(p.PreambleBuffer) == 2) {
+			if p.PreambleBuffer[0] == 'G' && p.PreambleBuffer[1] == 'T' {
+				p.State = preambleRecvd
+				p.Offset = 2 // Preamble offset
+				p.PreambleBuffer = make([]byte, 0)
+			}  else {
+				// pop off the first element of preamble buffer, continue waiting.
+				p.PreambleBuffer = p.PreambleBuffer[1:]
+			}
 		}
 	case preambleRecvd:
 		p.PacketBuffer[p.Offset] = value
@@ -70,6 +73,8 @@ func (p *packetParser) ParseByte(value byte) bool {
 	default:
 		log.Println("Unrecognized packet parser state: ", p.State)
 		p.State = idle
+		p.PreambleBuffer = make([]byte, 0)
+
 	}
 	return false
 }

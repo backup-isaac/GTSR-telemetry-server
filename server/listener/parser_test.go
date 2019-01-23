@@ -33,7 +33,7 @@ func TestPacketParser(t *testing.T) {
 		},
 	}
 	parser := listener.NewPacketParser(canconfig)
-	packet := make([]byte, 12)
+	packet := make([]byte, 10)
 	// Can ID 0
 	packet[0] = 0
 	packet[1] = 0
@@ -49,6 +49,7 @@ func TestPacketParser(t *testing.T) {
 	}
 	bytes := append([]byte("GT"), packet...)
 	for i := 0; i < len(bytes); i++ {
+		log.Println()
 		ok := parser.ParseByte(bytes[i])
 		if i == len(bytes)-1 {
 			assert.True(t, ok)
