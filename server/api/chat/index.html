@@ -73,7 +73,7 @@ initializeSocket();
 
 function send() {
   if (input.readOnly) return;
-  if (input.value.length > 16) {
+  if (input.value.length > 35) {
     output.innerHTML += "<b>Message is too long</b><br>"; 
   } else {
     snd.play();
