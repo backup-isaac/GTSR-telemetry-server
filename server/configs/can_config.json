@@ -912,10 +912,10 @@
     "can_id": 841,
     "datatype": "float32",
     "name": "Balancing_Enabled",
-    "offset": 1,
+    "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 1
   },
   {
     "can_id": 1025,
