@@ -1,8 +1,6 @@
 package api
 
 import (
-	"github.com/gorilla/mux"
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"path"
@@ -10,6 +8,9 @@ import (
 	"server/datatypes"
 	"server/listener"
 	"sync"
+
+	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 )
 
 // global datapoint subscriber
@@ -110,7 +111,7 @@ func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		if len(string(msg)) > 16 {
+		if len(string(msg)) > 35 {
 			err := conn.WriteMessage(msgType, []byte("Message length too long"))
 			if err != nil {
 				return

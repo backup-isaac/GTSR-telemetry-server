@@ -31,7 +31,11 @@ If you are using Windows 10 Home, follow these steps, else continue past this se
 
 Open "Oracle VM VirtualBox Manager" and open the "Settings" tab. Navigate to the "Network" tab and click on "Advanced" then "Port Forwarding".
 
+<<<<<<< HEAD
 There should already be a port here. Add ports corresponding to the "Exposed Ports" in this README.md file. When filling out the ports, use the same Host IP as the inital port and use the Port in the Exposed Port section for both the "Host Port" and "Guest Port". Click "Ok" till you get back to the main screen and you can close the application.
+=======
+There should already be a port here. Add ports corresponding to the "Exposed Ports" in this README.md file. When filling out the ports, use the same Host IP as the inital port and use the Port in the Exposed Port section for both the "Host Port" and "Guest Port". Click "Ok" till you get back to the main screen, and you can close the application.
+>>>>>>> 49ff52e682547f836d06d170945f18d6219112e6
 
 Then, once all the containers are initialized, go to your web browser and navigate to http://grafana.localhost/ use admin/admin as your credentials.
 
@@ -95,11 +99,11 @@ And then navigate to your web browser to localhost:8088 to access Jenkins jobs. 
 
 ## Data Protocol
 
-CAN data is first parsed by the telemetry subsystem on the car. The microcontroller connected to the Cellular LTE modem will convert each CAN frame into a basic 15-byte format, and forward it via TCP to port 6001 on the server.
+CAN data is first parsed by the telemetry subsystem on the car. The microcontroller connected to the Cellular LTE modem will convert each CAN frame into a basic 12-byte format, and forward it via TCP to port 6001 on the server.
 
-| Bytes 0-3 | Bytes 4-5 | Bytes 6-7 | Bytes 8-15 |
-|  ---      |  ---      |    ---    |   ---      |
-|  'GTSR'   | CAN_ID    | Unused    | Payload    |
+| Bytes 0-2 | Bytes 3-4 | Bytes 5-11 |
+|  ---      |  ---    |   ---      |
+|  'GT'   | CAN_ID    |  Payload    |
 
 All data is transmitted in little-endian format. Can Frames that do not use the whole 8 byte payload must still transmit the fixed 8 byte size. Perhaps the unusued two bytes may be useful for a size specifier or a checksum in this instance.
 

@@ -19,7 +19,7 @@ func main() {
 	if len(os.Args) > 1 && os.Args[1] == "remote" {
 		host = "solarracing.me"
 	} else {
-		host = "localhost"
+		host = "server"
 	}
 	conn, err := net.Dial("tcp", fmt.Sprintf("%s:6001", host))
 	if err != nil {
@@ -36,13 +36,13 @@ func sendTestComputation(conn net.Conn) {
 	for {
 		packet := formPacket()
 		sendLock.Lock()
-		packet[4] = 0xFF
-		packet[5] = 0xFF
+		packet[2] = 0xFF
+		packet[3] = 0xFF
 		value := rand.Float32() * 100
 		valueBytes := make([]byte, 4)
 		binary.LittleEndian.PutUint32(valueBytes, math.Float32bits(value))
 		for i := 0; i < 4; i++ {
-			packet[8+i] = valueBytes[i]
+			packet[4+i] = valueBytes[i]
 		}
 		_, err := conn.Write(packet)
 		sendLock.Unlock()
@@ -51,16 +51,15 @@ func sendTestComputation(conn net.Conn) {
 		}
 		time.Sleep(50 * time.Millisecond)
 	}
-
 }
 
 func sendDriverStatuses(conn net.Conn) {
 	for {
 		packet := formPacket()
 		sendLock.Lock()
-		packet[4] = 0x05
-		packet[5] = 0x07
-		packet[8] = 0x00
+		packet[2] = 0x05
+		packet[3] = 0x07
+		packet[4] = 0x00
 		_, err := conn.Write(packet)
 		sendLock.Unlock()
 		if err != nil {
