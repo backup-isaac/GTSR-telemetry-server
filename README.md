@@ -31,21 +31,18 @@ If you are using Windows 10 Home, follow these steps, else continue past this se
 
 Open "Oracle VM VirtualBox Manager" and open the "Settings" tab. Navigate to the "Network" tab and click on "Advanced" then "Port Forwarding".
 
-<<<<<<< HEAD
 There should already be a port here. Add ports corresponding to the "Exposed Ports" in this README.md file. When filling out the ports, use the same Host IP as the inital port and use the Port in the Exposed Port section for both the "Host Port" and "Guest Port". Click "Ok" till you get back to the main screen and you can close the application.
-=======
-There should already be a port here. Add ports corresponding to the "Exposed Ports" in this README.md file. When filling out the ports, use the same Host IP as the inital port and use the Port in the Exposed Port section for both the "Host Port" and "Guest Port". Click "Ok" till you get back to the main screen, and you can close the application.
->>>>>>> 49ff52e682547f836d06d170945f18d6219112e6
 
 Then, once all the containers are initialized, go to your web browser and navigate to http://grafana.localhost/ use admin/admin as your credentials.
 
 Next, add a data source. The URL will be http://influxdb:8086 and the database name will be `telemetry` with no username or password. Name it what you'd like.
 
-Now run
+Now navigate to the generator directory and run
 
 ```
-docker exec -it server go run generator/data_generator.go
+./generator.sh
 ```
+In bash (Linux), Terminal (OSX), or Docker Quickstart Terminal (Windows 10 Home)
 
 This will create test data, to verify your pipeline is properly running, navigate to grafana, add a new dashboard, add a new panel, and select `Test` as your metric name.
 
