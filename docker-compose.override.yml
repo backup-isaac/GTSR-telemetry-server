@@ -3,6 +3,8 @@ services:
   nginx:
     volumes:
       - ./nginx/conf.d/dev:/etc/nginx/conf.d
-      - letsencrypt:/etc/letsencrypt #hack to override prod /etc/letsencrypt
+      - letsencrypt-config:/etc/letsencrypt #hack to override prod /etc/letsencrypt
+      - letsencrypt-www:/var/www/certbot # ditto
 volumes:
-    letsencrypt:
+  letsencrypt-config:
+  letsencrypt-www:
