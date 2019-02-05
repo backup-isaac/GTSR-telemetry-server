@@ -22,7 +22,7 @@ services:
     restart: unless-stopped
     networks:
       - telemetry-server
-  server: 
+  server:
     image: "golang:1.11.2"
     container_name: server
     environment:
@@ -57,6 +57,7 @@ services:
     restart: unless-stopped 
     networks:
       - telemetry-server
+      - jenkins-network
   jenkins:
     build: ./jenkins
     container_name: jenkins
@@ -69,7 +70,7 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - telemetry-server
+      - jenkins-network
 volumes:
   cache:
   db-data:
@@ -78,3 +79,5 @@ volumes:
 networks:
   telemetry-server:
     name: telemetry-server
+  jenkins-network:
+    name: jenkins-network
