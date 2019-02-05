@@ -82,7 +82,7 @@ Installing packages, running unit tests, and linting all occur in Docker contain
 
 ## Connecting to Jenkins
 
-The Jenkins server in production can be accessed either at https://jenkins.solarracing.me or via an ssh tunnel.
+The Jenkins server in production can be accessed either at https://jenkins.solarracing.me or via an ssh tunnel. https://jenkins.solarracing.me is only available on eduroam or the Georgia Tech VPN.
 
 To tunnel, you *must* connect to the Georgia Tech VPN (ssh traffic is only accessible within the Georgia Tech network, so eduroam/gtwifi won't work). Then, proxy-jenkins.sh will tunnel traffic on port 8080 to localhost:8088. *Note the final digit is different.*
 
