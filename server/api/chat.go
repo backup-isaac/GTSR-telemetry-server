@@ -129,11 +129,11 @@ func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
 // which will then relay to the car
 func uploadTCPMessage(message string) {
 	// send GTSR, the length of the string, and the string itself
-	tag := []byte("GTSR")
-	listener.Write(tag)
+	msg := []byte("GTSR")
 	messageLength := []byte{byte(len(message))}
-	listener.Write(messageLength)
-	listener.Write([]byte(message))
+	msg = append(msg, messageLength...)
+	msg = append(msg, []byte(message)...)
+	listener.Write(msg)
 }
 
 // RegisterChatRoutes registers the routes for the chat service
