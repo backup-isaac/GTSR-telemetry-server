@@ -1,6 +1,8 @@
 package api
 
 import (
+	"github.com/gorilla/mux"
+	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"path"
@@ -9,8 +11,6 @@ import (
 	"server/listener"
 	"sync"
 	"time"
-	"github.com/gorilla/mux"
-	"github.com/gorilla/websocket"
 )
 
 // global datapoint subscriber
@@ -134,7 +134,7 @@ func pingClient(conn *websocket.Conn) {
 	defer ticker.Stop()
 	for {
 		<-ticker.C
-		err := conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second * 10))
+		err := conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second*10))
 		if err != nil {
 			log.Println(err)
 			return
