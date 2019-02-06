@@ -8,7 +8,7 @@ import (
 	"server/datatypes"
 	"server/listener"
 	"sync"
-
+	"time"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
 )
@@ -104,16 +104,20 @@ func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
 	addSocketConn(conn)
 	defer removeSocketConn(conn)
 
-	// read messages from each websocket
+	// ping client every 10 seconds to keep alive
+	go pingClient(conn)
+	// read messages from websocket
 	for {
 		msgType, msg, err := conn.ReadMessage()
 		if err != nil {
+			log.Println(err)
 			return
 		}
 
 		if len(string(msg)) > 35 {
 			err := conn.WriteMessage(msgType, []byte("Message length too long"))
 			if err != nil {
+				log.Println(err)
 				return
 			}
 		} else {
@@ -121,6 +125,19 @@ func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
 			log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
 			// upload message to car
 			uploadTCPMessage(string(msg))
+		}
+	}
+}
+
+func pingClient(conn *websocket.Conn) {
+	ticker := time.NewTicker(time.Second * 10)
+	defer ticker.Stop()
+	for {
+		<-ticker.C
+		err := conn.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(time.Second * 10))
+		if err != nil {
+			log.Println(err)
+			return
 		}
 	}
 }
