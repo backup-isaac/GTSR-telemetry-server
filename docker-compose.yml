@@ -51,6 +51,7 @@ services:
       - ./nginx/conf.d/prod:/etc/nginx/conf.d
       - /etc/letsencrypt/:/etc/letsencrypt
       - /var/www/certbot:/var/www/certbot
+      - /etc/telemetry-server/secrets:/etc/nginx/secrets
     ports:
       - "80:80"
       - "443:443"

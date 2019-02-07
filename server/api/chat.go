@@ -161,6 +161,7 @@ func (api *API) RegisterChatRoutes(router *mux.Router) {
 	}
 	dir := path.Dir(filename)
 	router.PathPrefix("/chat/static/").Handler(http.StripPrefix("/chat/static/", http.FileServer(http.Dir(path.Join(dir, "chat")))))
+	router.PathPrefix("/chat-login/static").Handler(http.StripPrefix("/chat-login/static/", http.FileServer(http.Dir(path.Join(dir, "chat-login")))))
 
 	router.HandleFunc("/chat", api.ChatDefault).Methods("GET")
 
