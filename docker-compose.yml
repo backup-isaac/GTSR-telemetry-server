@@ -1,4 +1,4 @@
-version: "3"
+version: "3.5"
 services:
   influxdb:
     image: influxdb
@@ -8,6 +8,8 @@ services:
     volumes:
       - db-data:/var/lib/influxdb
     restart: unless-stopped
+    networks:
+      - telemetry-server
   grafana:
     build: ./grafana 
     container_name: grafana
@@ -18,7 +20,9 @@ services:
     volumes:
       - grafana-storage:/var/lib/grafana
     restart: unless-stopped
-  server: 
+    networks:
+      - telemetry-server
+  server:
     image: "golang:1.11.2"
     container_name: server
     environment:
@@ -33,7 +37,9 @@ services:
     ports:
       - "8888:8888"
       - "6001:6001"
-    restart: unless-stopped
+    restart: unless-stopped 
+    networks:
+      - telemetry-server
   nginx:
     image: nginx
     container_name: nginx
@@ -44,21 +50,34 @@ services:
     volumes:
       - ./nginx/conf.d/prod:/etc/nginx/conf.d
       - /etc/letsencrypt/:/etc/letsencrypt
+      - /var/www/certbot:/var/www/certbot
     ports:
       - "80:80"
       - "443:443"
-    restart: unless-stopped
+    restart: unless-stopped 
+    networks:
+      - telemetry-server
+      - jenkins-network
   jenkins:
     build: ./jenkins
     container_name: jenkins
+    environment:
+      - TRY_UPGRADE_IF_NO_MARKER=true
     volumes:
       - jenkins-home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
       - .:/opt/telemetry-server
     ports:
       - "8080:8080"
+    networks:
+      - jenkins-network
 volumes:
   cache:
   db-data:
   grafana-storage:
   jenkins-home:
+networks:
+  telemetry-server:
+    name: telemetry-server
+  jenkins-network:
+    name: jenkins-network

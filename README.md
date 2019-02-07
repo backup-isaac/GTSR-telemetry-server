@@ -12,7 +12,7 @@ Handles listening to TCP data port, interfacing with InfluxDB for storage, and s
 Note that modern Docker requires Windows 10 Pro. If you're on Windows 10 Basic or older version sof Windows, you're going to have to install a virtual machine or try to get it working with older versions of docker engine (not tested)
 
 ## Initial Setup
-Make sure to install above. Also, if you are running OSx, and would like to run the RF relay to allow you to connect to the RF antenna, 
+Make sure to install above. Also, if you are running OSx, and would like to run the RF relay to allow you to connect to the RF antenna,
 you will also need to install go.
 
 First you should build and update all containers
@@ -31,17 +31,18 @@ If you are using Windows 10 Home, follow these steps, else continue past this se
 
 Open "Oracle VM VirtualBox Manager" and open the "Settings" tab. Navigate to the "Network" tab and click on "Advanced" then "Port Forwarding".
 
-There should already be a port here. Add ports corresponding to the "Exposed Ports" in this README.md file. When filling out the ports, use the same Host IP as the inital port and use the Port in the Exposed Port section for both the "Host Port" and "Guest Port". Click "Ok" till you get back to the main screen, and you can close the application.
+There should already be a port here. Add ports corresponding to the "Exposed Ports" in this README.md file. When filling out the ports, use the same Host IP as the inital port and use the Port in the Exposed Port section for both the "Host Port" and "Guest Port". Click "Ok" till you get back to the main screen and you can close the application.
 
 Then, once all the containers are initialized, go to your web browser and navigate to http://grafana.localhost/ use admin/admin as your credentials.
 
 Next, add a data source. The URL will be http://influxdb:8086 and the database name will be `telemetry` with no username or password. Name it what you'd like.
 
-Now run
+Now navigate to the generator directory and run
 
 ```
-docker exec -it server go run generator/data_generator.go
+./generator.sh
 ```
+In bash (Linux), Terminal (OSX), or Docker Quickstart Terminal (Windows 10 Home)
 
 This will create test data, to verify your pipeline is properly running, navigate to grafana, add a new dashboard, add a new panel, and select `Test` as your metric name.
 
@@ -57,7 +58,7 @@ Will automatically pull and build all relevant docker containers, and initialize
 ## Exposed Ports
 
 These ports are forwarded onto the docker host machine
-Note that in production, only port 6001, 80, and 443 are exposed to the internet. 
+Note that in production, only port 6001, 80, and 443 are exposed to the internet.
 
 We rely on nginx as a reverse proxy to proxy traffic to the relevant local sockets
 
@@ -78,10 +79,10 @@ We run a Jenkins Server in production that automatically manages deployments and
 The Jenkins *container* actually has full access to the Docker daemon on production. As a precaution against user error (but not necessarily making the system more secure), the jenkins user does not have direct root access to the server. Therefore, we have some pre-defined scripts `change-socket.docker` and `copy.docker` that run privledged to grant the dockerd unix socket and copy to /opt/telemetry-server on production. Note that since Jenkins has access to the Docker daemon, which runs as root, it should be treated as having root access.
 
 Installing packages, running unit tests, and linting all occur in Docker containers as specified in the Jenkins pipeline. Actually copying the files occurs outside of the Docker containers
- 
+
 ## Connecting to Jenkins
 
-The Jenkins server in production can be accessed either at https://jenkins.solarracing.me or via an ssh tunnel.
+The Jenkins server in production can be accessed either at https://jenkins.solarracing.me or via an ssh tunnel. https://jenkins.solarracing.me is only available on eduroam or the Georgia Tech VPN.
 
 To tunnel, you *must* connect to the Georgia Tech VPN (ssh traffic is only accessible within the Georgia Tech network, so eduroam/gtwifi won't work). Then, proxy-jenkins.sh will tunnel traffic on port 8080 to localhost:8088. *Note the final digit is different.*
 
