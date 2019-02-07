@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #map {
+        height: 100%;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <title>GTSR Car Tracker</title>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      var map;
+      var carMarker;
+      function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 10,
+          center: {lat: 33.787041, lng: -84.406817}
+        });
+        var icon = {
+          url: "/map/static/datboi.gif",
+          scaledSize: new google.maps.Size(35, 55)
+        }
+        carMarker = new google.maps.Marker({
+          map: map,
+          icon: icon,
+          position: {lat: 0, lng: 0},
+          optimized: false
+        });
+        carMarker.setVisible(false);
+        updateMarker(true);
+        window.setInterval(function() {
+          updateMarker(false);
+        }, 1000);
+        
+        function updateMarker(center) {
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.onreadystatechange = function() { 
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+              var latlng = JSON.parse(xmlHttp.responseText);
+              if (latlng.lat === 0 && latlng.lng === 0) {
+                carMarker.setVisible(false);
+              } else {
+                carMarker.setVisible(true);
+                carMarker.setPosition(latlng);
+                if (center) {
+                  map.setCenter(latlng)
+                }
+              }
+            }
+          }
+          xmlHttp.open("GET", "/api/location", true);
+          xmlHttp.send(null);
+          
+        }
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCUuAgXPNZv6AHBjAvQoMHwS57WWY6Ykr4&callback=initMap">
+    </script>
+  </body>
+</html>
