@@ -52,8 +52,8 @@ func SetCookieHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	useSecure := false
-	if os.Getenv("PRODUCTION") == "false" {
-		useSecure = false
+	if os.Getenv("PRODUCTION") == "true" {
+		useSecure = true
 	}
 
 	log.Printf("set cookie: %s\n", token)
