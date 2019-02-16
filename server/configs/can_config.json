@@ -375,8 +375,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 5,
-      "description": "Voltage on cell/battery 36 in the BMS. We only have 35 cells, so there is usually no data on these cells/floating zeros."
+    "max_value": 5,
+    "description": "Voltage on cell/battery 36 in the BMS. We only have 35 cells, so there is usually no data on these cells/floating zeros."
 
   },
   {
@@ -386,8 +386,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 5,
-      "description": "Voltage on cell 37. Like with cell 36, there is no data on these cells."
+    "max_value": 5,
+    "description": "Voltage on cell 37. Like with cell 36, there is no data on these cells."
   },
   {
     "can_id": 786,
@@ -396,8 +396,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 5,
-      "description": "Voltage on cell 38. No data/floating zeroes on these cells."
+    "max_value": 5,
+    "description": "Voltage on cell 38. No data/floating zeroes on these cells."
   },
   {
     "can_id": 787,
@@ -406,8 +406,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 5,
-      "description": "Voltage on cell 39. No data/floating zeroes on these cells."
+    "max_value": 5,
+    "description": "Voltage on cell 39. No data/floating zeroes on these cells."
   },
   {
     "can_id": 787,
@@ -416,8 +416,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 5,
-      "description": "Voltage on cell 40. No data/floating zeroes on these cells."
+    "max_value": 5,
+    "description": "Voltage on cell 40. No data/floating zeroes on these cells."
   },
   {
     "can_id": 800,
@@ -426,8 +426,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 200,
-      "description": "Cell/battery temperature of Cell 1 in the BMS."
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 1 in the BMS."
   },
   {
     "can_id": 800,
@@ -436,8 +436,8 @@
     "offset": 1,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 200,
-      "description": "Cell/battery temperature of Cell 2 in the BMS."
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 2 in the BMS."
   },
   {
     "can_id": 800,
@@ -446,8 +446,8 @@
     "offset": 2,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 200,
-      "description": "Cell/battery temperature of Cell 3 in the BMS."
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 3 in the BMS."
   },
   {
     "can_id": 800,
@@ -456,8 +456,8 @@
     "offset": 3,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 200,
-      "description": "Cell/battery temperature of Cell 4 in the BMS."
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 4 in the BMS."
   },
   {
     "can_id": 800,
@@ -466,8 +466,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 200,
-      "description": "Cell/battery temperature of Cell 5 in the BMS."
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 5 in the BMS."
   },
   {
     "can_id": 800,
@@ -476,8 +476,8 @@
     "offset": 5,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 200,
-      "description": "Cell/battery temperature of Cell 6 in the BMS."
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 6 in the BMS."
   },
   {
     "can_id": 800,
@@ -486,8 +486,8 @@
     "offset": 6,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 200,
-      "description": "Cell/battery temperature of Cell 7 in the BMS."
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 7 in the BMS."
   },
   {
     "can_id": 800,
@@ -506,8 +506,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 200,
-      "description": "Cell/battery temperature of Cell 9 in the BMS."
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 9 in the BMS."
   },
   {
     "can_id": 801,
@@ -516,8 +516,8 @@
     "offset": 1,
     "check_bounds": true,
     "min_value": 0,
-      "max_value": 200,
-      "description": "Cell/battery temperature of Cell 10 in the BMS."
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 10 in the BMS."
   },
   {
     "can_id": 801,
@@ -526,7 +526,8 @@
     "offset": 2,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 11 in the BMS."
   },
   {
     "can_id": 801,
@@ -535,7 +536,8 @@
     "offset": 3,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 12 in the BMS."
   },
   {
     "can_id": 801,
@@ -544,7 +546,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 13 in the BMS."
   },
   {
     "can_id": 801,
@@ -553,7 +556,8 @@
     "offset": 5,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 14 in the BMS."
   },
   {
     "can_id": 801,
@@ -562,7 +566,8 @@
     "offset": 6,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 15 in the BMS."
   },
   {
     "can_id": 801,
@@ -571,7 +576,8 @@
     "offset": 7,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 16 in the BMS."
   },
   {
     "can_id": 802,
@@ -580,7 +586,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 17 in the BMS."
   },
   {
     "can_id": 802,
@@ -589,7 +596,8 @@
     "offset": 1,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 18 in the BMS."
   },
   {
     "can_id": 802,
@@ -598,7 +606,8 @@
     "offset": 2,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 19 in the BMS."
   },
   {
     "can_id": 802,
@@ -607,7 +616,8 @@
     "offset": 3,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 20 in the BMS."
   },
   {
     "can_id": 802,
@@ -616,7 +626,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 21 in the BMS."
   },
   {
     "can_id": 802,
@@ -625,7 +636,8 @@
     "offset": 5,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 22 in the BMS."
   },
   {
     "can_id": 802,
@@ -634,7 +646,8 @@
     "offset": 6,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 23 in the BMS."
   },
   {
     "can_id": 802,
@@ -643,7 +656,8 @@
     "offset": 7,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 24 in the BMS."
   },
   {
     "can_id": 803,
@@ -652,7 +666,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 25 in the BMS."
   },
   {
     "can_id": 803,
@@ -661,7 +676,8 @@
     "offset": 1,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 26 in the BMS."
   },
   {
     "can_id": 803,
@@ -670,7 +686,8 @@
     "offset": 2,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 27 in the BMS."
   },
   {
     "can_id": 803,
@@ -679,7 +696,8 @@
     "offset": 3,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 28 in the BMS."
   },
   {
     "can_id": 803,
@@ -688,7 +706,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 29 in the BMS."
   },
   {
     "can_id": 803,
@@ -697,7 +716,8 @@
     "offset": 5,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 30 in the BMS."
   },
   {
     "can_id": 803,
@@ -706,7 +726,8 @@
     "offset": 6,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 31 in the BMS."
   },
   {
     "can_id": 803,
@@ -715,7 +736,8 @@
     "offset": 7,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 32 in the BMS."
   },
   {
     "can_id": 804,
@@ -724,7 +746,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 33 in the BMS."
   },
   {
     "can_id": 804,
@@ -733,7 +756,8 @@
     "offset": 1,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 34 in the BMS."
   },
   {
     "can_id": 804,
@@ -742,7 +766,8 @@
     "offset": 2,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 35 in the BMS."
   },
   {
     "can_id": 804,
@@ -751,7 +776,8 @@
     "offset": 3,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 36 in the BMS. Should be zero."
   },
   {
     "can_id": 804,
@@ -760,7 +786,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 37 in the BMS. Should be zero."
   },
   {
     "can_id": 804,
@@ -769,7 +796,8 @@
     "offset": 5,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 38 in the BMS. Should be zero."
   },
   {
     "can_id": 804,
@@ -778,7 +806,8 @@
     "offset": 6,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "Cell/battery temperature of Cell 39 in the BMS. Should be zero."
   },
   {
     "can_id": 804,
@@ -787,7 +816,8 @@
     "offset": 7,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "temperature": "Temperature on cell 40. Should be zero."
   },
   {
     "can_id": 833,
@@ -807,7 +837,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 5,
-    "description": "The Battery Cell Voltage with the Largest Volatge"
+    "description": "The Battery Cell Voltage with the Largest Voltage"
   },
   {
     "can_id": 834,
