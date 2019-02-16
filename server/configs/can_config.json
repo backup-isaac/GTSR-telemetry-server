@@ -818,7 +818,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "temperature": "Temperature on cell 40. Should be zero."
+    "description": "Temperature on cell 40. Should be zero."
   },
   {
     "can_id": 833,
