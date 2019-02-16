@@ -1,4 +1,4 @@
-[
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------[
   {
     "can_id": 1,
     "datatype": "uint8",
@@ -6,7 +6,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 10
+    "max_value": 10,
+    "description": "Whether BMS is tripped"
   },
   {
     "can_id": 105,
@@ -15,7 +16,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 1
+    "max_value": 1,
+    "description": "Checks if the SD Card is in"
   },
   {
     "can_id": 768,
@@ -24,7 +26,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 1"
   },
   {
     "can_id": 768,
@@ -33,7 +36,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 2"
   },
   {
     "can_id": 769,
@@ -42,7 +46,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 3"
   },
   {
     "can_id": 769,
@@ -51,7 +56,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 4"
   },
   {
     "can_id": 770,
@@ -60,7 +66,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 5"
   },
   {
     "can_id": 770,
@@ -69,7 +76,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 6"
   },
   {
     "can_id": 771,
@@ -78,7 +86,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 7"
   },
   {
     "can_id": 771,
@@ -87,7 +96,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 8"
   },
   {
     "can_id": 772,
@@ -96,7 +106,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 9"
   },
   {
     "can_id": 772,
@@ -105,7 +116,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 10"
   },
   {
     "can_id": 773,
@@ -114,7 +126,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 11"
   },
   {
     "can_id": 773,
@@ -123,7 +136,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 12"
   },
   {
     "can_id": 774,
@@ -132,7 +146,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 13"
   },
   {
     "can_id": 774,
@@ -141,7 +156,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 14"
   },
   {
     "can_id": 775,
@@ -150,7 +166,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 15"
   },
   {
     "can_id": 775,
@@ -159,7 +176,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 16"
   },
   {
     "can_id": 776,
@@ -168,7 +186,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 17"
   },
   {
     "can_id": 776,
@@ -177,7 +196,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 18"
   },
   {
     "can_id": 777,
@@ -186,7 +206,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 19"
   },
   {
     "can_id": 777,
@@ -195,7 +216,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 20"
   },
   {
     "can_id": 778,
@@ -204,7 +226,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 21"
   },
   {
     "can_id": 778,
@@ -213,7 +236,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 22"
   },
   {
     "can_id": 779,
@@ -222,7 +246,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 23"
   },
   {
     "can_id": 779,
@@ -231,7 +256,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 24"
   },
   {
     "can_id": 780,
@@ -240,7 +266,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 25"
   },
   {
     "can_id": 780,
@@ -249,7 +276,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 26"
   },
   {
     "can_id": 781,
@@ -258,7 +286,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 27"
   },
   {
     "can_id": 781,
@@ -267,7 +296,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 28"
   },
   {
     "can_id": 782,
@@ -276,7 +306,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 29"
   },
   {
     "can_id": 782,
@@ -285,7 +316,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 30"
   },
   {
     "can_id": 783,
@@ -294,7 +326,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 31"
   },
   {
     "can_id": 783,
@@ -303,7 +336,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 32"
   },
   {
     "can_id": 784,
@@ -312,7 +346,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 33"
   },
   {
     "can_id": 784,
@@ -321,7 +356,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 34"
   },
   {
     "can_id": 785,
@@ -330,7 +366,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage for Cell 35"
   },
   {
     "can_id": 785,
@@ -744,7 +781,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage with the Smallest Volatge"
   },
   {
     "can_id": 833,
@@ -753,7 +791,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 5
+    "max_value": 5,
+    "description": "The Battery Cell Voltage with the Largest Volatge"
   },
   {
     "can_id": 834,
@@ -762,7 +801,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": -150,
-    "max_value": 150
+    "max_value": 150,
+    "description": "The Amount of Current flowing out of BMS"
   },
   {
     "can_id": 834,
@@ -771,7 +811,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": -0.1,
-    "max_value": 100.1
+    "max_value": 100.1,
+    "description": "The percentage of the current Charge out of the max amount of Charge"
   },
   {
     "can_id": 835,
@@ -780,7 +821,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "The Battery Cell Temperature with the Lowest Temperature"
   },
   {
     "can_id": 835,
@@ -789,7 +831,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "The Battery Cell Temperature with the Highest Temperature"
   },
   {
     "can_id": 836,
@@ -798,7 +841,8 @@
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "The Heatsink Temperature for Heatsink 1"
   },
   {
     "can_id": 836,
@@ -807,7 +851,8 @@
     "offset": 1,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "The Heatsink Temperature for Heatsink 2"
   },
   {
     "can_id": 836,
@@ -816,7 +861,8 @@
     "offset": 2,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "The Heatsink Temperature for Heatsink 3"
   },
   {
     "can_id": 836,
@@ -825,7 +871,8 @@
     "offset": 3,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "The Heatsink Temperature for Heatsink 4"
   },
   {
     "can_id": 836,
@@ -834,7 +881,8 @@
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
-    "max_value": 200
+    "max_value": 200,
+    "description": "The Heatsink Temperature for Heatsink 5"
   },
   {
     "can_id": 837,
