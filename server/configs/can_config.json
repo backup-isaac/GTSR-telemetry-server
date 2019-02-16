@@ -377,9 +377,8 @@
     "check_bounds": true,
     "min_value": 0,
       "max_value": 5,
-      "description": "Voltage on cell/battery 36 in the BMS. We only have 35 cells, so there is usually no data on
-      these cells/floating zeros."
-      
+      "description": "Voltage on cell/battery 36 in the BMS. We only have 35 cells, so there is usually no data on these cells/floating zeros."
+
   },
   {
     "can_id": 786,
