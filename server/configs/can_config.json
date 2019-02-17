@@ -1524,7 +1524,7 @@
   {
     "can_id": 1798,
     "datatype": "uint8",
-    "name": "Lap_Reset",
+    "name": "MC2_Lap_Reset",
     "offset": 0,
     "check_bounds": true,
     "min_value": 0,
