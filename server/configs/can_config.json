@@ -849,6 +849,7 @@
     "min_value": -150,
     "max_value": 150,
     "description": "Net current out of battery pack (negative charging)"
+  },
   {
     "can_id": 834,
     "datatype": "float32",
