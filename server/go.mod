@@ -9,5 +9,6 @@ require (
 	github.com/gorilla/websocket v1.4.0
 	github.com/influxdata/influxdb v1.7.2
 	github.com/influxdata/platform v0.0.0-20181226214301-364b56f4fada // indirect
+	github.com/nlopes/slack v0.5.0
 	github.com/stretchr/testify v1.2.2
 )
