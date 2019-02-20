@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 	"io/ioutil"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
@@ -277,7 +278,7 @@ func (api *API) RegisterChatRoutes(router *mux.Router) {
 	dir := path.Dir(filename)
 
 	if token, err := ioutil.ReadFile("/secrets/slack_token.txt"); err == nil {
-		slck = slack.New(string(token))
+		slck = slack.New(strings.TrimSpace(string(token)))
 	} else {
 		log.Printf("Unable to find Slack credentials: %s\n", err)
 	}
