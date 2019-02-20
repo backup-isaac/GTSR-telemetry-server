@@ -1225,6 +1225,60 @@
     "max_value": 1
   },
   {
+    "can_id": 1385,
+    "datatype": "uint8",
+    "name": "MC2_Cruise_Enabled",
+    "offset": 1,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 1
+  },
+  {
+    "can_id": 1385,
+    "datatype": "uint8",
+    "name": "MC2_Drive_Direction",
+    "offset": 2,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 1
+  },
+  {
+    "can_id": 1385,
+    "datatype": "uint8",
+    "name": "MC2_Regen_Enabled",
+    "offset": 3,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 1
+  },
+  {
+    "can_id": 1385,
+    "datatype": "uint8",
+    "name": "MC2_Brake_Pressed",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 1
+  },
+  {
+    "can_id": 1385,
+    "datatype": "uint8",
+    "name": "MC2_CAN_TX_Errors",
+    "offset": 5,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 255
+  },
+  {
+    "can_id": 1385,
+    "datatype": "uint8",
+    "name": "MC2_CAN_RX_Errors",
+    "offset": 6,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 255
+  },
+  {
     "can_id": 1569,
     "datatype": "float32",
     "name": "GPS_Latitude",
@@ -1342,6 +1396,15 @@
     "max_value": 120
   },
   {
+    "can_id": 1582,
+    "datatype": "uint8",
+    "name": "GPS_Status",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 1
+  },
+  {
     "can_id": 1680,
     "datatype": "float32",
     "name": "Photon_Channel_0_Array_Voltage",
@@ -1457,6 +1520,15 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 255
+  },
+  {
+    "can_id": 1798,
+    "datatype": "uint8",
+    "name": "MC2_Lap_Reset",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 1
   },
   {
     "can_id": 1801,

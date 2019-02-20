@@ -1,10 +1,14 @@
 version: "3.5"
 services:
+  server:
+    environment:
+      - PRODUCTION=false
   nginx:
     volumes:
       - ./nginx/conf.d/dev:/etc/nginx/conf.d
       - letsencrypt-config:/etc/letsencrypt #hack to override prod /etc/letsencrypt
       - letsencrypt-www:/var/www/certbot # ditto
+      - ./nginx/secrets/dev:/etc/nginx/secrets # Use dev credentials for chat login
 volumes:
   letsencrypt-config:
   letsencrypt-www:
