@@ -27,12 +27,14 @@ services:
     container_name: server
     environment:
       - IN_DOCKER=true
+      - PRODUCTION=true
     depends_on:
       - "influxdb"
     working_dir: /app
     volumes: 
       - ./server:/app
       - cache:/go
+      - /etc/telemetry-server/secrets:/secrets
     command: bash -c "go run main.go"
     ports:
       - "8888:8888"
@@ -51,6 +53,7 @@ services:
       - ./nginx/conf.d/prod:/etc/nginx/conf.d
       - /etc/letsencrypt/:/etc/letsencrypt
       - /var/www/certbot:/var/www/certbot
+      - /etc/telemetry-server/secrets:/etc/nginx/secrets
     ports:
       - "80:80"
       - "443:443"
