@@ -198,19 +198,19 @@ func SubscribeDriverStatus() {
 	for {
 		point := <-points
 		if point.Metric == "Driver_ACK_Status" {
+			msg := ""
+			if point.Value == 0.0 {
+				msg = "Driver Response NACK"
+				postSlackMessage("Driver: NACK")
+			} else if point.Value == 1.0 {
+				msg = "Driver Response ACK"
+				postSlackMessage("Driver: ACK")
+			}
+			if msg == "" {
+				continue
+			}
 			socketLock.Lock()
 			for _, conn := range activeWebsockets {
-				msg := ""
-				if point.Value == 0.0 {
-					msg = "Driver Response NACK"
-					postSlackMessage("Driver: NACK")
-				} else if point.Value == 1.0 {
-					msg = "Driver Response ACK"
-					postSlackMessage("Driver: ACK")
-				} else {
-					// don't send NULL
-					continue
-				}
 				err := conn.WriteMessage(websocket.TextMessage, []byte(msg))
 				if err != nil {
 					log.Println("Failed to write message to websocket")
