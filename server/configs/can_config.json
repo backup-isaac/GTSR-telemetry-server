@@ -918,6 +918,24 @@
     "max_value": 1
   },
   {
+    "can_id": 842,
+    "datatype": "float32",
+    "name": "I_Net",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": -150,
+    "max_value": 150
+  },
+  {
+    "can_id": 842,
+    "datatype": "float32",
+    "name": "Q_Net",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": -50,
+    "max_value": 50
+  },
+  {
     "can_id": 1025,
     "datatype": "uint16",
     "name": "Right_Wavesculptor_Limit_Flags",
