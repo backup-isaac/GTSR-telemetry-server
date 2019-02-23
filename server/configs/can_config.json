@@ -938,7 +938,7 @@
     "check_bounds": true,
     "min_value": -10,
     "max_value": 10,
-    "description": ""
+    "description": "The current coming out of the V12 Vicor system"
   },
   {
     "can_id": 837,
@@ -948,7 +948,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-    "description": ""
+    "description": "The voltage coming out of the V12 Vicor system"
   },
   {
     "can_id": 838,
@@ -958,7 +958,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": ""
+    "description": "The current amount of voltage the pack has"
   },
   {
     "can_id": 838,
@@ -968,7 +968,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": ""
+    "description": "The total amount of voltage the pack can store"
   },
   {
     "can_id": 839,
@@ -978,7 +978,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-    "description": ""
+    "description": "Value for the highest value for V12 voltage"
   },
   {
     "can_id": 839,
@@ -988,7 +988,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-    "description": ""
+    "description": "The average value for the V12 voltage"
   },
   {
     "can_id": 840,
@@ -998,7 +998,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-    "description": ""
+    "description": "The voltage for the auxiliary battery"
   },
   {
     "can_id": 841,
@@ -1008,7 +1008,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 5,
-    "description": ""
+    "description": "The value at which should trigger an alert"
   },
   {
     "can_id": 841,
@@ -1018,7 +1018,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 1,
-    "description": ""
+    "description": "Whether the values have gone past the balancing threshold"
   },
   {
     "can_id": 1025,
@@ -1026,7 +1026,7 @@
     "name": "Right_Wavesculptor_Limit_Flags",
     "offset": 0,
     "check_bounds": false,
-    "description": ""
+    "description": "Describes what the value of the limits for the right wavesculpter flags for the right motor"
   },
   {
     "can_id": 1025,
@@ -1034,7 +1034,7 @@
     "name": "Right_Wavesculptor_Error_Flags",
     "offset": 2,
     "check_bounds": false,
-    "description": ""
+    "description": "Describes whether there are errors for the right wavesculpter flags for the right motor"
   },
   {
     "can_id": 1026,
@@ -1044,7 +1044,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": ""
+    "description": "The voltage on the right bus"
   },
   {
     "can_id": 1026,
@@ -1054,7 +1054,7 @@
     "check_bounds": true,
     "min_value": -150,
     "max_value": 150,
-    "description": ""
+    "description": "The current on the right bus"
   },
   {
     "can_id": 1027,
@@ -1064,7 +1064,7 @@
     "check_bounds": true,
     "min_value": -2000,
     "max_value": 2000,
-    "description": ""
+    "description": "The amount of revolutions the wavesculpter makes in a minute"
   },
   {
     "can_id": 1028,
@@ -1074,7 +1074,7 @@
     "check_bounds": true,
     "min_value": -1,
     "max_value": 100,
-    "description": ""
+    "description": "The Current for the B Wave Cycle"
   },
   {
     "can_id": 1028,
@@ -1084,7 +1084,7 @@
     "check_bounds": true,
     "min_value": -1,
     "max_value": 100,
-    "description": ""
+    "description": "The Current for the C Wave Cycle"
   },
   {
     "can_id": 1029,
@@ -1094,7 +1094,7 @@
     "check_bounds": true,
     "min_value": -5,
     "max_value": 5,
-    "description": ""
+    "description": "The right motor voltage through its quadrature axis"
   },
   {
     "can_id": 1029,
@@ -1104,7 +1104,7 @@
     "check_bounds": true,
     "min_value": -10,
     "max_value": 50,
-    "description": ""
+    "description": "The right motor voltage through its direct axis (perpendicular to quadrature axis)"
   },
   {
     "can_id": 1030,
@@ -1114,7 +1114,7 @@
     "check_bounds": true,
     "min_value": -100,
     "max_value": 100,
-    "description": ""
+    "description": "The right motor current through its quadrature axis"
   },
   {
     "can_id": 1030,
@@ -1124,7 +1124,7 @@
     "check_bounds": true,
     "min_value": -100,
     "max_value": 100,
-    "description": ""
+    "description": "The right motor current through its direct axis (perpendicular to quadrature axis)"
   },
   {
     "can_id": 1031,
@@ -1134,7 +1134,7 @@
     "check_bounds": true,
     "min_value": -200,
     "max_value": 200,
-    "description": ""
+    "description": "The value of the right motor's electromagnetic field"
   },
   {
     "can_id": 1035,
@@ -1144,7 +1144,7 @@
     "check_bounds": true,
     "min_value": -40,
     "max_value": 200,
-    "description": ""
+    "description": "The temperature of the right motor"
   },
   {
     "can_id": 1035,
@@ -1154,7 +1154,7 @@
     "check_bounds": true,
     "min_value": -40,
     "max_value": 200,
-    "description": ""
+    "description": "The temperature of the right wavesculpter's heatsink"
   },
   {
     "can_id": 1038,
@@ -1164,7 +1164,7 @@
     "check_bounds": true,
     "min_value": -12742,
     "max_value": 12742,
-    "description": ""
+    "description": "The value of the right Odometer (measures distance the vechicle travels)"
   },
   {
     "can_id": 1038,
@@ -1174,7 +1174,7 @@
     "check_bounds": true,
     "min_value": -1000,
     "max_value": 1000,
-    "description": ""
+    "description": "The amount of charge consumed by the right side"
   },
   {
     "can_id": 1057,
@@ -1340,7 +1340,7 @@
     "check_bounds": true,
     "min_value": -20000,
     "max_value": 20000,
-    "description": ""
+    "description": "The target amount of revolutions per minute"
   },
   {
     "can_id": 1281,
@@ -1350,7 +1350,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 1,
-    "description": ""
+    "description": "The amount of flow through the engine"
   },
   {
     "can_id": 1385,
@@ -1360,7 +1360,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 1,
-    "description": ""
+    "description": "Displays whether the nitrogen oxide system is active"
   },
   {
     "can_id": 1569,
@@ -1370,7 +1370,7 @@
     "check_bounds": true,
     "min_value": -90,
     "max_value": 90,
-    "description": ""
+    "description": "The latitude of the car"
   },
   {
     "can_id": 1569,
@@ -1380,7 +1380,7 @@
     "check_bounds": true,
     "min_value": -180,
     "max_value": 180,
-    "description": ""
+    "description": "The longitude of the car"
   },
   {
     "can_id": 1570,
@@ -1390,7 +1390,7 @@
     "check_bounds": true,
     "min_value": -100,
     "max_value": 10000,
-    "description": ""
+    "description": "The altitude of the car"
   },
   {
     "can_id": 1571,
@@ -1400,7 +1400,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 100,
-    "description": ""
+    "description": "Displays the speed of the car"
   },
   {
     "can_id": 1571,
@@ -1410,7 +1410,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 365,
-    "description": ""
+    "description": "The angle of which the car is traveling at"
   },
   {
     "can_id": 1573,
@@ -1420,7 +1420,7 @@
     "check_bounds": true,
     "min_value": -3.15,
     "max_value": 3.15,
-    "description": ""
+    "description": "The oscillation of the car about the vertical axis"
   },
   {
     "can_id": 1573,
@@ -1430,7 +1430,7 @@
     "check_bounds": true,
     "min_value": -3.15,
     "max_value": 3.15,
-    "description": ""
+    "description": "The oscillation of the car about the side axis"
   },
   {
     "can_id": 1574,
@@ -1440,7 +1440,7 @@
     "check_bounds": true,
     "min_value": -3.15,
     "max_value": 3.15,
-    "description": ""
+    "description": "The oscillation of the car about the axis through the front of the car"
   },
   {
     "can_id": 1577,
@@ -1450,7 +1450,7 @@
     "check_bounds": true,
     "min_value": -16,
     "max_value": 16,
-    "description": ""
+    "description": "The acceleration of the car going forward"
   },
   {
     "can_id": 1577,
@@ -1460,7 +1460,7 @@
     "check_bounds": true,
     "min_value": -16,
     "max_value": 16,
-    "description": ""
+    "description": "The acceleration of the car going left/right"
   },
   {
     "can_id": 1578,
@@ -1470,7 +1470,7 @@
     "check_bounds": true,
     "min_value": -16,
     "max_value": 16,
-    "description": ""
+    "description": "The acceleration of the car going up/down"
   },
   {
     "can_id": 1578,
@@ -1480,7 +1480,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 8,
-    "description": ""
+    "description": "The magnitude of the acceleration"
   },
   {
     "can_id": 1581,
@@ -1490,7 +1490,7 @@
     "check_bounds": true,
     "min_value": -80,
     "max_value": 120,
-    "description": ""
+    "description": "The temperature of the Inertial Measurement Unit"
   },
   {
     "can_id": 1680,
