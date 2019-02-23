@@ -938,7 +938,7 @@
   {
     "can_id": 843,
     "datatype": "float32",
-    "name": "BMS_Current_Limit_Charging",
+    "name": "BMS_Current_Limit_Discharging",
     "offset": 0,
     "check_bounds": true,
     "min_value": -240,
@@ -947,7 +947,7 @@
   {
     "can_id": 843,
     "datatype": "float32",
-    "name": "BMS_Current_Limit_Disharging",
+    "name": "BMS_Current_Limit_Charging",
     "offset": 4,
     "check_bounds": true,
     "min_value": -240,
