@@ -938,11 +938,7 @@
     "check_bounds": true,
     "min_value": -10,
     "max_value": 10,
-<<<<<<< HEAD
     "description": "The current coming out of the V12 Vicor system"
-=======
-    "description": "Current sourced by Vicor (i.e. draw of 12V line)"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 837,
@@ -952,11 +948,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-<<<<<<< HEAD
     "description": "The voltage coming out of the V12 Vicor system"
-=======
-    "description": "Voltage output by Vicor"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 838,
@@ -966,11 +958,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-<<<<<<< HEAD
     "description": "The current amount of voltage the pack has"
-=======
-    "description": "Total pack voltage as calculated by BMS Master"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 838,
@@ -980,11 +968,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-<<<<<<< HEAD
     "description": "The total amount of voltage the pack can store"
-=======
-    "description": "Estimated capacity of the battery pack"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 839,
@@ -994,11 +978,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-<<<<<<< HEAD
     "description": "Value for the highest value for V12 voltage"
-=======
-    "description": "Voltage of the 12V Critical line as measured on BMS Master"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 839,
@@ -1008,11 +988,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-<<<<<<< HEAD
     "description": "The average value for the V12 voltage"
-=======
-    "description": "Voltage of the 12V Common line as measured on BMS Master"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 840,
@@ -1022,11 +998,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-<<<<<<< HEAD
     "description": "The voltage for the auxiliary battery"
-=======
-    "description": "Voltage of the auxiliary battery"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 841,
@@ -1036,11 +1008,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 5,
-<<<<<<< HEAD
     "description": "The value at which should trigger an alert"
-=======
-    "description": "Current target setpoint for battery balancing"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 841,
@@ -1050,11 +1018,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 1,
-<<<<<<< HEAD
     "description": "Whether the values have gone past the balancing threshold"
-=======
-    "description": "Whether the pack is allowed to balance or not"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 1025,
@@ -1080,11 +1044,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-<<<<<<< HEAD
     "description": "The voltage on the right bus"
-=======
-    "description": "Bus voltage as measured by right Wavesculptor"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 1026,
@@ -1094,11 +1054,7 @@
     "check_bounds": true,
     "min_value": -150,
     "max_value": 150,
-<<<<<<< HEAD
     "description": "The current on the right bus"
-=======
-    "description": "Current consumed by right Wavesculptor"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 1027,
@@ -1108,11 +1064,7 @@
     "check_bounds": true,
     "min_value": -2000,
     "max_value": 2000,
-<<<<<<< HEAD
     "description": "The amount of revolutions the wavesculpter makes in a minute"
-=======
-    "description": "Current RPM of right motor"
->>>>>>> ed8067abbf76eeee2f55c6ff2b995eb751307e19
   },
   {
     "can_id": 1028,
