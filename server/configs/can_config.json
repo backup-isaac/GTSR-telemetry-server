@@ -936,6 +936,24 @@
     "max_value": 50
   },
   {
+    "can_id": 843,
+    "datatype": "float32",
+    "name": "BMS_Current_Limit_Discharging",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": -240,
+    "max_value": 240
+  },
+  {
+    "can_id": 843,
+    "datatype": "float32",
+    "name": "BMS_Current_Limit_Charging",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": -240,
+    "max_value": 240
+  },
+  {
     "can_id": 1025,
     "datatype": "uint16",
     "name": "Right_Wavesculptor_Limit_Flags",
