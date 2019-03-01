@@ -818,7 +818,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": "Temperature on cell 40"
+    "description": "Temperature of Battery Module 40"
   },
   {
     "can_id": 833,
@@ -938,7 +938,7 @@
     "check_bounds": true,
     "min_value": -10,
     "max_value": 10,
-    "description": "The current coming out of the V12 Vicor system"
+    "description": "The current drawn from the Vicor converter (total 12V line)"
   },
   {
     "can_id": 837,
@@ -948,7 +948,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-    "description": "The voltage coming out of the V12 Vicor system"
+    "description": "The voltage output of the Vicor converter"
   },
   {
     "can_id": 838,
@@ -958,7 +958,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": "The current amount of voltage the pack has"
+    "description": "Total output voltage of the Battery Pack"
   },
   {
     "can_id": 838,
@@ -968,7 +968,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": "The total amount of voltage the pack can store"
+    "description": "The total amount of charge capacity of the Battery Pack"
   },
   {
     "can_id": 839,
@@ -978,7 +978,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-    "description": "Value for the V12 voltage for the Critial line"
+    "description": "Voltage of the 12V Critical line"
   },
   {
     "can_id": 839,
@@ -988,7 +988,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-    "description": "Value for the V12 voltage for the Common line"
+    "description": "Voltage of the 12V Common line"
   },
   {
     "can_id": 840,
@@ -998,7 +998,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 20,
-    "description": "The voltage for the auxiliary battery"
+    "description": "The voltage of the auxiliary battery"
   },
   {
     "can_id": 841,
@@ -1008,7 +1008,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 5,
-    "description": "The value at which should trigger an alert"
+    "description": "The current voltage setpoint for Battery balancing (shunt point)"
   },
   {
     "can_id": 841,
@@ -1018,7 +1018,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 1,
-    "description": "Whether the values have gone past the balancing threshold"
+    "description": "Whether BMS Master has decided to balance the modules"
   },
   {
     "can_id": 1025,
@@ -1026,7 +1026,7 @@
     "name": "Right_Wavesculptor_Limit_Flags",
     "offset": 0,
     "check_bounds": false,
-    "description": "Displays whether the limit is met for the right wavesculpter flags for the right motor"
+    "description": "The value(s) of any control limits on the right Wavesculptor"
   },
   {
     "can_id": 1025,
@@ -1034,7 +1034,7 @@
     "name": "Right_Wavesculptor_Error_Flags",
     "offset": 2,
     "check_bounds": false,
-    "description": "Displays whether there is(are) error(s) for the right wavesculpter flags for the right motor"
+    "description": "The value(s) of any errors (trips) on the right Wavesculptor"
   },
   {
     "can_id": 1026,
@@ -1044,7 +1044,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": "The voltage on the right bus"
+    "description": "The DC bus voltage on the right Wavesculptor"
   },
   {
     "can_id": 1026,
@@ -1054,7 +1054,7 @@
     "check_bounds": true,
     "min_value": -150,
     "max_value": 150,
-    "description": "The current on the right bus"
+    "description": "The DC current consumed by the right Wavesculptor"
   },
   {
     "can_id": 1027,
@@ -1064,7 +1064,7 @@
     "check_bounds": true,
     "min_value": -2000,
     "max_value": 2000,
-    "description": "The amount of revolutions the wavesculpter makes in a minute"
+    "description": "The rotational velocity of the right motor"
   },
   {
     "can_id": 1028,
@@ -1074,7 +1074,7 @@
     "check_bounds": true,
     "min_value": -1,
     "max_value": 100,
-    "description": "The Current for the B Wave Cycle for the B wires in the right motor"
+    "description": "RMS current flowing through phase B on the right motor"
   },
   {
     "can_id": 1028,
@@ -1084,7 +1084,7 @@
     "check_bounds": true,
     "min_value": -1,
     "max_value": 100,
-    "description": "The Current for the C Wave Cycle for the C wires in the right motor"
+    "description": "RMS current flowing through phase C on the right motor"
   },
   {
     "can_id": 1029,
@@ -1094,7 +1094,7 @@
     "check_bounds": true,
     "min_value": -5,
     "max_value": 5,
-    "description": "The right motor voltage through its quadrature axis"
+    "description": "The right motor's voltage along its quadrature axis (torque-producing)"
   },
   {
     "can_id": 1029,
@@ -1104,7 +1104,7 @@
     "check_bounds": true,
     "min_value": -10,
     "max_value": 50,
-    "description": "The right motor voltage through its direct axis (perpendicular to quadrature axis)"
+    "description": "The right motor's voltage through its direct axis (perpendicular to quadrature axis)"
   },
   {
     "can_id": 1030,
@@ -1114,7 +1114,7 @@
     "check_bounds": true,
     "min_value": -100,
     "max_value": 100,
-    "description": "The right motor current through its quadrature axis"
+    "description": "The right motor's current through its quadrature axis (torque-producing)"
   },
   {
     "can_id": 1030,
@@ -1124,7 +1124,7 @@
     "check_bounds": true,
     "min_value": -100,
     "max_value": 100,
-    "description": "The right motor current through its direct axis (perpendicular to quadrature axis)"
+    "description": "The right motor's current through its direct axis (perpendicular to quadrature axis)"
   },
   {
     "can_id": 1031,
@@ -1134,7 +1134,7 @@
     "check_bounds": true,
     "min_value": -200,
     "max_value": 200,
-    "description": "The value of the right motor's electromagnetic field"
+    "description": "The value of the right motor's back-electromagnetic field"
   },
   {
     "can_id": 1035,
@@ -1154,7 +1154,7 @@
     "check_bounds": true,
     "min_value": -40,
     "max_value": 200,
-    "description": "The temperature of the right wavesculpter's heatsink"
+    "description": "The temperature of the right Wavesculptor's heatsink"
   },
   {
     "can_id": 1038,
@@ -1164,7 +1164,7 @@
     "check_bounds": true,
     "min_value": -12742,
     "max_value": 12742,
-    "description": "The value of the right Odometer (measures distance the vechicle travels)"
+    "description": "Distance the right motor has travelled since the right Wavesculptor was last reset"
   },
   {
     "can_id": 1038,
@@ -1174,7 +1174,7 @@
     "check_bounds": true,
     "min_value": -1000,
     "max_value": 1000,
-    "description": "The amount of charge consumed by the right side"
+    "description": "The amount of charge consumed by the right motor since the right Wavesculptor was last reset"
   },
   {
     "can_id": 1057,
@@ -1182,7 +1182,7 @@
     "name": "Left_Wavesculptor_Limit_Flags",
     "offset": 0,
     "check_bounds": false,
-    "description": "Displays whether the limit is met for the left wavesculpter flags for the left motor"
+    "description": "The value(s) of any control limits on the left Wavesculptor"
   },
   {
     "can_id": 1057,
@@ -1190,7 +1190,7 @@
     "name": "Left_Wavesculptor_Error_Flags",
     "offset": 2,
     "check_bounds": false,
-    "description": "Displays whether there is(are) error(s) for the left wavesculpter flags for the left motor"
+    "description": "The value(s) of any errors (trips) on the left Wavesculptor"
   },
   {
     "can_id": 1058,
@@ -1200,7 +1200,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": "Bus voltage as measured by left Wavesculptor"
+    "description": "The DC bus voltage on the left Wavesculptor"
   },
   {
     "can_id": 1058,
@@ -1210,7 +1210,7 @@
     "check_bounds": true,
     "min_value": -150,
     "max_value": 150,
-    "description": "Current consumed by left Wavesculptor"
+    "description": "The DC current consumed by the left Wavesculptor"
   },
   {
     "can_id": 1059,
@@ -1220,7 +1220,7 @@
     "check_bounds": true,
     "min_value": -2000,
     "max_value": 2000,
-    "description": "Current RPM of left motor"
+    "description": "The rotational velocity of the left motor"
   },
   {
     "can_id": 1060,
@@ -1230,7 +1230,7 @@
     "check_bounds": true,
     "min_value": -1,
     "max_value": 100,
-    "description": "The Current for the B Wave Cycle for the B wires in the left motor"
+    "description": "RMS current flowing through phase B on the left motor"
   },
   {
     "can_id": 1060,
@@ -1240,7 +1240,7 @@
     "check_bounds": true,
     "min_value": -1,
     "max_value": 100,
-    "description": "The Current for the C Wave Cycle for the C wires in the left motor"
+    "description": "RMS current flowing through phase C on the left motor"
   },
   {
     "can_id": 1061,
@@ -1250,7 +1250,7 @@
     "check_bounds": true,
     "min_value": -5,
     "max_value": 5,
-    "description": "The left motor voltage through its quadrature axis"
+    "description": "The left motor's voltage along its quadrature axis"
   },
   {
     "can_id": 1061,
@@ -1270,7 +1270,7 @@
     "check_bounds": true,
     "min_value": -100,
     "max_value": 100,
-    "description": "The left motor current through its quadrature axis"
+    "description": "The left motor's current along its quadrature axis (torque-producing)"
   },
   {
     "can_id": 1062,
@@ -1290,7 +1290,7 @@
     "check_bounds": true,
     "min_value": -200,
     "max_value": 200,
-    "description": "The value of the left motor's electromagnetic field"
+    "description": "The value of the right motor's back-electromagnetic field"
   },
   {
     "can_id": 1067,
@@ -1310,7 +1310,7 @@
     "check_bounds": true,
     "min_value": -40,
     "max_value": 200,
-    "description": "The temperature of the left wavesculpter's heatsink"
+    "description": "The temperature of the left Wavesculptor's heatsink"
   },
   {
     "can_id": 1070,
@@ -1320,7 +1320,7 @@
     "check_bounds": true,
     "min_value": -12742,
     "max_value": 12742,
-    "description": "The value of the left Odometer (measures distance the vechicle travels)"
+    "description": "Distance the right motor has travelled since the right Wavesculptor was last reset"
   },
   {
     "can_id": 1070,
@@ -1330,7 +1330,7 @@
     "check_bounds": true,
     "min_value": -1000,
     "max_value": 1000,
-    "description": "The amount of charge consumed by the left side"
+    "description": "The amount of charge consumed by the right motor since the right Wavesculptor was last reset"
   },
   {
     "can_id": 1281,
@@ -1340,7 +1340,7 @@
     "check_bounds": true,
     "min_value": -20000,
     "max_value": 20000,
-    "description": "The target amount of revolutions per minute"
+    "description": "Target motor control speed set by MC^2"
   },
   {
     "can_id": 1281,
@@ -1350,7 +1350,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 1,
-    "description": "The amount of flow through the engine"
+    "description": "Pedal position/proportion of max bus current each Wavesculptor is allowed to draw to drive its motor"
   },
   {
     "can_id": 1385,
@@ -1360,7 +1360,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 1,
-    "description": "Displays whether the nitrogen oxide system is active"
+    "description": "Whether the driver has access to the full torque of the vehicle"
   },
   {
     "can_id": 1569,
@@ -1400,7 +1400,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 100,
-    "description": "Displays the speed of the car"
+    "description": "The speed of the car"
   },
   {
     "can_id": 1571,
@@ -1420,7 +1420,7 @@
     "check_bounds": true,
     "min_value": -3.15,
     "max_value": 3.15,
-    "description": "The oscillation of the car about the vertical axis"
+    "description": "Angle of the car about the vertical axis"
   },
   {
     "can_id": 1573,
@@ -1430,7 +1430,7 @@
     "check_bounds": true,
     "min_value": -3.15,
     "max_value": 3.15,
-    "description": "The oscillation of the car about the side axis"
+    "description": "Angle of the car with respect to the ground (hill inclination)"
   },
   {
     "can_id": 1574,
@@ -1440,7 +1440,7 @@
     "check_bounds": true,
     "min_value": -3.15,
     "max_value": 3.15,
-    "description": "The oscillation of the car about the axis through the front of the car"
+    "description": "Angle of the car with respect to the ground (hill secondary axis of curvature)"
   },
   {
     "can_id": 1577,
@@ -1500,7 +1500,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 1,
-    "description": "Displays whether the GPS is on or off"
+    "description": "Displays whether the GPS currently has a position fix"
   },
   {
     "can_id": 1680,
@@ -1510,7 +1510,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 100,
-    "description": "The voltage for the photons flowing through the panels in channel 0"
+    "description": "The voltage of the array connected to Photon channel 0"
   },
   {
     "can_id": 1680,
@@ -1520,7 +1520,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 15,
-    "description": "The current for the photons flowing through the panels in channel 0"
+    "description": "The current flowing through the array connected to Photon channel 0"
   },
   {
     "can_id": 1681,
@@ -1530,7 +1530,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 100,
-    "description": "The voltage for the photons flowing through the batteries in channel 0"
+    "description": "The battery voltage (output) on Photon channel 0"
   },
   {
     "can_id": 1681,
@@ -1540,7 +1540,7 @@
     "check_bounds": true,
     "min_value": -40,
     "max_value": 200,
-    "description": "The temperature for the photons flowing in channel 0"
+    "description": "The temperature of the power electronics for Photon channel 0"
   },
   {
     "can_id": 1682,
@@ -1550,7 +1550,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 100,
-    "description": "The voltage for the photons flowing through the panels in channel 1"
+    "description": "The voltage of the array connected to Photon channel 1"
   },
   {
     "can_id": 1682,
@@ -1560,7 +1560,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 15,
-    "description": "The current for the photons flowing through the panels in channel 1"
+    "description": "The current flowing through the array connected to Photon channel 0"
   },
   {
     "can_id": 1683,
@@ -1570,7 +1570,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 100,
-    "description": "The voltage for the photons flowing through the batteries in channel 1"
+    "description": "The battery voltage (output) on Photon channel 1"
   },
   {
     "can_id": 1683,
@@ -1580,7 +1580,7 @@
     "check_bounds": true,
     "min_value": -40,
     "max_value": 200,
-    "description": "The temperature for the photons flowing in channel 1"
+    "description": "The temperature of the power electronics for Photon channel 1"
   },
   {
     "can_id": 1684,
@@ -1590,7 +1590,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 100,
-    "description": "The voltage for the photons flowing in the Drivetek"
+    "description": "The voltage of the array connected to the Drivetek"
   },
   {
     "can_id": 1684,
@@ -1600,7 +1600,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 15,
-    "description": "The current for the photons flowing in the Drivetek"
+    "description": "The current flowing through the array connected to the Drivetek"
   },
   {
     "can_id": 1685,
@@ -1610,7 +1610,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": "The temperature for the photons flowing in the Drivetek"
+    "description": "The temperature of the Drivetek's power electronics"
   },
   {
     "can_id": 1685,
@@ -1630,7 +1630,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 255,
-    "description": "The driver's acknolegement"
+    "description": "Last value of driver's ACK/NACK button press"
   },
   {
     "can_id": 65535,
