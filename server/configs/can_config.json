@@ -968,7 +968,7 @@
     "check_bounds": true,
     "min_value": 0,
     "max_value": 200,
-    "description": "The total amount of charge capacity of the Battery Pack"
+    "description": "The total charge capacity of the Battery Pack"
   },
   {
     "can_id": 839,
