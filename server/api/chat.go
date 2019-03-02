@@ -3,9 +3,6 @@ package api
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/gorilla/securecookie"
-	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"os"
@@ -15,12 +12,27 @@ import (
 	"server/listener"
 	"sync"
 	"time"
+	"io/ioutil"
+	"strings"
+
+	"github.com/gorilla/mux"
+	"github.com/gorilla/securecookie"
+	"github.com/gorilla/websocket"
+	"github.com/nlopes/slack"
 )
 
 var hashKey = []byte(securecookie.GenerateRandomKey(32))
 var blockKey = []byte(securecookie.GenerateRandomKey(32))
 
 const cookieName = "login-cookie"
+
+var slck *slack.Client
+
+func postSlackMessage(message string) {
+	if slck != nil {
+		slck.PostMessage("chat", slack.MsgOptionText(message, false))
+	}
+}
 
 var sc = securecookie.New(hashKey, blockKey)
 
@@ -171,6 +183,7 @@ func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
 		} else {
 			// Print the message to the console
 			log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
+			postSlackMessage("Strategy: " + string(msg))
 			// upload message to car
 			uploadTCPMessage(string(msg))
 		}
@@ -186,17 +199,19 @@ func SubscribeDriverStatus() {
 	for {
 		point := <-points
 		if point.Metric == "Driver_ACK_Status" {
+			msg := ""
+			if point.Value == 0.0 {
+				msg = "Driver Response NACK"
+				postSlackMessage("Driver: NACK")
+			} else if point.Value == 1.0 {
+				msg = "Driver Response ACK"
+				postSlackMessage("Driver: ACK")
+			}
+			if msg == "" {
+				continue
+			}
 			socketLock.Lock()
 			for _, conn := range activeWebsockets {
-				msg := ""
-				if point.Value == 0.0 {
-					msg = "Driver Response NACK"
-				} else if point.Value == 1.0 {
-					msg = "Driver Response ACK"
-				} else {
-					// don't send NULL
-					continue
-				}
 				err := conn.WriteMessage(websocket.TextMessage, []byte(msg))
 				if err != nil {
 					log.Println("Failed to write message to websocket")
@@ -261,6 +276,12 @@ func (api *API) RegisterChatRoutes(router *mux.Router) {
 		log.Fatal("Could not find runtime caller")
 	}
 	dir := path.Dir(filename)
+
+	if token, err := ioutil.ReadFile("/secrets/slack_token.txt"); err == nil {
+		slck = slack.New(strings.TrimSpace(string(token)))
+	} else {
+		log.Printf("Unable to find Slack credentials: %s\n", err)
+	}
 
 	router.PathPrefix("/chat/static").Handler(checkAuthHandler(http.StripPrefix("/chat/static/", http.FileServer(http.Dir(path.Join(dir, "chat"))))))
 	router.PathPrefix("/chat-login/static").Handler(http.StripPrefix("/chat-login/static/", http.FileServer(http.Dir(path.Join(dir, "chat-login")))))

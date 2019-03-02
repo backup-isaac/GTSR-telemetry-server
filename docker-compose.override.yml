@@ -3,6 +3,8 @@ services:
   server:
     environment:
       - PRODUCTION=false
+    volumes:
+      - ./secrets:/secrets
   nginx:
     volumes:
       - ./nginx/conf.d/dev:/etc/nginx/conf.d
