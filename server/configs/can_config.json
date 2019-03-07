@@ -918,6 +918,42 @@
     "max_value": 1
   },
   {
+    "can_id": 842,
+    "datatype": "float32",
+    "name": "I_Net",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": -150,
+    "max_value": 150
+  },
+  {
+    "can_id": 842,
+    "datatype": "float32",
+    "name": "Q_Net",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": -50,
+    "max_value": 50
+  },
+  {
+    "can_id": 843,
+    "datatype": "float32",
+    "name": "BMS_Current_Limit_Discharging",
+    "offset": 0,
+    "check_bounds": true,
+    "min_value": -240,
+    "max_value": 240
+  },
+  {
+    "can_id": 843,
+    "datatype": "float32",
+    "name": "BMS_Current_Limit_Charging",
+    "offset": 4,
+    "check_bounds": true,
+    "min_value": -240,
+    "max_value": 240
+  },
+  {
     "can_id": 1025,
     "datatype": "uint16",
     "name": "Right_Wavesculptor_Limit_Flags",
@@ -1254,7 +1290,7 @@
   {
     "can_id": 1385,
     "datatype": "uint8",
-    "name": "MC2_Brake_Pressed",
+    "name": "MC2_Accel_Pressed",
     "offset": 4,
     "check_bounds": true,
     "min_value": 0,
@@ -1263,8 +1299,17 @@
   {
     "can_id": 1385,
     "datatype": "uint8",
-    "name": "MC2_CAN_TX_Errors",
+    "name": "MC2_Brake_Pressed",
     "offset": 5,
+    "check_bounds": true,
+    "min_value": 0,
+    "max_value": 1
+  },
+  {
+    "can_id": 1385,
+    "datatype": "uint8",
+    "name": "MC2_CAN_TX_Errors",
+    "offset": 6,
     "check_bounds": true,
     "min_value": 0,
     "max_value": 255
@@ -1273,7 +1318,7 @@
     "can_id": 1385,
     "datatype": "uint8",
     "name": "MC2_CAN_RX_Errors",
-    "offset": 6,
+    "offset": 7,
     "check_bounds": true,
     "min_value": 0,
     "max_value": 255

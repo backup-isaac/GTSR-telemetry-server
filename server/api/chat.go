@@ -3,6 +3,7 @@ package api
 import (
 	"crypto/rand"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -10,10 +11,9 @@ import (
 	"runtime"
 	"server/datatypes"
 	"server/listener"
+	"strings"
 	"sync"
 	"time"
-	"io/ioutil"
-	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
