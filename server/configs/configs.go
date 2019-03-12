@@ -17,6 +17,7 @@ type CanConfigType struct {
 	CheckBounds bool    `json:"check_bounds"`
 	MinValue    float64 `json:"min_value"`
 	MaxValue    float64 `json:"max_value"`
+	Description string  `json:"description"`
 }
 
 // LoadConfigs loads the CAN configs from the config file

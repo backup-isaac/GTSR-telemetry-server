@@ -79,7 +79,8 @@
       <th>Datatype</th>
       <th>Max_value</th>
       <th>Min_value</th>
-      <th>Offset</th></tr>
+      <th>Offset</th>
+      <th>Description</th></tr>
       <!-- IMPORTANT, class="list" have to be at tbody -->
       <tbody class="list"></tbody>
     </table>
@@ -99,8 +100,8 @@
     })
     .then((canConfigs) => {
       var options = {
-        valueNames: [ 'can_id', 'hex_id', 'check_bounds', 'datatype', 'max_value', 'min_value', 'name', 'offset' ],
-        item: '<tr><td class="name"></td><td class="can_id"></td><td class="hex_id"></td><td class="check_bounds"></td><td class="datatype"></td><td class="max_value"></td><td class="min_value"></td><td class="offset"></td></tr>'
+        valueNames: [ 'can_id', 'hex_id', 'check_bounds', 'datatype', 'max_value', 'min_value', 'name', 'offset', 'description' ],
+        item: '<tr><td class="name"></td><td class="can_id"></td><td class="hex_id"></td><td class="check_bounds"></td><td class="datatype"></td><td class="max_value"></td><td class="min_value"></td><td class="offset"></td><td class="description"></td></tr>'
       };
       var userList = new List('users', options, canConfigs);
     })
