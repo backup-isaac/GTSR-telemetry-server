@@ -43,7 +43,7 @@ services:
     networks:
       - telemetry-server
   nginx:
-    build: ./nginx
+    image: nginx
     container_name: nginx
     depends_on:
       - "server"
