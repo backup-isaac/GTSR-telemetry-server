@@ -856,8 +856,8 @@
     "name": "State_of_Charge",
     "offset": 4,
     "check_bounds": true,
-    "min_value": -0.1,
-    "max_value": 100.1,
+    "min_value": -0.001,
+    "max_value": 1.001,
     "description": "Current estimated state of charge of the battery"
   },
   {
