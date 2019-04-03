@@ -3,7 +3,7 @@ USER root
 
 # Installs docker-compose and rsync
 RUN apk add py-pip
-RUN pip install docker-compose 
+RUN pip install docker-compose==1.23.2
 RUN apk add rsync
 RUN apk add sudo
 
