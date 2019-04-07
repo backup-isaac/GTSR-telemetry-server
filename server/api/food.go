@@ -1,11 +1,20 @@
 package api
 
+/*
+This API represents the /food Slack command, that tells you where you should eat.
+Slack users can manage this database for all of solar using certain commands.
+You can also choose to filter out places that are closed if you're looking
+to eat during Real Solar Hours^TM
+*/
+
 import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
+	"regexp"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -13,9 +22,41 @@ import (
 	"github.com/gorilla/mux"
 )
 
+const helpText = `Welcome to the food bot! Type /food to get a food suggestion.
+
+If you're in the mood for something specific, type /food followed by a tag:
+	/food fast
+
+To add a restaurant to the database, type:
+	/food -add Cookout
+
+To give a restaurant a category:
+	/food -add -fast Cookout
+Now Cookout has the fast tag. Tags can be whatever you want.
+
+To specify when a restaurant closes, type:
+	/food -add -closes=4am Cookout
+Other options for the closes tag syntax:
+	/food -add -closes=9:30pm Wagaya
+	/food -add -closes=never Waffle House
+Any other syntax for the closes tag will get treated as a normal tag
+
+If it's real solar hours, you can filter out closed restaurants by using:
+	/food -late
+
+To delete a restaurant, type:
+	/food -delete Krystal
+
+To list all the restaurants in the database, type:
+	/food -list
+
+Happy eating!`
+
 var foodLock sync.Mutex
 
 type fooddb map[string][]string
+
+const closesTagRegex = "closes=((((([1-9])|(1[012]))|(([1-9])|(1[012])):[0-5][0-9])((am)|(pm)))|never)"
 
 // FoodSuggestion handles a request from Slack asking for a suggestion of
 // where to eat
@@ -59,6 +100,14 @@ func (api *API) FoodSuggestion(res http.ResponseWriter, req *http.Request) {
 			}
 		case "-list":
 			selection = db.listFood()
+		case "-late":
+			if len(tokens) == 1 {
+				selection = db.filterOpen().pickFood()
+			} else {
+				selection = db.filterOpen().pickFoodFromCategory(tokens[1])
+			}
+		case "-help":
+			selection = helpText
 		default:
 			selection = db.pickFoodFromCategory(tokens[0])
 		}
@@ -119,6 +168,20 @@ func (db fooddb) addFood(args []string) string {
 		}
 		restaurant := strings.Join(args[1:], " ")
 		category := args[0][1:]
+		if isCloseTag, _ := regexp.MatchString(closesTagRegex, category); isCloseTag {
+			// Remove other close tags if this one is a close tag
+			var newtags []string
+			for _, otherCategory := range db[restaurant] {
+				if isAlsoCloseTag, _ := regexp.MatchString(closesTagRegex, otherCategory); !isAlsoCloseTag {
+					newtags = append(newtags, otherCategory)
+				}
+			}
+			db[restaurant] = newtags
+		} else {
+			if strings.HasPrefix(category, "closes=") {
+				return "closes= tag has invalid syntax!"
+			}
+		}
 		db[restaurant] = append(db[restaurant], category)
 		return "Successfully added " + restaurant + " to the " + category + " category."
 	}
@@ -151,6 +214,58 @@ func (db fooddb) pickFoodFromCategory(category string) string {
 	}
 	rand.Seed(time.Now().Unix())
 	return inverted[category][rand.Intn(len(inverted[category]))]
+}
+
+func (db fooddb) filterOpen() fooddb {
+	var newdb fooddb = make(map[string][]string)
+	loc, _ := time.LoadLocation("America/New_York")
+	curtime := time.Now().In(loc)
+	for restaurant, tags := range db {
+		for _, tag := range tags {
+			match, err := regexp.MatchString(closesTagRegex, tag)
+			if err != nil {
+				log.Printf("Error parsing time tag regex: %s\n", err)
+				return newdb
+			}
+			if match {
+				timestr := tag[len("closes="):]
+				if timestr == "never" {
+					newdb[restaurant] = tags
+					continue
+				}
+				var hourstr string
+				var minutestr string
+				if colonIndex := strings.Index(timestr, ":"); colonIndex >= 0 {
+					hourstr = timestr[:colonIndex]
+					minutestr = timestr[colonIndex+1 : len(timestr)-2]
+				} else {
+					hourstr = timestr[:len(timestr)-2]
+					minutestr = "00"
+				}
+				hour, err := strconv.Atoi(hourstr)
+				if err != nil {
+					log.Printf("Error parsing time tag hour: %s\n", err)
+					return newdb
+				}
+				minute, err := strconv.Atoi(minutestr)
+				if err != nil {
+					log.Printf("Error parsing time tag minute: %s\n", err)
+				}
+				if timestr[len(timestr)-2:] == "pm" && hour != 12 {
+					hour += 12
+				} else if timestr[len(timestr)-2:] == "am" && hour == 12 {
+					hour -= 12
+				}
+				if (curtime.Hour() < 6 && hour < 6 && curtime.Hour() < hour) ||
+					(curtime.Hour() > 6 && hour < 6) ||
+					(curtime.Hour() > 6 && curtime.Hour() < hour) ||
+					(curtime.Hour() == hour && curtime.Minute() < minute) {
+					newdb[restaurant] = tags
+				}
+			}
+		}
+	}
+	return newdb
 }
 
 // RegisterFoodRoutes registers the routes for the food service
