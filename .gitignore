@@ -5,3 +5,4 @@ node_modules
 jenkins/jenkins_home
 package-lock.json
 secrets
+fooddb
