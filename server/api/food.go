@@ -82,7 +82,9 @@ func (api *API) FoodSuggestion(res http.ResponseWriter, req *http.Request) {
 	text = strings.TrimSpace(text)
 	tokens := strings.Fields(text)
 	var selection string
-	if len(tokens) == 0 {
+	if strings.Contains(text, "\"") {
+		selection = "No double quotes are allowed in the text string"
+	} else if len(tokens) == 0 {
 		selection = db.pickFood()
 	} else {
 		switch tokens[0] {
