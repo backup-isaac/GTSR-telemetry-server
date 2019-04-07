@@ -5,6 +5,7 @@ services:
       - PRODUCTION=false
     volumes:
       - ./secrets:/secrets
+      - ./fooddb:/fooddb
   nginx:
     volumes:
       - ./nginx/conf.d/dev:/etc/nginx/conf.d
