@@ -213,7 +213,7 @@ func (db fooddb) pickFoodFromCategory(category string) string {
 		return "Couldn't find any restaurants in the " + category + " category!"
 	}
 	rand.Seed(time.Now().Unix())
-	return inverted[category][rand.Intn(len(inverted[category]))]
+	return "You should go to " + inverted[category][rand.Intn(len(inverted[category]))]
 }
 
 func (db fooddb) filterOpen() fooddb {
