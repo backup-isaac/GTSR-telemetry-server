@@ -3,4 +3,7 @@ This package will target port 6001 and send formatted packets to mimic the car. 
 This program will also listen for uploaded track data from the map API. It will print the values that it received.
 
 To run the generator, run generator.sh. This will target a locally running instance of the server.
-To target the remote server, add the argument "remote" (e.g. "./generator.sh remote").
+
+To target the remote server, add the argument "remote" (e.g. "./generator.sh remote tcp").
+
+To change the protocol used, add the argument "tcp" or "udp" (default tcp).
