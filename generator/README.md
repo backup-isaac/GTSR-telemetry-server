@@ -4,6 +4,4 @@ This program will also listen for uploaded track data from the map API. It will 
 
 To run the generator, run generator.sh. This will target a locally running instance of the server.
 
-To target the remote server, add the argument "remote" (e.g. "./generator.sh remote tcp").
-
-To change the protocol used, add the argument "tcp" or "udp" (default tcp).
+To target the remote server, add the argument "remote" (e.g. "./generator.sh remote").
