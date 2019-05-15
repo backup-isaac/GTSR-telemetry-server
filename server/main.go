@@ -13,6 +13,7 @@ import (
 
 func main() {
 	go listener.Listen()
+	go listener.UDPListen()
 	store, err := storage.NewStorage()
 	if err != nil {
 		log.Fatalf("Error initializing storage: %s", err)

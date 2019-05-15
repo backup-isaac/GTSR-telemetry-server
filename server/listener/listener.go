@@ -1,6 +1,7 @@
 package listener
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"math/rand"
@@ -16,7 +17,7 @@ import (
 
 const (
 	connHost = "0.0.0.0"
-	connPort = "6001"
+	connPort = 6001
 	connType = "tcp"
 )
 
@@ -91,12 +92,12 @@ func Listen() {
 	if err != nil {
 		log.Fatalf("Error loading CAN configs: %s", err)
 	}
-	connListener, err := net.Listen(connType, connHost+":"+connPort)
+	connListener, err := net.Listen(connType, fmt.Sprintf("%s:%d", connHost, connPort))
 	if err != nil {
 		log.Fatalf("Error listening on TCP port: %s", err)
 	}
 	defer connListener.Close()
-	log.Printf("Listening on %s:%s\n", connHost, connPort)
+	log.Printf("Listening on %s:%d TCP\n", connHost, connPort)
 	consecutiveFailures := 0
 	for {
 		conn, err := connListener.Accept()

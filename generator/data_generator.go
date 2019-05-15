@@ -16,12 +16,22 @@ var sendLock sync.Mutex
 
 func main() {
 	var host string
+	var protocol string
 	if len(os.Args) > 1 && os.Args[1] == "remote" {
 		host = "solarracing.me"
 	} else {
 		host = "server"
 	}
-	conn, err := net.Dial("tcp", fmt.Sprintf("%s:6001", host))
+
+	if len(os.Args) > 2 && os.Args[2] == "udp" {
+		protocol = "udp"
+	} else {
+		protocol = "tcp"
+	}
+
+	log.Printf("Attempting to send data to host %s:6001 with protocol %s\n", host, protocol)
+
+	conn, err := net.Dial(protocol, fmt.Sprintf("%s:6001", host))
 	if err != nil {
 		log.Fatalf("Error connecting to port: %s", err)
 	}
@@ -70,7 +80,7 @@ func sendDriverStatuses(conn net.Conn) {
 }
 
 func formPacket() []byte {
-	packet := append([]byte("GTSR"), make([]byte, 12)...)
+	packet := append([]byte("GT"), make([]byte, 10)...)
 	return packet
 }
 
