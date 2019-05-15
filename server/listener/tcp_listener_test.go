@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestConnectionHandler(t *testing.T) {
+func TestTCPConnectionHandler(t *testing.T) {
 	parser := &mocks.PacketParser{}
 	parser.On("ParseByte", uint8(0)).Return(false)
 	parser.On("ParseByte", uint8(1)).Return(true)
@@ -22,12 +22,12 @@ func TestConnectionHandler(t *testing.T) {
 	publisher := &mocks.DatapointPublisher{}
 	publisher.On("Publish", datapoint[0]).Return()
 
-	l := &listener.ConnectionHandler{
+	l := &listener.TCPConnectionHandler{
 		Publisher: publisher,
 		Parser:    parser,
 	}
 	server, client := net.Pipe()
-	go l.HandleConnection(client)
+	go l.HandleTCPConnection(client)
 
 	server.Write(make([]byte, 4))
 	server.Write(make([]byte, 2))

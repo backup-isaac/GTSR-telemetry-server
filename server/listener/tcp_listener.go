@@ -21,15 +21,15 @@ const (
 	connType = "tcp"
 )
 
-// ConnectionHandler is the object representing the TCP listener
-type ConnectionHandler struct {
+// TCPConnectionHandler is the object representing the TCP listener
+type TCPConnectionHandler struct {
 	Publisher DatapointPublisher
 	Parser    PacketParser
 }
 
-// NewConnectionHandler returns an initialized ConnectionHandler
-func NewConnectionHandler(publisher DatapointPublisher, parser PacketParser) *ConnectionHandler {
-	return &ConnectionHandler{
+// NewTCPConnectionHandler returns an initialized TCPConnectionHandler
+func NewTCPConnectionHandler(publisher DatapointPublisher, parser PacketParser) *TCPConnectionHandler {
+	return &TCPConnectionHandler{
 		Publisher: publisher,
 		Parser:    parser,
 	}
@@ -57,8 +57,8 @@ func reportConnections() {
 	}
 }
 
-// HandleConnection handles a new connection
-func (handler *ConnectionHandler) HandleConnection(conn net.Conn) {
+// HandleTCPConnection handles a new connection
+func (handler *TCPConnectionHandler) HandleTCPConnection(conn net.Conn) {
 	defer conn.Close()
 	connectionKey := conn.RemoteAddr().String() + ";" + string(rand.Intn(1000000))
 	connections.Store(connectionKey, conn)
@@ -86,8 +86,8 @@ func (handler *ConnectionHandler) HandleConnection(conn net.Conn) {
 	}
 }
 
-// Listen is the main function of listener which listens to the TCP data port for incoming connections
-func Listen() {
+// TCPListen is the main function of listener which listens to the TCP data port for incoming connections
+func TCPListen() {
 	canConfigs, err := configs.LoadConfigs()
 	if err != nil {
 		log.Fatalf("Error loading CAN configs: %s", err)
@@ -104,8 +104,8 @@ func Listen() {
 		if err == nil {
 			consecutiveFailures = 0
 			log.Println("Received connection from", conn.RemoteAddr().String())
-			handler := NewConnectionHandler(GetDatapointPublisher(), NewPacketParser(canConfigs))
-			go handler.HandleConnection(conn)
+			handler := NewTCPConnectionHandler(GetDatapointPublisher(), NewPacketParser(canConfigs))
+			go handler.HandleTCPConnection(conn)
 		} else {
 			consecutiveFailures++
 			log.Println("Error accepting connection in function Listen: listener/listener.go")
