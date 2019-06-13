@@ -16,30 +16,32 @@ var sendLock sync.Mutex
 
 func main() {
 	var host string
-	var protocol string
+
 	if len(os.Args) > 1 && os.Args[1] == "remote" {
 		host = "solarracing.me"
 	} else {
 		host = "server"
 	}
 
-	if len(os.Args) > 2 && os.Args[2] == "udp" {
-		protocol = "udp"
-	} else {
-		protocol = "tcp"
-	}
+	log.Printf("Attempting to send data to host %s:6001\n", host)
 
-	log.Printf("Attempting to send data to host %s:6001 with protocol %s\n", host, protocol)
-
-	conn, err := net.Dial(protocol, fmt.Sprintf("%s:6001", host))
+	tcpConn, err := net.Dial("tcp", fmt.Sprintf("%s:6001", host))
 	if err != nil {
 		log.Fatalf("Error connecting to port: %s", err)
 	}
-	go listen(conn)
-	// every 10 seconds, send driver ack status
-	go sendDriverStatuses(conn)
-	// every 50 milliseconds, send test computation
-	sendTestComputation(conn)
+
+	udpConn, err := net.Dial("udp", fmt.Sprintf("%s:6001", host))
+	if err != nil {
+		log.Fatalf("Error connecting to port: %s", err)
+	}
+
+	go listen(tcpConn)
+
+	// every 10 seconds, send driver ack status (TCP/Reliable)
+	go sendDriverStatuses(tcpConn)
+
+	// every 50 milliseconds, send test computation (UDP/Unreliable)
+	sendTestComputation(udpConn)
 }
 
 func sendTestComputation(conn net.Conn) {

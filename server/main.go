@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	go listener.Listen()
+	go listener.TCPListen()
 	go listener.UDPListen()
 	store, err := storage.NewStorage()
 	if err != nil {

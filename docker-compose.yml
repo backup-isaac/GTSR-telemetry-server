@@ -40,6 +40,7 @@ services:
     ports:
       - "8888:8888"
       - "6001:6001"
+      - "6001:6001/udp"
     restart: unless-stopped 
     networks:
       - telemetry-server
