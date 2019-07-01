@@ -68,6 +68,7 @@ services:
     container_name: jenkins
     environment:
       - TRY_UPGRADE_IF_NO_MARKER=true
+      - PLUGINS_FORCE_UPGRADE=true
     volumes:
       - jenkins-home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
