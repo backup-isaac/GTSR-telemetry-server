@@ -33,6 +33,7 @@
           position: {lat: 0, lng: 0},
           optimized: false,
         });
+        stillMarker.setVisible(false);
         var animatedIcon = {
           url: "/map/static/datboi.gif",
           scaledSize: new google.maps.Size(35, 55)
@@ -43,10 +44,10 @@
           position: {lat: 0, lng: 0},
           optimized: false,
         });
+        animatedMarker.setVisible(false);
         var carConnected = false;
         var gpsConnected = false;
-        carMarker = stillMarker
-        carMarker.setVisible(false);
+        carMarker = stillMarker;
         updateMarker(true);
         window.setInterval(function() {
           updateConnectionStatus();
