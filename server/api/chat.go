@@ -42,6 +42,8 @@ var slck *slack.Client
 func postSlackMessage(message string) {
 	if slck != nil {
 		slck.PostMessage("chat", slack.MsgOptionText(message, false))
+	} else {
+		log.Printf("No slack key - message: %s", message)
 	}
 }
 
@@ -52,9 +54,6 @@ func randToken() string {
 	rand.Read(b)
 	return fmt.Sprintf("%x", b)
 }
-
-// global datapoint subscriber
-var points chan *datatypes.Datapoint
 
 // Write strings to these websockets
 var activeWebsockets []*websocket.Conn
@@ -238,7 +237,7 @@ func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
 // and filter all data points except for driver ACK/NACK,
 // and relay such messages to each WebSocket currently connected
 func SubscribeDriverStatus() {
-	points = make(chan *datatypes.Datapoint)
+	points := make(chan *datatypes.Datapoint)
 	listener.Subscribe(points)
 	for {
 		point := <-points
@@ -335,6 +334,31 @@ func (api *API) RegisterChatRoutes(router *mux.Router) {
 	router.HandleFunc("/chatSlashCommand", api.ChatSlashCommand).Methods("GET")
 }
 
+// MonitorConnection listens for data from the car, posting updates
+// to Slack for when connection is established and lost.
+func MonitorConnection() {
+	points := make(chan *datatypes.Datapoint, 10)
+	listener.Subscribe(points)
+	connected := false
+	for {
+		timer := time.NewTimer(10 * time.Second)
+		select {
+		case <-points:
+			timer.Stop()
+			if !connected {
+				postSlackMessage("Connection established")
+				connected = true
+			}
+		case <-timer.C:
+			if connected {
+				postSlackMessage("Connection lost")
+				connected = false
+			}
+		}
+	}
+}
+
 func init() {
 	go SubscribeDriverStatus()
+	go MonitorConnection()
 }
