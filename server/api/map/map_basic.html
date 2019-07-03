@@ -23,19 +23,34 @@
           zoom: 10,
           center: {lat: 33.787041, lng: -84.406817}
         });
-        var icon = {
+        var stillIcon = {
+          url: "/map/static/datboi_still.png",
+          scaledSize: new google.maps.Size(35, 55)
+        }
+        var stillMarker = new google.maps.Marker({
+          map: map,
+          icon: stillIcon,
+          position: {lat: 0, lng: 0},
+          optimized: false,
+        });
+        var animatedIcon = {
           url: "/map/static/datboi.gif",
           scaledSize: new google.maps.Size(35, 55)
         }
-        carMarker = new google.maps.Marker({
+        var animatedMarker = new google.maps.Marker({
           map: map,
-          icon: icon,
+          icon: animatedIcon,
           position: {lat: 0, lng: 0},
-          optimized: false
+          optimized: false,
         });
+        var carConnected = false;
+        var gpsConnected = false;
+        carMarker = stillMarker
         carMarker.setVisible(false);
         updateMarker(true);
         window.setInterval(function() {
+          updateConnectionStatus();
+          updateGPSStatus();
           updateMarker(false);
         }, 1000);
         
@@ -44,10 +59,16 @@
           xmlHttp.onreadystatechange = function() { 
             if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
               var latlng = JSON.parse(xmlHttp.responseText);
-              if (latlng.lat === 0 && latlng.lng === 0) {
-                carMarker.setVisible(false);
-              } else {
-                carMarker.setVisible(true);
+              if (latlng.lat !== 0 && latlng.lng !== 0) {
+                if (carConnected) {
+                  carMarker = animatedMarker;
+                  animatedMarker.setVisible(true);
+                  stillMarker.setVisible(false);
+                } else {
+                  carMarker = stillMarker;
+                  stillMarker.setVisible(true);
+                  animatedMarker.setVisible(false);
+                }
                 carMarker.setPosition(latlng);
                 if (center) {
                   map.setCenter(latlng)
@@ -57,7 +78,28 @@
           }
           xmlHttp.open("GET", "/api/location", true);
           xmlHttp.send(null);
-          
+        }
+
+        function updateConnectionStatus() {
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+              carConnected = parseInt(xmlHttp.responseText) === 1;
+            }
+          }
+          xmlHttp.open("GET", "/api/latest?name=\"Connection_Status\"");
+          xmlHttp.send(null);
+        }
+
+        function updateGPSStatus() {
+          var xmlHttp = new XMLHttpRequest();
+          xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+              gpsConnected = parseInt(xmlHttp.responseText) === 1;
+            }
+          }
+          xmlHttp.open("GET", "/api/latest?name=\"GPS_Status\"");
+          xmlHttp.send(null);
         }
       }
     </script>
