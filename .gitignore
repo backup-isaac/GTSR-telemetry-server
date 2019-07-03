@@ -6,3 +6,4 @@ jenkins/jenkins_home
 package-lock.json
 secrets
 fooddb
+.vscode
