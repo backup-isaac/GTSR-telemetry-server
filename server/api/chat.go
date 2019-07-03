@@ -2,6 +2,7 @@ package api
 
 import (
 	"crypto/rand"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -25,6 +26,16 @@ var hashKey = []byte(securecookie.GenerateRandomKey(32))
 var blockKey = []byte(securecookie.GenerateRandomKey(32))
 
 const cookieName = "login-cookie"
+
+const maxMessageLength = 35
+
+var authorizedUsers = map[string]bool{
+	"U0JSX098T": true, // Jared
+	"U06CN1EGN": true, // Jackson
+	"U2PVAD9B7": true, // Alex
+	"U0ML7HT1S": true, // Michael
+	"U709MM717": true, // Steven
+}
 
 var slck *slack.Client
 
@@ -136,6 +147,45 @@ func (api *API) ChatDefault(res http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// ChatSlashCommand is the handler for the chat slash command, which sends
+// a message to the car
+func (api *API) ChatSlashCommand(res http.ResponseWriter, req *http.Request) {
+	err := req.ParseForm()
+	if err != nil {
+		res.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	user := req.Form.Get("user_id")
+	if !authorizedUsers[user] {
+		slackResponse("Unauthorized user", res)
+		return
+	}
+	channel := req.Form.Get("channel_name")
+	if channel != "chat" && channel != "testing" {
+		slackResponse("Requests must be made from #chat", res)
+		return
+	}
+	msg := req.Form.Get("text")
+	if len(msg) == 0 {
+		slackResponse("Please provide a message", res)
+		return
+	}
+	if len(msg) > maxMessageLength {
+		slackResponse("Message exceeds maximum length", res)
+		return
+	}
+	uploadTCPMessage(msg)
+	slackResponse("Message sent", res)
+}
+
+func slackResponse(text string, res http.ResponseWriter) {
+	response := make(map[string]string)
+	response["response_type"] = "in_channel"
+	response["text"] = text
+	res.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(res).Encode(response)
+}
+
 // ChatSocket initializes the WebSocket for a connection.
 // The websocket is responsible for relaying driver responses (Yes, No)
 // to the client as well
@@ -174,7 +224,7 @@ func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		if len(string(msg)) > 35 {
+		if len(string(msg)) > maxMessageLength {
 			err := conn.WriteMessage(msgType, []byte("Message length too long"))
 			if err != nil {
 				log.Println(err)
@@ -288,4 +338,5 @@ func (api *API) RegisterChatRoutes(router *mux.Router) {
 	router.HandleFunc("/chat/login", api.ChatLogin).Methods("GET")
 	router.HandleFunc("/chat", checkAuth(api.ChatDefault)).Methods("GET")
 	router.HandleFunc("/chat/socket", api.ChatSocket)
+	router.HandleFunc("/chatSlashCommand", api.ChatSlashCommand).Methods("GET")
 }
