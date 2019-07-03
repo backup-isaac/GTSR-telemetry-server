@@ -204,12 +204,6 @@ func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	socketLock.Lock()
-	if points == nil {
-		go SubscribeDriverStatus()
-	}
-	socketLock.Unlock()
-
 	// Subscribe this socket to ACK/NACK changes
 	addSocketConn(conn)
 	defer removeSocketConn(conn)
@@ -339,4 +333,8 @@ func (api *API) RegisterChatRoutes(router *mux.Router) {
 	router.HandleFunc("/chat", checkAuth(api.ChatDefault)).Methods("GET")
 	router.HandleFunc("/chat/socket", api.ChatSocket)
 	router.HandleFunc("/chatSlashCommand", api.ChatSlashCommand).Methods("GET")
+}
+
+func init() {
+	go SubscribeDriverStatus()
 }
