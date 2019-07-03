@@ -12,6 +12,7 @@ import (
 	"runtime"
 	"server/datatypes"
 	"server/listener"
+	"server/storage"
 	"strings"
 	"sync"
 	"time"
@@ -337,6 +338,10 @@ func (api *API) RegisterChatRoutes(router *mux.Router) {
 // MonitorConnection listens for data from the car, posting updates
 // to Slack for when connection is established and lost.
 func MonitorConnection() {
+	store, err := storage.NewStorage()
+	if err != nil {
+		log.Fatalf("Error initializing storage for connection status: %v", err)
+	}
 	points := make(chan *datatypes.Datapoint, 10)
 	listener.Subscribe(points)
 	connected := false
@@ -346,11 +351,27 @@ func MonitorConnection() {
 		case <-points:
 			timer.Stop()
 			if !connected {
+				err = store.Insert([]*datatypes.Datapoint{{
+					Metric: "Connection_Status",
+					Value:  1,
+					Time:   time.Now(),
+				}})
+				if err != nil {
+					log.Printf("Error storing connection status 1: %v", err)
+				}
 				postSlackMessage("Connection established")
 				connected = true
 			}
 		case <-timer.C:
 			if connected {
+				err = store.Insert([]*datatypes.Datapoint{{
+					Metric: "Connection_Status",
+					Value:  0,
+					Time:   time.Now(),
+				}})
+				if err != nil {
+					log.Printf("Error storing connection status 0: %v", err)
+				}
 				postSlackMessage("Connection lost")
 				connected = false
 			}
