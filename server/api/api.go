@@ -104,12 +104,12 @@ func (api *API) Latest(res http.ResponseWriter, req *http.Request) {
 
 // Location returns the current position of the car
 func (api *API) Location(res http.ResponseWriter, req *http.Request) {
-	latpt, err := api.store.Latest("GPS_Latitude")
+	latpt, err := api.store.LatestNonZero("GPS_Latitude")
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	lngpt, err := api.store.Latest("GPS_Longitude")
+	lngpt, err := api.store.LatestNonZero("GPS_Longitude")
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return

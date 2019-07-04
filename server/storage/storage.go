@@ -27,6 +27,8 @@ type Storage interface {
 	ListMetrics() ([]string, error)
 	// Latest returns the most recent datapoint for the given metric
 	Latest(metric string) (*datatypes.Datapoint, error)
+	// LatestNonZero returns the most recent non-zero datapoint for the given metric
+	LatestNonZero(metric string) (*datatypes.Datapoint, error)
 	// Close performs cleanup work
 	Close() error
 }
@@ -178,32 +180,35 @@ func (s *storageImpl) Latest(metric string) (*datatypes.Datapoint, error) {
 	if response.Error() != nil {
 		return nil, response.Error()
 	}
-	if len(response.Results) == 0 || len(response.Results[0].Series) == 0 ||
-		len(response.Results[0].Series[0].Values) == 0 {
+	points, err := getDatapoints(metric, response)
+	if err != nil {
+		return nil, err
+	}
+	if len(points) != 1 {
 		return nil, nil
 	}
-	value := response.Results[0].Series[0].Values[0]
-	point := &datatypes.Datapoint{
-		Metric: metric,
-		Tags:   response.Results[0].Series[0].Tags,
+	return points[0], nil
+}
+
+func (s *storageImpl) LatestNonZero(metric string) (*datatypes.Datapoint, error) {
+	response, err := s.client.Query(client.Query{
+		Command:  fmt.Sprintf("SELECT * FROM %s WHERE value != 0 ORDER BY DESC LIMIT 1", metric),
+		Database: tableName,
+	})
+	if err != nil {
+		return nil, err
 	}
-	for i, column := range response.Results[0].Series[0].Columns {
-		switch column {
-		case "time":
-			timestamp, err := time.Parse(time.RFC3339Nano, value[i].(string))
-			if err != nil {
-				return nil, err
-			}
-			point.Time = timestamp
-		case "value":
-			val, err := strconv.ParseFloat(string(value[i].(json.Number)), 64)
-			if err != nil {
-				return nil, err
-			}
-			point.Value = val
-		}
+	if response.Error() != nil {
+		return nil, response.Error()
 	}
-	return point, nil
+	points, err := getDatapoints(metric, response)
+	if err != nil {
+		return nil, err
+	}
+	if len(points) != 1 {
+		return nil, nil
+	}
+	return points[0], nil
 }
 
 func (s *storageImpl) Close() error {

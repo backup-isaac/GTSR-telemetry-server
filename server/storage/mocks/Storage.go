@@ -76,6 +76,29 @@ func (_m *Storage) Latest(metric string) (*datatypes.Datapoint, error) {
 	return r0, r1
 }
 
+// LatestNonZero provides a mock function with given fields: metric
+func (_m *Storage) LatestNonZero(metric string) (*datatypes.Datapoint, error) {
+	ret := _m.Called(metric)
+
+	var r0 *datatypes.Datapoint
+	if rf, ok := ret.Get(0).(func(string) *datatypes.Datapoint); ok {
+		r0 = rf(metric)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*datatypes.Datapoint)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(metric)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ListMetrics provides a mock function with given fields:
 func (_m *Storage) ListMetrics() ([]string, error) {
 	ret := _m.Called()

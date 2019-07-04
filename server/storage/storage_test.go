@@ -68,6 +68,31 @@ func TestStorage(t *testing.T) {
 	assert.NoError(t, err)
 }
 
+func TestLatestNonZero(t *testing.T) {
+	_, ok := os.LookupEnv("IN_DOCKER")
+	if !ok {
+		return
+	}
+	store, err := storage.NewStorage()
+	assert.NoError(t, err)
+	utc, err := time.LoadLocation("UTC")
+	assert.NoError(t, err)
+	datapoints := []*datatypes.Datapoint{{
+		Metric: "Unit_Test_2",
+		Value:  0,
+		Time:   time.Date(2069, time.April, 20, 0, 0, 0, 0, utc),
+	}, {
+		Metric: "Unit_Test_2",
+		Value:  12345,
+		Time:   time.Date(2018, time.May, 21, 0, 0, 0, 0, utc),
+	}}
+	err = store.Insert(datapoints)
+	assert.NoError(t, err)
+	point, err := store.LatestNonZero("Unit_Test_2")
+	assert.NoError(t, err)
+	assert.Equal(t, datapoints[1], point)
+}
+
 func TestInsertEmptyPoints(t *testing.T) {
 	_, ok := os.LookupEnv("IN_DOCKER")
 	if !ok {
