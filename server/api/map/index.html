@@ -46,11 +46,11 @@
       <br>
       <div id="data">
         <p>Speed: <span id="speed"></span> mph</p>
-        <p>Target Speed: <span id="targetSpeed"></span> mph</p>
+        <!-- <p>Target Speed: <span id="targetSpeed"></span> mph</p> -->
         <p>Bus Power: <span id="busPower"></span> W</p>
-        <p>Solar Power: <span id="solarPower"></span> W</p>
+        <!-- <p>Solar Power: <span id="solarPower"></span> W</p> -->
         <p>BMS Power: <span id="batteryPower"></span> W</p>
-        <p>Torque: <span id="torque"></span> Nm</p>
+        <!-- <p>Torque: <span id="torque"></span> Nm</p> -->
         <p>Throttle: <span id="throttle"></span>%</p>
       </div>
       <br>
@@ -161,10 +161,10 @@
                     closestSpeed = lineSpeeds[i];
                   }
                 }
-                if (closestLine != null) {
-                  var targetSpeedLabel = document.getElementById("targetSpeed");
-                  targetSpeedLabel.textContent = Math.round(closestSpeed * 100) / 100;
-                }
+                // if (closestLine != null) {
+                //   var targetSpeedLabel = document.getElementById("targetSpeed");
+                //   targetSpeedLabel.textContent = Math.round(closestSpeed * 100) / 100;
+                // }
 
                 if (center) {
                   map.setCenter(latlng)
@@ -336,15 +336,15 @@
         getLatest("Bus_Power", function(result) {
           document.getElementById("busPower").textContent = Number.parseFloat(result).toFixed(2);
         });
-        getLatest("Array_Power", function(result) {
-          document.getElementById("solarPower").textContent = Number.parseFloat(result).toFixed(2);
-        });
+        // getLatest("Array_Power", function(result) {
+        //   document.getElementById("solarPower").textContent = Number.parseFloat(result).toFixed(2);
+        // });
         getLatest("Battery_Power", function(result) {
           document.getElementById("batteryPower").textContent = Number.parseFloat(result).toFixed(2);
         });
-        getLatest("Torque", function(result) {
-          document.getElementById("torque").textContent = Number.parseFloat(result).toFixed(2);
-        });
+        // getLatest("Torque", function(result) {
+        //   document.getElementById("torque").textContent = Number.parseFloat(result).toFixed(2);
+        // });
         getLatest("Throttle", function(result) {
           document.getElementById("throttle").textContent = (Number.parseFloat(result) * 100).toFixed(1);
         });
