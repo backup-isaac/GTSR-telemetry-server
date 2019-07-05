@@ -90,8 +90,26 @@
           optimized: false,
         });
         animatedMarker.setVisible(false);
+        var bigMarker = new google.maps.Marker({
+          map: map,
+          icon: {
+            url: "/map/static/datboi.gif",
+            scaledSize: new google.maps.Size(95, 150)
+          },
+          position: {lat: 0, lng: 0},
+          optimized: false,
+        });
+        bigMarker.setVisible(false);
         var carConnected = false;
         var gpsConnected = false;
+        var inStreetView = false;
+        var streetView = map.getStreetView();
+        google.maps.event.addListener(streetView, 'visible_changed', function() {
+          inStreetView = streetView.getVisible();
+          if (!inStreetView) {
+            bigMarker.setVisible(false);
+          }
+        });
         carMarker = stillMarker;
         updateMarker(true);
         window.setInterval(function() {
@@ -110,14 +128,21 @@
             if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
               var latlng = JSON.parse(xmlHttp.responseText);
               if (latlng.lat !== 0 && latlng.lng !== 0) {
-                if (carConnected && gpsConnected) {
+                if (inStreetView) {
+                  carMarker = bigMarker;
+                  bigMarker.setVisible(true);
+                  animatedMarker.setVisible(false);
+                  stillMarker.setVisible(false);
+                } else if (carConnected && gpsConnected) {
                   carMarker = animatedMarker;
                   animatedMarker.setVisible(true);
                   stillMarker.setVisible(false);
+                  bigMarker.setVisible(false);
                 } else {
                   carMarker = stillMarker;
                   stillMarker.setVisible(true);
                   animatedMarker.setVisible(false);
+                  bigMarker.setVisible(false);
                 }
                 carMarker.setPosition(latlng);
 
