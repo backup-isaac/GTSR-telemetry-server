@@ -4,13 +4,15 @@ import (
 	"encoding/binary"
 	"fmt"
 	"math"
+	"strings"
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
 	"server/configs"
 	"server/datatypes"
 	"server/listener"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPacketParser(t *testing.T) {
@@ -116,14 +118,15 @@ func TestParseConfigs(t *testing.T) {
 	assert.NoError(t, err)
 	for canID, configTypes := range configsMap {
 		for _, config := range configTypes {
+			if strings.Contains(config.Name, " ") {
+				t.Errorf("Config name contains illegal characters: %s", config.Name)
+			}
 			assert.Equal(t, canID, config.CanID,
 				fmt.Sprintf("Config %+v \nhas CanID  that does not match CanID in canConfigs", *config))
 			assert.True(t, config.CanID >= 0,
 				fmt.Sprintf("Config %+v \nhas CanID less than 0 : %d", *config, config.CanID))
 			assert.True(t, config.Offset >= 0,
 				fmt.Sprintf("Config %+v \nhas offset less than 0: %d", *config, config.Offset))
-			assert.True(t, config.Offset <= 7,
-				fmt.Sprintf("Config %+v \nhas offset greater than 7: %d", *config, config.Offset))
 			_, ok := listener.PayloadParsers[config.Datatype]
 			assert.True(t, ok, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
 			if config.Datatype == "int16" || config.Datatype == "uint16" {
@@ -137,7 +140,22 @@ func TestParseConfigs(t *testing.T) {
 				config.Datatype == "int64" || config.Datatype == "uint64" {
 				assert.True(t, config.Offset == 0,
 					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
+			} else if config.Datatype == "bit" {
+				assert.True(t, config.Offset < 64,
+					fmt.Sprintf("Config %+v \nhas offset extending past length of a CAN payload: %d", *config, config.Offset))
 			}
 		}
 	}
+}
+
+func TestBitParser(t *testing.T) {
+	bitParser, ok := listener.PayloadParsers["bit"]
+	assert.True(t, ok, "bit parser not found in PayloadParsers")
+	bytes := []byte{0, 16, 0, 0, 0, 0, 0, 0}
+	value, err := bitParser(bytes, 12)
+	assert.NoError(t, err)
+	assert.Equal(t, float64(1), value)
+	value, err = bitParser(bytes, 3)
+	assert.NoError(t, err)
+	assert.Equal(t, float64(0), value)
 }
