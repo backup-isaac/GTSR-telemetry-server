@@ -1148,7 +1148,7 @@
     "can_id": 1025,
     "datatype": "uint16",
     "name": "Right_Wavesculptor_Error_Flags",
-    "offset": 1,
+    "offset": 2,
     "check_bounds": false,
     "description": "Overall error flags for the right wavesculptor"
   },
@@ -1389,6 +1389,14 @@
     "description": "The value of the right motor's back-electromagnetic field"
   },
   {
+    "can_id": 1032,
+    "datatype": "float32",
+    "name": "Right_Motor_15V_Measurement",
+    "offset": 4,
+    "check_bounds": false,
+    "description": "The value measured on the right motor's 15V rail"
+  },
+  {
     "can_id": 1035,
     "datatype": "float32",
     "name": "Right_Motor_Temp",
@@ -1436,7 +1444,7 @@
     "can_id": 1057,
     "datatype": "uint16",
     "name": "Left_Wavesculptor_Error_Flags",
-    "offset": 1,
+    "offset": 2,
     "check_bounds": false,
     "description": "Overall error flags for the left wavesculptor"
   },
@@ -1675,6 +1683,14 @@
     "min_value": -200,
     "max_value": 200,
     "description": "The value of the left motor's back-electromagnetic field"
+  },
+  {
+    "can_id": 1064,
+    "datatype": "float32",
+    "name": "Left_Motor_15V_Measurement",
+    "offset": 4,
+    "check_bounds": false,
+    "description": "The value measured on the left motor's 15V rail"
   },
   {
     "can_id": 1067,
