@@ -1138,6 +1138,22 @@
   },
   {
     "can_id": 1025,
+    "datatype": "uint16",
+    "name": "Right_Wavesculptor_Limit_Flags",
+    "offset": 0,
+    "check_bounds": false,
+    "description": "Overall limit flags for the right wavesculptor"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "uint16",
+    "name": "Right_Wavesculptor_Error_Flags",
+    "offset": 1,
+    "check_bounds": false,
+    "description": "Overall error flags for the right wavesculptor"
+  },
+  {
+    "can_id": 1025,
     "datatype": "bit",
     "name": "Right_Wavesculptor_Limit_Output_Voltage_PWM",
     "offset": 0,
@@ -1407,6 +1423,22 @@
     "min_value": -1000,
     "max_value": 1000,
     "description": "The amount of charge consumed by the right motor since the right Wavesculptor was last reset"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "uint16",
+    "name": "Left_Wavesculptor_Limit_Flags",
+    "offset": 0,
+    "check_bounds": false,
+    "description": "Overall limit flags for the left wavesculptor"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "uint16",
+    "name": "Left_Wavesculptor_Error_Flags",
+    "offset": 1,
+    "check_bounds": false,
+    "description": "Overall error flags for the left wavesculptor"
   },
   {
     "can_id": 1057,
