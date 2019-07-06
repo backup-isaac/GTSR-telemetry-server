@@ -149,4 +149,12 @@ func init() {
 		}
 		return value, nil
 	}
+	PayloadParsers["bit"] = func(bytes []byte, offset int) (float64, error) {
+		byteOffset := offset / 8
+		bitOffset := uint(offset % 8)
+		if bytes[byteOffset]&(1<<bitOffset) != 0 {
+			return 1, nil
+		}
+		return 0, nil
+	}
 }

@@ -1138,19 +1138,139 @@
   },
   {
     "can_id": 1025,
-    "datatype": "uint16",
-    "name": "Right_Wavesculptor_Limit_Flags",
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Limit_Output_Voltage_PWM",
     "offset": 0,
     "check_bounds": false,
-    "description": "The value(s) of any control limits on the right Wavesculptor"
+    "description": "The output of the right wavesculptor is limited by the output voltage PWM"
   },
   {
     "can_id": 1025,
-    "datatype": "uint16",
-    "name": "Right_Wavesculptor_Error_Flags",
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Limit_Motor_Current",
+    "offset": 1,
+    "check_bounds": false,
+    "description": "The output of the right Wavesculptor is being limited by the motor current"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Limit_Velocity",
     "offset": 2,
     "check_bounds": false,
-    "description": "The value(s) of any errors (trips) on the right Wavesculptor"
+    "description": "The output of the right Wavesculptor is being limited by velocity"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Limit_Bus_Current",
+    "offset": 3,
+    "check_bounds": false,
+    "description": "The output of the right Wavesculptor is being limited by the bus current"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Limit_Bus_Voltage_Upper",
+    "offset": 4,
+    "check_bounds": false,
+    "description": "The output of the right Wavesculptor is being limited by the bus voltage upper limit"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Limit_Bus_Voltage_Lower",
+    "offset": 5,
+    "check_bounds": false,
+    "description": "The output of the right Wavesculptor is being limited by the bus voltage lower limit"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Limit_Motor_Temperature",
+    "offset": 6,
+    "check_bounds": false,
+    "description": "The output of the right Wavesculptor is being limited by the motor temperature"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Error_Software_Over_Current",
+    "offset": 17,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a software over current error"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Error_DC_Bus_Over_Voltage",
+    "offset": 18,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a DC bus over voltage error"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Error_Bad_Motor_Position_Hall_Sequence",
+    "offset": 19,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a bad motor position hall sequence error"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Error_Watchdog_Caused_Last_Reset",
+    "offset": 20,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a watchdog caused last reset error"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Error_Config_Read_Error",
+    "offset": 21,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced an error reading the config"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Error_15V_Rail_Under_Voltage_Lockout",
+    "offset": 22,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a 15V rail under voltage lockout error"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Error_Desaturation_Fault",
+    "offset": 23,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a desaturation fault"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "bit",
+    "name": "Right_Wavesculptor_Error_Motor_Over_Speed",
+    "offset": 24,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a motor over speed error"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "uint8",
+    "name": "Right_Wavesculptor_CAN_Transmit_Error_Count",
+    "offset": 6,
+    "check_bounds": false,
+    "description": "The count of transmit errors from the right Wavesculptor CAN bus"
+  },
+  {
+    "can_id": 1025,
+    "datatype": "uint8",
+    "name": "Right_Wavesculptor_CAN_Receive_Error_Count",
+    "offset": 7,
+    "check_bounds": false,
+    "description": "The count of receive errors from the right Wavesculptor CAN bus"
   },
   {
     "can_id": 1026,
@@ -1290,19 +1410,139 @@
   },
   {
     "can_id": 1057,
-    "datatype": "uint16",
-    "name": "Left_Wavesculptor_Limit_Flags",
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Limit_Output_Voltage_PWM",
     "offset": 0,
     "check_bounds": false,
-    "description": "The value(s) of any control limits on the left Wavesculptor"
+    "description": "The output of the left wavesculptor is limited by the output voltage PWM"
   },
   {
     "can_id": 1057,
-    "datatype": "uint16",
-    "name": "Left_Wavesculptor_Error_Flags",
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Limit_Motor_Current",
+    "offset": 1,
+    "check_bounds": false,
+    "description": "The output of the left Wavesculptor is being limited by the motor current"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Limit_Velocity",
     "offset": 2,
     "check_bounds": false,
-    "description": "The value(s) of any errors (trips) on the left Wavesculptor"
+    "description": "The output of the left Wavesculptor is being limited by velocity"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Limit_Bus_Current",
+    "offset": 3,
+    "check_bounds": false,
+    "description": "The output of the left Wavesculptor is being limited by the bus current"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Limit_Bus_Voltage_Upper",
+    "offset": 4,
+    "check_bounds": false,
+    "description": "The output of the left Wavesculptor is being limited by the bus voltage upper limit"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Limit_Bus_Voltage_Lower",
+    "offset": 5,
+    "check_bounds": false,
+    "description": "The output of the left Wavesculptor is being limited by the bus voltage lower limit"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Limit_Motor_Temperature",
+    "offset": 6,
+    "check_bounds": false,
+    "description": "The output of the left Wavesculptor is being limited by the motor temperature"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Error_Software_Over_Current",
+    "offset": 17,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a software over current error"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Error_DC_Bus_Over_Voltage",
+    "offset": 18,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a DC bus over voltage error"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Error_Bad_Motor_Position_Hall_Sequence",
+    "offset": 19,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a bad motor position hall sequence error"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Error_Watchdog_Caused_Last_Reset",
+    "offset": 20,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a watchdog caused last reset error"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Error_Config_Read_Error",
+    "offset": 21,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced an error reading the config"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Error_15V_Rail_Under_Voltage_Lockout",
+    "offset": 22,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a 15V rail under voltage lockout error"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Error_Desaturation_Fault",
+    "offset": 23,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a desaturation fault"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "bit",
+    "name": "Left_Wavesculptor_Error_Motor_Over_Speed",
+    "offset": 24,
+    "check_bounds": false,
+    "description": "The Wavesculptor experienced a motor over speed error"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "uint8",
+    "name": "Left_Wavesculptor_CAN_Transmit_Error_Count",
+    "offset": 6,
+    "check_bounds": false,
+    "description": "The count of transmit errors from the left Wavesculptor CAN bus"
+  },
+  {
+    "can_id": 1057,
+    "datatype": "uint8",
+    "name": "Left_Wavesculptor_CAN_Receive_Error_Count",
+    "offset": 7,
+    "check_bounds": false,
+    "description": "The count of receive errors from the left Wavesculptor CAN bus"
   },
   {
     "can_id": 1058,
@@ -1402,7 +1642,7 @@
     "check_bounds": true,
     "min_value": -200,
     "max_value": 200,
-    "description": "The value of the right motor's back-electromagnetic field"
+    "description": "The value of the left motor's back-electromagnetic field"
   },
   {
     "can_id": 1067,
@@ -1428,7 +1668,7 @@
     "check_bounds": true,
     "min_value": -12742,
     "max_value": 12742,
-    "description": "Distance the right motor has travelled since the right Wavesculptor was last reset"
+    "description": "Distance the left motor has travelled since the left Wavesculptor was last reset"
   },
   {
     "can_id": 1070,
@@ -1438,7 +1678,7 @@
     "check_bounds": true,
     "min_value": -1000,
     "max_value": 1000,
-    "description": "The amount of charge consumed by the right motor since the right Wavesculptor was last reset"
+    "description": "The amount of charge consumed by the left motor since the left Wavesculptor was last reset"
   },
   {
     "can_id": 1152,
