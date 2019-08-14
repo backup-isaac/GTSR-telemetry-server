@@ -30,13 +30,13 @@ const cookieName = "login-cookie"
 
 const maxMessageLength = 35
 
+const requireAuthorization = false
+
 var authorizedUsers = map[string]bool{
 	"U0JSX098T": true, // Jared
-	"U06CN1EGN": true, // Jackson
 	"U2PVAD9B7": true, // Alex
-	"U0ML7HT1S": true, // Michael
 	"U709MM717": true, // Steven
-	"U0KS2T740": true, // Lilli
+	"UCRCSKHBN": true, // Noah
 }
 
 var slck *slack.Client
@@ -157,7 +157,7 @@ func (api *API) ChatSlashCommand(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	user := req.Form.Get("user_id")
-	if !authorizedUsers[user] {
+	if requireAuthorization && !authorizedUsers[user] {
 		slackResponse("Unauthorized user", res)
 		return
 	}
