@@ -37,6 +37,7 @@ var authorizedUsers = map[string]bool{
 	"U2PVAD9B7": true, // Alex
 	"U709MM717": true, // Steven
 	"UCRCSKHBN": true, // Noah
+	"UCR9YCZCN": true, // Kat
 }
 
 var slck *slack.Client
