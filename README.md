@@ -137,3 +137,32 @@ Please see the README.md in rf-listener for more information on running the rf-l
 ## Generator
 
 For debugging purposes, we have a generator which will create Test Computations and Driver ACK/NACK messages and send them to either a local server or the production server. It will also print out any chat messages recieved from the server.
+
+# FAQ
+
+## Jenkins has stopped running builds.
+
+Jenkins ocassionally falls over. If the container has crashed, sometimes restarting the container instance can fix it.
+```
+docker-compose restart jenkins
+```
+
+If Jenkins is running, but no longer running builds, it is possible that the plugins are out of date. This can be remediated by logging in to Jenkins as an administrator user, and updating plugins
+
+Manage Jenkins -> Plugin Manager -> Select All Updates -> Update After Restart -> Restart Jenkins
+
+## Old containers are floating around and clogging up docker.
+
+Whenever Jenkins builds docker containers in a given branch, by default it doesn't actually clean up old containers once the builds are completed. 
+
+https://stackoverflow.com/questions/45128781/no-space-on-device-with-jenkins-and-docker-how-to-cleanup-properly
+
+Running docker system prune on a regular basis can clean up orphaned containers. Note that in production we delete all stopped containers, and manually whitelist tiva-toolchain and other containers to make sure they are always available.
+
+## Jenkins is out of date.
+
+The Jenkins container has no mechanism currently to update itself. Currently on server restarts, we run docker-compose pull to guarentee that the containers are the most up to date version. The best way to update Jenkins is to update the plugins and restart the containers periodically, making sure to run pull to update the containers
+
+## I can't access Jenkins. I am getting 403 Forbidden.
+
+Jenkins is whitelisted to Georgia Tech's network.
