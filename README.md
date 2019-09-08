@@ -98,7 +98,7 @@ And then navigate to your web browser to localhost:8088 to access Jenkins jobs. 
 
 CAN data is first parsed by the telemetry subsystem on the car. The microcontroller connected to the Cellular LTE modem will convert each CAN frame into a basic 12-byte format, and forward it via TCP to port 6001 on the server.
 
-| Bytes 0-2 | Bytes 3-4 | Bytes 5-11 |
+| Bytes 0-1 | Bytes 2-3 | Bytes 4-11 |
 |  ---      |  ---    |   ---      |
 |  'GT'   | CAN_ID    |  Payload    |
 
