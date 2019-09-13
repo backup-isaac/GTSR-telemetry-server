@@ -13,7 +13,7 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'golang:1.11.2'
+                    image 'golang:1.13'
                     args '-u root -v go-cache:/go'
                     reuseNode true
                 }
@@ -25,7 +25,7 @@ pipeline {
         stage('Test') {
             agent {
                 docker {
-                    image 'golang:1.11.2'
+                    image 'golang:1.13'
                     args "-u root -v go-cache:/go"
                     reuseNode true
                 }
@@ -37,7 +37,7 @@ pipeline {
         stage('Lint') {
             agent {
                 docker {
-                    image 'golang:1.11.2'
+                    image 'golang:1.13'
                     args '-u root -v go-cache:/go'
                     reuseNode true
                 }
