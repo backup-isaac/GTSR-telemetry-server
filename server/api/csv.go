@@ -22,6 +22,22 @@ func init() {
 	generating.Store(false)
 }
 
+type generationRequest struct {
+	start      time.Time
+	end        time.Time
+	resolution int
+}
+
+var genQueue = make(chan generationRequest)
+
+func (api *API) generationScheduler() {
+	for req := range genQueue {
+		generating.Store(true)
+		api.generateCsv(req.start, req.end, req.resolution)
+		generating.Store(false)
+	}
+}
+
 // CsvDefault is the default handler for the /csv route
 func (api *API) CsvDefault(res http.ResponseWriter, req *http.Request) {
 	if !generating.Load().(bool) {
@@ -38,15 +54,9 @@ func (api *API) IsGenerating(res http.ResponseWriter, req *http.Request) {
 
 // GenerateCsv generates the csv
 func (api *API) GenerateCsv(res http.ResponseWriter, req *http.Request) {
-	if generating.Load().(bool) {
-		http.Error(res, "Already generating CSV", http.StatusLocked)
-		return
-	}
-	generating.Store(true)
 	err := req.ParseForm()
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing form: %s", err), http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	startDateString := req.Form.Get("startDate")
@@ -54,34 +64,34 @@ func (api *API) GenerateCsv(res http.ResponseWriter, req *http.Request) {
 	resolutionString := req.Form.Get("resolution")
 	if startDateString == "" || endDateString == "" || resolutionString == "" {
 		http.Error(res, "malformatted query", http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	startDate, err := unixStringMillisToTime(startDateString)
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing start date: %s", err), http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	endDate, err := unixStringMillisToTime(endDateString)
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing end date: %s", err), http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	resolution64, err := strconv.ParseInt(resolutionString, 10, 32)
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing resolution: %s", err), http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	resolution := int(resolution64)
 	if resolution <= 0 {
 		http.Error(res, "Resolution must be strictly greater than 0", http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
-	go api.generateCsv(startDate, endDate, resolution)
+	select {
+	case genQueue <- generationRequest{startDate, endDate, resolution}:
+	default:
+		http.Error(res, "Already generating CSV", http.StatusLocked)
+		return
+	}
 	res.WriteHeader(http.StatusOK)
 }
 
@@ -94,7 +104,6 @@ func unixStringMillisToTime(timeString string) (time.Time, error) {
 }
 
 func (api *API) generateCsv(start time.Time, end time.Time, resolution int) {
-	defer generating.Store(false)
 	metrics, err := api.store.ListMetrics()
 	if err != nil {
 		log.Printf("Error getting metrics: %s\n", err)
@@ -199,6 +208,7 @@ func WriteCsv(columns map[string][]float64, start time.Time, end time.Time, reso
 
 // RegisterCsvRoutes registers the routes for the CSV service
 func (api *API) RegisterCsvRoutes(router *mux.Router) {
+	go api.generationScheduler()
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("Could not find runtime caller")
