@@ -344,6 +344,7 @@ func MonitorConnection() {
 	if err != nil {
 		log.Fatalf("Error initializing storage for connection status: %v", err)
 	}
+	defer store.Close()
 	points := make(chan *datatypes.Datapoint, 10)
 	listener.Subscribe(points)
 	connected := false
