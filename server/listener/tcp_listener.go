@@ -44,6 +44,7 @@ func reportConnections() {
 		log.Println("Error getting storage for connection reporting.")
 		return
 	}
+	defer store.Close()
 	ticker := time.NewTicker(time.Second * 5)
 	for {
 		<-ticker.C
