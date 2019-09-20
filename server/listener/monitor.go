@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-var connStatusMetric = "Connection_Status"
+const connStatusMetric = "Connection_Status"
 
 // monitorConnection listens for data from the car, posting updates
 // to Slack for when connection is established and lost.
