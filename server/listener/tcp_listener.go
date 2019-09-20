@@ -89,6 +89,9 @@ func (handler *TCPConnectionHandler) HandleTCPConnection(conn net.Conn) {
 
 // TCPListen is the main function of listener which listens to the TCP data port for incoming connections
 func TCPListen() {
+	go reportConnections()
+	go writerThread()
+	go monitorConnection()
 	canConfigs, err := configs.LoadConfigs()
 	if err != nil {
 		log.Fatalf("Error loading CAN configs: %s", err)
@@ -148,9 +151,4 @@ func Subscribe(c chan *datatypes.Datapoint) error {
 // Unsubscribe unsubscribes the channel c from the datapoint publisher
 func Unsubscribe(c chan *datatypes.Datapoint) error {
 	return GetDatapointPublisher().Unsubscribe(c)
-}
-
-func init() {
-	go reportConnections()
-	go writerThread()
 }
