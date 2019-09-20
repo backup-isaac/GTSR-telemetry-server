@@ -344,7 +344,7 @@ func MonitorConnection() {
 	c := make(chan *datatypes.Datapoint, 10)
 	err := listener.Subscribe(c)
 	if err != nil {
-		log.Fatalf("Error getting datapoint publisher")
+		log.Fatalf("Error getting datapoint publisher: %v", err)
 	}
 	for point := range c {
 		if point.Metric == "Connection_Status" {

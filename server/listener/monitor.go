@@ -1,6 +1,7 @@
 package listener
 
 import (
+	"log"
 	"server/datatypes"
 	"time"
 )
@@ -12,7 +13,10 @@ var connStatusMetric = "Connection_Status"
 func monitorConnection() {
 	p := GetDatapointPublisher()
 	points := make(chan *datatypes.Datapoint, 10)
-	Subscribe(points)
+	err := Subscribe(points)
+	if err != nil {
+		log.Fatalf("Error subscribing to publisher: %v", err)
+	}
 	connected := false
 	timer := time.NewTimer(10 * time.Second)
 	for {
