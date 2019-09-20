@@ -12,7 +12,6 @@ import (
 	"runtime"
 	"server/datatypes"
 	"server/listener"
-	"server/storage"
 	"strings"
 	"sync"
 	"time"
@@ -317,6 +316,8 @@ func uploadTCPMessage(message string) {
 
 // RegisterChatRoutes registers the routes for the chat service
 func (api *API) RegisterChatRoutes(router *mux.Router) {
+	go SubscribeDriverStatus()
+	go MonitorConnection()
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("Could not find runtime caller")
@@ -337,52 +338,21 @@ func (api *API) RegisterChatRoutes(router *mux.Router) {
 	router.HandleFunc("/chatSlashCommand", api.ChatSlashCommand).Methods("GET")
 }
 
-// MonitorConnection listens for data from the car, posting updates
-// to Slack for when connection is established and lost.
+// MonitorConnection listens for connection status messages and
+// posts Slack messages in response
 func MonitorConnection() {
-	store, err := storage.NewStorage()
+	c := make(chan *datatypes.Datapoint, 10)
+	err := listener.Subscribe(c)
 	if err != nil {
-		log.Fatalf("Error initializing storage for connection status: %v", err)
+		log.Fatalf("Error getting datapoint publisher")
 	}
-	defer store.Close()
-	points := make(chan *datatypes.Datapoint, 10)
-	listener.Subscribe(points)
-	connected := false
-	for {
-		timer := time.NewTimer(10 * time.Second)
-		select {
-		case <-points:
-			timer.Stop()
-			if !connected {
-				err = store.Insert([]*datatypes.Datapoint{{
-					Metric: "Connection_Status",
-					Value:  1,
-					Time:   time.Now(),
-				}})
-				if err != nil {
-					log.Printf("Error storing connection status 1: %v", err)
-				}
+	for point := range c {
+		if point.Metric == "Connection_Status" {
+			if point.Value == 1 {
 				postSlackMessage("Connection established")
-				connected = true
-			}
-		case <-timer.C:
-			if connected {
-				err = store.Insert([]*datatypes.Datapoint{{
-					Metric: "Connection_Status",
-					Value:  0,
-					Time:   time.Now(),
-				}})
-				if err != nil {
-					log.Printf("Error storing connection status 0: %v", err)
-				}
+			} else {
 				postSlackMessage("Connection lost")
-				connected = false
 			}
 		}
 	}
-}
-
-func init() {
-	go SubscribeDriverStatus()
-	go MonitorConnection()
 }
