@@ -12,9 +12,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// JacksonHandler handles requests from /advice
+type JacksonHandler struct{}
+
+// NewJacksonHandler is the basic JacksonHandler constructor
+func NewJacksonHandler() *JacksonHandler {
+	return &JacksonHandler{}
+}
+
 // GenerateJacksonSpeech uses jackson_samples.txt, a file containing
 // all of Jackson's Slack messages, to generate sagely advice
-func (api *API) GenerateJacksonSpeech(res http.ResponseWriter, req *http.Request) {
+func (j *JacksonHandler) GenerateJacksonSpeech(res http.ResponseWriter, req *http.Request) {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("Could not find runtime caller")
@@ -30,8 +38,8 @@ func (api *API) GenerateJacksonSpeech(res http.ResponseWriter, req *http.Request
 	json.NewEncoder(res).Encode(response)
 }
 
-// RegisterJacksonRoutes registers the POST request route
+// RegisterRoutes registers the GET request route
 // for the joke Jackson chatbot integration in Slack
-func (api *API) RegisterJacksonRoutes(router *mux.Router) {
-	router.HandleFunc("/jackson", api.GenerateJacksonSpeech).Methods("GET")
+func (j *JacksonHandler) RegisterRoutes(router *mux.Router) {
+	router.HandleFunc("/jackson", j.GenerateJacksonSpeech).Methods("GET")
 }

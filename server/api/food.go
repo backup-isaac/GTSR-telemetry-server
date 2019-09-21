@@ -22,6 +22,14 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// FoodHandler handles requests related to the food bot Slack plugin
+type FoodHandler struct{}
+
+// NewFoodHandler is the basic FoodHandler constructor
+func NewFoodHandler() *FoodHandler {
+	return &FoodHandler{}
+}
+
 const helpText = `Welcome to the food bot! Type /food to get a food suggestion.
 
 If you're in the mood for something specific, type /food followed by a tag:
@@ -60,7 +68,7 @@ const closesTagRegex = "closes=((((([1-9])|(1[012]))|(([1-9])|(1[012])):[0-5][0-
 
 // FoodSuggestion handles a request from Slack asking for a suggestion of
 // where to eat
-func (api *API) FoodSuggestion(res http.ResponseWriter, req *http.Request) {
+func (f *FoodHandler) FoodSuggestion(res http.ResponseWriter, req *http.Request) {
 	foodLock.Lock()
 	defer foodLock.Unlock()
 	var db fooddb = make(map[string][]string)
@@ -270,7 +278,7 @@ func (db fooddb) filterOpen() fooddb {
 	return newdb
 }
 
-// RegisterFoodRoutes registers the routes for the food service
-func (api *API) RegisterFoodRoutes(router *mux.Router) {
-	router.HandleFunc("/food", api.FoodSuggestion).Methods("GET")
+// RegisterRoutes registers the routes for the food service
+func (f *FoodHandler) RegisterRoutes(router *mux.Router) {
+	router.HandleFunc("/food", f.FoodSuggestion).Methods("GET")
 }

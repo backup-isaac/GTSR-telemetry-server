@@ -12,14 +12,17 @@ import (
 
 	"server/api"
 	"server/datatypes"
-	"server/storage"
 
 	"github.com/stretchr/testify/assert"
 )
 
 type mockStore struct {
-	*storage.Storage
-	points []*datatypes.Datapoint
+	metrics []string
+	points  []*datatypes.Datapoint
+}
+
+func (m *mockStore) ListMetrics() ([]string, error) {
+	return m.metrics, nil
 }
 
 func (m *mockStore) SelectMetricTimeRange(name string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error) {
@@ -55,7 +58,7 @@ func TestGetSampledPointsForMetric(t *testing.T) {
 	}
 	expectedValues := []float64{0, 1, 1, 3, 3, 4, 4, 4}
 	mockStore := &mockStore{points: points}
-	apiObj := api.NewAPI(mockStore)
+	apiObj := api.NewCSVHandler(mockStore)
 	actualValues, err := apiObj.GetSampledPointsForMetric(metric, start, end, resolution)
 	assert.NoError(t, err)
 	assert.Equal(t, expectedValues, actualValues)

@@ -21,6 +21,16 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// MapHandler handles requests related to the map service,
+// which includes serving the Google Maps frontend for tracking the
+// car, as well as the tool for uploading suggested speeds
+type MapHandler struct{}
+
+// NewMapHandler is the basic MapHandler constructor
+func NewMapHandler() *MapHandler {
+	return &MapHandler{}
+}
+
 // RoutePoint is a point along the uploaded route
 type RoutePoint struct {
 	// Distance is the distance along the route for this point
@@ -37,12 +47,12 @@ type RoutePoint struct {
 }
 
 // MapDefault is the default handler for the /map path
-func (api *API) MapDefault(res http.ResponseWriter, req *http.Request) {
+func (m *MapHandler) MapDefault(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/map/static/index.html", http.StatusFound)
 }
 
 // FileUpload handles a CSV upload of a race route and suggested speeds
-func (api *API) FileUpload(res http.ResponseWriter, req *http.Request) {
+func (m *MapHandler) FileUpload(res http.ResponseWriter, req *http.Request) {
 	file, _, err := req.FormFile("uploadedFile")
 	if err != nil {
 		http.Error(res, "Error getting uploaded file: "+err.Error(), http.StatusBadRequest)
@@ -180,8 +190,8 @@ func writeFloat64As32(num float64) {
 	listener.Write(buf)
 }
 
-// RegisterMapRoutes registers the routes for the map service
-func (api *API) RegisterMapRoutes(router *mux.Router) {
+// RegisterRoutes registers the routes for the map service
+func (m *MapHandler) RegisterRoutes(router *mux.Router) {
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("Could not find runtime caller")
@@ -189,6 +199,6 @@ func (api *API) RegisterMapRoutes(router *mux.Router) {
 	dir := path.Dir(filename)
 	router.PathPrefix("/map/static/").Handler(http.StripPrefix("/map/static/", http.FileServer(http.Dir(path.Join(dir, "map")))))
 
-	router.HandleFunc("/map", api.MapDefault).Methods("GET")
-	router.HandleFunc("/map/fileupload", api.FileUpload).Methods("POST")
+	router.HandleFunc("/map", m.MapDefault).Methods("GET")
+	router.HandleFunc("/map/fileupload", m.FileUpload).Methods("POST")
 }

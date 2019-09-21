@@ -19,8 +19,15 @@ func main() {
 		log.Fatalf("Error initializing storage: %s", err)
 	}
 	defer store.Close()
-	apiObj := api.NewAPI(store)
-	go apiObj.StartServer()
+	go api.StartServer([]api.RouteHandler{
+		api.NewChatHandler(),
+		api.NewCore(store),
+		api.NewCSVHandler(store),
+		api.NewDataHandler(),
+		api.NewFoodHandler(),
+		api.NewJacksonHandler(),
+		api.NewMapHandler(),
+	})
 	go computations.RunComputations()
 	err = recordData(store)
 	log.Fatalf("Error recording data: %s", err)
