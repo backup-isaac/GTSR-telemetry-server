@@ -249,8 +249,7 @@ func (c *ChatHandler) ChatSocket(res http.ResponseWriter, req *http.Request) {
 func SubscribeDriverStatus() {
 	points := make(chan *datatypes.Datapoint)
 	listener.Subscribe(points)
-	for {
-		point := <-points
+	for point := range points {
 		if point.Metric == "Driver_ACK_Status" {
 			msg := ""
 			if point.Value == 0.0 {

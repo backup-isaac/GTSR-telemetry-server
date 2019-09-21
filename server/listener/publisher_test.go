@@ -1,17 +1,17 @@
-package listener_test
+package listener
 
 import (
 	"testing"
 	"time"
 
 	"server/datatypes"
-	"server/listener"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestDatapointPublisher(t *testing.T) {
-	publisher := listener.GetDatapointPublisher()
+	publisher := GetDatapointPublisher()
+	defer publisher.Close()
 	c := make(chan *datatypes.Datapoint)
 	err := publisher.Subscribe(c)
 	assert.NoError(t, err)
@@ -30,4 +30,13 @@ func TestDatapointPublisher(t *testing.T) {
 		assert.Fail(t, "Timed out 1 second after publish")
 	}
 	assert.Equal(t, datapoint, actualDatapoint)
+
+	// Ensure GetDatapointPublisher does singleton logic correctly
+	publisher2 := GetDatapointPublisher()
+	publisher2.Publish(datapoint)
+	select {
+	case <-c:
+	case <-time.After(time.Second):
+		assert.Fail(t, "Timed out 1 second after publish")
+	}
 }

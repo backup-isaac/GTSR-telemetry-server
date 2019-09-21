@@ -23,12 +23,12 @@ const (
 
 // TCPConnectionHandler is the object representing the TCP listener
 type TCPConnectionHandler struct {
-	Publisher DatapointPublisher
-	Parser    PacketParser
+	Publisher *DatapointPublisher
+	Parser    *PacketParser
 }
 
 // NewTCPConnectionHandler returns an initialized TCPConnectionHandler
-func NewTCPConnectionHandler(publisher DatapointPublisher, parser PacketParser) *TCPConnectionHandler {
+func NewTCPConnectionHandler(publisher *DatapointPublisher, parser *PacketParser) *TCPConnectionHandler {
 	return &TCPConnectionHandler{
 		Publisher: publisher,
 		Parser:    parser,
