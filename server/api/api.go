@@ -10,18 +10,25 @@ import (
 	"time"
 
 	"server/configs"
-	"server/storage"
+	"server/datatypes"
 
 	"github.com/gorilla/mux"
 )
 
+type apiStorage interface {
+	ListMetrics() ([]string, error)
+	Latest(string) (*datatypes.Datapoint, error)
+	LatestNonZero(string) (*datatypes.Datapoint, error)
+	SelectMetricTimeRange(string, time.Time, time.Time) ([]*datatypes.Datapoint, error)
+}
+
 // API is the object which handles HTTP API requests
 type API struct {
-	store storage.Storage
+	store apiStorage
 }
 
 // NewAPI returns a new API initialized with the provided store
-func NewAPI(store storage.Storage) *API {
+func NewAPI(store apiStorage) *API {
 	return &API{store: store}
 }
 

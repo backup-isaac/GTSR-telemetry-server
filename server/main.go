@@ -26,7 +26,7 @@ func main() {
 	log.Fatalf("Error recording data: %s", err)
 }
 
-func recordData(store storage.Storage) error {
+func recordData(store *storage.Storage) error {
 	points := make(chan *datatypes.Datapoint, 1000)
 	err := listener.Subscribe(points)
 	if err != nil {
