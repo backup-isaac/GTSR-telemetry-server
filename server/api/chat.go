@@ -2,7 +2,6 @@ package api
 
 import (
 	"crypto/rand"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -12,6 +11,7 @@ import (
 	"runtime"
 	"server/datatypes"
 	"server/listener"
+	"server/message"
 	"strings"
 	"sync"
 	"time"
@@ -49,13 +49,8 @@ var authorizedUsers = map[string]bool{
 
 var slck *slack.Client
 
-func postSlackMessage(message string) {
-	if slck != nil {
-		slck.PostMessage("chat", slack.MsgOptionText(message, false))
-	} else {
-		log.Printf("No slack key - message: %s", message)
-	}
-}
+var carMessenger = message.NewCarMessenger("GTSR")
+var slackMessenger = message.NewSlackMessenger(slck)
 
 var sc = securecookie.New(hashKey, blockKey)
 
@@ -166,33 +161,25 @@ func (c *ChatHandler) ChatSlashCommand(res http.ResponseWriter, req *http.Reques
 	}
 	user := req.Form.Get("user_id")
 	if requireAuthorization && !authorizedUsers[user] {
-		slackResponse("Unauthorized user", res)
+		slackMessenger.RespondToSlackRequest("Unauthorized user", res)
 		return
 	}
 	channel := req.Form.Get("channel_name")
 	if channel != "chat" && channel != "testing" {
-		slackResponse("Requests must be made from #chat", res)
+		slackMessenger.RespondToSlackRequest("Requests must be made from #chat", res)
 		return
 	}
 	msg := req.Form.Get("text")
 	if len(msg) == 0 {
-		slackResponse("Please provide a message", res)
+		slackMessenger.RespondToSlackRequest("Please provide a message", res)
 		return
 	}
 	if len(msg) > maxMessageLength {
-		slackResponse("Message exceeds maximum length", res)
+		slackMessenger.RespondToSlackRequest("Message exceeds maximum length", res)
 		return
 	}
-	uploadTCPMessage(msg)
-	slackResponse("Message sent", res)
-}
-
-func slackResponse(text string, res http.ResponseWriter) {
-	response := make(map[string]string)
-	response["response_type"] = "in_channel"
-	response["text"] = text
-	res.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(res).Encode(response)
+	carMessenger.UploadTCPMessage(msg)
+	slackMessenger.RespondToSlackRequest("Message sent", res)
 }
 
 // ChatSocket initializes the WebSocket for a connection.
@@ -236,9 +223,9 @@ func (c *ChatHandler) ChatSocket(res http.ResponseWriter, req *http.Request) {
 		} else {
 			// Print the message to the console
 			log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
-			postSlackMessage("Strategy: " + string(msg))
+			slackMessenger.PostNewMessage("Strategy: " + string(msg))
 			// upload message to car
-			uploadTCPMessage(string(msg))
+			carMessenger.UploadTCPMessage(string(msg))
 		}
 	}
 }
@@ -253,10 +240,10 @@ func SubscribeDriverStatus() {
 		msg := ""
 		if point.Value == 0.0 {
 			msg = "Driver Response NACK"
-			postSlackMessage("Driver: NACK")
+			slackMessenger.PostNewMessage("Driver: NACK")
 		} else if point.Value == 1.0 {
 			msg = "Driver Response ACK"
-			postSlackMessage("Driver: ACK")
+			slackMessenger.PostNewMessage("Driver: ACK")
 		}
 		if msg == "" {
 			continue
@@ -308,17 +295,6 @@ func pingClient(conn *websocket.Conn) {
 	}
 }
 
-// uploadTCPMessage sends our message to the listener
-// which will then relay to the car
-func uploadTCPMessage(message string) {
-	// send GTSR, the length of the string, and the string itself
-	msg := []byte("GTSR")
-	messageLength := []byte{byte(len(message))}
-	msg = append(msg, messageLength...)
-	msg = append(msg, []byte(message)...)
-	listener.Write(msg)
-}
-
 // MonitorConnection listens for connection status messages and
 // posts Slack messages in response
 func MonitorConnection() {
@@ -329,9 +305,9 @@ func MonitorConnection() {
 	}
 	for point := range c {
 		if point.Value == 1 {
-			postSlackMessage("Connection established")
+			slackMessenger.PostNewMessage("Connection established")
 		} else {
-			postSlackMessage("Connection lost")
+			slackMessenger.PostNewMessage("Connection lost")
 		}
 	}
 }
