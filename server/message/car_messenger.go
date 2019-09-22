@@ -1,21 +1,28 @@
 package message
 
-import "server/listener"
+// Writer handles writing a message to a TCP listener
+type Writer interface {
+	Write([]byte)
+}
 
 // CarMessenger handles sending messages to the car
 type CarMessenger struct {
 	TCPPrefix string
+	Writer    Writer
 }
 
 // NewCarMessenger returns a new Messenger initialized with the provided TCP
-// prefix, and a message terminator used when constructing a TCP message
-func NewCarMessenger(tcpPrefix string) *CarMessenger {
-	return &CarMessenger{TCPPrefix: tcpPrefix}
+// prefix that will write new messages to the provided Writer
+func NewCarMessenger(tcpPrefix string, writer Writer) *CarMessenger {
+	return &CarMessenger{
+		TCPPrefix: tcpPrefix,
+		Writer:    writer,
+	}
 }
 
 // UploadTCPMessage sends the provided message to the listener, which will then
 // relay it to the car
 func (m *CarMessenger) UploadTCPMessage(message string) {
 	msg := m.TCPPrefix + string(len(message)) + message
-	listener.Write([]byte(msg))
+	m.Writer.Write([]byte(msg))
 }

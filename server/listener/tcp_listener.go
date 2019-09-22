@@ -123,9 +123,19 @@ func TCPListen() {
 
 var writeChannel = make(chan []byte, 100)
 
+// TCPWriter writes messages to all open TCP connections
+type TCPWriter struct {
+	writeChannel chan []byte
+}
+
+// NewTCPWriter returns a new TCPWriter initialized with the default channel
+func NewTCPWriter() *TCPWriter {
+	return &TCPWriter{writeChannel: writeChannel}
+}
+
 // Write writes the data in buf to all open connections
-func Write(buf []byte) {
-	writeChannel <- append(make([]byte, 0, len(buf)), buf...)
+func (w *TCPWriter) Write(buf []byte) {
+	w.writeChannel <- append(make([]byte, 0, len(buf)), buf...)
 }
 
 func writerThread() {

@@ -168,8 +168,9 @@ func verifyColumns(columns map[string]int) error {
 }
 
 func uploadPoints(points []*RoutePoint) {
+	w := listener.NewTCPWriter()
 	tag := []byte("GTSR")
-	listener.Write(tag)
+	w.Write(tag)
 	for _, point := range points {
 		if point.Critical {
 			writeFloat64As32(point.Distance)
@@ -179,7 +180,7 @@ func uploadPoints(points []*RoutePoint) {
 			time.Sleep(100 * time.Millisecond)
 		}
 	}
-	listener.Write(tag)
+	w.Write(tag)
 }
 
 func writeFloat64As32(num float64) {
@@ -187,7 +188,7 @@ func writeFloat64As32(num float64) {
 	bits := math.Float32bits(num32)
 	buf := make([]byte, 4)
 	binary.LittleEndian.PutUint32(buf, bits)
-	listener.Write(buf)
+	listener.NewTCPWriter().Write(buf)
 }
 
 // RegisterRoutes registers the routes for the map service
