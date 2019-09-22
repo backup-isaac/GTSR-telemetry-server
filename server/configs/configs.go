@@ -28,9 +28,8 @@ func LoadConfigs() (map[int][]*CanConfigType, error) {
 	if !ok {
 		return nil, fmt.Errorf("Could not find runtime caller")
 	}
-	dirname := "."
-
-	f, err := os.Open(dirname)
+	dir := path.Dir(filename)
+	f, err := os.Open(dir)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +42,7 @@ func LoadConfigs() (map[int][]*CanConfigType, error) {
 
 	for _, file := range files {
 		if strings.Contains(file, ".json") {
-			rawJSON, err := ioutil.ReadFile(path.Join(path.Dir(filename), file))
+			rawJSON, err := ioutil.ReadFile(path.Join(dir, file))
 			if err != nil {
 				return nil, err
 			}
