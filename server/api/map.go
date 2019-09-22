@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"math"
 	"mime/multipart"
@@ -14,12 +15,16 @@ import (
 	"path"
 	"runtime"
 	"strconv"
+	"sync"
 	"time"
 
+	"server/api/trackinfo"
 	"server/listener"
 
 	"github.com/gorilla/mux"
 )
+
+var trackInfoMutex = sync.Mutex{}
 
 // MapHandler handles requests related to the map service,
 // which includes serving the Google Maps frontend for tracking the
@@ -81,6 +86,7 @@ func (m *MapHandler) FileUpload(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	go uploadPoints(points)
+	editIsTrackInfoNew(res, true)
 	res.WriteHeader(http.StatusOK)
 }
 
@@ -189,6 +195,36 @@ func writeFloat64As32(num float64) {
 	buf := make([]byte, 4)
 	binary.LittleEndian.PutUint32(buf, bits)
 	listener.NewTCPWriter().Write(buf)
+}
+
+// editIsTrackInfoNew overwrites the contents of track_info_config.json's
+// "isTrackInfoNew" key with the provided bool
+func editIsTrackInfoNew(res http.ResponseWriter, value bool) {
+	trackInfoMutex.Lock()
+	defer trackInfoMutex.Unlock()
+
+	configFile, err := ioutil.ReadFile("trackinfo/track_info_config.json")
+	if err != nil {
+		http.Error(res, "Error reading track_info_config: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	trackInfoModel := trackinfo.Model{}
+	json.Unmarshal(configFile, &trackInfoModel)
+
+	trackInfoModel.IsTrackInfoNew = value
+
+	jsonAsBytes, err := json.Marshal(trackInfoModel)
+	if err != nil {
+		http.Error(res, "Error editing track_info_config: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = ioutil.WriteFile("trackinfo/track_info_config.json", jsonAsBytes, 0644)
+	if err != nil {
+		http.Error(res, "Error writing changes to track_info_config: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 // RegisterRoutes registers the routes for the map service
