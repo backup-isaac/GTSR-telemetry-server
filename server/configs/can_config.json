@@ -2240,6 +2240,20 @@
     "max_value": 120
   },
   {
+    "can_id": 2000,
+    "datatype": "uint32",
+    "name": "x7D0_Low",
+    "offset": 0,
+    "check_bounds": false
+  },
+  {
+    "can_id": 2000,
+    "datatype": "uint32",
+    "name": "x7D0_High",
+    "offset": 4,
+    "check_bounds": false
+  },
+  {
     "can_id": 65535,
     "datatype": "float32",
     "name": "Test",

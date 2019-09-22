@@ -14,44 +14,26 @@ import (
 const tableName = "telemetry"
 
 // Storage describes the interface with persistent storage
-type Storage interface {
-	// Insert inserts points into the store
-	Insert(points []*datatypes.Datapoint) error
-	// DeleteMetric deletes a metric from the store
-	DeleteMetric(metric string) error
-	// Select all entries for specified metric
-	SelectMetric(metric string) ([]*datatypes.Datapoint, error)
-	// Select entries for metric within specified time range
-	SelectMetricTimeRange(metric string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error)
-	// ListMetrics lists all of the metrics in the table
-	ListMetrics() ([]string, error)
-	// Latest returns the most recent datapoint for the given metric
-	Latest(metric string) (*datatypes.Datapoint, error)
-	// LatestNonZero returns the most recent non-zero datapoint for the given metric
-	LatestNonZero(metric string) (*datatypes.Datapoint, error)
-	// Close performs cleanup work
-	Close() error
-}
-
-type storageImpl struct {
+type Storage struct {
 	client client.Client
 }
 
 // NewStorage returns an initialized Storage, backed by InfluxDB
-func NewStorage() (Storage, error) {
+func NewStorage() (*Storage, error) {
 	c, err := client.NewHTTPClient(client.HTTPConfig{
 		Addr: "http://influxdb:8086",
 	})
 	if err != nil {
 		return nil, err
 	}
-	storage := &storageImpl{
+	storage := &Storage{
 		client: c,
 	}
 	return storage, nil
 }
 
-func (s *storageImpl) Insert(points []*datatypes.Datapoint) error {
+// Insert inserts points into the store
+func (s *Storage) Insert(points []*datatypes.Datapoint) error {
 	bp, err := client.NewBatchPoints(client.BatchPointsConfig{
 		Database:  tableName,
 		Precision: "ns",
@@ -77,7 +59,8 @@ func getPoint(metric string, tags map[string]string, fields map[string]interface
 	return client.NewPoint(metric, tags, fields, time)
 }
 
-func (s *storageImpl) DeleteMetric(metric string) error {
+// DeleteMetric deletes a metric from the store
+func (s *Storage) DeleteMetric(metric string) error {
 	response, err := s.client.Query(client.Query{
 		Command:  fmt.Sprintf("DROP MEASUREMENT %s", metric),
 		Database: tableName,
@@ -88,7 +71,8 @@ func (s *storageImpl) DeleteMetric(metric string) error {
 	return response.Error()
 }
 
-func (s *storageImpl) SelectMetric(metric string) ([]*datatypes.Datapoint, error) {
+// SelectMetric selects all entries for specified metric
+func (s *Storage) SelectMetric(metric string) ([]*datatypes.Datapoint, error) {
 	response, err := s.client.Query(client.Query{
 		Command:  fmt.Sprintf("SELECT * FROM %s", metric),
 		Database: tableName,
@@ -102,7 +86,8 @@ func (s *storageImpl) SelectMetric(metric string) ([]*datatypes.Datapoint, error
 	return getDatapoints(metric, response)
 }
 
-func (s *storageImpl) SelectMetricTimeRange(metric string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error) {
+// SelectMetricTimeRange selects entries for metric within specified time range
+func (s *Storage) SelectMetricTimeRange(metric string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error) {
 	response, err := s.client.Query(client.Query{
 		Command: fmt.Sprintf("SELECT * FROM %s WHERE time >= '%s' AND time <= '%s'",
 			metric, start.Format(time.RFC3339Nano), end.Format(time.RFC3339Nano)),
@@ -150,7 +135,8 @@ func getDatapoints(metric string, response *client.Response) ([]*datatypes.Datap
 	return results, nil
 }
 
-func (s *storageImpl) ListMetrics() ([]string, error) {
+// ListMetrics lists all of the metrics in the table
+func (s *Storage) ListMetrics() ([]string, error) {
 	response, err := s.client.Query(client.Query{
 		Command:  "SHOW MEASUREMENTS",
 		Database: tableName,
@@ -169,7 +155,8 @@ func (s *storageImpl) ListMetrics() ([]string, error) {
 	return metrics, nil
 }
 
-func (s *storageImpl) Latest(metric string) (*datatypes.Datapoint, error) {
+// Latest returns the most recent datapoint for the given metric
+func (s *Storage) Latest(metric string) (*datatypes.Datapoint, error) {
 	response, err := s.client.Query(client.Query{
 		Command:  fmt.Sprintf("SELECT * FROM %s ORDER BY DESC LIMIT 1", metric),
 		Database: tableName,
@@ -190,7 +177,8 @@ func (s *storageImpl) Latest(metric string) (*datatypes.Datapoint, error) {
 	return points[0], nil
 }
 
-func (s *storageImpl) LatestNonZero(metric string) (*datatypes.Datapoint, error) {
+// LatestNonZero returns the most recent non-zero datapoint for the given metric
+func (s *Storage) LatestNonZero(metric string) (*datatypes.Datapoint, error) {
 	response, err := s.client.Query(client.Query{
 		Command:  fmt.Sprintf("SELECT * FROM %s WHERE value != 0 ORDER BY DESC LIMIT 1", metric),
 		Database: tableName,
@@ -211,6 +199,7 @@ func (s *storageImpl) LatestNonZero(metric string) (*datatypes.Datapoint, error)
 	return points[0], nil
 }
 
-func (s *storageImpl) Close() error {
+// Close performs cleanup work
+func (s *Storage) Close() error {
 	return s.client.Close()
 }
