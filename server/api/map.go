@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"server/api/trackinfo"
+	"server/datatypes"
 	"server/listener"
 
 	"github.com/gorilla/mux"
@@ -206,6 +207,40 @@ func writeFloat64As32(num float64) {
 	listener.NewTCPWriter().Write(buf)
 }
 
+// checkIfTrackInfoNeedsUpdating listens for connection status messages. When
+// the car connects, if the track info stored on the car is out-of-date, it
+// gets replaced with the track info stored on the server
+func checkIfTrackInfoNeedsUpdating() {
+	c := make(chan *datatypes.Datapoint, 10)
+	listener.Subscribe(c)
+
+	for point := range c {
+		if point.Metric == "Connection_Status" && point.Value == 1 {
+			// The car just connected/reconnected
+			// Check to see if we need to send it more up-to-date track info
+			trackInfoModel := trackinfo.Model{}
+
+			err := readTrackInfoConfig(&trackInfoModel)
+			if err != nil {
+				// TODO: real error handling
+				log.Print(err)
+			}
+
+			if trackInfoModel.IsTrackInfoNew == true {
+				// Send track info csv stored on the server to the car
+
+				// Clear flag indicating that the server has new track info
+				trackInfoModel.IsTrackInfoNew = false
+				err = writeToTrackInfoConfig(&trackInfoModel)
+				if err != nil {
+					// TODO: real error handling
+					log.Print(err)
+				}
+			}
+		}
+	}
+}
+
 // editIsTrackInfoNew overwrites the contents of track_info_config.json's
 // "isTrackInfoNew" key with the provided bool
 func editIsTrackInfoNew(value bool) error {
@@ -262,6 +297,8 @@ func writeToTrackInfoConfig(m *trackinfo.Model) error {
 
 // RegisterRoutes registers the routes for the map service
 func (m *MapHandler) RegisterRoutes(router *mux.Router) {
+	go checkIfTrackInfoNeedsUpdating()
+
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("Could not find runtime caller")
