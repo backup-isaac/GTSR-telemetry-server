@@ -142,13 +142,18 @@ func TestInOrder(t *testing.T) {
 }
 
 func TestIllegalMetricName(t *testing.T) {
-	points := []*datatypes.Datapoint{{
-		Metric: "Metric with space",
-		Value:  0,
-		Time:   time.Now(),
-	}}
-	store, err := storage.NewStorage()
-	assert.NoError(t, err)
-	err = store.Insert(points)
-	assert.Error(t, err, "Insert of datapoint with metric name containing spaces should have been rejected")
+	for _, metric := range []string{
+		"metric space",
+		"metric\nnewline",
+	} {
+		points := []*datatypes.Datapoint{{
+			Metric: metric,
+			Value:  0,
+			Time:   time.Now(),
+		}}
+		store, err := storage.NewStorage()
+		assert.NoError(t, err)
+		err = store.Insert(points)
+		assert.Errorf(t, err, "Metric %q should have been rejected", metric)
+	}
 }

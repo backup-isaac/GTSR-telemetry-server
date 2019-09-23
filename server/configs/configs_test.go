@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"strings"
+	"server/storage"
 	"testing"
 )
 
@@ -11,9 +11,10 @@ func TestConfigs(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Error loading configs: %v", err)
 	}
+	// Check that there are no illegal metric names in the config
 	for _, configList := range configs {
 		for _, config := range configList {
-			if strings.ContainsAny(config.Name, " \n\t\r") {
+			if !storage.ValidMetric(config.Name) {
 				t.Errorf("Illegal metric name: %v", config.Name)
 			}
 		}
