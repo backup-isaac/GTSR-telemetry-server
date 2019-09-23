@@ -27,7 +27,7 @@ func LoadConfigs() (map[int][]*CanConfigType, error) {
 	if !ok {
 		return nil, fmt.Errorf("Could not find runtime caller")
 	}
-	dir := path.Dir(filename)
+	dir := path.Join(path.Dir(filename), "can_configs")
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return nil, err
