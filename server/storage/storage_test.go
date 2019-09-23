@@ -140,3 +140,15 @@ func TestInOrder(t *testing.T) {
 	err = store.DeleteMetric("Unit_Test_Order")
 	assert.NoError(t, err)
 }
+
+func TestIllegalMetricName(t *testing.T) {
+	points := []*datatypes.Datapoint{{
+		Metric: "Metric with space",
+		Value:  0,
+		Time:   time.Now(),
+	}}
+	store, err := storage.NewStorage()
+	assert.NoError(t, err)
+	err = store.Insert(points)
+	assert.Error(t, err, "Insert of datapoint with metric name containing spaces should have been rejected")
+}

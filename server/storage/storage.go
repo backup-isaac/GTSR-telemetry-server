@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"server/datatypes"
@@ -42,6 +43,9 @@ func (s *Storage) Insert(points []*datatypes.Datapoint) error {
 		return err
 	}
 	for _, point := range points {
+		if strings.ContainsAny(point.Metric, " \n\t\r") {
+			return fmt.Errorf("illegal metric name in Insert: %v", point.Metric)
+		}
 		fields := map[string]interface{}{"value": point.Value}
 		pt, err := getPoint(point.Metric, point.Tags, fields, point.Time)
 		if err != nil {
