@@ -14,7 +14,7 @@ import (
 
 const tableName = "telemetry"
 
-var metricRegex = regexp.MustCompile("\\A[a-zA-Z0-9_-]*\\z")
+var metricRegex = regexp.MustCompile("\\A[a-zA-Z0-9_-]+\\z")
 
 // ValidMetric returns whether the metric name is valid
 func ValidMetric(metric string) bool {
