@@ -1,4 +1,4 @@
-package listener_test
+package listener
 
 import (
 	"encoding/binary"
@@ -10,7 +10,6 @@ import (
 
 	"server/configs"
 	"server/datatypes"
-	"server/listener"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -34,7 +33,7 @@ func TestPacketParser(t *testing.T) {
 			},
 		},
 	}
-	parser := listener.NewPacketParser(canconfig)
+	parser := NewPacketParser(canconfig)
 	packet := make([]byte, 10)
 	// Can ID 0
 	packet[0] = 0
@@ -98,7 +97,7 @@ func TestInvalidValues(t *testing.T) {
 			},
 		},
 	}
-	parser := listener.NewPacketParser(canConfig)
+	parser := NewPacketParser(canConfig)
 	packet := append([]byte("GT"), make([]byte, 10)...)
 	packet[4] = 12
 	valueBytes := make([]byte, 4)
@@ -127,7 +126,7 @@ func TestParseConfigs(t *testing.T) {
 				fmt.Sprintf("Config %+v \nhas CanID less than 0 : %d", *config, config.CanID))
 			assert.True(t, config.Offset >= 0,
 				fmt.Sprintf("Config %+v \nhas offset less than 0: %d", *config, config.Offset))
-			_, ok := listener.PayloadParsers[config.Datatype]
+			_, ok := payloadParsers[config.Datatype]
 			assert.True(t, ok, fmt.Sprintf("Config: %+v \nhas an invalid datatype: %s", *config, config.Datatype))
 			if config.Datatype == "int16" || config.Datatype == "uint16" {
 				assert.True(t, config.Offset <= 6,
@@ -149,8 +148,8 @@ func TestParseConfigs(t *testing.T) {
 }
 
 func TestBitParser(t *testing.T) {
-	bitParser, ok := listener.PayloadParsers["bit"]
-	assert.True(t, ok, "bit parser not found in PayloadParsers")
+	bitParser, ok := payloadParsers["bit"]
+	assert.True(t, ok, "bit parser not found in payloadParsers")
 	bytes := []byte{0, 16, 0, 0, 0, 0, 0, 0}
 	value, err := bitParser(bytes, 12)
 	assert.NoError(t, err)

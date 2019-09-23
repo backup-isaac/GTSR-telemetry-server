@@ -8,12 +8,12 @@ import (
 
 // UDPHandler is the object representing the UDP listener
 type UDPHandler struct {
-	Publisher DatapointPublisher
-	Parser    PacketParser
+	Publisher *DatapointPublisher
+	Parser    *PacketParser
 }
 
 // NewUDPHandler returns an initialized UDPHandler
-func NewUDPHandler(publisher DatapointPublisher, parser PacketParser) *UDPHandler {
+func NewUDPHandler(publisher *DatapointPublisher, parser *PacketParser) *UDPHandler {
 	return &UDPHandler{
 		Publisher: publisher,
 		Parser:    parser,

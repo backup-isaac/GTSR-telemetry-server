@@ -22,6 +22,14 @@ import (
 	"github.com/nlopes/slack"
 )
 
+// ChatHandler handles communications between the car, Slack, and the chat web service
+type ChatHandler struct{}
+
+// NewChatHandler returns a basic initialized ChatHandler
+func NewChatHandler() *ChatHandler {
+	return &ChatHandler{}
+}
+
 var hashKey = []byte(securecookie.GenerateRandomKey(32))
 var blockKey = []byte(securecookie.GenerateRandomKey(32))
 
@@ -107,7 +115,7 @@ func ReadCookieHandler(r *http.Request) bool {
 }
 
 // ChatLogin will issue a token. It is secured in Basic Auth at the NGINX layer
-func (api *API) ChatLogin(res http.ResponseWriter, req *http.Request) {
+func (c *ChatHandler) ChatLogin(res http.ResponseWriter, req *http.Request) {
 	// Grant a login token via a cookie if it does not exist
 	if !ReadCookieHandler(req) {
 		SetCookieHandler(res, req)
@@ -139,7 +147,7 @@ func checkAuthHandler(h http.Handler) http.Handler {
 }
 
 // ChatDefault is the default handler for the /chat path
-func (api *API) ChatDefault(res http.ResponseWriter, req *http.Request) {
+func (c *ChatHandler) ChatDefault(res http.ResponseWriter, req *http.Request) {
 	// Check if login session exists, if it doesn't, then redirect to login
 	if ReadCookieHandler(req) {
 		http.Redirect(res, req, "/chat/static/index.html", http.StatusFound)
@@ -150,7 +158,7 @@ func (api *API) ChatDefault(res http.ResponseWriter, req *http.Request) {
 
 // ChatSlashCommand is the handler for the chat slash command, which sends
 // a message to the car
-func (api *API) ChatSlashCommand(res http.ResponseWriter, req *http.Request) {
+func (c *ChatHandler) ChatSlashCommand(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		res.WriteHeader(http.StatusBadRequest)
@@ -190,7 +198,7 @@ func slackResponse(text string, res http.ResponseWriter) {
 // ChatSocket initializes the WebSocket for a connection.
 // The websocket is responsible for relaying driver responses (Yes, No)
 // to the client as well
-func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
+func (c *ChatHandler) ChatSocket(res http.ResponseWriter, req *http.Request) {
 	// Only upgrade connection with proper cookie.
 
 	if !ReadCookieHandler(req) {
@@ -241,8 +249,7 @@ func (api *API) ChatSocket(res http.ResponseWriter, req *http.Request) {
 func SubscribeDriverStatus() {
 	points := make(chan *datatypes.Datapoint)
 	listener.Subscribe(points)
-	for {
-		point := <-points
+	for point := range points {
 		if point.Metric == "Driver_ACK_Status" {
 			msg := ""
 			if point.Value == 0.0 {
@@ -314,30 +321,6 @@ func uploadTCPMessage(message string) {
 	listener.Write(msg)
 }
 
-// RegisterChatRoutes registers the routes for the chat service
-func (api *API) RegisterChatRoutes(router *mux.Router) {
-	go SubscribeDriverStatus()
-	go MonitorConnection()
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		log.Fatal("Could not find runtime caller")
-	}
-	dir := path.Dir(filename)
-
-	if token, err := ioutil.ReadFile("/secrets/slack_token.txt"); err == nil {
-		slck = slack.New(strings.TrimSpace(string(token)))
-	} else {
-		log.Printf("Unable to find Slack credentials: %s\n", err)
-	}
-
-	router.PathPrefix("/chat/static").Handler(checkAuthHandler(http.StripPrefix("/chat/static/", http.FileServer(http.Dir(path.Join(dir, "chat"))))))
-	router.PathPrefix("/chat-login/static").Handler(http.StripPrefix("/chat-login/static/", http.FileServer(http.Dir(path.Join(dir, "chat-login")))))
-	router.HandleFunc("/chat/login", api.ChatLogin).Methods("GET")
-	router.HandleFunc("/chat", checkAuth(api.ChatDefault)).Methods("GET")
-	router.HandleFunc("/chat/socket", api.ChatSocket)
-	router.HandleFunc("/chatSlashCommand", api.ChatSlashCommand).Methods("GET")
-}
-
 // MonitorConnection listens for connection status messages and
 // posts Slack messages in response
 func MonitorConnection() {
@@ -355,4 +338,28 @@ func MonitorConnection() {
 			}
 		}
 	}
+}
+
+// RegisterRoutes registers the routes for the chat service
+func (c *ChatHandler) RegisterRoutes(router *mux.Router) {
+	go SubscribeDriverStatus()
+	go MonitorConnection()
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		log.Fatal("Could not find runtime caller")
+	}
+	dir := path.Dir(filename)
+
+	if token, err := ioutil.ReadFile("/secrets/slack_token.txt"); err == nil {
+		slck = slack.New(strings.TrimSpace(string(token)))
+	} else {
+		log.Printf("Unable to find Slack credentials: %s\n", err)
+	}
+
+	router.PathPrefix("/chat/static").Handler(checkAuthHandler(http.StripPrefix("/chat/static/", http.FileServer(http.Dir(path.Join(dir, "chat"))))))
+	router.PathPrefix("/chat-login/static").Handler(http.StripPrefix("/chat-login/static/", http.FileServer(http.Dir(path.Join(dir, "chat-login")))))
+	router.HandleFunc("/chat/login", c.ChatLogin).Methods("GET")
+	router.HandleFunc("/chat", checkAuth(c.ChatDefault)).Methods("GET")
+	router.HandleFunc("/chat/socket", c.ChatSocket)
+	router.HandleFunc("/chatSlashCommand", c.ChatSlashCommand).Methods("GET")
 }

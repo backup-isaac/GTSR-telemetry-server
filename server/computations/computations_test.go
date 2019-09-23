@@ -37,6 +37,7 @@ func TestComputations(t *testing.T) {
 	go computations.RunComputations()
 
 	publisher := listener.GetDatapointPublisher()
+	defer publisher.Close()
 	stream := make(chan *datatypes.Datapoint, 1000)
 	err := publisher.Subscribe(stream)
 	assert.NoError(t, err)

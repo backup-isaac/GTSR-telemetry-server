@@ -34,8 +34,7 @@ func RunComputations() {
 	points := make(chan *datatypes.Datapoint, 1000)
 	listener.Subscribe(points)
 
-	for {
-		point := <-points
+	for point := range points {
 		for _, stream := range streams[point.Metric] {
 			stream <- point
 		}
@@ -44,8 +43,7 @@ func RunComputations() {
 
 func compute(computation Computable, stream chan *datatypes.Datapoint) {
 	publisher := listener.GetDatapointPublisher()
-	for {
-		point := <-stream
+	for point := range stream {
 		if computation.Update(point) {
 			publisher.Publish(computation.Compute())
 		}
