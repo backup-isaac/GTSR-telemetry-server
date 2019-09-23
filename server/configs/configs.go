@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"os"
 	"path"
 	"runtime"
 	"strings"
@@ -29,20 +28,15 @@ func LoadConfigs() (map[int][]*CanConfigType, error) {
 		return nil, fmt.Errorf("Could not find runtime caller")
 	}
 	dir := path.Dir(filename)
-	f, err := os.Open(dir)
-	if err != nil {
-		return nil, err
-	}
-	files, err := f.Readdirnames(-1)
-	f.Close()
+	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}
 	var canConfigList []CanConfigType
 
 	for _, file := range files {
-		if strings.Contains(file, ".json") {
-			rawJSON, err := ioutil.ReadFile(path.Join(dir, file))
+		if strings.HasSuffix(file.Name(), ".json") {
+			rawJSON, err := ioutil.ReadFile(path.Join(dir, file.Name()))
 			if err != nil {
 				return nil, err
 			}
