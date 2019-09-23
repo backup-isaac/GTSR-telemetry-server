@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"server/datatypes"
 	"strconv"
 	"sync/atomic"
 	"time"
@@ -22,8 +23,39 @@ func init() {
 	generating.Store(false)
 }
 
+type csvStore interface {
+	ListMetrics() ([]string, error)
+	SelectMetricTimeRange(string, time.Time, time.Time) ([]*datatypes.Datapoint, error)
+}
+
+// CSVHandler handles requests related to the CSV generator tool
+type CSVHandler struct {
+	store csvStore
+}
+
+// NewCSVHandler returns an initialized CSVHandler
+func NewCSVHandler(store csvStore) *CSVHandler {
+	return &CSVHandler{store}
+}
+
+type generationRequest struct {
+	start      time.Time
+	end        time.Time
+	resolution int
+}
+
+var genQueue = make(chan generationRequest)
+
+func (c *CSVHandler) generationScheduler() {
+	for req := range genQueue {
+		generating.Store(true)
+		c.generateCsv(req.start, req.end, req.resolution)
+		generating.Store(false)
+	}
+}
+
 // CsvDefault is the default handler for the /csv route
-func (api *API) CsvDefault(res http.ResponseWriter, req *http.Request) {
+func (c *CSVHandler) CsvDefault(res http.ResponseWriter, req *http.Request) {
 	if !generating.Load().(bool) {
 		http.Redirect(res, req, "/csv/static/index.html", http.StatusFound)
 	} else {
@@ -32,21 +64,15 @@ func (api *API) CsvDefault(res http.ResponseWriter, req *http.Request) {
 }
 
 // IsGenerating returns whether a CSV is currently being generated
-func (api *API) IsGenerating(res http.ResponseWriter, req *http.Request) {
+func (c *CSVHandler) IsGenerating(res http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(res).Encode(generating.Load().(bool))
 }
 
 // GenerateCsv generates the csv
-func (api *API) GenerateCsv(res http.ResponseWriter, req *http.Request) {
-	if generating.Load().(bool) {
-		http.Error(res, "Already generating CSV", http.StatusLocked)
-		return
-	}
-	generating.Store(true)
+func (c *CSVHandler) GenerateCsv(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing form: %s", err), http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	startDateString := req.Form.Get("startDate")
@@ -54,34 +80,34 @@ func (api *API) GenerateCsv(res http.ResponseWriter, req *http.Request) {
 	resolutionString := req.Form.Get("resolution")
 	if startDateString == "" || endDateString == "" || resolutionString == "" {
 		http.Error(res, "malformatted query", http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	startDate, err := unixStringMillisToTime(startDateString)
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing start date: %s", err), http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	endDate, err := unixStringMillisToTime(endDateString)
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing end date: %s", err), http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	resolution64, err := strconv.ParseInt(resolutionString, 10, 32)
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing resolution: %s", err), http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
 	resolution := int(resolution64)
 	if resolution <= 0 {
 		http.Error(res, "Resolution must be strictly greater than 0", http.StatusBadRequest)
-		generating.Store(false)
 		return
 	}
-	go api.generateCsv(startDate, endDate, resolution)
+	select {
+	case genQueue <- generationRequest{startDate, endDate, resolution}:
+	default:
+		http.Error(res, "Already generating CSV", http.StatusLocked)
+		return
+	}
 	res.WriteHeader(http.StatusOK)
 }
 
@@ -93,9 +119,8 @@ func unixStringMillisToTime(timeString string) (time.Time, error) {
 	return time.Unix(0, timeMillis*1e6), nil
 }
 
-func (api *API) generateCsv(start time.Time, end time.Time, resolution int) {
-	defer generating.Store(false)
-	metrics, err := api.store.ListMetrics()
+func (c *CSVHandler) generateCsv(start time.Time, end time.Time, resolution int) {
+	metrics, err := c.store.ListMetrics()
 	if err != nil {
 		log.Printf("Error getting metrics: %s\n", err)
 		return
@@ -104,7 +129,7 @@ func (api *API) generateCsv(start time.Time, end time.Time, resolution int) {
 	for i, metric := range metrics {
 		colChannels[i] = make(chan []float64, 1)
 		go func(metric string, colChan chan []float64) {
-			column, err := api.GetSampledPointsForMetric(metric, start, end, resolution)
+			column, err := c.GetSampledPointsForMetric(metric, start, end, resolution)
 			if err != nil {
 				log.Printf("Error getting values for metric %s: %s\n", metric, err)
 				colChan <- nil
@@ -125,8 +150,8 @@ func (api *API) generateCsv(start time.Time, end time.Time, resolution int) {
 
 // GetSampledPointsForMetric returns sampled data for a particular metric in the time range specified by start and end
 // at the given resolution
-func (api *API) GetSampledPointsForMetric(metric string, start time.Time, end time.Time, resolution int) ([]float64, error) {
-	points, err := api.store.SelectMetricTimeRange(metric, start, end)
+func (c *CSVHandler) GetSampledPointsForMetric(metric string, start time.Time, end time.Time, resolution int) ([]float64, error) {
+	points, err := c.store.SelectMetricTimeRange(metric, start, end)
 	if err != nil {
 		return nil, err
 	}
@@ -197,8 +222,9 @@ func WriteCsv(columns map[string][]float64, start time.Time, end time.Time, reso
 	}
 }
 
-// RegisterCsvRoutes registers the routes for the CSV service
-func (api *API) RegisterCsvRoutes(router *mux.Router) {
+// RegisterRoutes registers the routes for the CSV service
+func (c *CSVHandler) RegisterRoutes(router *mux.Router) {
+	go c.generationScheduler()
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		log.Fatal("Could not find runtime caller")
@@ -206,7 +232,7 @@ func (api *API) RegisterCsvRoutes(router *mux.Router) {
 	dir := path.Dir(filename)
 	router.PathPrefix("/csv/static/").Handler(http.StripPrefix("/csv/static/", http.FileServer(http.Dir(path.Join(dir, "csv")))))
 
-	router.HandleFunc("/csv", api.CsvDefault).Methods("GET")
-	router.HandleFunc("/csv/isGenerating", api.IsGenerating).Methods("GET")
-	router.HandleFunc("/csv/generateCsv", api.GenerateCsv).Methods("POST")
+	router.HandleFunc("/csv", c.CsvDefault).Methods("GET")
+	router.HandleFunc("/csv/isGenerating", c.IsGenerating).Methods("GET")
+	router.HandleFunc("/csv/generateCsv", c.GenerateCsv).Methods("POST")
 }

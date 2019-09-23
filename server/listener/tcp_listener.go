@@ -23,12 +23,12 @@ const (
 
 // TCPConnectionHandler is the object representing the TCP listener
 type TCPConnectionHandler struct {
-	Publisher DatapointPublisher
-	Parser    PacketParser
+	Publisher *DatapointPublisher
+	Parser    *PacketParser
 }
 
 // NewTCPConnectionHandler returns an initialized TCPConnectionHandler
-func NewTCPConnectionHandler(publisher DatapointPublisher, parser PacketParser) *TCPConnectionHandler {
+func NewTCPConnectionHandler(publisher *DatapointPublisher, parser *PacketParser) *TCPConnectionHandler {
 	return &TCPConnectionHandler{
 		Publisher: publisher,
 		Parser:    parser,
@@ -44,6 +44,7 @@ func reportConnections() {
 		log.Println("Error getting storage for connection reporting.")
 		return
 	}
+	defer store.Close()
 	ticker := time.NewTicker(time.Second * 5)
 	for {
 		<-ticker.C
@@ -88,6 +89,9 @@ func (handler *TCPConnectionHandler) HandleTCPConnection(conn net.Conn) {
 
 // TCPListen is the main function of listener which listens to the TCP data port for incoming connections
 func TCPListen() {
+	go reportConnections()
+	go writerThread()
+	go monitorConnection()
 	canConfigs, err := configs.LoadConfigs()
 	if err != nil {
 		log.Fatalf("Error loading CAN configs: %s", err)
@@ -147,9 +151,4 @@ func Subscribe(c chan *datatypes.Datapoint) error {
 // Unsubscribe unsubscribes the channel c from the datapoint publisher
 func Unsubscribe(c chan *datatypes.Datapoint) error {
 	return GetDatapointPublisher().Unsubscribe(c)
-}
-
-func init() {
-	go reportConnections()
-	go writerThread()
 }
