@@ -27,6 +27,8 @@ import (
 
 var trackInfoMutex = sync.Mutex{}
 
+const trackInfoConfigPath = "trackinfo/track_info_config.json"
+
 // MapHandler handles requests related to the map service,
 // which includes serving the Google Maps frontend for tracking the
 // car, as well as the tool for uploading suggested speeds
@@ -207,25 +209,50 @@ func writeFloat64As32(num float64) {
 // editIsTrackInfoNew overwrites the contents of track_info_config.json's
 // "isTrackInfoNew" key with the provided bool
 func editIsTrackInfoNew(value bool) error {
+	trackInfoModel := trackinfo.Model{}
+
+	err := readTrackInfoConfig(&trackInfoModel)
+	if err != nil {
+		return err
+	}
+
+	trackInfoModel.IsTrackInfoNew = value
+
+	err = writeToTrackInfoConfig(&trackInfoModel)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// readTrackInfoConfig reads the track info config from disk and unmarshals it
+// into the provided struct
+func readTrackInfoConfig(m *trackinfo.Model) error {
 	trackInfoMutex.Lock()
 	defer trackInfoMutex.Unlock()
 
-	configFile, err := ioutil.ReadFile("trackinfo/track_info_config.json")
+	configFile, err := ioutil.ReadFile(trackInfoConfigPath)
 	if err != nil {
 		return errors.New("Error reading track_info_config: " + err.Error())
 	}
 
-	trackInfoModel := trackinfo.Model{}
-	json.Unmarshal(configFile, &trackInfoModel)
+	json.Unmarshal(configFile, &m)
+	return nil
+}
 
-	trackInfoModel.IsTrackInfoNew = value
+// writeToTrackInfoConfig writes the contents of the provided struct to the
+// track info config on disk
+func writeToTrackInfoConfig(m *trackinfo.Model) error {
+	trackInfoMutex.Lock()
+	defer trackInfoMutex.Unlock()
 
-	jsonAsBytes, err := json.Marshal(trackInfoModel)
+	jsonAsBytes, err := json.Marshal(m)
 	if err != nil {
 		return errors.New("Error editing track_info_config: " + err.Error())
 	}
 
-	err = ioutil.WriteFile("trackinfo/track_info_config.json", jsonAsBytes, 0644)
+	err = ioutil.WriteFile(trackInfoConfigPath, jsonAsBytes, 0644)
 	if err != nil {
 		return errors.New("Error writing changes to track_info_config: " + err.Error())
 	}
