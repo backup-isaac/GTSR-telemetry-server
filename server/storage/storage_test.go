@@ -140,3 +140,20 @@ func TestInOrder(t *testing.T) {
 	err = store.DeleteMetric("Unit_Test_Order")
 	assert.NoError(t, err)
 }
+
+func TestIllegalMetricName(t *testing.T) {
+	for _, metric := range []string{
+		"metric space",
+		"metric\nnewline",
+	} {
+		points := []*datatypes.Datapoint{{
+			Metric: metric,
+			Value:  0,
+			Time:   time.Now(),
+		}}
+		store, err := storage.NewStorage()
+		assert.NoError(t, err)
+		err = store.Insert(points)
+		assert.Errorf(t, err, "Metric %q should have been rejected", metric)
+	}
+}

@@ -1,10 +1,22 @@
 package configs
 
-import "testing"
+import (
+	"server/storage"
+	"testing"
+)
 
 func TestConfigs(t *testing.T) {
 	// Test that CAN configs can be loaded without error
-	if _, err := LoadConfigs(); err != nil {
-		t.Fail()
+	configs, err := LoadConfigs()
+	if err != nil {
+		t.Fatalf("Error loading configs: %v", err)
+	}
+	// Check that there are no illegal metric names in the config
+	for _, configList := range configs {
+		for _, config := range configList {
+			if !storage.ValidMetric(config.Name) {
+				t.Errorf("Illegal metric name: %v", config.Name)
+			}
+		}
 	}
 }

@@ -3,6 +3,7 @@ package storage
 import (
 	"encoding/json"
 	"fmt"
+	"regexp"
 	"strconv"
 	"time"
 
@@ -12,6 +13,13 @@ import (
 )
 
 const tableName = "telemetry"
+
+var metricRegex = regexp.MustCompile("\\A[a-zA-Z0-9_-]+\\z")
+
+// ValidMetric returns whether the metric name is valid
+func ValidMetric(metric string) bool {
+	return metricRegex.MatchString(metric)
+}
 
 // Storage describes the interface with persistent storage
 type Storage struct {
@@ -42,6 +50,9 @@ func (s *Storage) Insert(points []*datatypes.Datapoint) error {
 		return err
 	}
 	for _, point := range points {
+		if !ValidMetric(point.Metric) {
+			return metricError(point.Metric)
+		}
 		fields := map[string]interface{}{"value": point.Value}
 		pt, err := getPoint(point.Metric, point.Tags, fields, point.Time)
 		if err != nil {
@@ -61,6 +72,9 @@ func getPoint(metric string, tags map[string]string, fields map[string]interface
 
 // DeleteMetric deletes a metric from the store
 func (s *Storage) DeleteMetric(metric string) error {
+	if !ValidMetric(metric) {
+		return metricError(metric)
+	}
 	response, err := s.client.Query(client.Query{
 		Command:  fmt.Sprintf("DROP MEASUREMENT %s", metric),
 		Database: tableName,
@@ -73,6 +87,9 @@ func (s *Storage) DeleteMetric(metric string) error {
 
 // SelectMetric selects all entries for specified metric
 func (s *Storage) SelectMetric(metric string) ([]*datatypes.Datapoint, error) {
+	if !ValidMetric(metric) {
+		return nil, metricError(metric)
+	}
 	response, err := s.client.Query(client.Query{
 		Command:  fmt.Sprintf("SELECT * FROM %s", metric),
 		Database: tableName,
@@ -88,6 +105,9 @@ func (s *Storage) SelectMetric(metric string) ([]*datatypes.Datapoint, error) {
 
 // SelectMetricTimeRange selects entries for metric within specified time range
 func (s *Storage) SelectMetricTimeRange(metric string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error) {
+	if !ValidMetric(metric) {
+		return nil, metricError(metric)
+	}
 	response, err := s.client.Query(client.Query{
 		Command: fmt.Sprintf("SELECT * FROM %s WHERE time >= '%s' AND time <= '%s'",
 			metric, start.Format(time.RFC3339Nano), end.Format(time.RFC3339Nano)),
@@ -157,6 +177,9 @@ func (s *Storage) ListMetrics() ([]string, error) {
 
 // Latest returns the most recent datapoint for the given metric
 func (s *Storage) Latest(metric string) (*datatypes.Datapoint, error) {
+	if !ValidMetric(metric) {
+		return nil, metricError(metric)
+	}
 	response, err := s.client.Query(client.Query{
 		Command:  fmt.Sprintf("SELECT * FROM %s ORDER BY DESC LIMIT 1", metric),
 		Database: tableName,
@@ -179,6 +202,9 @@ func (s *Storage) Latest(metric string) (*datatypes.Datapoint, error) {
 
 // LatestNonZero returns the most recent non-zero datapoint for the given metric
 func (s *Storage) LatestNonZero(metric string) (*datatypes.Datapoint, error) {
+	if !ValidMetric(metric) {
+		return nil, metricError(metric)
+	}
 	response, err := s.client.Query(client.Query{
 		Command:  fmt.Sprintf("SELECT * FROM %s WHERE value != 0 ORDER BY DESC LIMIT 1", metric),
 		Database: tableName,
@@ -202,4 +228,8 @@ func (s *Storage) LatestNonZero(metric string) (*datatypes.Datapoint, error) {
 // Close performs cleanup work
 func (s *Storage) Close() error {
 	return s.client.Close()
+}
+
+func metricError(metric string) error {
+	return fmt.Errorf("illegal metric name: %v", metric)
 }
