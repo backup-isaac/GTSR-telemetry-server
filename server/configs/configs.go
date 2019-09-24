@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"path"
 	"runtime"
+	"strings"
 )
 
 // CanConfigType holds CAN configuration information
@@ -26,15 +27,29 @@ func LoadConfigs() (map[int][]*CanConfigType, error) {
 	if !ok {
 		return nil, fmt.Errorf("Could not find runtime caller")
 	}
-	rawJSON, err := ioutil.ReadFile(path.Join(path.Dir(filename), "can_config.json"))
+	dir := path.Join(path.Dir(filename), "can_configs")
+	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}
 	var canConfigList []CanConfigType
-	err = json.Unmarshal(rawJSON, &canConfigList)
-	if err != nil {
-		return nil, err
+
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".json") {
+			rawJSON, err := ioutil.ReadFile(path.Join(dir, file.Name()))
+			if err != nil {
+				return nil, err
+			}
+
+			var tmpConfigList []CanConfigType
+			err = json.Unmarshal(rawJSON, &tmpConfigList)
+			if err != nil {
+				return nil, err
+			}
+			canConfigList = append(canConfigList, tmpConfigList...)
+		}
 	}
+
 	canDatatypes := make(map[int][]*CanConfigType)
 	for i := range canConfigList {
 		config := &canConfigList[i]
