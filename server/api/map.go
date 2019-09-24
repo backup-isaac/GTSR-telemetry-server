@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"encoding/csv"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -86,7 +87,13 @@ func (m *MapHandler) FileUpload(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	go uploadPoints(points)
-	editIsTrackInfoNew(res, true)
+
+	err = editIsTrackInfoNew(true)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	res.WriteHeader(http.StatusOK)
 }
 
@@ -199,14 +206,13 @@ func writeFloat64As32(num float64) {
 
 // editIsTrackInfoNew overwrites the contents of track_info_config.json's
 // "isTrackInfoNew" key with the provided bool
-func editIsTrackInfoNew(res http.ResponseWriter, value bool) {
+func editIsTrackInfoNew(value bool) error {
 	trackInfoMutex.Lock()
 	defer trackInfoMutex.Unlock()
 
 	configFile, err := ioutil.ReadFile("trackinfo/track_info_config.json")
 	if err != nil {
-		http.Error(res, "Error reading track_info_config: "+err.Error(), http.StatusInternalServerError)
-		return
+		return errors.New("Error reading track_info_config: " + err.Error())
 	}
 
 	trackInfoModel := trackinfo.Model{}
@@ -216,15 +222,15 @@ func editIsTrackInfoNew(res http.ResponseWriter, value bool) {
 
 	jsonAsBytes, err := json.Marshal(trackInfoModel)
 	if err != nil {
-		http.Error(res, "Error editing track_info_config: "+err.Error(), http.StatusInternalServerError)
-		return
+		return errors.New("Error editing track_info_config: " + err.Error())
 	}
 
 	err = ioutil.WriteFile("trackinfo/track_info_config.json", jsonAsBytes, 0644)
 	if err != nil {
-		http.Error(res, "Error writing changes to track_info_config: "+err.Error(), http.StatusInternalServerError)
-		return
+		return errors.New("Error writing changes to track_info_config: " + err.Error())
 	}
+
+	return nil
 }
 
 // RegisterRoutes registers the routes for the map service
