@@ -23,6 +23,11 @@ func NewCarMessenger(tcpPrefix string, writer Writer) *CarMessenger {
 // UploadTCPMessage sends the provided message to the listener, which will then
 // relay it to the car
 func (m *CarMessenger) UploadTCPMessage(message string) {
-	msg := m.TCPPrefix + string(len(message)) + message
-	m.Writer.Write([]byte(msg))
+	constructedMsg := make([]byte, 0)
+
+	constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)
+	constructedMsg = append(constructedMsg, byte(len(message)))
+	constructedMsg = append(constructedMsg, []byte(message)...)
+
+	m.Writer.Write(constructedMsg)
 }
