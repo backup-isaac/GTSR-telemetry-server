@@ -40,21 +40,6 @@ func NewMapHandler() *MapHandler {
 	return &MapHandler{}
 }
 
-// RoutePoint is a point along the uploaded route
-type RoutePoint struct {
-	// Distance is the distance along the route for this point
-	Distance float64 `json:"distance"`
-	// Latitude is the GPS latitude of this point
-	Latitude float64 `json:"latitude"`
-	// Longitude is the GPS longitude of this point
-	Longitude float64 `json:"longitude"`
-	// Speed is the suggested speed for the car at this point
-	Speed float64 `json:"speed"`
-	// Critical is a flag for whether this is a significant datapoint
-	// that should be sent to the car to be suggested to the driver
-	Critical bool `json:"critical"`
-}
-
 // MapDefault is the default handler for the /map path
 func (m *MapHandler) MapDefault(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/map/static/index.html", http.StatusFound)
@@ -101,7 +86,7 @@ func (m *MapHandler) FileUpload(res http.ResponseWriter, req *http.Request) {
 }
 
 // ParseRouteCsv returns the parsed list of RoutePoints from the uploaded CSV file
-func ParseRouteCsv(file multipart.File) ([]*RoutePoint, error) {
+func ParseRouteCsv(file multipart.File) ([]*datatypes.RoutePoint, error) {
 	reader := csv.NewReader(file)
 	header, err := reader.Read()
 	if err != nil {
@@ -111,7 +96,7 @@ func ParseRouteCsv(file multipart.File) ([]*RoutePoint, error) {
 	if err != nil {
 		return nil, err
 	}
-	var routePoints []*RoutePoint
+	var routePoints []*datatypes.RoutePoint
 	for {
 		row, err := reader.Read()
 		if err != nil {
@@ -132,7 +117,7 @@ func ParseRouteCsv(file multipart.File) ([]*RoutePoint, error) {
 	return routePoints, nil
 }
 
-func parseRow(row []string, columns map[string]int) (*RoutePoint, error) {
+func parseRow(row []string, columns map[string]int) (*datatypes.RoutePoint, error) {
 	distance, err := strconv.ParseFloat(row[columns["distance"]], 64)
 	if err != nil {
 		return nil, err
@@ -150,7 +135,7 @@ func parseRow(row []string, columns map[string]int) (*RoutePoint, error) {
 		return nil, err
 	}
 	critical := row[columns["critical"]] == "1"
-	return &RoutePoint{
+	return &datatypes.RoutePoint{
 		Distance:  distance,
 		Latitude:  latitude,
 		Longitude: longitude,
@@ -183,7 +168,7 @@ func verifyColumns(columns map[string]int) error {
 	return nil
 }
 
-func uploadPoints(points []*RoutePoint) {
+func uploadPoints(points []*datatypes.RoutePoint) {
 	w := listener.NewTCPWriter()
 	tag := []byte("GTSR")
 	w.Write(tag)
