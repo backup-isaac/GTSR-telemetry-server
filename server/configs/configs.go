@@ -21,39 +21,49 @@ type CanConfigType struct {
 	Description string  `json:"description"`
 }
 
+var canDatatypes map[int][]*CanConfigType
+var lock bool = false
+
 // LoadConfigs loads the CAN configs from the config file
 func LoadConfigs() (map[int][]*CanConfigType, error) {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		return nil, fmt.Errorf("Could not find runtime caller")
-	}
-	dir := path.Join(path.Dir(filename), "can_configs")
-	files, err := ioutil.ReadDir(dir)
-	if err != nil {
-		return nil, err
-	}
-	var canConfigList []CanConfigType
+	for lock {
 
-	for _, file := range files {
-		if strings.HasSuffix(file.Name(), ".json") {
-			rawJSON, err := ioutil.ReadFile(path.Join(dir, file.Name()))
-			if err != nil {
-				return nil, err
-			}
+	}
+	lock = true
+	if canDatatypes == nil {
+		_, filename, _, ok := runtime.Caller(0)
+		if !ok {
+			return nil, fmt.Errorf("Could not find runtime caller")
+		}
+		dir := path.Join(path.Dir(filename), "can_configs")
+		files, err := ioutil.ReadDir(dir)
+		if err != nil {
+			return nil, err
+		}
+		var canConfigList []CanConfigType
 
-			var tmpConfigList []CanConfigType
-			err = json.Unmarshal(rawJSON, &tmpConfigList)
-			if err != nil {
-				return nil, err
+		for _, file := range files {
+			if strings.HasSuffix(file.Name(), ".json") {
+				rawJSON, err := ioutil.ReadFile(path.Join(dir, file.Name()))
+				if err != nil {
+					return nil, err
+				}
+
+				var tmpConfigList []CanConfigType
+				err = json.Unmarshal(rawJSON, &tmpConfigList)
+				if err != nil {
+					return nil, err
+				}
+				canConfigList = append(canConfigList, tmpConfigList...)
 			}
-			canConfigList = append(canConfigList, tmpConfigList...)
+		}
+
+		canDatatypes = make(map[int][]*CanConfigType)
+		for i := range canConfigList {
+			config := &canConfigList[i]
+			canDatatypes[config.CanID] = append(canDatatypes[config.CanID], config)
 		}
 	}
-
-	canDatatypes := make(map[int][]*CanConfigType)
-	for i := range canConfigList {
-		config := &canConfigList[i]
-		canDatatypes[config.CanID] = append(canDatatypes[config.CanID], config)
-	}
+	lock = false
 	return canDatatypes, nil
 }
