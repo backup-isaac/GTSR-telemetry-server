@@ -27,43 +27,42 @@ var configsLock sync.Mutex
 
 // LoadConfigs loads the CAN configs from the config file
 func LoadConfigs() (map[int][]*CanConfigType, error) {
-	for {
-		configsLock.Lock()
-		if canConfigs == nil {
-			_, filename, _, ok := runtime.Caller(0)
-			if !ok {
-				return nil, fmt.Errorf("Could not find runtime caller")
-			}
-			dir := path.Join(path.Dir(filename), "can_configs")
-			files, err := ioutil.ReadDir(dir)
+	configsLock.Lock()
+	defer configsLock.Unlock()
+	if canConfigs != nil {
+		return canConfigs, nil
+	}
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		return nil, fmt.Errorf("Could not find runtime caller")
+	}
+	dir := path.Join(path.Dir(filename), "can_configs")
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+	var canConfigList []CanConfigType
+
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".json") {
+			rawJSON, err := ioutil.ReadFile(path.Join(dir, file.Name()))
 			if err != nil {
 				return nil, err
 			}
-			var canConfigList []CanConfigType
 
-			for _, file := range files {
-				if strings.HasSuffix(file.Name(), ".json") {
-					rawJSON, err := ioutil.ReadFile(path.Join(dir, file.Name()))
-					if err != nil {
-						return nil, err
-					}
-
-					var tmpConfigList []CanConfigType
-					err = json.Unmarshal(rawJSON, &tmpConfigList)
-					if err != nil {
-						return nil, err
-					}
-					canConfigList = append(canConfigList, tmpConfigList...)
-				}
+			var tmpConfigList []CanConfigType
+			err = json.Unmarshal(rawJSON, &tmpConfigList)
+			if err != nil {
+				return nil, err
 			}
-
-			canConfigs = make(map[int][]*CanConfigType)
-			for i := range canConfigList {
-				config := &canConfigList[i]
-				canConfigs[config.CanID] = append(canConfigs[config.CanID], config)
-			}
+			canConfigList = append(canConfigList, tmpConfigList...)
 		}
-		configsLock.Unlock()
-		return canConfigs, nil
 	}
+
+	canConfigs = make(map[int][]*CanConfigType)
+	for i := range canConfigList {
+		config := &canConfigList[i]
+		canConfigs[config.CanID] = append(canConfigs[config.CanID], config)
+	}
+	return canConfigs, nil
 }
