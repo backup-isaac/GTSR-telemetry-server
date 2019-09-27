@@ -7,6 +7,7 @@ import (
 	"path"
 	"runtime"
 	"strings"
+	"sync"
 )
 
 // CanConfigType holds CAN configuration information
@@ -21,8 +22,16 @@ type CanConfigType struct {
 	Description string  `json:"description"`
 }
 
+var canConfigs map[int][]*CanConfigType
+var configsLock sync.Mutex
+
 // LoadConfigs loads the CAN configs from the config file
 func LoadConfigs() (map[int][]*CanConfigType, error) {
+	configsLock.Lock()
+	defer configsLock.Unlock()
+	if canConfigs != nil {
+		return canConfigs, nil
+	}
 	_, filename, _, ok := runtime.Caller(0)
 	if !ok {
 		return nil, fmt.Errorf("Could not find runtime caller")
@@ -50,10 +59,10 @@ func LoadConfigs() (map[int][]*CanConfigType, error) {
 		}
 	}
 
-	canDatatypes := make(map[int][]*CanConfigType)
+	canConfigs = make(map[int][]*CanConfigType)
 	for i := range canConfigList {
 		config := &canConfigList[i]
-		canDatatypes[config.CanID] = append(canDatatypes[config.CanID], config)
+		canConfigs[config.CanID] = append(canConfigs[config.CanID], config)
 	}
-	return canDatatypes, nil
+	return canConfigs, nil
 }
