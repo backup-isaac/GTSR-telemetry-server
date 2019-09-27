@@ -212,9 +212,8 @@ func checkIfTrackInfoNeedsUpdating() {
 			}
 
 			if trackInfoModel.IsTrackInfoNew == true {
-				// Send track info csv stored on the server to the car
+				carMessenger.UploadTrackInfoViaTCP()
 
-				// Clear flag indicating that the server has new track info
 				trackInfoModel.IsTrackInfoNew = false
 				err = writeToTrackInfoConfig(&trackInfoModel)
 				if err != nil {
