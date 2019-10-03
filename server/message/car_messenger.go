@@ -85,9 +85,8 @@ func (m *CarMessenger) UploadTrackInfoViaTCP() error {
 // UploadTCPPointMessage sends a new track info point to the dashboard
 // Message protocol currently looks like: GTSR_d_#_distance_latitude_longitude_speed
 func (m *CarMessenger) UploadTCPPointMessage(p *datatypes.RoutePoint, pointNumber int) {
-	constructedMsg := make([]byte, 0)
+	constructedMsg := []byte(m.TCPPrefix)
 
-	constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)
 	constructedMsg = append(constructedMsg, byte(DatapointClassifier))
 	constructedMsg = append(constructedMsg, byte(pointNumber))
 	constructedMsg = append(constructedMsg, convertFloat64to32(p.Distance)...)
