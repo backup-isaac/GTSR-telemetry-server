@@ -35,9 +35,9 @@ func NewCarMessenger(tcpPrefix string, writer Writer) *CarMessenger {
 	}
 }
 
-// UploadTCPMessage sends the provided message to the listener, which will then
-// relay it to the car
-func (m *CarMessenger) UploadTCPMessage(message string) {
+// UploadChatMessageViaTCP sends the provided message to the listener, which
+// will then relay it to the car
+func (m *CarMessenger) UploadChatMessageViaTCP(message string) {
 	constructedMsg := make([]byte, 0)
 
 	constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)

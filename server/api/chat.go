@@ -178,7 +178,7 @@ func (c *ChatHandler) ChatSlashCommand(res http.ResponseWriter, req *http.Reques
 		slackMessenger.RespondToSlackRequest("Message exceeds maximum length", res)
 		return
 	}
-	carMessenger.UploadTCPMessage(msg)
+	carMessenger.UploadChatMessageViaTCP(msg)
 	slackMessenger.RespondToSlackRequest("Message sent", res)
 }
 
@@ -225,7 +225,7 @@ func (c *ChatHandler) ChatSocket(res http.ResponseWriter, req *http.Request) {
 			log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
 			slackMessenger.PostNewMessage("Strategy: " + string(msg))
 			// upload message to car
-			carMessenger.UploadTCPMessage(string(msg))
+			carMessenger.UploadChatMessageViaTCP(string(msg))
 		}
 	}
 }

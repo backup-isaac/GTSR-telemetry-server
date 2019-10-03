@@ -14,7 +14,7 @@ func (w *FakeWriter) Write(msg []byte) {
 
 }
 
-func TestUploadTCPMessage(t *testing.T) {
+func TestUploadChatMessageViaTCP(t *testing.T) {
 	tcpPrefix := "GT"
 	for _, tc := range []struct {
 		title       string
@@ -32,7 +32,7 @@ func TestUploadTCPMessage(t *testing.T) {
 		t.Run(tc.title, func(t *testing.T) {
 			w := &FakeWriter{}
 			m := NewCarMessenger(tcpPrefix, w)
-			m.UploadTCPMessage(tc.msg)
+			m.UploadChatMessageViaTCP(tc.msg)
 			if !reflect.DeepEqual(tc.expectedMsg, w.msg) {
 				t.Errorf("Unexpected message: want %q, got %q", tc.expectedMsg, w.msg)
 
