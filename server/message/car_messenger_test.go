@@ -26,11 +26,11 @@ func TestUploadChatMessageViaTCP(t *testing.T) {
 	}{{
 		title:       "Basic message",
 		msg:         "Go 40",
-		expectedMsg: []byte{'G', 'T', 5, 'G', 'o', ' ', '4', '0'},
+		expectedMsg: []byte{'G', 'T', 'c', 5, 'G', 'o', ' ', '4', '0'},
 	}, {
 		title:       "Empty message",
 		msg:         "",
-		expectedMsg: []byte{'G', 'T', 0},
+		expectedMsg: []byte{'G', 'T', 'c', 0},
 	}} {
 		t.Run(tc.title, func(t *testing.T) {
 			w := &FakeWriter{}
@@ -51,21 +51,18 @@ func TestUploadTCPPointMessage(t *testing.T) {
 	// Building expected messages
 	basicExpectedMsg := []byte{'G', 'T', 'd'}
 	basicExpectedMsg = append(basicExpectedMsg, byte(42))
-	basicExpectedMsg = append(basicExpectedMsg, convertFloat64to32(420.69)...)
 	basicExpectedMsg = append(basicExpectedMsg, convertFloat64to32(24.24)...)
 	basicExpectedMsg = append(basicExpectedMsg, convertFloat64to32(25.25)...)
 	basicExpectedMsg = append(basicExpectedMsg, convertFloat64to32(88)...)
 
 	zerothPointExpectedMsg := []byte{'G', 'T', 'd'}
 	zerothPointExpectedMsg = append(zerothPointExpectedMsg, byte(0))
-	zerothPointExpectedMsg = append(zerothPointExpectedMsg, convertFloat64to32(420.69)...)
 	zerothPointExpectedMsg = append(zerothPointExpectedMsg, convertFloat64to32(24.24)...)
 	zerothPointExpectedMsg = append(zerothPointExpectedMsg, convertFloat64to32(25.25)...)
 	zerothPointExpectedMsg = append(zerothPointExpectedMsg, convertFloat64to32(88)...)
 
 	zeroSpeedExpectedMsg := []byte{'G', 'T', 'd'}
 	zeroSpeedExpectedMsg = append(zeroSpeedExpectedMsg, byte(42))
-	zeroSpeedExpectedMsg = append(zeroSpeedExpectedMsg, convertFloat64to32(420.69)...)
 	zeroSpeedExpectedMsg = append(zeroSpeedExpectedMsg, convertFloat64to32(24.24)...)
 	zeroSpeedExpectedMsg = append(zeroSpeedExpectedMsg, convertFloat64to32(25.25)...)
 	zeroSpeedExpectedMsg = append(zeroSpeedExpectedMsg, convertFloat64to32(0)...)
@@ -78,7 +75,6 @@ func TestUploadTCPPointMessage(t *testing.T) {
 	}{{
 		title: "Basic point",
 		point: &datatypes.RoutePoint{
-			Distance:  420.69,
 			Latitude:  24.24,
 			Longitude: 25.25,
 			Speed:     88,
@@ -88,7 +84,6 @@ func TestUploadTCPPointMessage(t *testing.T) {
 	}, {
 		title: "0th point",
 		point: &datatypes.RoutePoint{
-			Distance:  420.69,
 			Latitude:  24.24,
 			Longitude: 25.25,
 			Speed:     88,
@@ -98,7 +93,6 @@ func TestUploadTCPPointMessage(t *testing.T) {
 	}, {
 		title: "Zero speed",
 		point: &datatypes.RoutePoint{
-			Distance:  420.69,
 			Latitude:  24.24,
 			Longitude: 25.25,
 			Speed:     0,

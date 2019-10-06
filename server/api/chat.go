@@ -49,7 +49,7 @@ var authorizedUsers = map[string]bool{
 
 var slck *slack.Client
 
-var carMessenger = message.NewCarMessenger("GTSR", listener.NewTCPWriter())
+var carMessenger = message.NewCarMessenger("GT", listener.NewTCPWriter())
 var slackMessenger = message.NewSlackMessenger(slck)
 
 var sc = securecookie.New(hashKey, blockKey)

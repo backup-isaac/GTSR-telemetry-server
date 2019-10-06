@@ -5,6 +5,7 @@
 package message
 
 const (
-	DatapointClassifier   = 'd'
-	NumIncomingDatapoints = 'n'
+	SlackMessageClassifier          = 'c'
+	DataPointClassifier             = 'd'
+	NumIncomingDataPointsClassifier = 't' //consider re-naming for clarity
 )

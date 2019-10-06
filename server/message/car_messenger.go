@@ -41,6 +41,7 @@ func (m *CarMessenger) UploadChatMessageViaTCP(message string) {
 	constructedMsg := make([]byte, 0)
 
 	constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)
+	constructedMsg = append(constructedMsg, byte(SlackMessageClassifier))
 	constructedMsg = append(constructedMsg, byte(len(message)))
 	constructedMsg = append(constructedMsg, []byte(message)...)
 
@@ -64,10 +65,11 @@ func (m *CarMessenger) UploadTrackInfoViaTCP() error {
 	constructedMsg := make([]byte, 0)
 
 	constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)
-	constructedMsg = append(constructedMsg, byte(NumIncomingDatapoints))
+	constructedMsg = append(constructedMsg, byte(NumIncomingDataPointsClassifier))
 	constructedMsg = append(constructedMsg, byte(len(points)))
 
 	m.Writer.Write(constructedMsg)
+	//listen to an ACK from the car
 
 	// Send each point from map/route.json to the dashboard
 	for i, point := range points {
@@ -83,13 +85,13 @@ func (m *CarMessenger) UploadTrackInfoViaTCP() error {
 }
 
 // UploadTCPPointMessage sends a new track info point to the dashboard
-// Message protocol currently looks like: GTSR_d_#_distance_latitude_longitude_speed
+// Message protocol currently looks like: GTSR_d_#_latitude_longitude_speed
 func (m *CarMessenger) UploadTCPPointMessage(p *datatypes.RoutePoint, pointNumber int) {
-	constructedMsg := []byte(m.TCPPrefix)
+	constructedMsg := make([]byte, 0)
 
-	constructedMsg = append(constructedMsg, byte(DatapointClassifier))
+	constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)
+	constructedMsg = append(constructedMsg, byte(DataPointClassifier))
 	constructedMsg = append(constructedMsg, byte(pointNumber))
-	constructedMsg = append(constructedMsg, convertFloat64to32(p.Distance)...)
 	constructedMsg = append(constructedMsg, convertFloat64to32(p.Latitude)...)
 	constructedMsg = append(constructedMsg, convertFloat64to32(p.Longitude)...)
 	constructedMsg = append(constructedMsg, convertFloat64to32(p.Speed)...)
@@ -97,7 +99,7 @@ func (m *CarMessenger) UploadTCPPointMessage(p *datatypes.RoutePoint, pointNumbe
 	m.Writer.Write(constructedMsg)
 }
 
-func convertFloat64to32(num float64) []byte {
+func convertFloat64to32(num float64) []byte { //probably want to convert to fewer bits
 	num32 := float32(num)
 	bits := math.Float32bits(num32)
 	buf := make([]byte, 4)

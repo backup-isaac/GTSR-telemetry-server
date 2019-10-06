@@ -174,7 +174,6 @@ func uploadPoints(points []*datatypes.RoutePoint) {
 	w.Write(tag)
 	for _, point := range points {
 		if point.Critical {
-			writeFloat64As32(point.Distance)
 			writeFloat64As32(point.Latitude)
 			writeFloat64As32(point.Longitude)
 			writeFloat64As32(point.Speed)
