@@ -143,9 +143,11 @@ func writerThread() {
 	}
 }
 
-// Subscribe subscribes the channel c to the datapoint publisher
-func Subscribe(c chan *datatypes.Datapoint) error {
-	return GetDatapointPublisher().Subscribe(c)
+// Subscribe subscribes the channel c to the datapoint publisher.
+// If metrics are provided, the channel will only be subscribed to
+// those metrics
+func Subscribe(c chan *datatypes.Datapoint, metrics ...string) error {
+	return GetDatapointPublisher().Subscribe(c, metrics...)
 }
 
 // Unsubscribe unsubscribes the channel c from the datapoint publisher

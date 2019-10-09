@@ -248,30 +248,28 @@ func (c *ChatHandler) ChatSocket(res http.ResponseWriter, req *http.Request) {
 // and relay such messages to each WebSocket currently connected
 func SubscribeDriverStatus() {
 	points := make(chan *datatypes.Datapoint)
-	listener.Subscribe(points)
+	listener.Subscribe(points, "Driver_ACK_Status")
 	for point := range points {
-		if point.Metric == "Driver_ACK_Status" {
-			msg := ""
-			if point.Value == 0.0 {
-				msg = "Driver Response NACK"
-				postSlackMessage("Driver: NACK")
-			} else if point.Value == 1.0 {
-				msg = "Driver Response ACK"
-				postSlackMessage("Driver: ACK")
-			}
-			if msg == "" {
+		msg := ""
+		if point.Value == 0.0 {
+			msg = "Driver Response NACK"
+			postSlackMessage("Driver: NACK")
+		} else if point.Value == 1.0 {
+			msg = "Driver Response ACK"
+			postSlackMessage("Driver: ACK")
+		}
+		if msg == "" {
+			continue
+		}
+		socketLock.Lock()
+		for _, conn := range activeWebsockets {
+			err := conn.WriteMessage(websocket.TextMessage, []byte(msg))
+			if err != nil {
+				log.Println("Failed to write message to websocket")
 				continue
 			}
-			socketLock.Lock()
-			for _, conn := range activeWebsockets {
-				err := conn.WriteMessage(websocket.TextMessage, []byte(msg))
-				if err != nil {
-					log.Println("Failed to write message to websocket")
-					continue
-				}
-			}
-			socketLock.Unlock()
 		}
+		socketLock.Unlock()
 	}
 }
 
@@ -325,17 +323,15 @@ func uploadTCPMessage(message string) {
 // posts Slack messages in response
 func MonitorConnection() {
 	c := make(chan *datatypes.Datapoint, 10)
-	err := listener.Subscribe(c)
+	err := listener.Subscribe(c, "Connection_Status")
 	if err != nil {
 		log.Fatalf("Error getting datapoint publisher: %v", err)
 	}
 	for point := range c {
-		if point.Metric == "Connection_Status" {
-			if point.Value == 1 {
-				postSlackMessage("Connection established")
-			} else {
-				postSlackMessage("Connection lost")
-			}
+		if point.Value == 1 {
+			postSlackMessage("Connection established")
+		} else {
+			postSlackMessage("Connection lost")
 		}
 	}
 }
