@@ -9,16 +9,18 @@ import (
 
 // DatapointPublisher provides pub/sub functionality for Datapoint streams
 type DatapointPublisher struct {
-	publishChannel  chan *datatypes.Datapoint
-	subscribers     []chan *datatypes.Datapoint
-	subscribersLock *sync.Mutex
+	publishChannel      chan *datatypes.Datapoint
+	specificSubscribers map[string][]chan *datatypes.Datapoint
+	subscribers         []chan *datatypes.Datapoint
+	subscribersLock     *sync.Mutex
 }
 
 func newDatapointPublisher() *DatapointPublisher {
 	publisher := &DatapointPublisher{
-		publishChannel:  make(chan *datatypes.Datapoint, 10000),
-		subscribers:     []chan *datatypes.Datapoint{},
-		subscribersLock: new(sync.Mutex),
+		publishChannel:      make(chan *datatypes.Datapoint, 10000),
+		specificSubscribers: make(map[string][]chan *datatypes.Datapoint),
+		subscribers:         []chan *datatypes.Datapoint{},
+		subscribersLock:     new(sync.Mutex),
 	}
 	go publisher.publisherThread()
 	return publisher
@@ -42,11 +44,18 @@ func GetDatapointPublisher() *DatapointPublisher {
 }
 
 // Subscribe subscribes the given channel to the publisher. Whenever Publish is
-// called on this publisher, the datapoint will be sent to the provided channel
-func (publisher *DatapointPublisher) Subscribe(c chan *datatypes.Datapoint) error {
+// called on this publisher, the datapoint will be sent to the provided channel.
+// If specific metrics are provided, the channel will only be sent datapoints
+// for those specific metrics
+func (publisher *DatapointPublisher) Subscribe(c chan *datatypes.Datapoint, metrics ...string) error {
 	publisher.subscribersLock.Lock()
 	defer publisher.subscribersLock.Unlock()
-	publisher.subscribers = append(publisher.subscribers, c)
+	if len(metrics) == 0 {
+		publisher.subscribers = append(publisher.subscribers, c)
+	}
+	for _, metric := range metrics {
+		publisher.specificSubscribers[metric] = append(publisher.specificSubscribers[metric], c)
+	}
 	return nil
 }
 
@@ -55,13 +64,25 @@ func (publisher *DatapointPublisher) Subscribe(c chan *datatypes.Datapoint) erro
 func (publisher *DatapointPublisher) Unsubscribe(c chan *datatypes.Datapoint) error {
 	publisher.subscribersLock.Lock()
 	defer publisher.subscribersLock.Unlock()
+	found := false
 	for i, channel := range publisher.subscribers {
 		if c == channel {
 			publisher.subscribers = append(publisher.subscribers[:i], publisher.subscribers[i+1:]...)
-			return nil
+			found = true
 		}
 	}
-	return fmt.Errorf("Unsubscribe: channel not found in subscriber list")
+	for k := range publisher.specificSubscribers {
+		for i, channel := range publisher.specificSubscribers[k] {
+			if c == channel {
+				publisher.specificSubscribers[k] = append(publisher.specificSubscribers[k][:i], publisher.specificSubscribers[k][i+1:]...)
+				found = true
+			}
+		}
+	}
+	if !found {
+		return fmt.Errorf("Unsubscribe: channel not found in subscriber list")
+	}
+	return nil
 }
 
 // Publish publishes a given datapoint. The datapoint will be sent to all subscribing channels
@@ -79,6 +100,15 @@ func (publisher *DatapointPublisher) Close() {
 	for _, c := range publisher.subscribers {
 		close(c)
 	}
+	closed := make(map[chan *datatypes.Datapoint]bool)
+	for _, subscribers := range publisher.specificSubscribers {
+		for _, c := range subscribers {
+			if !closed[c] {
+				close(c)
+				closed[c] = true
+			}
+		}
+	}
 	if publisher == globalPublisher {
 		globalPublisher = nil
 	}
@@ -88,6 +118,9 @@ func (publisher *DatapointPublisher) publisherThread() {
 	for point := range publisher.publishChannel {
 		publisher.subscribersLock.Lock()
 		for _, subscriber := range publisher.subscribers {
+			subscriber <- point
+		}
+		for _, subscriber := range publisher.specificSubscribers[point.Metric] {
 			subscriber <- point
 		}
 		publisher.subscribersLock.Unlock()

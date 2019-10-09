@@ -22,22 +22,10 @@ func Register(computation Computable) {
 // RunComputations is the main function, which spawns goroutines for every computation and routes
 // incoming data points to their associated computations
 func RunComputations() {
-	streams := make(map[string][]chan *datatypes.Datapoint)
 	for _, computation := range registry {
 		stream := make(chan *datatypes.Datapoint, 100)
-		for _, metric := range computation.GetMetrics() {
-			streams[metric] = append(streams[metric], stream)
-		}
+		listener.Subscribe(stream, computation.GetMetrics()...)
 		go compute(computation, stream)
-	}
-
-	points := make(chan *datatypes.Datapoint, 1000)
-	listener.Subscribe(points)
-
-	for point := range points {
-		for _, stream := range streams[point.Metric] {
-			stream <- point
-		}
 	}
 }
 
