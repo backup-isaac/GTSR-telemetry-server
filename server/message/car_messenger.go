@@ -4,16 +4,30 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math"
 	"sync"
+	"time"
 
 	"server/datatypes"
+	"server/listener"
+
+	"github.com/nlopes/slack"
 )
 
 var routePointsMutex = sync.Mutex{}
 
 const routePointsJSONPath = "../map/route.json"
+
+// # of times we attempt to send a message to the car if we don't receive ACKs
+const retryAttempts = 5
+
+// Length of time in seconds we wait for the car to respond with an ACK
+const timeoutLen = 3
+
+var slck *slack.Client
+var slackMessenger = NewSlackMessenger(slck)
 
 // Writer handles writing a message to a TCP listener
 type Writer interface {
@@ -61,15 +75,46 @@ func (m *CarMessenger) UploadTrackInfoViaTCP() error {
 	var points []datatypes.RoutePoint
 	json.Unmarshal(routePointsFile, &points)
 
+	// Subscribe to datapoint publisher to listen for ACKs in response to
+	// messages that we sent below
+	pointsFromCar := make(chan *datatypes.Datapoint)
+	listener.Subscribe(pointsFromCar)
+
 	// Send a message telling the dashboard how many new points will be sent
-	constructedMsg := make([]byte, 0)
+	curSendAttempts := 0
+	didTelemBoardAck := false
+	for !didTelemBoardAck && curSendAttempts < retryAttempts {
+		// Construct & send the "heads-up" message
+		constructedMsg := make([]byte, 0)
+		constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)
+		constructedMsg = append(constructedMsg, byte(NumIncomingDataPointsClassifier))
+		constructedMsg = append(constructedMsg, byte(len(points)))
+		m.Writer.Write(constructedMsg)
 
-	constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)
-	constructedMsg = append(constructedMsg, byte(NumIncomingDataPointsClassifier))
-	constructedMsg = append(constructedMsg, byte(len(points)))
+		curSendAttempts++
 
-	m.Writer.Write(constructedMsg)
-	//listen to an ACK from the car
+		// Determine if we need to retry sending this "heads-up" message
+		timer := time.NewTimer(timeoutLen * time.Second)
+		<-timer.C
+		select {
+		case p := <-pointsFromCar:
+			if p.Metric == "Receive_New_Track_Info_ACK_Status" && p.Value == 1.0 {
+				timer.Stop()
+				didTelemBoardAck = true
+				slackMessenger.PostNewMessage("Server: ACK'd new track info \"heads-up\" message")
+			}
+		case <-timer.C:
+			msg := "New track info \"heads-up\" message: timeout. "
+			if curSendAttempts < retryAttempts {
+				msg += fmt.Sprintf("Retrying... (%q of %q)", curSendAttempts, retryAttempts)
+			}
+		}
+	}
+
+	if !didTelemBoardAck {
+		return errors.New("Reached max number of retry attempts while sending new track info \"heads-up\" message")
+		slackMessenger.PostNewMessage("Reached max number of retry attempts.")
+	}
 
 	// Send each point from map/route.json to the dashboard
 	for i, point := range points {

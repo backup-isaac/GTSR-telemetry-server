@@ -74,7 +74,7 @@ func (m *MapHandler) FileUpload(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "Error saving route JSON: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	go uploadPoints(points)
+	// go uploadPoints(points)
 
 	err = editIsTrackInfoNew(true)
 	if err != nil {
