@@ -16,9 +16,11 @@ var sendLock sync.Mutex
 
 func main() {
 	var host string
+	remote := false
 
 	if len(os.Args) > 1 && os.Args[1] == "remote" {
 		host = "solarracing.me"
+		remote = true
 	} else {
 		host = "server"
 	}
@@ -39,6 +41,10 @@ func main() {
 
 	// every 10 seconds, send driver ack status (TCP/Reliable)
 	go sendDriverStatuses(tcpConn)
+
+	if !remote {
+		go sendLocations(tcpConn)
+	}
 
 	// every 50 milliseconds, send test computation (UDP/Unreliable)
 	sendTestComputation(udpConn)
@@ -77,7 +83,43 @@ func sendDriverStatuses(conn net.Conn) {
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}
-		time.Sleep(10000 * time.Millisecond)
+		time.Sleep(10 * time.Second)
+	}
+}
+
+type latlng struct {
+	lat float32
+	lng float32
+}
+
+func sendLocations(conn net.Conn) {
+	// small loop on Hemphill
+	points := []latlng{{33.786239, -84.406763}, {33.786235, -84.406200}, {33.785794, -84.406061}, {33.784849, -84.406088}, {33.785527, -84.406560}}
+	i := 0
+	for {
+		packet := formPacket()
+		sendLock.Lock()
+		packet[2] = 0x21
+		packet[3] = 0x06
+		binary.LittleEndian.PutUint32(packet[4:8], math.Float32bits(points[i].lat))
+		binary.LittleEndian.PutUint32(packet[8:12], math.Float32bits(points[i].lng))
+		_, err := conn.Write(packet)
+		sendLock.Unlock()
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		packet = formPacket()
+		sendLock.Lock()
+		packet[2] = 0x2e
+		packet[3] = 0x06
+		packet[4] = 1
+		_, err = conn.Write(packet)
+		sendLock.Unlock()
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		i = (i + 1) % len(points)
+		time.Sleep(2 * time.Second)
 	}
 }
 
