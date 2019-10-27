@@ -112,6 +112,9 @@
           inStreetView = streetView.getVisible();
           if (!inStreetView) {
             bigMarker.setVisible(false);
+            if (vrEnabled) {
+              toggleVR();
+            }
           }
         });
         carMarker = stillMarker;
@@ -148,10 +151,21 @@
                   animatedMarker.setVisible(false);
                   bigMarker.setVisible(false);
                 }
+                var lastPosition = carMarker.getPosition();
                 carMarker.setPosition(latlng);
+                var curPosition = carMarker.getPosition();
 
                 if (vrEnabled) {
-                  trackMarker(new google.maps.LatLng(latlng));
+                  var dlat = curPosition.lat() - lastPosition.lat()
+                  var dlng = curPosition.lng() - lastPosition.lng()
+                  var mag = (dlat ** 2 + dlng ** 2) ** (1/2)
+                  
+                  if (mag > 0) {
+                    trackMarker(new google.maps.LatLng({
+                      lat: curPosition.lat() - dlat / mag * .0002,
+                      lng: curPosition.lng() - dlng / mag * .0002
+                    }), curPosition);
+                  }
                 }
 
                 var minDistance = Number.MAX_SAFE_INTEGER;
@@ -401,7 +415,7 @@
         } else {
           if (carMarker.position.lat != 0 && carMarker.position.lng != 0) {
             vrEnabled = true;
-            trackMarker(carMarker.position);
+            trackMarker(carMarker.position, carMarker.position);
             vrButton.textContent = "Exit Dat Boi VR Experience";
           } else {
             alert("dat boi is currently AWOL, try again later");
@@ -409,9 +423,9 @@
         }
       }
 
-      function trackMarker(latlng) {
+      function trackMarker(targetPos, latlng) {
         streetView.setVisible(true);
-        streetView.setPosition(latlng);
+        streetView.setPosition(targetPos);
         google.maps.event.addListenerOnce(streetView, 'status_changed', function() {
           var heading = google.maps.geometry.spherical.computeHeading(streetView.getLocation().latLng, latlng);
           streetView.setPov({
