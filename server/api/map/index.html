@@ -55,6 +55,8 @@
       </div>
       <br>
       <button id="centerButton" style="margin-top: 20px" onclick="centerMap()">Center on Track</button>
+      <br>
+      <button id="vrButton" style="margin-top: 20px" onclick="toggleVR()">Enter Dat Boi VR Experience</button>
     </div>
     <script>
       var updateRouteFlag = true;
@@ -62,6 +64,8 @@
       var lineSpeeds = [];
       var routeCenter = {lat: 0, lng: 0};
       var map;
+      var streetView;
+      var vrEnabled = false;
       var carMarker;
       function initMap() {
         map = new google.maps.Map(document.getElementById('map'), {
@@ -103,7 +107,7 @@
         var carConnected = false;
         var gpsConnected = false;
         var inStreetView = false;
-        var streetView = map.getStreetView();
+        streetView = map.getStreetView();
         google.maps.event.addListener(streetView, 'visible_changed', function() {
           inStreetView = streetView.getVisible();
           if (!inStreetView) {
@@ -145,6 +149,10 @@
                   bigMarker.setVisible(false);
                 }
                 carMarker.setPosition(latlng);
+
+                if (vrEnabled) {
+                  trackMarker(new google.maps.LatLng(latlng));
+                }
 
                 var minDistance = Number.MAX_SAFE_INTEGER;
                 var closestLine = null;
@@ -382,6 +390,35 @@
             centerButton.textContent = "Center on Track";
           }
         }
+      }
+
+      function toggleVR() {
+        var vrButton = document.getElementById("vrButton");
+        if (vrEnabled) {
+          vrEnabled = false;
+          streetView.setVisible(false);
+          vrButton.textContent = "Enter Dat Boi VR Experience";
+        } else {
+          if (carMarker.position.lat != 0 && carMarker.position.lng != 0) {
+            vrEnabled = true;
+            trackMarker(carMarker.position);
+            vrButton.textContent = "Exit Dat Boi VR Experience";
+          } else {
+            alert("dat boi is currently AWOL, try again later");
+          }
+        }
+      }
+
+      function trackMarker(latlng) {
+        streetView.setVisible(true);
+        streetView.setPosition(latlng);
+        google.maps.event.addListenerOnce(streetView, 'status_changed', function() {
+          var heading = google.maps.geometry.spherical.computeHeading(streetView.getLocation().latLng, latlng);
+          streetView.setPov({
+            heading: heading,
+            pitch: 0
+          });
+        });
       }
     </script>
     <script async defer
