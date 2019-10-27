@@ -88,7 +88,7 @@
               carConnected = parseInt(xmlHttp.responseText) === 1;
             }
           }
-          xmlHttp.open("GET", "/api/latest?name=\"Connection_Status\"");
+          xmlHttp.open("GET", "/api/latest?name=Connection_Status");
           xmlHttp.send(null);
         }
 
@@ -99,7 +99,7 @@
               gpsConnected = parseInt(xmlHttp.responseText) === 1;
             }
           }
-          xmlHttp.open("GET", "/api/latest?name=\"GPS_Status\"");
+          xmlHttp.open("GET", "/api/latest?name=GPS_Status");
           xmlHttp.send(null);
         }
       }
