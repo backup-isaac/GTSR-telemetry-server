@@ -71,8 +71,8 @@ func TestWriteCsv(t *testing.T) {
 	end := time.Unix(1, 0)
 	resolution := 250
 	columns := map[string][]float64{
-		"Column_1": []float64{0, 1, 2, 3},
-		"Column_2": []float64{4, 5, 6, 7},
+		"Column_1": {0, 1, 2, 3},
+		"Column_2": {4, 5, 6, 7},
 	}
 	api.WriteCsv(columns, start, end, resolution)
 	_, callerFile, _, ok := runtime.Caller(0)

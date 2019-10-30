@@ -13,7 +13,7 @@ import (
 
 func TestTCPConnectionHandler(t *testing.T) {
 	parser := NewPacketParser(map[int][]*configs.CanConfigType{
-		0x100: []*configs.CanConfigType{{
+		0x100: {{
 			CanID:    0x100,
 			Datatype: "int32",
 			Name:     "Test1",
