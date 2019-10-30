@@ -49,7 +49,7 @@ func reportConnections() {
 	for {
 		<-ticker.C
 		store.Insert([]*datatypes.Datapoint{
-			&datatypes.Datapoint{
+			{
 				Metric: "Active_TCP_Connections",
 				Value:  float64(atomic.LoadUint32(&activeConnectionCount)),
 				Time:   time.Now(),

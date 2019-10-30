@@ -46,7 +46,7 @@ func (sp *SOCPercentage) Update(point *datatypes.Datapoint) bool {
 	return (len(sp.values) == 2) && point.Metric == "Min_Voltage"
 }
 
-// Compute returns the current percentage remaing using linear interpolation of current and voltage
+// Compute returns the current percentage remaining using linear interpolation of current and voltage
 func (sp *SOCPercentage) Compute() *datatypes.Datapoint {
 	minVoltage := sp.values["Min_Voltage"]
 	bmsCurrent := sp.values["BMS_Current"]

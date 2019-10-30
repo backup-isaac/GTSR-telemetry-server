@@ -4,7 +4,7 @@ set -e
 for fn in $(find . -name go.mod); do
     dn=$(dirname $fn)
     cd $dn
-    if [[ $(go fmt ./...) ]]; then
+    if [[ $(gofmt -l -s .) ]]; then
         exit 1
     fi
     go test ./...
