@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"math"
 	"sync"
 	"time"
@@ -67,6 +68,8 @@ func (m *CarMessenger) UploadTrackInfoViaTCP() error {
 	routePointsMutex.Lock()
 	defer routePointsMutex.Unlock()
 
+	log.Println("car_messenger.go's UploadTrackInfoViaTCP(): About to send new track info to the car...")
+
 	routePointsFile, err := ioutil.ReadFile(routePointsJSONPath)
 	if err != nil {
 		return errors.New("Error reading map/route.json to send new points to dashboard: " + err.Error())
@@ -91,6 +94,8 @@ func (m *CarMessenger) UploadTrackInfoViaTCP() error {
 		constructedMsg = append(constructedMsg, byte(len(points)))
 		m.Writer.Write(constructedMsg)
 
+		log.Println("car_messenger.go's UploadTrackInfoViaTCP(): Constructed \"heads-up\" message:\n\t" + string(constructedMsg))
+
 		curSendAttempts++
 
 		// Determine if we need to retry sending this "heads-up" message
@@ -112,8 +117,8 @@ func (m *CarMessenger) UploadTrackInfoViaTCP() error {
 	}
 
 	if !didTelemBoardAck {
-		return errors.New("Reached max number of retry attempts while sending new track info \"heads-up\" message")
 		slackMessenger.PostNewMessage("Reached max number of retry attempts.")
+		return errors.New("Reached max number of retry attempts while sending new track info \"heads-up\" message")
 	}
 
 	// Send each point from map/route.json to the dashboard

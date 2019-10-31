@@ -200,6 +200,9 @@ func checkIfTrackInfoNeedsUpdating() {
 
 	for point := range c {
 		if point.Metric == "Connection_Status" && point.Value == 1 {
+			// Temporary
+			log.Println("map.go's checkIfTrackInfoNeedsUpdating(): \"Connection established\" message recognized")
+
 			// The car just connected/reconnected
 			// Check to see if we need to send it more up-to-date track info
 			trackInfoModel := trackinfo.Model{}
@@ -207,17 +210,17 @@ func checkIfTrackInfoNeedsUpdating() {
 			err := readTrackInfoConfig(&trackInfoModel)
 			if err != nil {
 				// TODO: real error handling
-				log.Print(err)
+				log.Println(err)
 			}
 
-			if trackInfoModel.IsTrackInfoNew == true {
+			if trackInfoModel.IsTrackInfoNew {
 				carMessenger.UploadTrackInfoViaTCP()
 
 				trackInfoModel.IsTrackInfoNew = false
 				err = writeToTrackInfoConfig(&trackInfoModel)
 				if err != nil {
 					// TODO: real error handling
-					log.Print(err)
+					log.Println(err)
 				}
 			}
 		}
