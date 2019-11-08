@@ -47,6 +47,8 @@ func (m *MapHandler) MapDefault(res http.ResponseWriter, req *http.Request) {
 
 // FileUpload handles a CSV upload of a race route and suggested speeds
 func (m *MapHandler) FileUpload(res http.ResponseWriter, req *http.Request) {
+	log.Print("\nEntering map.go's FileUpload handler...\n")
+
 	file, _, err := req.FormFile("uploadedFile")
 	if err != nil {
 		http.Error(res, "Error getting uploaded file: "+err.Error(), http.StatusBadRequest)
@@ -195,13 +197,25 @@ func writeFloat64As32(num float64) {
 // the car connects, if the track info stored on the car is out-of-date, it
 // gets replaced with the track info stored on the server
 func checkIfTrackInfoNeedsUpdating() {
+	log.Print("Entering map.go's checkIfTrackInfoNeedsUpdating()")
+
 	c := make(chan *datatypes.Datapoint, 10)
-	listener.Subscribe(c)
+	err := listener.Subscribe(c, "Active_TCP_Connections")
+	if err != nil {
+		// Should we kill the server in this situation?
+		// Or can we recover from this point?
+		// TODO: reconsider this error-handling
+		log.Fatalf("Failed to subscribe to: \"Connection_Status\" datapoints: %v", err)
+	}
+
+	log.Print("From map.go's checkIfTrackInfoNeedsUpdating(): done subscribing to active tcp connections")
 
 	for point := range c {
-		if point.Metric == "Connection_Status" && point.Value == 1 {
-			// Temporary
-			log.Println("map.go's checkIfTrackInfoNeedsUpdating(): \"Connection established\" message recognized")
+		log.Print("From map.go's checkIfTrackInfoNeedsUpdating(): Recognized a \"Active_TCP_Connections\" datapoint")
+
+		if point.Value == 1 {
+			// log.Print("\nFrom map.go's checkIfTrackInfoNeedsUpdating(): Recognized a \"Connection_Status\" datapoint\n")
+			log.Print("From map.go's checkIfTrackInfoNeedsUpdating(): An Active_TCP_Connections message had a value: 1")
 
 			// The car just connected/reconnected
 			// Check to see if we need to send it more up-to-date track info
