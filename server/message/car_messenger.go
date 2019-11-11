@@ -42,7 +42,7 @@ func (m *CarMessenger) UploadChatMessageViaTCP(message string) {
 	constructedMsg := make([]byte, 0)
 
 	constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)
-	constructedMsg = append(constructedMsg, byte(SlackMessageClassifier))
+	constructedMsg = append(constructedMsg, byte(slackMessage))
 	constructedMsg = append(constructedMsg, byte(len(message)))
 	constructedMsg = append(constructedMsg, []byte(message)...)
 
@@ -51,7 +51,7 @@ func (m *CarMessenger) UploadChatMessageViaTCP(message string) {
 
 // UploadNewRoute sends a New Route message to the car
 func (m *CarMessenger) UploadNewRoute(len int) {
-	m.Writer.Write(append([]byte(m.TCPPrefix), byte(NumIncomingDataPointsClassifier), byte(len)))
+	m.Writer.Write(append([]byte(m.TCPPrefix), byte(routeBegin), byte(len)))
 }
 
 // UploadTCPPointMessage sends a new track info point to the dashboard
@@ -60,7 +60,7 @@ func (m *CarMessenger) UploadTCPPointMessage(p *datatypes.RoutePoint, pointNumbe
 	constructedMsg := make([]byte, 0)
 
 	constructedMsg = append(constructedMsg, []byte(m.TCPPrefix)...)
-	constructedMsg = append(constructedMsg, byte(DataPointClassifier))
+	constructedMsg = append(constructedMsg, byte(dataPoint))
 	constructedMsg = append(constructedMsg, byte(pointNumber))
 	constructedMsg = append(constructedMsg, convertFloat64to32(p.Latitude)...)
 	constructedMsg = append(constructedMsg, convertFloat64to32(p.Longitude)...)

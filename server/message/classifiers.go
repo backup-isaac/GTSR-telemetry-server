@@ -4,8 +4,10 @@
 
 package message
 
+type classifier byte
+
 const (
-	SlackMessageClassifier          = 'c'
-	DataPointClassifier             = 'd'
-	NumIncomingDataPointsClassifier = 't' //consider re-naming for clarity
+	slackMessage classifier = 'c'
+	dataPoint    classifier = 'd'
+	routeBegin   classifier = 't'
 )
