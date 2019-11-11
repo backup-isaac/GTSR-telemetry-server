@@ -3,6 +3,9 @@ package track
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
+	"path"
+	"runtime"
 )
 
 // Model mirrors the structure of track_info_config.json. Used to edit
@@ -13,11 +16,20 @@ type Model struct {
 	PointNumber         int  `json:"pointNumber"`
 }
 
-var trackInfoConfigPath = "track_info_config.json"
+var infoPath string
+
+func init() {
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		log.Fatal("Could not find runtime caller")
+	}
+	dir := path.Dir(filename)
+	infoPath = path.Join(dir, "track_info_config.json")
+}
 
 // ReadTrackInfoModel the current track info model
 func ReadTrackInfoModel() (*Model, error) {
-	configFile, err := ioutil.ReadFile(trackInfoConfigPath)
+	configFile, err := ioutil.ReadFile(infoPath)
 	if err != nil {
 		return &Model{}, nil
 	}
@@ -32,5 +44,5 @@ func (m *Model) Commit() error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(trackInfoConfigPath, bytes, 0644)
+	return ioutil.WriteFile(infoPath, bytes, 0644)
 }

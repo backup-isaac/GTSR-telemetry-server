@@ -66,12 +66,14 @@ func (t *Track) uploader() {
 		t.model.Commit()
 	}
 	var quit chan bool
+	connected := false
 	for {
 		// Listen for status frames or new routes
 		select {
 		case point := <-status:
 			if point.Value == 0 {
 				// If connection was lost, quit trying to upload
+				connected = false
 				if quit != nil {
 					quit <- true
 					quit = nil
@@ -79,6 +81,7 @@ func (t *Track) uploader() {
 			} else {
 				// If connection was established and the current route isn't done uploading,
 				// continue the upload process
+				connected = true
 				quit = make(chan bool)
 				if !t.model.IsTrackInfoUploaded {
 					go t.uploadPoints(track, quit)
@@ -94,8 +97,10 @@ func (t *Track) uploader() {
 			t.model.PointNumber = 0
 			t.model.IsTrackInfoUploaded = false
 			t.model.Commit()
-			quit = make(chan bool)
-			go t.uploadPoints(track, quit)
+			if connected {
+				quit = make(chan bool)
+				go t.uploadPoints(track, quit)
+			}
 		}
 	}
 }
