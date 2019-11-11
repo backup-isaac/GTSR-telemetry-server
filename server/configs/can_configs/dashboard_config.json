@@ -44,6 +44,20 @@
       "check_bounds": true,
       "min_value": 0,
       "max_value": 1
+    },
+    {
+      "can_id": 1802,
+      "datatype": "uint32",
+      "name": "Track_Info_Control_Begin_ACK",
+      "offset": 0,
+      "check_bounds": false
+    },
+    {
+      "can_id": 1803,
+      "datatype": "uint8",
+      "name": "Track_Info_Control_Packet_ACK",
+      "offset": 0,
+      "check_bounds": false
     }
   ]
   
