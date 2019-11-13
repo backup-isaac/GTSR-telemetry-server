@@ -12,6 +12,7 @@ const (
 	newTrackInfoACK = "Track_Info_Control_Begin_ACK"
 	packetACK       = "Track_Info_Control_Packet_ACK"
 	timeout         = 3 * time.Second
+	maxTimeouts     = 15
 )
 
 // Track controls the logic for uploading new routes to the car
@@ -108,6 +109,7 @@ func (t *Track) uploader() {
 func (t *Track) uploadPoints(track []*datatypes.RoutePoint, quit chan bool) {
 	c := make(chan *datatypes.Datapoint, 10)
 	listener.Subscribe(c, newTrackInfoACK, packetACK)
+	timeoutCount := 0
 	for !t.model.IsTrackInfoUploaded {
 		// Upload the relevant packet for our current state
 		if t.model.IsTrackInfoNew {
@@ -118,6 +120,7 @@ func (t *Track) uploadPoints(track []*datatypes.RoutePoint, quit chan bool) {
 		// Update state based on the car's response
 		select {
 		case ack := <-c:
+			timeoutCount = 0
 			// If we get an ACK corresponding to our current state, move to the next state
 			switch ack.Metric {
 			case newTrackInfoACK:
@@ -138,6 +141,10 @@ func (t *Track) uploadPoints(track []*datatypes.RoutePoint, quit chan bool) {
 			}
 		case <-time.After(timeout):
 			// Retry current send after 3 seconds
+			timeoutCount++
+			if timeoutCount >= maxTimeouts {
+				return
+			}
 		case <-quit:
 			// Car lost connection or new track was uploaded
 			return
