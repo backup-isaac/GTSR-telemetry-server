@@ -12,7 +12,7 @@ import (
 func TestDatapointPublisher(t *testing.T) {
 	publisher := GetDatapointPublisher()
 	defer publisher.Close()
-	c := make(chan *datatypes.Datapoint)
+	c := make(chan *datatypes.Datapoint, 10)
 	err := publisher.Subscribe(c)
 	assert.NoError(t, err)
 	datapoint := &datatypes.Datapoint{
