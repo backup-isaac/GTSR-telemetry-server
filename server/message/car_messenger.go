@@ -4,12 +4,7 @@ import (
 	"encoding/binary"
 	"math"
 	"server/datatypes"
-	"sync"
 )
-
-var routePointsMutex = sync.Mutex{}
-
-const routePointsJSONPath = "../map/route.json"
 
 // Writer handles writing a message to a TCP listener
 type Writer interface {
