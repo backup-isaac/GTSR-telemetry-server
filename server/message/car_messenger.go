@@ -5,16 +5,11 @@ import (
 	"math"
 	"server/datatypes"
 	"sync"
-
-	"github.com/nlopes/slack"
 )
 
 var routePointsMutex = sync.Mutex{}
 
 const routePointsJSONPath = "../map/route.json"
-
-var slck *slack.Client
-var slackMessenger = NewSlackMessenger(slck)
 
 // Writer handles writing a message to a TCP listener
 type Writer interface {
