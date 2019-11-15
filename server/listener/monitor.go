@@ -12,7 +12,7 @@ const connStatusMetric = "Connection_Status"
 // to Slack for when connection is established and lost.
 func monitorConnection() {
 	p := GetDatapointPublisher()
-	points := make(chan *datatypes.Datapoint, 10)
+	points := make(chan *datatypes.Datapoint, 100)
 	err := Subscribe(points)
 	if err != nil {
 		log.Fatalf("Error subscribing to publisher: %v", err)

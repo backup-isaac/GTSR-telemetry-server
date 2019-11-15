@@ -132,6 +132,6 @@ func send(subscriber chan *datatypes.Datapoint, point *datatypes.Datapoint) {
 	select {
 	case subscriber <- point:
 	default:
-		log.Printf("WARNING: Subscriber blocked publisher. Skipping...")
+		log.Printf("WARNING: Subscriber %v blocked publisher. Skipping...", subscriber)
 	}
 }
