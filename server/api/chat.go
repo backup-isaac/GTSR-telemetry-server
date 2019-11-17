@@ -47,10 +47,8 @@ var authorizedUsers = map[string]bool{
 	"UCR9YCZCN": true, // Kat
 }
 
-var slck *slack.Client
-
 var carMessenger = message.NewCarMessenger("GT", listener.NewTCPWriter())
-var slackMessenger = message.NewSlackMessenger(slck)
+var slackMessenger *message.SlackMessenger
 
 var sc = securecookie.New(hashKey, blockKey)
 
@@ -323,7 +321,8 @@ func (c *ChatHandler) RegisterRoutes(router *mux.Router) {
 	dir := path.Dir(filename)
 
 	if token, err := ioutil.ReadFile("/secrets/slack_token.txt"); err == nil {
-		slck = slack.New(strings.TrimSpace(string(token)))
+		slck := slack.New(strings.TrimSpace(string(token)))
+		slackMessenger = message.NewSlackMessenger(slck)
 	} else {
 		log.Printf("Unable to find Slack credentials: %s\n", err)
 	}

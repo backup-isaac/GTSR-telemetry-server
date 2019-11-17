@@ -21,7 +21,7 @@ func NewSlackMessenger(client *slack.Client) *SlackMessenger {
 
 // PostNewMessage posts the provided message to the "chat" channel
 func (s *SlackMessenger) PostNewMessage(message string) {
-	if s.client != nil {
+	if s != nil {
 		s.client.PostMessage("chat", slack.MsgOptionText(message, false))
 	} else {
 		log.Printf("No slack key - message: %s", message)
