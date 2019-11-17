@@ -3,7 +3,6 @@ package api
 import (
 	"crypto/rand"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -12,22 +11,26 @@ import (
 	"server/datatypes"
 	"server/listener"
 	"server/message"
-	"strings"
 	"sync"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/websocket"
-	"github.com/nlopes/slack"
 )
 
 // ChatHandler handles communications between the car, Slack, and the chat web service
-type ChatHandler struct{}
+type ChatHandler struct {
+	slackMessenger *message.SlackMessenger
+	carMessenger   *message.CarMessenger
+}
 
 // NewChatHandler returns a basic initialized ChatHandler
 func NewChatHandler() *ChatHandler {
-	return &ChatHandler{}
+	return &ChatHandler{
+		slackMessenger: message.NewSlackMessenger(),
+		carMessenger:   message.NewCarMessenger("GT", listener.NewTCPWriter()),
+	}
 }
 
 var hashKey = []byte(securecookie.GenerateRandomKey(32))
@@ -46,9 +49,6 @@ var authorizedUsers = map[string]bool{
 	"UCRCSKHBN": true, // Noah
 	"UCR9YCZCN": true, // Kat
 }
-
-var carMessenger = message.NewCarMessenger("GT", listener.NewTCPWriter())
-var slackMessenger *message.SlackMessenger
 
 var sc = securecookie.New(hashKey, blockKey)
 
@@ -159,25 +159,25 @@ func (c *ChatHandler) ChatSlashCommand(res http.ResponseWriter, req *http.Reques
 	}
 	user := req.Form.Get("user_id")
 	if requireAuthorization && !authorizedUsers[user] {
-		slackMessenger.RespondToSlackRequest("Unauthorized user", res)
+		c.slackMessenger.RespondToSlackRequest("Unauthorized user", res)
 		return
 	}
 	channel := req.Form.Get("channel_name")
 	if channel != "chat" && channel != "testing" {
-		slackMessenger.RespondToSlackRequest("Requests must be made from #chat", res)
+		c.slackMessenger.RespondToSlackRequest("Requests must be made from #chat", res)
 		return
 	}
 	msg := req.Form.Get("text")
 	if len(msg) == 0 {
-		slackMessenger.RespondToSlackRequest("Please provide a message", res)
+		c.slackMessenger.RespondToSlackRequest("Please provide a message", res)
 		return
 	}
 	if len(msg) > maxMessageLength {
-		slackMessenger.RespondToSlackRequest("Message exceeds maximum length", res)
+		c.slackMessenger.RespondToSlackRequest("Message exceeds maximum length", res)
 		return
 	}
-	carMessenger.UploadChatMessageViaTCP(msg)
-	slackMessenger.RespondToSlackRequest("Message sent", res)
+	c.carMessenger.UploadChatMessageViaTCP(msg)
+	c.slackMessenger.RespondToSlackRequest("Message sent", res)
 }
 
 // ChatSocket initializes the WebSocket for a connection.
@@ -221,9 +221,9 @@ func (c *ChatHandler) ChatSocket(res http.ResponseWriter, req *http.Request) {
 		} else {
 			// Print the message to the console
 			log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
-			slackMessenger.PostNewMessage("Strategy: " + string(msg))
+			c.slackMessenger.PostNewMessage("Strategy: " + string(msg))
 			// upload message to car
-			carMessenger.UploadChatMessageViaTCP(string(msg))
+			c.carMessenger.UploadChatMessageViaTCP(string(msg))
 		}
 	}
 }
@@ -234,6 +234,7 @@ func (c *ChatHandler) ChatSocket(res http.ResponseWriter, req *http.Request) {
 func SubscribeDriverStatus() {
 	points := make(chan *datatypes.Datapoint)
 	listener.Subscribe(points, "Driver_ACK_Status")
+	slackMessenger := message.NewSlackMessenger()
 	for point := range points {
 		msg := ""
 		if point.Value == 0.0 {
@@ -301,6 +302,7 @@ func MonitorConnection() {
 	if err != nil {
 		log.Fatalf("Error getting datapoint publisher: %v", err)
 	}
+	slackMessenger := message.NewSlackMessenger()
 	for point := range c {
 		if point.Value == 1 {
 			slackMessenger.PostNewMessage("Connection established")
@@ -319,13 +321,6 @@ func (c *ChatHandler) RegisterRoutes(router *mux.Router) {
 		log.Fatal("Could not find runtime caller")
 	}
 	dir := path.Dir(filename)
-
-	if token, err := ioutil.ReadFile("/secrets/slack_token.txt"); err == nil {
-		slck := slack.New(strings.TrimSpace(string(token)))
-		slackMessenger = message.NewSlackMessenger(slck)
-	} else {
-		log.Printf("Unable to find Slack credentials: %s\n", err)
-	}
 
 	router.PathPrefix("/chat/static").Handler(checkAuthHandler(http.StripPrefix("/chat/static/", http.FileServer(http.Dir(path.Join(dir, "chat"))))))
 	router.PathPrefix("/chat-login/static").Handler(http.StripPrefix("/chat-login/static/", http.FileServer(http.Dir(path.Join(dir, "chat-login")))))

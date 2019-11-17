@@ -26,6 +26,7 @@ type Track struct {
 	newPoints chan []*datatypes.RoutePoint
 	model     *Model
 	messenger pointUploader
+	slack     *message.SlackMessenger
 	done      chan bool
 }
 
@@ -39,6 +40,7 @@ func NewTrack(messenger *message.CarMessenger) (*Track, error) {
 		newPoints: make(chan []*datatypes.RoutePoint, 1),
 		model:     m,
 		messenger: messenger,
+		slack:     message.NewSlackMessenger(),
 		done:      make(chan bool),
 	}
 	go t.uploader()
@@ -51,6 +53,7 @@ func (t *Track) UploadRoute(route []*datatypes.RoutePoint) error {
 	if err != nil {
 		return err
 	}
+	t.slack.PostNewMessage("Received new target speeds")
 	t.newPoints <- filterCritical(route)
 	return nil
 }
@@ -163,6 +166,7 @@ func (t *Track) uploadPoints(track []*datatypes.RoutePoint, quit chan bool, wg *
 					t.model.PointNumber++
 					if t.model.PointNumber >= len(track) {
 						t.model.IsTrackInfoUploaded = true
+						t.slack.PostNewMessage("Target speed upload complete")
 					}
 					t.model.Commit()
 				}

@@ -4,6 +4,7 @@ import (
 	"os"
 	"server/datatypes"
 	"server/listener"
+	"server/message"
 	"testing"
 	"time"
 )
@@ -58,6 +59,7 @@ func TestTrackUploader(t *testing.T) {
 		newPoints: make(chan []*datatypes.RoutePoint, 10),
 		model:     model,
 		messenger: messenger,
+		slack:     message.NewSlackMessenger(),
 		done:      make(chan bool),
 	}
 	defer track.Close()
