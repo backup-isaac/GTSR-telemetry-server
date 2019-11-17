@@ -1,6 +1,7 @@
 package listener
 
 import (
+	"sync"
 	"testing"
 	"time"
 
@@ -62,6 +63,26 @@ func TestSpecificSubscribers(t *testing.T) {
 	publisher.Publish(&datatypes.Datapoint{Metric: "metric3"})
 	assertReceived(t, c1)
 	assertNotReceived(t, c2, "datapoint delivered to channel not subscribed to metric3")
+}
+
+func TestMultithreadSpecificSubscribers(t *testing.T) {
+	publisher := GetDatapointPublisher()
+	defer publisher.Close()
+	c1 := make(chan *datatypes.Datapoint, 1)
+	err := publisher.Subscribe(c1, "Connection_Status")
+	assert.NoError(t, err)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		p := <-c1
+		assert.Equal(t, 0, int(p.Value))
+		wg.Done()
+	}()
+	c1 <- &datatypes.Datapoint{
+		Metric: "Connection_Status",
+		Value:  0,
+	}
+	wg.Wait()
 }
 
 func TestUnsubscribe(t *testing.T) {

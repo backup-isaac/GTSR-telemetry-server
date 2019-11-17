@@ -1,22 +1,20 @@
 package api
 
 import (
-	"encoding/binary"
 	"encoding/csv"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
-	"math"
 	"mime/multipart"
 	"net/http"
-	"os"
 	"path"
 	"runtime"
-	"strconv"
-	"time"
-
+	"server/datatypes"
 	"server/listener"
+	"server/message"
+	"server/track"
+	"strconv"
 
 	"github.com/gorilla/mux"
 )
@@ -24,26 +22,19 @@ import (
 // MapHandler handles requests related to the map service,
 // which includes serving the Google Maps frontend for tracking the
 // car, as well as the tool for uploading suggested speeds
-type MapHandler struct{}
+type MapHandler struct {
+	track *track.Track
+}
 
 // NewMapHandler is the basic MapHandler constructor
 func NewMapHandler() *MapHandler {
-	return &MapHandler{}
-}
-
-// RoutePoint is a point along the uploaded route
-type RoutePoint struct {
-	// Distance is the distance along the route for this point
-	Distance float64 `json:"distance"`
-	// Latitude is the GPS latitude of this point
-	Latitude float64 `json:"latitude"`
-	// Longitude is the GPS longitude of this point
-	Longitude float64 `json:"longitude"`
-	// Speed is the suggested speed for the car at this point
-	Speed float64 `json:"speed"`
-	// Critical is a flag for whether this is a significant datapoint
-	// that should be sent to the car to be suggested to the driver
-	Critical bool `json:"critical"`
+	track, err := track.NewTrack(message.NewCarMessenger("GT", listener.NewTCPWriter()))
+	if err != nil {
+		log.Fatalf("Error getting Track: %+v", err)
+	}
+	return &MapHandler{
+		track: track,
+	}
 }
 
 // MapDefault is the default handler for the /map path
@@ -64,28 +55,28 @@ func (m *MapHandler) FileUpload(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "Error parsing provided CSV: "+err.Error(), http.StatusBadRequest)
 		return
 	}
-	_, callerFile, _, ok := runtime.Caller(0)
-	if !ok {
-		http.Error(res, "Unable to save route JSON", http.StatusInternalServerError)
-		return
-	}
-	jsonFile, err := os.Create(path.Join(path.Dir(callerFile), "/map/route.json"))
+	err = m.track.UploadRoute(points)
 	if err != nil {
-		http.Error(res, "Error saving route JSON: "+err.Error(), http.StatusInternalServerError)
-		return
+		http.Error(res, "Error uploading points: "+err.Error(), http.StatusInternalServerError)
 	}
-	defer jsonFile.Close()
-	err = json.NewEncoder(jsonFile).Encode(points)
-	if err != nil {
-		http.Error(res, "Error saving route JSON: "+err.Error(), http.StatusInternalServerError)
-		return
-	}
-	go uploadPoints(points)
 	res.WriteHeader(http.StatusOK)
 }
 
+// Route gets the current route
+func (m *MapHandler) Route(res http.ResponseWriter, req *http.Request) {
+	route, err := m.track.GetRoute()
+	if err != nil {
+		res.WriteHeader(http.StatusNotFound)
+		return
+	}
+	err = json.NewEncoder(res).Encode(route)
+	if err != nil {
+		http.Error(res, "Malformatted route: "+err.Error(), http.StatusInternalServerError)
+	}
+}
+
 // ParseRouteCsv returns the parsed list of RoutePoints from the uploaded CSV file
-func ParseRouteCsv(file multipart.File) ([]*RoutePoint, error) {
+func ParseRouteCsv(file multipart.File) ([]*datatypes.RoutePoint, error) {
 	reader := csv.NewReader(file)
 	header, err := reader.Read()
 	if err != nil {
@@ -95,7 +86,7 @@ func ParseRouteCsv(file multipart.File) ([]*RoutePoint, error) {
 	if err != nil {
 		return nil, err
 	}
-	var routePoints []*RoutePoint
+	var routePoints []*datatypes.RoutePoint
 	for {
 		row, err := reader.Read()
 		if err != nil {
@@ -116,7 +107,7 @@ func ParseRouteCsv(file multipart.File) ([]*RoutePoint, error) {
 	return routePoints, nil
 }
 
-func parseRow(row []string, columns map[string]int) (*RoutePoint, error) {
+func parseRow(row []string, columns map[string]int) (*datatypes.RoutePoint, error) {
 	distance, err := strconv.ParseFloat(row[columns["distance"]], 64)
 	if err != nil {
 		return nil, err
@@ -134,7 +125,7 @@ func parseRow(row []string, columns map[string]int) (*RoutePoint, error) {
 		return nil, err
 	}
 	critical := row[columns["critical"]] == "1"
-	return &RoutePoint{
+	return &datatypes.RoutePoint{
 		Distance:  distance,
 		Latitude:  latitude,
 		Longitude: longitude,
@@ -167,29 +158,6 @@ func verifyColumns(columns map[string]int) error {
 	return nil
 }
 
-func uploadPoints(points []*RoutePoint) {
-	tag := []byte("GTSR")
-	listener.Write(tag)
-	for _, point := range points {
-		if point.Critical {
-			writeFloat64As32(point.Distance)
-			writeFloat64As32(point.Latitude)
-			writeFloat64As32(point.Longitude)
-			writeFloat64As32(point.Speed)
-			time.Sleep(100 * time.Millisecond)
-		}
-	}
-	listener.Write(tag)
-}
-
-func writeFloat64As32(num float64) {
-	num32 := float32(num)
-	bits := math.Float32bits(num32)
-	buf := make([]byte, 4)
-	binary.LittleEndian.PutUint32(buf, bits)
-	listener.Write(buf)
-}
-
 // RegisterRoutes registers the routes for the map service
 func (m *MapHandler) RegisterRoutes(router *mux.Router) {
 	_, filename, _, ok := runtime.Caller(0)
@@ -201,4 +169,5 @@ func (m *MapHandler) RegisterRoutes(router *mux.Router) {
 
 	router.HandleFunc("/map", m.MapDefault).Methods("GET")
 	router.HandleFunc("/map/fileupload", m.FileUpload).Methods("POST")
+	router.HandleFunc("/map/route", m.Route).Methods("GET")
 }
