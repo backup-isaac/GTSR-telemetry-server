@@ -66,7 +66,7 @@ func (r *ReconToolHandler) ReconTimeRange(res http.ResponseWriter, req *http.Req
 		http.Error(res, "Resolution must be positive", http.StatusBadRequest)
 		return
 	}
-	res.Write([]byte(fmt.Sprintf("Request successful: start date %d, end date %d, resolution %d", startDate, endDate, resolution)))
+	res.Write([]byte(fmt.Sprintf("Request successful: start date %v, end date %v, resolution %d", startDate, endDate, resolution)))
 }
 
 // ReconCSV runs ReconTool on data provided as a CSV
