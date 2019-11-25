@@ -52,6 +52,7 @@ func (r *ReconToolHandler) ReconTimeRange(res http.ResponseWriter, req *http.Req
 		http.Error(res, "Missing resolution", http.StatusBadRequest)
 		return
 	}
+	gpsTerrainString := req.Form.Get("terrain")
 	startDate, err := unixStringMillisToTime(startDateString)
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing start date: %s", err), http.StatusBadRequest)
@@ -72,6 +73,11 @@ func (r *ReconToolHandler) ReconTimeRange(res http.ResponseWriter, req *http.Req
 		http.Error(res, "Resolution must be positive", http.StatusBadRequest)
 		return
 	}
+	gpsTerrain, err := strconv.ParseBool(gpsTerrainString)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return
+	}
 	vehicle, err := extractVehicleForm(&req.Form)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
@@ -80,8 +86,9 @@ func (r *ReconToolHandler) ReconTimeRange(res http.ResponseWriter, req *http.Req
 	data, err := r.store.GetMetricPointsRange(recontool.MetricNames, startDate, endDate, resolution, true)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
+		return
 	}
-	res.Write([]byte(fmt.Sprintf("Request successful: vehicle %v, metrics %v", vehicle, data)))
+	res.Write([]byte(fmt.Sprintf("Request successful: terrain %t, vehicle %v, metrics %v", gpsTerrain, vehicle, data)))
 }
 
 func extractVehicleForm(form *url.Values) (recontool.Vehicle, error) {
@@ -142,6 +149,36 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 		http.Error(res, fmt.Sprintf("Error parsing multipart form: %s", err), http.StatusBadRequest)
 		return
 	}
+	gpsTerrainString, ok := req.MultipartForm.Value["terrain"]
+	if !ok {
+		http.Error(res, "Missing GPS terrain", http.StatusBadRequest)
+		return
+	}
+	gpsTerrain, err := strconv.ParseBool(gpsTerrainString[0])
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return
+	}
+	plotAllString, ok := req.MultipartForm.Value["autoPlots"]
+	if !ok {
+		http.Error(res, "Missing plot all", http.StatusBadRequest)
+		return
+	}
+	plotAll, err := strconv.ParseBool(plotAllString[0])
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return
+	}
+	combineFilesString, ok := req.MultipartForm.Value["compileFiles"]
+	if !ok {
+		http.Error(res, "Missing plot all", http.StatusBadRequest)
+		return
+	}
+	combineFiles, err := strconv.ParseBool(combineFilesString[0])
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return
+	}
 	numCsvs := len(req.MultipartForm.File)
 	if numCsvs == 0 {
 		http.Error(res, fmt.Sprintf("No CSVs present"), http.StatusBadRequest)
@@ -153,8 +190,7 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	res.Write([]byte(fmt.Sprintf("Request successful: %d CSVs present, vehicle %v", numCsvs, vehicle)))
+	res.Write([]byte(fmt.Sprintf("Request successful: terrain %t, autoPlots %t, compileFiles %t, %d CSVs present, vehicle %v", gpsTerrain, plotAll, combineFiles, numCsvs, vehicle)))
 }
 
 func extractVehicleMultipart(form *multipart.Form) (recontool.Vehicle, error) {

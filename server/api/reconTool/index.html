@@ -19,10 +19,10 @@
         <div class="panel-body">
           <h4>Uploaded file options:</h4>
           <div class="checkbox">
-            <label><input type="checkbox" value="" id="autoPlots">Plot all raw data</label>
+            <label><input type="checkbox" id="autoPlots">Plot all raw data</label>
           </div>
           <div class="checkbox">
-            <label><input type="checkbox" value="" id="compileFiles">Combine uploaded files together</label>
+            <label><input type="checkbox" id="compileFiles">Combine uploaded files together</label>
           </div>
           <input type="file" id="upload" multiple="true" accept="text/csv">
           <button type="button" onclick="return clearFile()" class="btn btn-default">Clear Upload</button>
@@ -34,7 +34,7 @@
         </div>
         <div class="panel-body">
           <div class="checkbox">
-            <label><input type="checkbox" value="" id="terrain">Use GPS for terrain data</label>
+            <label><input type="checkbox" id="terrain">Use GPS for terrain data</label>
           </div>
           <h4>Vehicle parameters:</h4>
           <div class="container">
@@ -168,11 +168,12 @@
   </div>
 </body>
 <script>
-  const params = ["terrain", "Rmot", "m", "CDa", "Crr1", "Crr2", "Tmax", "Qmax", "Rline", "Vser", "VcMax", "VcMin"]
+  const params = ["Rmot", "m", "CDa", "Crr1", "Crr2", "Tmax", "Qmax", "Rline", "Vser", "VcMax", "VcMin"]
   function addCommonConfigs(formData) {
     for (var param of params) {
-      formData.append(param, document.getElementById(param).value)
+      formData.append(param, document.getElementById(param).value);
     }
+    formData.append("terrain", document.getElementById("terrain").checked);
   }
 
   function formEncodedCommonConfigs() {
@@ -180,6 +181,7 @@
     for (var param of params) {
       formEncoded += "&" + param + "=" + document.getElementById(param).value;
     }
+    formEncoded += "&terrain=" + document.getElementById("terrain").checked;
     return formEncoded;
   }
 
@@ -207,8 +209,8 @@
     request.open("POST", "/reconTool/fromCSV", true);
     var formData = new FormData();
     addCommonConfigs(formData);
-    formData.append("autoPlots", document.getElementById("autoPlots").value);
-    formData.append("compileFiles", document.getElementById("compileFiles").value);
+    formData.append("autoPlots", document.getElementById("autoPlots").checked);
+    formData.append("compileFiles", document.getElementById("compileFiles").checked);
     for (var i = 0; i < fileUpload.files.length; i++) {
       formData.append("file" + i, fileUpload.files[i]);
     }
