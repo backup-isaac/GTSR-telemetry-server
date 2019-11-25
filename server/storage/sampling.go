@@ -1,6 +1,7 @@
 package storage
 
 import (
+	"fmt"
 	"log"
 	"time"
 )
@@ -36,12 +37,17 @@ func (s *Storage) GetSampledPointsForMetric(metric string, start time.Time, end 
 	return column, nil
 }
 
-// GetMetricPointsRange returns sampled data for all metrics in the specified time range
-func (s *Storage) GetMetricPointsRange(start time.Time, end time.Time, resolution int) (map[string][]float64, error) {
+// GetAllMetricPointsRange returns sampled data for all metrics in the specified time range
+func (s *Storage) GetAllMetricPointsRange(start time.Time, end time.Time, resolution int) (map[string][]float64, error) {
 	metrics, err := s.ListMetrics()
 	if err != nil {
 		return nil, err
 	}
+	return s.GetMetricPointsRange(metrics, start, end, resolution, false)
+}
+
+// GetMetricPointsRange returns sampled data for the specified metrics in the specified time range
+func (s *Storage) GetMetricPointsRange(metrics []string, start time.Time, end time.Time, resolution int, strict bool) (map[string][]float64, error) {
 	colChannels := make([]chan []float64, len(metrics))
 	for i, metric := range metrics {
 		colChannels[i] = make(chan []float64, 1)
@@ -60,6 +66,8 @@ func (s *Storage) GetMetricPointsRange(start time.Time, end time.Time, resolutio
 		column := <-colChan
 		if column != nil {
 			columns[metrics[i]] = column
+		} else if strict {
+			return nil, fmt.Errorf("Unable to get values for metric %s", metrics[i])
 		}
 	}
 	return columns, nil

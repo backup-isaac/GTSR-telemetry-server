@@ -115,7 +115,7 @@ func unixStringMillisToTime(timeString string) (time.Time, error) {
 }
 
 func (c *CSVHandler) generateCsv(start time.Time, end time.Time, resolution int) {
-	columns, err := c.store.GetMetricPointsRange(start, end, resolution)
+	columns, err := c.store.GetAllMetricPointsRange(start, end, resolution)
 	if err != nil {
 		log.Printf("Error getting metrics: %s\n", err)
 		return
