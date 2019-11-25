@@ -9,6 +9,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"server/storage"
 	"strconv"
 	"sync/atomic"
 	"time"
@@ -22,18 +23,14 @@ func init() {
 	generating.Store(false)
 }
 
-type csvStore interface {
-	GetMetricPointsRange(start time.Time, end time.Time, resolution int) (map[string][]float64, error)
-}
-
 // CSVHandler handles requests related to the CSV generator tool
 type CSVHandler struct {
-	store csvStore
+	store *storage.Storage
 }
 
 // NewCSVHandler returns an initialized CSVHandler
-func NewCSVHandler(store csvStore) *CSVHandler {
-	return &CSVHandler{store}
+func NewCSVHandler(store *storage.Storage) *CSVHandler {
+	return &CSVHandler{store: store}
 }
 
 type generationRequest struct {

@@ -9,17 +9,20 @@ import (
 	"path"
 	"runtime"
 	"server/recontool"
+	"server/storage"
 	"strconv"
 
 	"github.com/gorilla/mux"
 )
 
 // ReconToolHandler handles requests related to ReconTool
-type ReconToolHandler struct{}
+type ReconToolHandler struct {
+	store *storage.Storage
+}
 
 // NewReconToolHandler returns an initialized ReconToolHandler
-func NewReconToolHandler() *ReconToolHandler {
-	return &ReconToolHandler{}
+func NewReconToolHandler(store *storage.Storage) *ReconToolHandler {
+	return &ReconToolHandler{store: store}
 }
 
 // ReconToolDefault is the default handler for /reconTool
@@ -74,7 +77,11 @@ func (r *ReconToolHandler) ReconTimeRange(res http.ResponseWriter, req *http.Req
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return
 	}
-	res.Write([]byte(fmt.Sprintf("Request successful: start date %v, end date %v, resolution %d, vehicle %v", startDate, endDate, resolution, vehicle)))
+	data, err := r.store.GetMetricPointsRange(startDate, endDate, resolution)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+	}
+	res.Write([]byte(fmt.Sprintf("Request successful: vehicle %v, metrics %v", vehicle, data)))
 }
 
 func extractVehicleForm(form *url.Values) (recontool.Vehicle, error) {
