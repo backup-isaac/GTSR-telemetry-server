@@ -1,7 +1,9 @@
 package api
 
 import (
+	"encoding/csv"
 	"fmt"
+	"io"
 	"log"
 	"mime/multipart"
 	"net/http"
@@ -11,6 +13,7 @@ import (
 	"server/recontool"
 	"server/storage"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -18,6 +21,11 @@ import (
 // ReconToolHandler handles requests related to ReconTool
 type ReconToolHandler struct {
 	store *storage.Storage
+}
+
+type csvParse struct {
+	csvData map[string][]float64
+	err     error
 }
 
 // NewReconToolHandler returns an initialized ReconToolHandler
@@ -190,7 +198,132 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return
 	}
-	res.Write([]byte(fmt.Sprintf("Request successful: terrain %t, autoPlots %t, compileFiles %t, %d CSVs present, vehicle %v", gpsTerrain, plotAll, combineFiles, numCsvs, vehicle)))
+	fileChannels := make([]chan csvParse, len(req.MultipartForm.File))
+	i := 0
+	for _, file := range req.MultipartForm.File {
+		channel := make(chan csvParse)
+		go readUploadedCsv(file[0], plotAll, channel)
+		fileChannels[i] = channel
+		i++
+	}
+	var parsedCsvs []map[string][]float64
+	if combineFiles {
+		parsedCsvs = make([]map[string][]float64, 1)
+		first := true
+		for _, fileChan := range fileChannels {
+			csvParse := <-fileChan
+			parsedCsv := csvParse.csvData
+			err := csvParse.err
+			if err != nil {
+				http.Error(res, err.Error(), http.StatusBadRequest)
+				return
+			}
+			if first {
+				first = false
+				parsedCsvs[0] = parsedCsv
+			} else {
+				mergeParsedCsvs(parsedCsvs[0], parsedCsv)
+			}
+		}
+	} else {
+		parsedCsvs = make([]map[string][]float64, len(fileChannels))
+		for i, fileChan := range fileChannels {
+			csvParse := <-fileChan
+			parsedCsv := csvParse.csvData
+			err := csvParse.err
+			if err != nil {
+				http.Error(res, err.Error(), http.StatusBadRequest)
+				return
+			}
+			parsedCsvs[i] = parsedCsv
+		}
+	}
+	res.Write([]byte(fmt.Sprintf("Request successful: terrain %t, vehicle %v, file contents %v", gpsTerrain, vehicle, parsedCsvs)))
+}
+
+func mergeParsedCsvs(csv1, csv2 map[string][]float64) {
+	for metric, metricValues := range csv2 {
+		arr, cont := csv1[metric]
+		if cont {
+			csv1[metric] = append(arr, metricValues...)
+		} else {
+			csv1[metric] = metricValues
+		}
+	}
+}
+
+func readUploadedCsv(fileHeader *multipart.FileHeader, plotAll bool, fileChannel chan csvParse) {
+	file, err := fileHeader.Open()
+	defer file.Close()
+	if err != nil {
+		fileChannel <- csvParse{nil, err}
+		return
+	}
+	reader := csv.NewReader(file)
+	headerRow, err := reader.Read()
+	if err != nil {
+		fileChannel <- csvParse{nil, err}
+		return
+	}
+	columns, err := parseColumnNames(headerRow, plotAll)
+	if err != nil {
+		fileChannel <- csvParse{nil, err}
+		return
+	}
+	csvContents := make(map[string][]float64, len(columns))
+	for metric := range columns {
+		csvContents[metric] = make([]float64, 0, fileHeader.Size/int64(len(columns))/16)
+	}
+	for {
+		row, err := reader.Read()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			fileChannel <- csvParse{nil, err}
+			return
+		}
+		for metric, index := range columns {
+			if index >= len(row) {
+				continue
+			}
+			value, err := strconv.ParseFloat(row[index], 64)
+			if err != nil {
+				fileChannel <- csvParse{nil, err}
+				return
+			}
+			csvContents[metric] = append(csvContents[metric], value)
+		}
+	}
+	fileChannel <- csvParse{csvContents, nil}
+}
+
+func parseColumnNames(headers []string, plotAll bool) (map[string]int, error) {
+	columnLocs := make(map[string]int)
+	columnsFound := 0
+	for i, colName := range headers {
+		trimmed := strings.TrimLeft(colName, " ")
+		if len(trimmed) == 0 {
+			continue
+		}
+		metric, ok := recontool.MetricHeaderNames[trimmed]
+		if ok {
+			columnsFound++
+		} else if plotAll {
+			metric = trimmed
+		} else {
+			continue
+		}
+		_, isDuplicate := columnLocs[metric]
+		if isDuplicate {
+			return nil, fmt.Errorf("Duplicate column %s", trimmed)
+		}
+		columnLocs[metric] = i
+	}
+	if columnsFound < len(recontool.MetricHeaderNames) {
+		return nil, fmt.Errorf("Required column(s) missing from CSV. Found columns %v", columnLocs)
+	}
+	return columnLocs, nil
 }
 
 func extractVehicleMultipart(form *multipart.Form) (recontool.Vehicle, error) {
