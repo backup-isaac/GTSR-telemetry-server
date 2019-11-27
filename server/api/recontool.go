@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -14,6 +15,7 @@ import (
 	"server/storage"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -24,8 +26,14 @@ type ReconToolHandler struct {
 }
 
 type csvParse struct {
-	csvData map[string][]float64
-	err     error
+	csvData    map[string][]float64
+	timestamps []int64
+	err        error
+}
+
+type reconResult struct {
+	analysisResult *recontool.AnalysisResult
+	err            error
 }
 
 // NewReconToolHandler returns an initialized ReconToolHandler
@@ -96,10 +104,27 @@ func (r *ReconToolHandler) ReconTimeRange(res http.ResponseWriter, req *http.Req
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return
 	}
-	res.Write([]byte(fmt.Sprintf("Request successful: terrain %t, vehicle %v, metrics %v", gpsTerrain, vehicle, data)))
+	timestamps := makeTimestamps(startDate, endDate, resolution)
+	results, err := recontool.RunReconTool(data, timestamps, vehicle, gpsTerrain, false)
+	if err != nil {
+		http.Error(res, err.Error(), http.StatusBadRequest)
+		return
+	}
+	json.NewEncoder(res).Encode(results)
 }
 
-func extractVehicleForm(form *url.Values) (recontool.Vehicle, error) {
+func makeTimestamps(start, end time.Time, resolution int) []int64 {
+	timestamps := make([]int64, end.Sub(start).Milliseconds()/int64(resolution))
+	resolutionDur := time.Duration(resolution) * time.Millisecond
+	i := 0
+	for timestamp := start; timestamp.Before(end); timestamp = timestamp.Add(resolutionDur) {
+		timestamps[i] = timestamp.UnixNano() / 1e6
+		i++
+	}
+	return timestamps
+}
+
+func extractVehicleForm(form *url.Values) (*recontool.Vehicle, error) {
 	vehicleParamsFloat := []string{
 		"Rmot",
 		"m",
@@ -116,26 +141,26 @@ func extractVehicleForm(form *url.Values) (recontool.Vehicle, error) {
 	for i, v := range vehicleParamsFloat {
 		valueString := form.Get(v)
 		if valueString == "" {
-			return recontool.Vehicle{}, fmt.Errorf("missing parameter %s", v)
+			return &recontool.Vehicle{}, fmt.Errorf("missing parameter %s", v)
 		}
 		value, err := strconv.ParseFloat(valueString, 64)
 		if err != nil {
-			return recontool.Vehicle{}, err
+			return &recontool.Vehicle{}, err
 		}
 		paramValuesFloat[i] = value
 	}
 	vSerString := form.Get("Vser")
 	if vSerString == "" {
-		return recontool.Vehicle{}, fmt.Errorf("missing parameter Vser")
+		return &recontool.Vehicle{}, fmt.Errorf("missing parameter Vser")
 	}
 	vSer, err := strconv.ParseInt(vSerString, 10, 32)
 	if err != nil {
-		return recontool.Vehicle{}, err
+		return &recontool.Vehicle{}, err
 	}
 	if vSer < 0 {
-		return recontool.Vehicle{}, fmt.Errorf("Invalid uint literal %s", vSerString)
+		return &recontool.Vehicle{}, fmt.Errorf("Invalid uint literal %s", vSerString)
 	}
-	return recontool.Vehicle{
+	return &recontool.Vehicle{
 		RMot:  paramValuesFloat[0],
 		M:     paramValuesFloat[1],
 		Crr1:  paramValuesFloat[2],
@@ -207,12 +232,15 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 		i++
 	}
 	var parsedCsvs []map[string][]float64
+	var parsedTimestamps [][]int64
 	if combineFiles {
 		parsedCsvs = make([]map[string][]float64, 1)
+		parsedTimestamps = make([][]int64, 1)
 		first := true
 		for _, fileChan := range fileChannels {
 			csvParse := <-fileChan
 			parsedCsv := csvParse.csvData
+			parsedTimestamp := csvParse.timestamps
 			err := csvParse.err
 			if err != nil {
 				http.Error(res, err.Error(), http.StatusBadRequest)
@@ -221,24 +249,48 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 			if first {
 				first = false
 				parsedCsvs[0] = parsedCsv
+				parsedTimestamps[0] = parsedTimestamp
 			} else {
 				mergeParsedCsvs(parsedCsvs[0], parsedCsv)
+				parsedTimestamps[0] = append(parsedTimestamps[0], parsedTimestamp...)
 			}
 		}
 	} else {
 		parsedCsvs = make([]map[string][]float64, len(fileChannels))
+		parsedTimestamps = make([][]int64, len(fileChannels))
 		for i, fileChan := range fileChannels {
 			csvParse := <-fileChan
 			parsedCsv := csvParse.csvData
+			parsedTimestamp := csvParse.timestamps
 			err := csvParse.err
 			if err != nil {
 				http.Error(res, err.Error(), http.StatusBadRequest)
 				return
 			}
 			parsedCsvs[i] = parsedCsv
+			parsedTimestamps[i] = parsedTimestamp
 		}
 	}
-	res.Write([]byte(fmt.Sprintf("Request successful: terrain %t, vehicle %v, file contents %v", gpsTerrain, vehicle, parsedCsvs)))
+	results := make([]*recontool.AnalysisResult, len(parsedCsvs))
+	resultChannels := make([]chan reconResult, len(parsedCsvs))
+	for i := range results {
+		resultChannels[i] = make(chan reconResult)
+		go func(data map[string][]float64, timestamp []int64, channel chan reconResult) {
+			result, err := recontool.RunReconTool(data, timestamp, vehicle, gpsTerrain, plotAll)
+			channel <- reconResult{result, err}
+		}(parsedCsvs[i], parsedTimestamps[i], resultChannels[i])
+	}
+	for i, channel := range resultChannels {
+		recon := <-channel
+		result := recon.analysisResult
+		err := recon.err
+		if err != nil {
+			http.Error(res, err.Error(), http.StatusBadRequest)
+			return
+		}
+		results[i] = result
+	}
+	json.NewEncoder(res).Encode(results)
 }
 
 func mergeParsedCsvs(csv1, csv2 map[string][]float64) {
@@ -256,51 +308,62 @@ func readUploadedCsv(fileHeader *multipart.FileHeader, plotAll bool, fileChannel
 	file, err := fileHeader.Open()
 	defer file.Close()
 	if err != nil {
-		fileChannel <- csvParse{nil, err}
+		fileChannel <- csvParse{nil, nil, err}
 		return
 	}
 	reader := csv.NewReader(file)
 	headerRow, err := reader.Read()
 	if err != nil {
-		fileChannel <- csvParse{nil, err}
+		fileChannel <- csvParse{nil, nil, err}
 		return
 	}
 	columns, err := parseColumnNames(headerRow, plotAll)
 	if err != nil {
-		fileChannel <- csvParse{nil, err}
+		fileChannel <- csvParse{nil, nil, err}
 		return
 	}
-	csvContents := make(map[string][]float64, len(columns))
+	csvContents := make(map[string][]float64, len(columns)-1)
 	for metric := range columns {
 		csvContents[metric] = make([]float64, 0, fileHeader.Size/int64(len(columns))/16)
 	}
+	timestamps := make([]int64, 0, fileHeader.Size/int64(len(columns))/16)
 	for {
 		row, err := reader.Read()
 		if err != nil {
 			if err == io.EOF {
 				break
 			}
-			fileChannel <- csvParse{nil, err}
+			fileChannel <- csvParse{nil, nil, err}
 			return
 		}
 		for metric, index := range columns {
 			if index >= len(row) {
 				continue
 			}
-			value, err := strconv.ParseFloat(row[index], 64)
-			if err != nil {
-				fileChannel <- csvParse{nil, err}
-				return
+			if metric == "time" {
+				value, err := strconv.ParseInt(row[index], 10, 64)
+				if err != nil {
+					fileChannel <- csvParse{nil, nil, err}
+					return
+				}
+				timestamps = append(timestamps, value)
+			} else {
+				value, err := strconv.ParseFloat(row[index], 64)
+				if err != nil {
+					fileChannel <- csvParse{nil, nil, err}
+					return
+				}
+				csvContents[metric] = append(csvContents[metric], value)
 			}
-			csvContents[metric] = append(csvContents[metric], value)
 		}
 	}
-	fileChannel <- csvParse{csvContents, nil}
+	fileChannel <- csvParse{csvContents, timestamps, nil}
 }
 
 func parseColumnNames(headers []string, plotAll bool) (map[string]int, error) {
 	columnLocs := make(map[string]int)
 	columnsFound := 0
+	timeLoc := -1
 	for i, colName := range headers {
 		trimmed := strings.TrimLeft(colName, " ")
 		if len(trimmed) == 0 {
@@ -309,6 +372,12 @@ func parseColumnNames(headers []string, plotAll bool) (map[string]int, error) {
 		metric, ok := recontool.MetricHeaderNames[trimmed]
 		if ok {
 			columnsFound++
+		} else if trimmed == recontool.TimeHeaderName {
+			if timeLoc != -1 {
+				return nil, fmt.Errorf("Duplicate column %s", trimmed)
+			}
+			timeLoc = i
+			metric = "time"
 		} else if plotAll {
 			metric = trimmed
 		} else {
@@ -323,10 +392,13 @@ func parseColumnNames(headers []string, plotAll bool) (map[string]int, error) {
 	if columnsFound < len(recontool.MetricHeaderNames) {
 		return nil, fmt.Errorf("Required column(s) missing from CSV. Found columns %v", columnLocs)
 	}
+	if timeLoc == -1 {
+		return nil, fmt.Errorf("Missing time column")
+	}
 	return columnLocs, nil
 }
 
-func extractVehicleMultipart(form *multipart.Form) (recontool.Vehicle, error) {
+func extractVehicleMultipart(form *multipart.Form) (*recontool.Vehicle, error) {
 	vehicleParamsFloat := []string{
 		"Rmot",
 		"m",
@@ -343,26 +415,26 @@ func extractVehicleMultipart(form *multipart.Form) (recontool.Vehicle, error) {
 	for i, v := range vehicleParamsFloat {
 		valueStrings, cont := form.Value[v]
 		if !cont || len(valueStrings) < 1 {
-			return recontool.Vehicle{}, fmt.Errorf("%s not present", v)
+			return &recontool.Vehicle{}, fmt.Errorf("%s not present", v)
 		}
 		value, err := strconv.ParseFloat(valueStrings[0], 64)
 		if err != nil {
-			return recontool.Vehicle{}, err
+			return &recontool.Vehicle{}, err
 		}
 		paramValuesFloat[i] = value
 	}
 	vSerStrings, cont := form.Value["Vser"]
 	if !cont || len(vSerStrings) < 1 {
-		return recontool.Vehicle{}, fmt.Errorf("Vser not present")
+		return &recontool.Vehicle{}, fmt.Errorf("Vser not present")
 	}
 	vSer, err := strconv.ParseInt(vSerStrings[0], 10, 32)
 	if err != nil {
-		return recontool.Vehicle{}, err
+		return &recontool.Vehicle{}, err
 	}
 	if vSer < 0 {
-		return recontool.Vehicle{}, fmt.Errorf("Invalid uint literal %s", vSerStrings[0])
+		return &recontool.Vehicle{}, fmt.Errorf("Invalid uint literal %s", vSerStrings[0])
 	}
-	return recontool.Vehicle{
+	return &recontool.Vehicle{
 		RMot:  paramValuesFloat[0],
 		M:     paramValuesFloat[1],
 		Crr1:  paramValuesFloat[2],
