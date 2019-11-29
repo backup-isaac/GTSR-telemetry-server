@@ -162,6 +162,7 @@
         </div>
         <div class="container" id="results"></div>
         <div class="panel-body" style="text-align: center">
+          <button id="downloadRawButton" class="btn btn-success">Download Raw Data (JSON)</button>
           <button id="fakeBackButton" onclick="goBack()" class="btn btn-primary">Back</button>
         </div>
       </div>
@@ -337,11 +338,32 @@
       Plotly.newPlot(plotContainer, kinematicsTraces, kinematicsLayout);
       document.getElementById("results").appendChild(plotContainer);
     }
+    document.getElementById("downloadRawButton").onclick = function() {
+      download(response, "recontool_raw.json", "application/json")
+    }
   }
 
   function goBack() {
     document.getElementById("inputs").style.display = "inline";
     document.getElementById("results").innerHTML = "";
     document.getElementById("outputs").style.display = "none";
+  }
+
+  function download(fileContents, filename, mimeType) {
+    var file = new Blob([fileContents], {type: mimeType});
+    if (window.navigator.msSaveOrOpenBlob) {// IE10+
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    } else { // Others
+        var a = document.createElement("a");
+        var url = URL.createObjectURL(file);
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 0);
+    }
   }
 </script>
