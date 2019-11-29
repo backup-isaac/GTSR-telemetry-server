@@ -61,21 +61,39 @@ func driveMotors(conn net.Conn) {
 	rightMotorRpms := []float32{
 		0.0, 3.8, 8.4, 13.0, 18.2, 23.1, 28.4, 34.0, 39.7, 44.9, 49.3, 44.8, 44.4, 37.7, 31.7, 25.3, 19.7, 14.5, 10.1, 6.3, 2.7, 0.1, 0.0,
 	}
+	leftMotorPhaseCs := []float32{
+		0.0, 1.9, 4.0, 4.2, 4.1, 4.5, 4.7, 4.8, 4.5, 4.0, 2.0, 0.5, -0.9, -3.7, -5.3, -5.4, -5.4, -5.3, -4.8, -3.8, -3.0, -0.6, 0.0,
+	}
+	rightMotorPhaseCs := []float32{
+		0.0, 2.1, 4.1, 4.0, 4.3, 4.5, 4.7, 4.7, 4.4, 4.1, 1.9, 0.7, -1.0, -3.5, -5.2, -5.4, -5.5, -5.2, -4.6, -3.6, -2.9, -0.4, 0.0,
+	}
 	i := 0
 	for {
-		var leftMotorRpm, rightMotorRpm float32
+		var leftMotorRpm, rightMotorRpm, leftMotorPhaseC, rightMotorPhaseC float32
 		if i < len(leftMotorRpms) {
 			leftMotorRpm = leftMotorRpms[i]
 			rightMotorRpm = rightMotorRpms[i]
+			leftMotorPhaseC = leftMotorPhaseCs[i]
+			rightMotorPhaseC = rightMotorPhaseCs[i]
 		} else {
 			leftMotorRpm = 0
 			rightMotorRpm = 0
+			leftMotorPhaseC = 0
+			rightMotorPhaseC = 0
 		}
-		err := sendFloatPacket(0x423, leftMotorRpm, conn)
+		err := sendFloatPacket(0x423, leftMotorRpm, 0, conn)
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}
-		err = sendFloatPacket(0x403, rightMotorRpm, conn)
+		err = sendFloatPacket(0x403, rightMotorRpm, 0, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x424, 0, leftMotorPhaseC, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x404, 0, rightMotorPhaseC, conn)
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}
@@ -84,11 +102,12 @@ func driveMotors(conn net.Conn) {
 	}
 }
 
-func sendFloatPacket(id uint16, value float32, conn net.Conn) error {
+func sendFloatPacket(id uint16, lowValue float32, highValue float32, conn net.Conn) error {
 	packet := formPacket()
 	packet[2] = byte(id & 0xff)
 	packet[3] = byte((id & 0xff00) >> 8)
-	binary.LittleEndian.PutUint32(packet[4:8], math.Float32bits(value))
+	binary.LittleEndian.PutUint32(packet[4:8], math.Float32bits(lowValue))
+	binary.LittleEndian.PutUint32(packet[8:12], math.Float32bits(highValue))
 	sendLock.Lock()
 	_, err := conn.Write(packet)
 	sendLock.Unlock()

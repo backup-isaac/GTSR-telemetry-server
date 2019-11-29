@@ -12,6 +12,7 @@ type AnalysisResult struct {
 	VelocityMph   []float64            `json:"velocity_mph"`
 	DistanceMiles []float64            `json:"distance_mi"`
 	Acceleration  []float64            `json:"acceleration"`
+	MotorTorque   []float64            `json:"motor_torque"`
 }
 
 // RunReconTool runs ReconTool on data provided as a mapping of metrics to
@@ -31,12 +32,15 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	if len(rpm) < 2 {
 		return nil, fmt.Errorf("At least 2 data points required")
 	}
+	phaseCurrentSeries := SumLeftRight(data["Left_Phase_C_Current"], data["Right_Phase_C_Current"])
 	velocitySeries := CalculateVelocitySeries(rpm, vehicle.RMot)
-	distanceSeries := CalculateDistanceSeries(velocitySeries, dt)
-	accelerationSeries := CalculateAccelerationSeries(velocitySeries, dt)
-	result.VelocityMph = MetersPerSecondToMilesPerHour(velocitySeries)
-	result.DistanceMiles = MetersToMiles(distanceSeries)
-	result.TimeMinutes = SecondsToMinutes(timeSeries)
+	distanceSeries := RiemannSumIntegrate(velocitySeries, dt)
+	accelerationSeries := Gradient(velocitySeries, dt)
+	motorTorqueSeries := CalculateMotorTorqueSeries(rpm, phaseCurrentSeries)
+	result.VelocityMph = Scale(velocitySeries, MetersPerSecondToMilesPerHour)
+	result.DistanceMiles = Scale(distanceSeries, MetersToMiles)
+	result.TimeMinutes = Scale(timeSeries, SecondsToMinutes)
 	result.Acceleration = accelerationSeries
+	result.MotorTorque = motorTorqueSeries
 	return &result, nil
 }

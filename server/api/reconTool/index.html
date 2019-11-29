@@ -266,6 +266,7 @@
     document.getElementById("outputs").style.display = "inline";
     var bigData = JSON.parse(response)
     for (var i = 0; i < bigData.length; i++) {
+      console.log(bigData)
       var plotContainer = document.createElement("DIV");
       plotContainer.style.alignItems = "center";
       plotContainer.id = "plotContainer" + i;
@@ -317,7 +318,7 @@
         yaxis2: {
           domain: [5.0/14, 9.0/14],
           title: {
-            text: "Velocity in m/s",
+            text: "Velocity in mph",
             font: {
               size: 10
             }
