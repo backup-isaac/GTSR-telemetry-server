@@ -29,4 +29,3 @@ func CalculateMotorTorqueSeries(rpm []float64, iPhaseC []float64) []float64 {
 	}
 	return motorTorqueSeries
 }
-
