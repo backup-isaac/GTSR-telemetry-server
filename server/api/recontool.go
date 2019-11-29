@@ -110,7 +110,8 @@ func (r *ReconToolHandler) ReconTimeRange(res http.ResponseWriter, req *http.Req
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return
 	}
-	json.NewEncoder(res).Encode(results)
+	var resultsArr = [1]*recontool.AnalysisResult{results}
+	json.NewEncoder(res).Encode(resultsArr)
 }
 
 func makeTimestamps(start, end time.Time, resolution int) []int64 {

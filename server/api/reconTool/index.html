@@ -266,7 +266,6 @@
     document.getElementById("outputs").style.display = "inline";
     var bigData = JSON.parse(response)
     for (var i = 0; i < bigData.length; i++) {
-      console.log(bigData[i]);
       var plotContainer = document.createElement("DIV");
       plotContainer.style.alignItems = "center";
       plotContainer.id = "plotContainer" + i;
@@ -281,7 +280,6 @@
         y: bigData[i].velocity_mph,
         mode: "markers",
         type: "scatter",
-        xaxis: 'x2',
         yaxis: 'y2',
       };
       var accelTrace = {
@@ -289,7 +287,6 @@
         y: bigData[i].acceleration,
         mode: "markers",
         type: "scatter",
-        xaxis: 'x3',
         yaxis: 'y3',
       };
       var kinematicsTraces = [ distanceTrace, velocityTrace, accelTrace ];
@@ -303,24 +300,36 @@
           columns: 1,
           pattern: 'independent',
         },
-        xaxis3: {
+        xaxis: {
           title: {
             text: "Time (min)"
           }
         },
         yaxis1: {
+          domain: [0, 4.0/14],
           title: {
-            text: "Distance in mi"
+            text: "Distance in mi",
+            font: {
+              size: 10
+            }
           }
         },
         yaxis2: {
+          domain: [5.0/14, 9.0/14],
           title: {
-            text: "Velocity in m/s"
+            text: "Velocity in m/s",
+            font: {
+              size: 10
+            }
           }
         },
         yaxis3: {
+          domain: [10.0/14, 1],
           title: {
-            text: "Acceleration in m/s^2"
+            text: "Acceleration in m/s^2",
+            font: {
+              size: 10
+            }
           }
         },
       };

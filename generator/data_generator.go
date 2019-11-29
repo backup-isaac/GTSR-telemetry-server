@@ -46,8 +46,53 @@ func main() {
 		go sendLocations(tcpConn)
 	}
 
+	// simulate Wavesculptor telemetry as if the car is driving
+	go driveMotors(tcpConn)
+
 	// every 50 milliseconds, send test computation (UDP/Unreliable)
 	sendTestComputation(udpConn)
+}
+
+// pretend that the car drives a couple seconds, then stops for a bit, then repeats
+func driveMotors(conn net.Conn) {
+	leftMotorRpms := []float32{
+		0.0, 3.8, 8.5, 13.0, 18.0, 23.0, 28.4, 34.1, 40.0, 45.0, 49.2, 44.8, 44.1, 37.6, 31.8, 25.3, 19.9, 14.7, 10.1, 6.2, 2.7, 0.0, 0.0,
+	}
+	rightMotorRpms := []float32{
+		0.0, 3.8, 8.4, 13.0, 18.2, 23.1, 28.4, 34.0, 39.7, 44.9, 49.3, 44.8, 44.4, 37.7, 31.7, 25.3, 19.7, 14.5, 10.1, 6.3, 2.7, 0.1, 0.0,
+	}
+	i := 0
+	for {
+		var leftMotorRpm, rightMotorRpm float32
+		if i < len(leftMotorRpms) {
+			leftMotorRpm = leftMotorRpms[i]
+			rightMotorRpm = rightMotorRpms[i]
+		} else {
+			leftMotorRpm = 0
+			rightMotorRpm = 0
+		}
+		err := sendFloatPacket(0x423, leftMotorRpm, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x403, rightMotorRpm, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		i = (i + 1) % 40
+		time.Sleep(250 * time.Millisecond)
+	}
+}
+
+func sendFloatPacket(id uint16, value float32, conn net.Conn) error {
+	packet := formPacket()
+	packet[2] = byte(id & 0xff)
+	packet[3] = byte((id & 0xff00) >> 8)
+	binary.LittleEndian.PutUint32(packet[4:8], math.Float32bits(value))
+	sendLock.Lock()
+	_, err := conn.Write(packet)
+	sendLock.Unlock()
+	return err
 }
 
 func sendTestComputation(conn net.Conn) {

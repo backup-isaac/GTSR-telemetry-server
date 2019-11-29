@@ -1,6 +1,8 @@
 package recontool
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // AnalysisResult contains the results of ReconTool analysis
 type AnalysisResult struct {
@@ -26,6 +28,9 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 		return nil, fmt.Errorf("Invalid time data %v", rawTimestamps)
 	}
 	rpm := Average(data["Left_Wavesculptor_RPM"], data["Right_Wavesculptor_RPM"])
+	if len(rpm) < 2 {
+		return nil, fmt.Errorf("At least 2 data points required")
+	}
 	velocitySeries := CalculateVelocitySeries(rpm, vehicle.RMot)
 	distanceSeries := CalculateDistanceSeries(velocitySeries, dt)
 	accelerationSeries := CalculateAccelerationSeries(velocitySeries, dt)
