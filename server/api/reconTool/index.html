@@ -202,6 +202,7 @@
         if (request.status == 200) {
           displayResult(request.response);
         } else {
+          hideLoadingSpinner();
           alert("Request failed: " + request.statusText);
           console.log(request.responseText);
         }
@@ -254,6 +255,7 @@
         if (request.status == 200) {
           displayResult(request.response);
         } else {
+          hideLoadingSpinner();
           alert("Request failed: " + request.statusText);
           console.log(request.responseText);
         }
