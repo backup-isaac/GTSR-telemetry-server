@@ -144,13 +144,16 @@
       </div>
     </div>
     <div class="col-sm-7">
-      <div class="panel panel-default">
+      <div class="panel panel-default" id="buttonContainer">
         <div class="panel-body" style="text-align: center">
           <button id="csvButton" onclick="runCSV()"class="btn btn-success">Run ReconTool with CSV</button>
         </div>
         <div class="panel-body" style="text-align: center">
           <button id="serverButton" onclick="runServer()"class="btn btn-success">Run ReconTool with Server Data</button>
         </div>
+      </div>
+      <div class="panel panel-default" id="loading" style="display: none; text-align: center;">
+        <img src="/reconTool/static/loading.gif" alt="loading..." style="width:96px; height:96px">
       </div>
     </div>
   </div>
@@ -217,6 +220,7 @@
       formData.append("file" + i, fileUpload.files[i]);
     }
     request.send(formData);
+    showLoadingSpinner();
   }
 
   function runServer() {
@@ -260,6 +264,17 @@
     var formEncoded = "startDate=" + startTime + "&endDate=" + endTime + "&resolution=" + resolution;
     formEncoded += formEncodedCommonConfigs();
     request.send(formEncoded);
+    showLoadingSpinner();
+  }
+
+  function hideLoadingSpinner() {
+    document.getElementById("buttonContainer").style.display = "";
+    document.getElementById("loading").style.display = "none";
+  }
+
+  function showLoadingSpinner() {
+    document.getElementById("buttonContainer").style.display = "none";
+    document.getElementById("loading").style.display = "";
   }
 
   function displayResult(response) {
@@ -267,27 +282,26 @@
     document.getElementById("outputs").style.display = "inline";
     var bigData = JSON.parse(response)
     for (var i = 0; i < bigData.length; i++) {
-      console.log(bigData)
       var plotContainer = document.createElement("DIV");
       plotContainer.style.alignItems = "center";
       plotContainer.id = "plotContainer" + i;
       var distanceTrace = {
         x: bigData[i].time_min,
         y: bigData[i].distance_mi,
-        mode: "markers",
+        mode: "lines",
         type: "scatter",
       };
       var velocityTrace = {
         x: bigData[i].time_min,
         y: bigData[i].velocity_mph,
-        mode: "markers",
+        mode: "lines",
         type: "scatter",
         yaxis: 'y2',
       };
       var accelTrace = {
         x: bigData[i].time_min,
         y: bigData[i].acceleration,
-        mode: "markers",
+        mode: "lines",
         type: "scatter",
         yaxis: 'y3',
       };
@@ -344,6 +358,7 @@
   }
 
   function goBack() {
+    hideLoadingSpinner();
     document.getElementById("inputs").style.display = "inline";
     document.getElementById("results").innerHTML = "";
     document.getElementById("outputs").style.display = "none";
