@@ -1,6 +1,8 @@
 package computations
 
-import "server/datatypes"
+import (
+	"server/datatypes"
+)
 
 // standardComputation is a container for the normal computation which just needs one
 // point of each metric type to perform its computation
