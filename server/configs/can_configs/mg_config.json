@@ -1,7 +1,7 @@
 [
     {
         "can_id": 384,
-        "datatype": "uint8",
+        "datatype": "float32",
         "name": "MG_0_Input_Current",
         "offset": 0,
         "check_bounds": true,
@@ -11,7 +11,7 @@
     },
     {
         "can_id": 384,
-        "datatype": "uint8",
+        "datatype": "float32",
         "name": "MG_0_Input_Voltage",
         "offset": 4,
         "check_bounds": true,
@@ -21,7 +21,7 @@
     },
     {
         "can_id": 385,
-        "datatype": "uint8",
+        "datatype": "float32",
         "name": "MG_1_Input_Current",
         "offset": 0,
         "check_bounds": true,
@@ -31,7 +31,7 @@
     },
     {
         "can_id": 385,
-        "datatype": "uint8",
+        "datatype": "float32",
         "name": "MG_1_Input_Voltage",
         "offset": 4,
         "check_bounds": true,
@@ -41,7 +41,7 @@
     },
     {
         "can_id": 640,
-        "datatype": "uint8",
+        "datatype": "float32",
         "name": "MG_0_Output_Voltage",
         "offset": 0,
         "check_bounds": true,
@@ -51,7 +51,7 @@
     },
     {
         "can_id": 640,
-        "datatype": "uint8",
+        "datatype": "float32",
         "name": "MG_0_Input_Power",
         "offset": 4,
         "check_bounds": true,
@@ -61,7 +61,7 @@
     },
     {
         "can_id": 641,
-        "datatype": "uint8",
+        "datatype": "float32",
         "name": "MG_1_Output_Voltage",
         "offset": 0,
         "check_bounds": true,
@@ -71,7 +71,7 @@
     },
     {
         "can_id": 641,
-        "datatype": "uint8",
+        "datatype": "float32",
         "name": "MG_1_Input_Power",
         "offset": 4,
         "check_bounds": true,
@@ -81,7 +81,7 @@
     },
     {
         "can_id": 1152,
-        "datatype": "uint16",
+        "datatype": "int16",
         "name": "MG_0_PCB_Temperature",
         "offset": 0,
         "check_bounds": true,
@@ -91,7 +91,7 @@
     },
     {
         "can_id": 1152,
-        "datatype": "uint16",
+        "datatype": "int16",
         "name": "MG_0_MOSFET_Temperature",
         "offset": 2,
         "check_bounds": true,
@@ -101,7 +101,7 @@
     },
     {
         "can_id": 1153,
-        "datatype": "uint16",
+        "datatype": "int16",
         "name": "MG_1_PCB_Temperature",
         "offset": 0,
         "check_bounds": true,
@@ -111,7 +111,7 @@
     },
     {
         "can_id": 1153,
-        "datatype": "uint16",
+        "datatype": "int16",
         "name": "MG_1_MOSFET_Temperature",
         "offset": 2,
         "check_bounds": true,
