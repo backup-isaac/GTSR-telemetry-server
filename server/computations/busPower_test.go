@@ -26,6 +26,7 @@ func TestBusPower(t *testing.T) {
 		Value:  30,
 	}
 	point := bp.Compute()
+	expectedPoint.Time = point.Time
 	assert.Equal(t, expectedPoint, point)
 	done = bp.Update(&datatypes.Datapoint{
 		Metric: "Left_Bus_Power",
@@ -51,6 +52,7 @@ func TestLeftBusPower(t *testing.T) {
 		Value:  5000,
 	}
 	actualPoint := bp.Compute()
+	expectedPoint.Time = actualPoint.Time
 	assert.Equal(t, expectedPoint, actualPoint)
 	done = bp.Update(&datatypes.Datapoint{
 		Metric: "Left_Bus_Voltage",
@@ -76,6 +78,7 @@ func TestRightBusPower(t *testing.T) {
 		Value:  5000,
 	}
 	actualPoint := bp.Compute()
+	expectedPoint.Time = actualPoint.Time
 	assert.Equal(t, expectedPoint, actualPoint)
 	done = bp.Update(&datatypes.Datapoint{
 		Metric: "Right_Bus_Voltage",
