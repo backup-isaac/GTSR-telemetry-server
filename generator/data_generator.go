@@ -67,19 +67,40 @@ func driveMotors(conn net.Conn) {
 	rightMotorPhaseCs := []float32{
 		0.0, 2.1, 4.1, 4.0, 4.3, 4.5, 4.7, 4.7, 4.4, 4.1, 1.9, 0.7, -1.0, -3.5, -5.2, -5.4, -5.5, -5.2, -4.6, -3.6, -2.9, -0.4, 0.0,
 	}
+	leftMotorBusVoltages := []float32{
+		128.14, 127.99, 127.92, 127.84, 127.81, 127.76, 127.72, 127.50, 127.48, 127.46, 127.77, 127.98, 128.19, 128.60, 128.60, 128.50, 128.43, 128.38, 128.33, 128.14, 128.09, 128.15, 128.04,
+	}
+	rightMotorBusVoltages := []float32{
+		128.17, 127.99, 127.93, 127.85, 127.81, 127.78, 127.76, 127.52, 127.51, 127.46, 127.81, 127.97, 128.22, 128.61, 128.60, 128.51, 128.45, 128.39, 128.37, 128.15, 128.10, 128.19, 128.05,
+	}
+	leftMotorBusCurrents := []float32{
+		0.00, 0.08, 0.38, 0.61, 0.82, 1.15, 1.48, 1.82, 2.00, 2.00, 1.09, 0.25, -0.44, -1.55, -1.87, -1.52, -1.19, -0.87, -0.54, -0.26, -0.09, -0.00, 0.00,
+	}
+	rightMotorBusCurrents := []float32{
+		0.00, 0.09, 0.38, 0.58, 0.87, 1.16, 1.48, 1.78, 1.94, 2.05, 1.04, 0.35, -0.49, -1.47, -1.83, -1.52, -1.20, -0.84, -0.52, -0.25, -0.09, -0.00, 0.00,
+	}
 	i := 0
 	for {
-		var leftMotorRpm, rightMotorRpm, leftMotorPhaseC, rightMotorPhaseC float32
+		var leftMotorRpm, rightMotorRpm, leftMotorPhaseC, rightMotorPhaseC, leftMotorBusVoltage, rightMotorBusVoltage, leftMotorBusCurrent, rightMotorBusCurrent float32
 		if i < len(leftMotorRpms) {
 			leftMotorRpm = leftMotorRpms[i]
 			rightMotorRpm = rightMotorRpms[i]
 			leftMotorPhaseC = leftMotorPhaseCs[i]
 			rightMotorPhaseC = rightMotorPhaseCs[i]
+			leftMotorBusVoltage = leftMotorBusVoltages[i]
+			rightMotorBusVoltage = rightMotorBusVoltages[i]
+			leftMotorBusCurrent = leftMotorBusCurrents[i]
+			rightMotorBusCurrent = rightMotorBusCurrents[i]
+
 		} else {
 			leftMotorRpm = 0
 			rightMotorRpm = 0
 			leftMotorPhaseC = 0
 			rightMotorPhaseC = 0
+			leftMotorBusVoltage = 0
+			rightMotorBusVoltage = 0
+			leftMotorBusCurrent = 0
+			rightMotorBusCurrent = 0
 		}
 		err := sendFloatPacket(0x423, leftMotorRpm, 0, conn)
 		if err != nil {
@@ -94,6 +115,14 @@ func driveMotors(conn net.Conn) {
 			log.Fatalf("Error writing to connection: %s", err)
 		}
 		err = sendFloatPacket(0x404, 0, rightMotorPhaseC, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x422, leftMotorBusVoltage, leftMotorBusCurrent, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x402, rightMotorBusVoltage, rightMotorBusCurrent, conn)
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}

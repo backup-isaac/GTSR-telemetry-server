@@ -46,6 +46,8 @@ func (r *ReconToolHandler) ReconToolDefault(res http.ResponseWriter, req *http.R
 	http.Redirect(res, req, "/reconTool/static/index.html", http.StatusFound)
 }
 
+
+
 // ReconTimeRange runs ReconTool on data taken from the server
 func (r *ReconToolHandler) ReconTimeRange(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
