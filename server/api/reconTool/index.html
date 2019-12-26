@@ -280,29 +280,29 @@
     document.getElementById("loading").style.display = "";
   }
 
+  function timeSeriesTrace(data, metric, legendEntry, yAxis) {
+    var trace = {
+      x: data.time_min,
+      y: data[metric],
+      mode: "lines",
+      type: "scatter",
+    };
+    if (legendEntry) {
+      trace.name = legendEntry;
+    }
+    if (yAxis) {
+      trace.yaxis = yAxis;
+    }
+    return trace;
+  }
+
   function statesContainer(data) {
     var plotContainer = document.createElement("DIV");
-    var distanceTrace = {
-      x: data.time_min,
-      y: data.distance_mi,
-      mode: "lines",
-      type: "scatter",
-    };
-    var velocityTrace = {
-      x: data.time_min,
-      y: data.velocity_mph,
-      mode: "lines",
-      type: "scatter",
-      yaxis: 'y2',
-    };
-    var accelTrace = {
-      x: data.time_min,
-      y: data.acceleration,
-      mode: "lines",
-      type: "scatter",
-      yaxis: 'y3',
-    };
-    var kinematicsTraces = [ distanceTrace, velocityTrace, accelTrace ];
+    var kinematicsTraces = [
+      timeSeriesTrace(data, 'distance_mi'),
+      timeSeriesTrace(data, 'velocity_mph', null, 'y2'),
+      timeSeriesTrace(data, 'acceleration', null, 'y3'),
+    ];
     var kinematicsLayout = {
       showlegend: false,
       title: {
@@ -352,14 +352,6 @@
 
   function powerTorqueContainer(data) {
     var plotContainer = document.createElement("DIV");
-    var torqueTrace = {
-      x: data.time_min,
-      y: data.model_derived_torque,
-      mode: "lines",
-      type: "scatter",
-      yaxis: 'y2',
-      name: "Model-Derived Torque",
-    };
     var tMaxTrace = {
       x: [data.time_min[0], data.time_min[data.time_min.length - 1]],
       y: [data.max_torque, data.max_torque],
@@ -371,33 +363,12 @@
       yaxis: 'y2',
       name: "Max Torque",
     };
-    var torqueDerivedPowerTrace = {
-      x: data.time_min,
-      y: data.motor_power,
-      mode: "lines",
-      type: "scatter",
-      name: "Torque-Derived Power",
-    };
-    var modelDerivedPowerTrace = {
-      x: data.time_min,
-      y: data.model_derived_power,
-      mode: "lines",
-      type: "scatter",
-      name: "Model-Derived Power",
-    };
-    var busPowerTrace = {
-      x: data.time_min,
-      y: data.bus_power,
-      mode: "lines",
-      type: "scatter",
-      name: "Measured Power",
-    };
     var powerTorqueTraces = [
-      torqueDerivedPowerTrace,
-      modelDerivedPowerTrace,
-      torqueTrace,
+      timeSeriesTrace(data, 'model_derived_torque', "Model-Derived Torque", 'y2'),
       tMaxTrace,
-      busPowerTrace,
+      timeSeriesTrace(data, 'motor_power', "Torque-Derived Power"),
+      timeSeriesTrace(data, 'model_derived_power', "Model-Derived Power"),
+      timeSeriesTrace(data, 'bus_power', "Measured Power"),
     ];
     var powerTorqueLayout = {
       title: {
