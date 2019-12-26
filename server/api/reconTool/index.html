@@ -374,8 +374,26 @@
       y: data.motor_power,
       mode: "lines",
       type: "scatter",
-    }
-    var powerTorqueTraces = [torqueDerivedPowerTrace, torqueTrace, tMaxTrace];
+    };
+    var modelDerivedPowerTrace = {
+      x: data.time_min,
+      y: data.model_derived_power,
+      mode: "lines",
+      type: "scatter",
+    };
+    var busPowerTrace = {
+      x: data.time_min,
+      y: data.bus_power,
+      mode: "lines",
+      type: "scatter",
+    };
+    var powerTorqueTraces = [
+      torqueDerivedPowerTrace,
+      modelDerivedPowerTrace,
+      torqueTrace,
+      tMaxTrace,
+      busPowerTrace,
+    ];
     var powerTorqueLayout = {
       showlegend: false,
       title: {

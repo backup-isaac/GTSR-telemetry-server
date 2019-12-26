@@ -85,3 +85,17 @@ func CalculateMotorEfficiencySeries(vBus, tMot []float64) []float64 {
 	}
 	return effMot
 }
+
+// CalculateModelDerivedPower computes motor power from model-derived force, velocity, and drivetrain efficiency
+func CalculateModelDerivedPower(fRes, dxdt, effDt float64) float64 {
+	return fRes * dxdt / effDt
+}
+
+// CalculateModelDerivedPowerSeries computes model-derived motor power for a series of points
+func CalculateModelDerivedPowerSeries(resultantForce, velocity, drivetrainEfficiency []float64) []float64 {
+	pMtc := make([]float64, len(resultantForce))
+	for i, f := range resultantForce {
+		pMtc[i] = CalculateModelDerivedPower(f, velocity[i], drivetrainEfficiency[i])
+	}
+	return pMtc
+}

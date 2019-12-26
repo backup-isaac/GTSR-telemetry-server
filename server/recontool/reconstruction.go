@@ -56,6 +56,7 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	motorEfficiencySeries := CalculateMotorEfficiencySeries(busVoltage, motorTorqueSeries)
 	drivetrainEfficiencySeries := CalculateDrivetrainEfficiencySeries(motorControllerEfficiencySeries, packEfficiencySeries, motorEfficiencySeries)
 	motorPowerSeries := CalculateMotorPowerSeries(motorTorqueSeries, velocitySeries, phaseCurrentSeries, drivetrainEfficiencySeries, vehicle)
+	modelDerivedPowerSeries := CalculateModelDerivedPowerSeries(resultantForceSeries, velocitySeries, drivetrainEfficiencySeries)
 	result.VelocityMph = Scale(velocitySeries, MetersPerSecondToMilesPerHour)
 	result.DistanceMiles = Scale(distanceSeries, MetersToMiles)
 	result.TimeMinutes = Scale(timeSeries, SecondsToMinutes)
@@ -63,7 +64,7 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	//result.MotorTorque = motorTorqueSeries
 	result.ModelDerivedTorque = modelDerivedTorqueSeries
 	result.MotorPower = motorPowerSeries
-	result.ModelDerivedMotorPower = make([]float64, 0)
-	result.BusPower = make([]float64, 0)
+	result.ModelDerivedMotorPower = modelDerivedPowerSeries
+	result.BusPower = busPowerSeries
 	return &result, nil
 }
