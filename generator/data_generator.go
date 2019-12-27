@@ -79,9 +79,15 @@ func driveMotors(conn net.Conn) {
 	rightMotorBusCurrents := []float32{
 		0.00, 0.09, 0.38, 0.58, 0.87, 1.16, 1.48, 1.78, 1.94, 2.05, 1.04, 0.35, -0.49, -1.47, -1.83, -1.52, -1.20, -0.84, -0.52, -0.25, -0.09, -0.00, 0.00,
 	}
+	bmsCurrents := []float32{
+		0.07, 0.19, 0.81, 1.26, 1.80, 2.48, 3.19, 3.80, 4.18, 4.28, 2.28, 0.66, -0.95, -3.10, -3.86, -3.17, -2.47, -1.74, -1.03, -0.51, -0.16, 0.08, 0.02,
+	}
+
 	i := 0
+	var qLeft float32
+	var qRight float32
 	for {
-		var leftMotorRpm, rightMotorRpm, leftMotorPhaseC, rightMotorPhaseC, leftMotorBusVoltage, rightMotorBusVoltage, leftMotorBusCurrent, rightMotorBusCurrent float32
+		var leftMotorRpm, rightMotorRpm, leftMotorPhaseC, rightMotorPhaseC, leftMotorBusVoltage, rightMotorBusVoltage, leftMotorBusCurrent, rightMotorBusCurrent, bmsCurrent float32
 		if i < len(leftMotorRpms) {
 			leftMotorRpm = leftMotorRpms[i]
 			rightMotorRpm = rightMotorRpms[i]
@@ -91,7 +97,7 @@ func driveMotors(conn net.Conn) {
 			rightMotorBusVoltage = rightMotorBusVoltages[i]
 			leftMotorBusCurrent = leftMotorBusCurrents[i]
 			rightMotorBusCurrent = rightMotorBusCurrents[i]
-
+			bmsCurrent = bmsCurrents[i]
 		} else {
 			leftMotorRpm = 0
 			rightMotorRpm = 0
@@ -101,7 +107,10 @@ func driveMotors(conn net.Conn) {
 			rightMotorBusVoltage = 0
 			leftMotorBusCurrent = 0
 			rightMotorBusCurrent = 0
+			bmsCurrent = 0
 		}
+		qLeft += leftMotorBusCurrent * 0.25 / 3600
+		qRight += rightMotorBusCurrent * 0.25 / 3600
 		err := sendFloatPacket(0x423, leftMotorRpm, 0, conn)
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
@@ -123,6 +132,18 @@ func driveMotors(conn net.Conn) {
 			log.Fatalf("Error writing to connection: %s", err)
 		}
 		err = sendFloatPacket(0x402, rightMotorBusVoltage, rightMotorBusCurrent, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x42e, 0, qLeft, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x40e, 0, qRight, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x300, bmsCurrent, 0, conn)
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}

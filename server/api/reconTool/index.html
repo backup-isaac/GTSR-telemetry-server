@@ -368,6 +368,29 @@
     return plotContainer;
   }
 
+  function chargeContainer(data) {
+    var plotContainer = document.createElement("DIV");
+    var qMaxTrace = {
+      x: [data.time_min[0], data.time_min[data.time_min.length - 1]],
+      y: [data.pack_capacity, data.pack_capacity],
+      mode: "lines",
+      type: "scatter",
+      line: {
+        dash: "dash"
+      },
+      name: "Pack Maximum",
+    };
+    var powerTorqueTraces = [
+      timeSeriesTrace(data, 'simulated_total_charge', "Simulated Total"),
+      timeSeriesTrace(data, 'simulated_net_charge', "Simulated Net"),
+      timeSeriesTrace(data, 'measured_total_charge', "Measured Out"),
+      timeSeriesTrace(data, 'measured_net_charge', "Measured Net"),
+      qMaxTrace,
+    ];
+    Plotly.newPlot(plotContainer, powerTorqueTraces, layOutAxes("Charge Consumed", ["Charge (A-hr)"], true));
+    return plotContainer;
+  }
+
   function displayResult(response) {
     document.getElementById("inputs").style.display = "none";
     document.getElementById("outputs").style.display = "inline";
@@ -378,6 +401,7 @@
       plotContainer.id = "plotContainer" + i;
       plotContainer.appendChild(statesContainer(bigData[i]));
       plotContainer.appendChild(powerTorqueContainer(bigData[i]));
+      plotContainer.appendChild(chargeContainer(bigData[i]));
       document.getElementById("results").appendChild(plotContainer);
     }
     document.getElementById("downloadRawButton").onclick = function() {
