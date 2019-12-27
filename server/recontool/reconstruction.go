@@ -39,24 +39,44 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	}
 	busVoltage := Average(data["Left_Bus_Voltage"], data["Right_Bus_Voltage"])
 	busCurrent := SumLeftRight(data["Left_Bus_Current"], data["Right_Bus_Current"])
-	busPowerSeries := CalculateBusPowerSeries(data["Left_Bus_Voltage"], data["Right_Bus_Voltage"], data["Left_Bus_Current"], data["Right_Bus_Current"])
+	busPowerSeries := CalculateSeries(func(params ...float64) float64 {
+		return BusPower(params[0], params[1], params[2], params[3])
+	}, data["Left_Bus_Voltage"], data["Right_Bus_Voltage"], data["Left_Bus_Current"], data["Right_Bus_Current"])
 	result.MaxTorque = vehicle.TMax
 	// we keep telemetry from phase B as well, should probably use it
 	phaseCurrentSeries := SumLeftRight(data["Left_Phase_C_Current"], data["Right_Phase_C_Current"])
-	velocitySeries := CalculateVelocitySeries(rpm, vehicle.RMot)
+	velocitySeries := CalculateSeries(func(params ...float64) float64 {
+		return Velocity(params[0], vehicle.RMot)
+	}, rpm)
 	distanceSeries := RiemannSumIntegrate(velocitySeries, dt)
 	accelerationSeries := Gradient(velocitySeries, dt)
-	motorTorqueSeries := CalculateMotorTorqueSeries(rpm, phaseCurrentSeries, vehicle.TMax)
+	motorTorqueSeries := CalculateSeries(func(params ...float64) float64 {
+		return MotorTorque(params[0], params[1], vehicle.TMax)
+	}, rpm, phaseCurrentSeries)
 	terrainAngleSeries := DeriveTerrainAngleSeries(motorTorqueSeries, velocitySeries, accelerationSeries, vehicle)
-	resultantForceSeries := DeriveMotorForceSeries(velocitySeries, accelerationSeries, terrainAngleSeries, vehicle)
+	resultantForceSeries := CalculateSeries(func(params ...float64) float64 {
+		return ModeledMotorForce(params[0], params[1], params[2], vehicle)
+	}, velocitySeries, accelerationSeries, terrainAngleSeries)
 	modelDerivedTorqueSeries := Scale(resultantForceSeries, vehicle.RMot)
-	motorControllerEfficiencySeries := CalculateMotorControllerEfficiencySeries(phaseCurrentSeries, busVoltage, busPowerSeries)
-	packResistance := CalculatePackResistance(busCurrent, busVoltage)
-	packEfficiencySeries := CalculatePackEfficiencySeries(busCurrent, busPowerSeries, packResistance)
-	motorEfficiencySeries := CalculateMotorEfficiencySeries(busVoltage, motorTorqueSeries)
-	drivetrainEfficiencySeries := CalculateDrivetrainEfficiencySeries(motorControllerEfficiencySeries, packEfficiencySeries, motorEfficiencySeries)
-	motorPowerSeries := CalculateMotorPowerSeries(motorTorqueSeries, velocitySeries, phaseCurrentSeries, drivetrainEfficiencySeries, vehicle)
-	modelDerivedPowerSeries := CalculateModelDerivedPowerSeries(resultantForceSeries, velocitySeries, drivetrainEfficiencySeries)
+	motorControllerEfficiencySeries := CalculateSeries(func(params ...float64) float64 {
+		return MotorControllerEfficiency(params[0], params[1], meanIf(busPowerSeries, func(p float64) bool { return p > 0 }))
+	}, phaseCurrentSeries, busVoltage)
+	packResistance := PackResistance(busCurrent, busVoltage)
+	packEfficiencySeries := CalculateSeries(func(params ...float64) float64 {
+		return PackEfficiency(params[0], params[1], packResistance)
+	}, busCurrent, busPowerSeries)
+	motorEfficiencySeries := CalculateSeries(func(params ...float64) float64 {
+		return MotorEfficiency(params[0], params[1])
+	}, busVoltage, motorTorqueSeries)
+	drivetrainEfficiencySeries := CalculateSeries(func(params ...float64) float64 {
+		return DrivetrainEfficiency(params[0], params[1], params[2])
+	}, motorControllerEfficiencySeries, packEfficiencySeries, motorEfficiencySeries)
+	motorPowerSeries := CalculateSeries(func(params ...float64) float64 {
+		return MotorPower(params[0], params[1], params[2], params[3], vehicle)
+	}, motorTorqueSeries, velocitySeries, phaseCurrentSeries, drivetrainEfficiencySeries)
+	modelDerivedPowerSeries := CalculateSeries(func(params ...float64) float64 {
+		return ModelDerivedPower(params[0], params[1], params[2])
+	}, resultantForceSeries, velocitySeries, drivetrainEfficiencySeries)
 	result.VelocityMph = Scale(velocitySeries, MetersPerSecondToMilesPerHour)
 	result.DistanceMiles = Scale(distanceSeries, MetersToMiles)
 	result.TimeMinutes = Scale(timeSeries, SecondsToMinutes)

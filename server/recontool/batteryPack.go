@@ -4,8 +4,8 @@ import (
 	"math"
 )
 
-// CalculatePackEfficiency calculates pack efficiency from the amount of power dissipated in the pack from the high voltage bus
-func CalculatePackEfficiency(iBus, pBus, rPack float64) float64 {
+// PackEfficiency calculates pack efficiency from the amount of power dissipated in the pack from the high voltage bus
+func PackEfficiency(iBus, pBus, rPack float64) float64 {
 	if pBus == 0 {
 		return 1
 	}
@@ -13,16 +13,7 @@ func CalculatePackEfficiency(iBus, pBus, rPack float64) float64 {
 	return math.Abs(1 / (1 + powerRatio))
 }
 
-// CalculatePackEfficiencySeries calculates pack efficiency for a series of points
-func CalculatePackEfficiencySeries(busCurrent, busPower []float64, packResistance float64) []float64 {
-	effPackSeries := make([]float64, len(busCurrent))
-	for i, ib := range busCurrent {
-		effPackSeries[i] = CalculatePackEfficiency(ib, busPower[i], packResistance)
-	}
-	return effPackSeries
-}
-
-// CalculatePackResistance calculates battery pack resistance as ∂V/∂I of bus voltage/current, using least squares
+// PackResistance calculates battery pack resistance as ∂V/∂I of bus voltage/current, using least squares
 // Originally this was done as
 //   IX = [ones(length(Ipack),1),Ipack];
 // 	 Rmat = (IX'*IX)^-1 * IX' * Vpack;
@@ -33,7 +24,7 @@ func CalculatePackEfficiencySeries(busCurrent, busPower []float64, packResistanc
 //   I_prime[i] = -sumI + length(Ipack) * Ipack[i]
 //   Rpack = (-I_prime * Vpack) / (length(Ipack)*sumISquares + sumI^2)
 // The two calculations are algebraically equivalent, but mine requires less matrix math and O(1) additional space
-func CalculatePackResistance(busCurrent, busVoltage []float64) float64 {
+func PackResistance(busCurrent, busVoltage []float64) float64 {
 	sumI := 0.0
 	sumI2 := 0.0
 	for _, iBus := range busCurrent {

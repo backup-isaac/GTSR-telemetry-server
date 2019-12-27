@@ -45,7 +45,7 @@ func (v *Velocity) Compute() *datatypes.Datapoint {
 	motorRadius := 0.278 // ideally we can manage this better
 	return &datatypes.Datapoint{
 		Metric: "RPM_Derived_Velocity",
-		Value:  recontool.CalculateVelocity(avgRpm, motorRadius),
+		Value:  recontool.Velocity(avgRpm, motorRadius),
 		Time:   avgTime,
 	}
 }
