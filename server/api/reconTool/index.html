@@ -296,20 +296,17 @@
     return trace;
   }
 
-  function statesContainer(data) {
-    var plotContainer = document.createElement("DIV");
-    var kinematicsTraces = [
-      timeSeriesTrace(data, 'distance_mi'),
-      timeSeriesTrace(data, 'velocity_mph', null, 'y2'),
-      timeSeriesTrace(data, 'acceleration', null, 'y3'),
-    ];
-    var kinematicsLayout = {
-      showlegend: false,
+  function layOutAxes(chartTitle, axisTitles, showLegend) {
+    if (typeof showLegend != 'boolean') {
+      showLegend = false;
+    }
+    var layout = {
+      showlegend: showLegend,
       title: {
-        text: "Vehicle States"
+        text: chartTitle,
       },
       grid: {
-        rows: 3,
+        rows: axisTitles.length,
         columns: 1,
         pattern: 'independent',
       },
@@ -318,35 +315,32 @@
           text: "Time (min)"
         }
       },
-      yaxis1: {
-        domain: [0, 4.0/14],
-        title: {
-          text: "Distance in mi",
-          font: {
-            size: 10
-          }
-        }
-      },
-      yaxis2: {
-        domain: [5.0/14, 9.0/14],
-        title: {
-          text: "Velocity in mph",
-          font: {
-            size: 10
-          }
-        }
-      },
-      yaxis3: {
-        domain: [10.0/14, 1],
-        title: {
-          text: "Acceleration in m/s^2",
-          font: {
-            size: 10
-          }
-        }
-      },
     };
-    Plotly.newPlot(plotContainer, kinematicsTraces, kinematicsLayout);
+    var domainSplit = axisTitles.length * 5.0 - 1.0;
+    for (var i = 0; i < axisTitles.length; i++) {
+      var dStart = i * 5.0 / domainSplit;
+      var dEnd = dStart + (4.0 / domainSplit);
+      layout['yaxis' + (i + 1)] = {
+        domain: [dStart, dEnd],
+        title: {
+          text: axisTitles[i],
+          font: {
+            size: 13 - axisTitles.length,
+          },
+        },
+      };
+    }
+    return layout;
+  }
+
+  function statesContainer(data) {
+    var plotContainer = document.createElement("DIV");
+    var kinematicsTraces = [
+      timeSeriesTrace(data, 'distance_mi'),
+      timeSeriesTrace(data, 'velocity_mph', null, 'y2'),
+      timeSeriesTrace(data, 'acceleration', null, 'y3'),
+    ];
+    Plotly.newPlot(plotContainer, kinematicsTraces, layOutAxes("Vehicle States", ["Distance (mi)", "Velocity (mph)", "Acceleration (m/s^2)"]));
     return plotContainer;
   }
 
@@ -370,34 +364,7 @@
       timeSeriesTrace(data, 'model_derived_power', "Model-Derived Power"),
       timeSeriesTrace(data, 'bus_power', "Measured Power"),
     ];
-    var powerTorqueLayout = {
-      title: {
-        text: "Power and Torque"
-      },
-      grid: {
-        rows: 2,
-        columns: 1,
-        pattern: 'independent',
-      },
-      xaxis: {
-        title: {
-          text: "Time (min)"
-        }
-      },
-      yaxis1: {
-        domain: [0, 4.0/9],
-        title: {
-          text: "Power (W)"
-        }
-      },
-      yaxis2: {
-        domain: [5.0/9, 1],
-        title: {
-          text: "Torque (N-m)"
-        }
-      }
-    };
-    Plotly.newPlot(plotContainer, powerTorqueTraces, powerTorqueLayout);
+    Plotly.newPlot(plotContainer, powerTorqueTraces, layOutAxes("Power and Torque", ["Power (W)", "Torque (N-m)"], true));
     return plotContainer;
   }
 
