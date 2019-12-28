@@ -36,6 +36,9 @@ type AnalysisResult struct {
 // time series of their values and returns computed values
 func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Vehicle, gpsTerrain, plotAll bool) (*AnalysisResult, error) {
 	result := AnalysisResult{}
+	if len(rawTimestamps) < 2 {
+		return nil, fmt.Errorf("At least 2 data points required")
+	}
 	if plotAll {
 		result.RawValues = data
 		result.RawTimestamps = rawTimestamps
@@ -46,9 +49,6 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 		return nil, fmt.Errorf("Invalid time data %v", rawTimestamps)
 	}
 	rpm := Average(data["Left_Wavesculptor_RPM"], data["Right_Wavesculptor_RPM"])
-	if len(rpm) < 2 {
-		return nil, fmt.Errorf("At least 2 data points required")
-	}
 	busVoltage := Average(data["Left_Bus_Voltage"], data["Right_Bus_Voltage"])
 	busCurrent := floats.AddTo(make([]float64, len(data["Left_Bus_Current"])), data["Left_Bus_Current"], data["Right_Bus_Current"])
 	busPowerSeries := CalculateSeries(func(params ...float64) float64 {
