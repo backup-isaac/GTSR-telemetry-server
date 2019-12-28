@@ -143,7 +143,7 @@ func driveMotors(conn net.Conn) {
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}
-		err = sendFloatPacket(0x300, bmsCurrent, 0, conn)
+		err = sendFloatPacket(0x342, bmsCurrent, 0, conn)
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}

@@ -296,9 +296,12 @@
     return trace;
   }
 
-  function layOutAxes(chartTitle, axisTitles, showLegend) {
+  function layOutAxes(chartTitle, axisTitles, showLegend, xAxis) {
     if (typeof showLegend != 'boolean') {
       showLegend = false;
+    }
+    if (typeof xAxis != 'string') {
+      xAxis = "Time (min)"
     }
     var layout = {
       showlegend: showLegend,
@@ -312,8 +315,8 @@
       },
       xaxis: {
         title: {
-          text: "Time (min)"
-        }
+          text: xAxis,
+        },
       },
     };
     var domainSplit = axisTitles.length * 5.0 - 1.0;
@@ -380,15 +383,52 @@
       },
       name: "Pack Maximum",
     };
-    var powerTorqueTraces = [
+    var chargeTraces = [
       timeSeriesTrace(data, 'simulated_total_charge', "Simulated Total"),
       timeSeriesTrace(data, 'simulated_net_charge', "Simulated Net"),
       timeSeriesTrace(data, 'measured_total_charge', "Measured Out"),
       timeSeriesTrace(data, 'measured_net_charge', "Measured Net"),
       qMaxTrace,
     ];
-    Plotly.newPlot(plotContainer, powerTorqueTraces, layOutAxes("Charge Consumed", ["Charge (A-hr)"], true));
+    Plotly.newPlot(plotContainer, chargeTraces, layOutAxes("Charge Consumed", ["Charge (A-hr)"], true));
     return plotContainer;
+  }
+
+  function packResistanceContainer(data) {
+    var plotContainer = document.createElement("DIV");
+    var imin = 0;
+    var imax = 0;
+    for (var i of data.bms_current) {
+      if (i < imin) {
+        imin = i;
+      } else if (i > imax) {
+        imax = i;
+      }
+    }
+    var vmax = data.pack_y_intercept - imin * data.pack_resistance;
+    var vmin = data.pack_y_intercept - imax * data.pack_resistance;
+    var packResistanceTraces = [
+      {
+        x: data.bms_current,
+        y: data.bus_voltage,
+        mode: "markers",
+        type: "scatter",
+      }, {
+        x: [imin, 0, imax],
+        y: [vmax, data.pack_y_intercept, vmin],
+        mode: "lines",
+        type: "scatter",
+      },
+    ];
+    var title = "Pack Resistance: "
+    var resStrs = (1000 * data.pack_resistance).toString().split('.')
+    title += resStrs[0]
+    if (resStrs.length > 1) {
+      title += "." + resStrs[1].substring(0,3)
+    }
+    title += " mOhm"
+    Plotly.newPlot(plotContainer, packResistanceTraces, layOutAxes(title, ["Bus Voltage (V)"], false, "Bus Current (A)"));
+    return plotContainer
   }
 
   function displayResult(response) {
@@ -402,6 +442,7 @@
       plotContainer.appendChild(statesContainer(bigData[i]));
       plotContainer.appendChild(powerTorqueContainer(bigData[i]));
       plotContainer.appendChild(chargeContainer(bigData[i]));
+      plotContainer.appendChild(packResistanceContainer(bigData[i]));
       document.getElementById("results").appendChild(plotContainer);
     }
     document.getElementById("downloadRawButton").onclick = function() {

@@ -36,28 +36,6 @@ func Average(l, r []float64) []float64 {
 	return avg
 }
 
-// SumLeftRight sums the values of l and of r into the result
-// Handles if one of the arguments is longer than the other
-func SumLeftRight(l, r []float64) []float64 {
-	var length int
-	if len(l) > len(r) {
-		length = len(l)
-	} else {
-		length = len(r)
-	}
-	sum := make([]float64, length)
-	for i := 0; i < len(sum); i++ {
-		if i >= len(l) {
-			sum[i] = r[i]
-		} else if i >= len(r) {
-			sum[i] = l[i]
-		} else {
-			sum[i] = l[i] + r[i]
-		}
-	}
-	return sum
-}
-
 // CalculatePower multiplies the values of i and v into the result
 func CalculatePower(i, v []float64) []float64 {
 	var length int
