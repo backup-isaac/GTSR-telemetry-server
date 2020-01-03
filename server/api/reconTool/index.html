@@ -412,7 +412,8 @@
         x: data.bms_current,
         y: data.bus_voltage,
         mode: "markers",
-        type: "scatter",
+        type: "scattergl",
+        // webgl rendering looks worse but SVG scatterplots murder the performance everything with more than a small handful of points
       }, {
         x: [imin, 0, imax],
         y: [vmax, data.pack_y_intercept, vmin],

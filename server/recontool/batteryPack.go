@@ -25,7 +25,7 @@ func PackEfficiency(iBus, pBus, rPack float64) float64 {
 //   sumISquares = ∑i^2 for all i in Ipack
 //   I_prime_resistance[i] = -sumI + length(Ipack) * Ipack[i]
 //   I_prime_intercept[i] = sumISquares - sumI * Ipack[i]
-//   denominator = length(Ipack)*sumISquares + sumI^2
+//   denominator = length(Ipack)*sumISquares - sumI^2
 //   Rpack = (-I_prime_resistance • Vpack) / denominator
 //   Yintercept = (-I_prime_intercept • Vpack) / denominator
 // The two calculations are algebraically equivalent, but mine requires less matrix math and O(1) additional space
