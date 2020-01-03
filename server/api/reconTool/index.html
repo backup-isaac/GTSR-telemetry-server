@@ -427,9 +427,54 @@
     if (resStrs.length > 1) {
       title += "." + resStrs[1].substring(0,3)
     }
-    title += " mOhm"
+    title += " mΩ"
     Plotly.newPlot(plotContainer, packResistanceTraces, layOutAxes(title, ["Bus Voltage (V)"], false, "Bus Current (A)"));
     return plotContainer
+  }
+
+  function batteryVoltagesContainer(data) {
+    var plotContainer = document.createElement("DIV");
+    var voltageTraces = [];
+    var firstRaw = true;
+    var maxTrace = {};
+    var minTrace = {};
+    for (var i = 0; i < data.module_voltages.length; i++) {
+      var trace = {
+        x: data.time_min,
+        y: data.module_voltages[i],
+        mode: "lines",
+        type: "scatter",
+        line: {},
+        yaxis: 'y3',
+      };
+      if (i == data.max_module_mode) {
+        trace.line.color = 'rgb(0, 170, 0)';
+        trace.name = "Max";
+        maxTrace = trace;
+      } else if (i == data.min_module_mode) {
+        trace.line.color = 'rgb(255, 0, 0)';
+        trace.name = "Min";
+        minTrace = trace;
+      } else {
+        trace.line.color = 'rgb(204, 204, 204)';
+        if (firstRaw) {
+          trace.name = "Raw";
+          firstRaw = false;
+        } else {
+          trace.showlegend = false;
+        }
+        voltageTraces.push(trace);
+      }
+    }
+    voltageTraces.push(
+      maxTrace,
+      minTrace,
+      timeSeriesTrace(data, 'max_min_difference', "Max-Min Difference", 'y2'),
+      timeSeriesTrace(data, 'max_module', "Max Module"),
+      timeSeriesTrace(data, 'min_module', "Min Module")
+    );
+    Plotly.newPlot(plotContainer, voltageTraces, layOutAxes("Module Voltages", ["Min/Max Module", "Max-Min (V)", "Module Voltage (V)"], true));
+    return plotContainer;
   }
 
   function displayResult(response) {
@@ -444,6 +489,7 @@
       plotContainer.appendChild(powerTorqueContainer(bigData[i]));
       plotContainer.appendChild(chargeContainer(bigData[i]));
       plotContainer.appendChild(packResistanceContainer(bigData[i]));
+      plotContainer.appendChild(batteryVoltagesContainer(bigData[i]))
       document.getElementById("results").appendChild(plotContainer);
     }
     document.getElementById("downloadRawButton").onclick = function() {

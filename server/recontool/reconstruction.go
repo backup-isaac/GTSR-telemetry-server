@@ -5,6 +5,7 @@ import (
 	"math"
 
 	"gonum.org/v1/gonum/floats"
+	"gonum.org/v1/gonum/stat"
 )
 
 // AnalysisResult contains the results of ReconTool analysis
@@ -15,6 +16,8 @@ type AnalysisResult struct {
 	RawTimestamps            []int64              `json:"raw_timestamps"`
 	PackResistance           float64              `json:"pack_resistance"`
 	PackResistanceYIntercept float64              `json:"pack_y_intercept"`
+	MaxModuleMode            float64              `json:"max_module_mode"`
+	MinModuleMode            float64              `json:"min_module_mode"`
 	TimeMinutes              []float64            `json:"time_min"`
 	VelocityMph              []float64            `json:"velocity_mph"`
 	DistanceMiles            []float64            `json:"distance_mi"`
@@ -29,6 +32,10 @@ type AnalysisResult struct {
 	MeasuredNetCharge        []float64            `json:"measured_net_charge"`
 	BusVoltage               []float64            `json:"bus_voltage"`
 	BmsCurrent               []float64            `json:"bms_current"`
+	ModuleVoltages           [][]float64          `json:"module_voltages"`
+	ModuleMaxMinDifference   []float64            `json:"max_min_difference"`
+	MaxModule                []float64            `json:"max_module"`
+	MinModule                []float64            `json:"min_module"`
 	//MotorTorque   []float64            `json:"motor_torque"`
 }
 
@@ -99,6 +106,9 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 		}
 		return params[0] / params[1]
 	}, modelDerivedPowerSeries, busVoltage)
+	moduleVoltages, maxMinDiff, maxModule, minModule := PackModuleVoltages(data, vehicle.VSer)
+	maxMode, _ := stat.Mode(maxModule, nil)
+	minMode, _ := stat.Mode(minModule, nil)
 	simulatedTotalChargeSeries := RiemannSumIntegrate(modelDerivedCurrentSeries, dt/3600)
 	simulatedNetChargeSeries := RiemannSumIntegrate(data["BMS_Current"], dt/3600)
 	measuredTotalChargeSeries := RiemannSumIntegrate(busCurrent, dt/3600)
@@ -119,5 +129,11 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	result.BusVoltage = packUsedBusVoltage
 	result.PackResistance = packResistance
 	result.PackResistanceYIntercept = resistanceYIntercept
+	result.ModuleVoltages = moduleVoltages
+	result.ModuleMaxMinDifference = maxMinDiff
+	result.MaxModule = maxModule
+	result.MinModule = minModule
+	result.MaxModuleMode = maxMode
+	result.MinModuleMode = minMode
 	return &result, nil
 }

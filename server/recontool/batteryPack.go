@@ -1,6 +1,7 @@
 package recontool
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -53,4 +54,33 @@ func PackResistanceRegression(busCurrent, busVoltage []float64) (float64, float6
 	}
 	denominator := count*sumI2 - (sumI * sumI)
 	return (-1 * dotProductResistance / denominator), (dotProductIntercept / denominator), usedCurrents, usedVoltages
+}
+
+// PackModuleVoltages arranges raw module voltages into a 2-D array, calculates the max and min modules over time, and calculates the max-min difference over time
+// Returns (raw module voltages, max-min difference, max module, min module)
+func PackModuleVoltages(data map[string][]float64, vSer uint) ([][]float64, []float64, []float64, []float64) {
+	rawModuleVoltages := make([][]float64, vSer)
+	var i uint
+	for i = 0; i < vSer; i++ {
+		rawModuleVoltages[i] = data[fmt.Sprintf("Cell_Voltage_%d", i+1)]
+	}
+	seriesLength := len(rawModuleVoltages[0])
+	maxMinDiff := make([]float64, seriesLength)
+	argmaxes := make([]float64, seriesLength)
+	argmins := make([]float64, seriesLength)
+	for j := 0; j < seriesLength; j++ {
+		var argmax uint
+		var argmin uint
+		for i = 0; i < vSer; i++ {
+			if rawModuleVoltages[i][j] > rawModuleVoltages[argmax][j] {
+				argmax = i
+			} else if rawModuleVoltages[i][j] < rawModuleVoltages[argmin][j] {
+				argmin = i
+			}
+		}
+		argmaxes[j] = float64(argmax + 1)
+		argmins[j] = float64(argmin + 1)
+		maxMinDiff[j] = rawModuleVoltages[argmax][j] - rawModuleVoltages[argmin][j]
+	}
+	return rawModuleVoltages, maxMinDiff, argmaxes, argmins
 }

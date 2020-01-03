@@ -147,6 +147,20 @@ func driveMotors(conn net.Conn) {
 		if err != nil {
 			log.Fatalf("Error writing to connection: %s", err)
 		}
+		fakeCellVoltages := make([]float32, 35)
+		for j := 0; j < 35; j++ {
+			if leftMotorBusVoltage > 0 {
+				fakeCellVoltages[j] = (leftMotorBusVoltage+rightMotorBusVoltage)/70 + (0.01 * float32(j))
+			} else {
+				fakeCellVoltages[j] = 128.2/35 + 0.005*float32(j)
+			}
+		}
+		for j := 0; j < 18; j++ {
+			err = sendFloatPacket(0x300+uint16(j), fakeCellVoltages[j], fakeCellVoltages[j+1], conn)
+			if err != nil {
+				log.Fatalf("Error writing to connection: %s", err)
+			}
+		}
 		i = (i + 1) % 40
 		time.Sleep(250 * time.Millisecond)
 	}
