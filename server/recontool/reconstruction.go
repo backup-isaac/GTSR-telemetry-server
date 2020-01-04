@@ -10,33 +10,35 @@ import (
 
 // AnalysisResult contains the results of ReconTool analysis
 type AnalysisResult struct {
-	MaxTorque                float64              `json:"max_torque"`
-	PackCapacity             float64              `json:"pack_capacity"`
-	RawValues                map[string][]float64 `json:"raw_values"`
-	RawTimestamps            []int64              `json:"raw_timestamps"`
-	PackResistance           float64              `json:"pack_resistance"`
-	PackResistanceYIntercept float64              `json:"pack_y_intercept"`
-	MaxModuleMode            float64              `json:"max_module_mode"`
-	MinModuleMode            float64              `json:"min_module_mode"`
-	TimeMinutes              []float64            `json:"time_min"`
-	VelocityMph              []float64            `json:"velocity_mph"`
-	DistanceMiles            []float64            `json:"distance_mi"`
-	Acceleration             []float64            `json:"acceleration"`
-	ModelDerivedTorque       []float64            `json:"model_derived_torque"`
-	MotorPower               []float64            `json:"motor_power"`
-	ModelDerivedMotorPower   []float64            `json:"model_derived_power"`
-	BusPower                 []float64            `json:"bus_power"`
-	SimulatedTotalCharge     []float64            `json:"simulated_total_charge"`
-	SimulatedNetCharge       []float64            `json:"simulated_net_charge"`
-	MeasuredTotalCharge      []float64            `json:"measured_total_charge"`
-	MeasuredNetCharge        []float64            `json:"measured_net_charge"`
-	BusVoltage               []float64            `json:"bus_voltage"`
-	BmsCurrent               []float64            `json:"bms_current"`
-	ModuleVoltages           [][]float64          `json:"module_voltages"`
-	ModuleMaxMinDifference   []float64            `json:"max_min_difference"`
-	MaxModule                []float64            `json:"max_module"`
-	MinModule                []float64            `json:"min_module"`
-	//MotorTorque   []float64            `json:"motor_torque"`
+	MaxTorque                         float64              `json:"max_torque"`
+	PackCapacity                      float64              `json:"pack_capacity"`
+	RawValues                         map[string][]float64 `json:"raw_values"`
+	RawTimestamps                     []int64              `json:"raw_timestamps"`
+	PackResistance                    float64              `json:"pack_resistance"`
+	PackResistanceYIntercept          float64              `json:"pack_y_intercept"`
+	MaxModuleMode                     float64              `json:"max_module_mode"`
+	MinModuleMode                     float64              `json:"min_module_mode"`
+	MeanModuleResistance              float64              `json:"mean_module_resistance"`
+	ModuleResistanceStandardDeviation float64              `json:"module_standard_deviation"`
+	TimeMinutes                       []float64            `json:"time_min"`
+	VelocityMph                       []float64            `json:"velocity_mph"`
+	DistanceMiles                     []float64            `json:"distance_mi"`
+	Acceleration                      []float64            `json:"acceleration"`
+	ModelDerivedTorque                []float64            `json:"model_derived_torque"`
+	MotorPower                        []float64            `json:"motor_power"`
+	ModelDerivedMotorPower            []float64            `json:"model_derived_power"`
+	BusPower                          []float64            `json:"bus_power"`
+	SimulatedTotalCharge              []float64            `json:"simulated_total_charge"`
+	SimulatedNetCharge                []float64            `json:"simulated_net_charge"`
+	MeasuredTotalCharge               []float64            `json:"measured_total_charge"`
+	MeasuredNetCharge                 []float64            `json:"measured_net_charge"`
+	BusVoltage                        []float64            `json:"bus_voltage"`
+	BmsCurrent                        []float64            `json:"bms_current"`
+	ModuleVoltages                    [][]float64          `json:"module_voltages"`
+	ModuleMaxMinDifference            []float64            `json:"max_min_difference"`
+	MaxModule                         []float64            `json:"max_module"`
+	MinModule                         []float64            `json:"min_module"`
+	ModuleResistances                 []float64            `json:"module_resistances"`
 }
 
 // RunReconTool runs ReconTool on data provided as a mapping of metrics to
@@ -109,6 +111,8 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	moduleVoltages, maxMinDiff, maxModule, minModule := PackModuleVoltages(data, vehicle.VSer)
 	maxMode, _ := stat.Mode(maxModule, nil)
 	minMode, _ := stat.Mode(minModule, nil)
+	moduleResistances := CalculateModuleResistances(data, vehicle.VSer)
+	meanModuleResistance, moduleStdDev := stat.MeanStdDev(moduleResistances, nil)
 	simulatedTotalChargeSeries := RiemannSumIntegrate(modelDerivedCurrentSeries, dt/3600)
 	simulatedNetChargeSeries := RiemannSumIntegrate(data["BMS_Current"], dt/3600)
 	measuredTotalChargeSeries := RiemannSumIntegrate(busCurrent, dt/3600)
@@ -135,5 +139,8 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	result.MinModule = minModule
 	result.MaxModuleMode = maxMode
 	result.MinModuleMode = minMode
+	result.ModuleResistances = moduleResistances
+	result.MeanModuleResistance = meanModuleResistance
+	result.ModuleResistanceStandardDeviation = moduleStdDev
 	return &result, nil
 }

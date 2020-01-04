@@ -477,6 +477,124 @@
     return plotContainer;
   }
 
+  function packStatsContainer(data) {
+    var plotContainer = document.createElement("DIV");
+    var milliohms = data.module_resistances.map((item) => { return item * 1000; });
+    var rMin = Math.min.apply(null, milliohms);
+    var rMax = Math.max.apply(null, milliohms);
+    var mu = data.mean_module_resistance * 1000;
+    var sugma = data.module_standard_deviation * 1000;
+    var pdfX = [];
+    var pdfY = [];
+    for (var i = Math.min(rMin, mu - 3 * sugma); i < Math.max(rMax, mu + 3 * sugma); i += (rMax - rMin) / 420) {
+      pdfX.push(i);
+      var pdfi = (milliohms.length / (sugma * Math.sqrt(2 * Math.PI))) * Math.exp(-1 * (i - mu) * (i - mu) / (2 * sugma * sugma));
+      pdfY.push(pdfi);
+    }
+    var packTraces = [{
+      type: 'bar',
+      x: data.module_resistances.map((_, i) => { return i + 1; }),
+      y: milliohms,
+      xaxis: 'x2',
+      yaxis: 'y2',
+      showlegend: false,
+    }, {
+      type: 'histogram',
+      x: milliohms,
+      name: "Frequency",
+    }, {
+      x: pdfX,
+      y: pdfY,
+      mode: "lines",
+      type: "scatter",
+      name: "Normal Distribution"
+    }];
+    var sum = 0;
+    for (var res of data.module_resistances) {
+      sum += res * 1000;
+    }
+    var titleText = "Module Resistance and Distribution - ";
+    titleText += sum.toString().split('.')[0]
+    titleText += " mΩ Total"
+    var layout = {
+      showlegend: true,
+      title: {
+        text: titleText,
+      },
+      grid: {
+        rows: 2,
+        columns: 1,
+        pattern: 'independent',
+      },
+      xaxis1: {
+        title: {
+          text: "Module Resistance (mΩ)",
+        },
+      },
+      xaxis2: {
+        anchor: 'y2',
+        title: {
+          text: "Module Number",
+          standoff: 0,
+        },
+      },
+      yaxis1: {
+        domain: [0, 4.0/9],
+        title: {
+          text: "# of Modules",
+          font: {
+            size: 11,
+          },
+        },
+      },
+      yaxis2: {
+        domain: [5.0/9, 1],
+        title: {
+          text: "Module Resistance (mΩ)",
+          font: {
+            size: 11,
+          },
+        },
+      },
+      shapes: [{
+        type: 'line',
+        x0: mu - 3 * sugma,
+        x1: mu - 3 * sugma,
+        y0: 0,
+        y1: Math.max.apply(null, pdfY) * 1.2,
+        line: {
+          dash: "dash",
+          color: "rgb(255, 0, 0)",
+        },
+      }, {
+        type: 'line',
+        x0: mu + 3 * sugma,
+        x1: mu + 3 * sugma,
+        y0: 0,
+        y1: Math.max.apply(null, pdfY) * 1.2,
+        line: {
+          dash: "dash",
+          color: "rgb(255, 0, 0)",
+        },
+      }],
+      annotations: [{
+        x: mu - 3 * sugma,
+        y: 0,
+        text: "-3σ",
+        showarrow: false,
+        yshift: -6
+      }, {
+        x: mu + 3 * sugma,
+        y: 0,
+        text: "+3σ",
+        showarrow: false,
+        yshift: -6
+      }],
+    };
+    Plotly.newPlot(plotContainer, packTraces, layout /*layOutAxes(null, ["# of Modules", "Module Resistance (mΩ)"], false, "Module Number")*/);
+    return plotContainer;
+  }
+
   function displayResult(response) {
     document.getElementById("inputs").style.display = "none";
     document.getElementById("outputs").style.display = "inline";
@@ -489,7 +607,8 @@
       plotContainer.appendChild(powerTorqueContainer(bigData[i]));
       plotContainer.appendChild(chargeContainer(bigData[i]));
       plotContainer.appendChild(packResistanceContainer(bigData[i]));
-      plotContainer.appendChild(batteryVoltagesContainer(bigData[i]))
+      plotContainer.appendChild(batteryVoltagesContainer(bigData[i]));
+      plotContainer.appendChild(packStatsContainer(bigData[i]));
       document.getElementById("results").appendChild(plotContainer);
     }
     document.getElementById("downloadRawButton").onclick = function() {

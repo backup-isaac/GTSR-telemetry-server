@@ -3,6 +3,8 @@ package recontool
 import (
 	"fmt"
 	"math"
+
+	"gonum.org/v1/gonum/floats"
 )
 
 // PackEfficiency calculates pack efficiency from the amount of power dissipated in the pack from the high voltage bus
@@ -83,4 +85,20 @@ func PackModuleVoltages(data map[string][]float64, vSer uint) ([][]float64, []fl
 		maxMinDiff[j] = rawModuleVoltages[argmax][j] - rawModuleVoltages[argmin][j]
 	}
 	return rawModuleVoltages, maxMinDiff, argmaxes, argmins
+}
+
+// ModuleResistance calculates the resistance of the module as
+// Rmod = (max(Vmod) - min(Vmod)) / (max(Imod) - min(Imod))
+func ModuleResistance(moduleVoltage, moduleCurrent []float64) float64 {
+	return (floats.Max(moduleVoltage) - floats.Min(moduleVoltage)) / (floats.Max(moduleCurrent) - floats.Min(moduleCurrent))
+}
+
+// CalculateModuleResistances returns the resistances of all battery modules
+func CalculateModuleResistances(data map[string][]float64, vSer uint) []float64 {
+	moduleResistances := make([]float64, vSer)
+	var i uint
+	for i = 0; i < vSer; i++ {
+		moduleResistances[i] = ModuleResistance(data[fmt.Sprintf("Cell_Voltage_%d", i+1)], data["BMS_Current"])
+	}
+	return moduleResistances
 }
