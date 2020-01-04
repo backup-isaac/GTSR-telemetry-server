@@ -39,6 +39,10 @@ type AnalysisResult struct {
 	MaxModule                         []float64            `json:"max_module"`
 	MinModule                         []float64            `json:"min_module"`
 	ModuleResistances                 []float64            `json:"module_resistances"`
+	DrivetrainEfficiency              []float64            `json:"drivetrain_efficiency"`
+	MotorEfficiency                   []float64            `json:"motor_efficiency"`
+	MotorControllerEfficiency         []float64            `json:"mc_efficiency"`
+	PackEfficiency                    []float64            `json:"pack_efficiency"`
 }
 
 // RunReconTool runs ReconTool on data provided as a mapping of metrics to
@@ -142,5 +146,9 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	result.ModuleResistances = moduleResistances
 	result.MeanModuleResistance = meanModuleResistance
 	result.ModuleResistanceStandardDeviation = moduleStdDev
+	result.DrivetrainEfficiency = drivetrainEfficiencySeries
+	result.MotorEfficiency = motorEfficiencySeries
+	result.MotorControllerEfficiency = motorControllerEfficiencySeries
+	result.PackEfficiency = packEfficiencySeries
 	return &result, nil
 }

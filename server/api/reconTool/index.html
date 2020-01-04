@@ -595,6 +595,18 @@
     return plotContainer;
   }
 
+  function drivetrainEfficiencyContainer(data) {
+    var plotContainer = document.createElement("DIV");
+    var effTraces = [
+      timeSeriesTrace(data, 'drivetrain_efficiency', "Total Drivetrain Efficiency"),
+      timeSeriesTrace(data, 'motor_efficiency', "Motor Efficiency"),
+      timeSeriesTrace(data, 'mc_efficiency', "Motor Controller Efficiency"),
+      timeSeriesTrace(data, 'pack_efficiency', "Battery Pack Efficiency"),
+    ];
+    Plotly.newPlot(plotContainer, effTraces, layOutAxes("Drivetrain Efficiency and Components", ["Efficiency (%)"], true));
+    return plotContainer;
+  }
+
   function displayResult(response) {
     document.getElementById("inputs").style.display = "none";
     document.getElementById("outputs").style.display = "inline";
@@ -609,6 +621,7 @@
       plotContainer.appendChild(packResistanceContainer(bigData[i]));
       plotContainer.appendChild(batteryVoltagesContainer(bigData[i]));
       plotContainer.appendChild(packStatsContainer(bigData[i]));
+      plotContainer.appendChild(drivetrainEfficiencyContainer(bigData[i]));
       document.getElementById("results").appendChild(plotContainer);
     }
     document.getElementById("downloadRawButton").onclick = function() {
