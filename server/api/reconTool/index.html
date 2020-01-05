@@ -617,6 +617,17 @@
     return plotContainer;
   }
 
+  function vtpContainer(data) {
+    var plotContainer = document.createElement("DIV");
+    var vtpTraces = [
+      timeSeriesTrace(data, 'velocity_mph', null, 'y3'),
+      timeSeriesTrace(data, 'motor_torque', null, 'y2'),
+      timeSeriesTrace(data, 'bus_power'),
+    ];
+    Plotly.newPlot(plotContainer, vtpTraces, layOutAxes("VTP Trajectories", ["Power (W)", "Torque (N-m)", "Velocity (mph)"], false));
+    return plotContainer;
+  }
+
   function displayResult(response) {
     document.getElementById("inputs").style.display = "none";
     document.getElementById("outputs").style.display = "inline";
@@ -633,6 +644,7 @@
       plotContainer.appendChild(packStatsContainer(bigData[i]));
       plotContainer.appendChild(drivetrainEfficiencyContainer(bigData[i]));
       plotContainer.appendChild(solarContainer(bigData[i]));
+      plotContainer.appendChild(vtpContainer(bigData[i]));
       document.getElementById("results").appendChild(plotContainer);
     }
     document.getElementById("downloadRawButton").onclick = function() {

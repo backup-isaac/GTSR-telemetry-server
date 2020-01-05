@@ -45,6 +45,7 @@ type AnalysisResult struct {
 	PackEfficiency                    []float64            `json:"pack_efficiency"`
 	SolarArrayPower                   []float64            `json:"solar_power"`
 	SolarArrayCharge                  []float64            `json:"solar_charge"`
+	MotorTorque                       []float64            `json:"motor_torque"`
 }
 
 // RunReconTool runs ReconTool on data provided as a mapping of metrics to
@@ -136,7 +137,7 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	result.DistanceMiles = floats.ScaleTo(make([]float64, len(distanceSeries)), MetersToMiles, distanceSeries)
 	result.TimeMinutes = floats.ScaleTo(make([]float64, len(timeSeries)), SecondsToMinutes, timeSeries)
 	result.Acceleration = accelerationSeries
-	//result.MotorTorque = motorTorqueSeries
+	result.MotorTorque = motorTorqueSeries
 	result.ModelDerivedTorque = modelDerivedTorqueSeries
 	result.MotorPower = motorPowerSeries
 	result.ModelDerivedMotorPower = modelDerivedPowerSeries
