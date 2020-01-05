@@ -43,6 +43,8 @@ type AnalysisResult struct {
 	MotorEfficiency                   []float64            `json:"motor_efficiency"`
 	MotorControllerEfficiency         []float64            `json:"mc_efficiency"`
 	PackEfficiency                    []float64            `json:"pack_efficiency"`
+	SolarArrayPower                   []float64            `json:"solar_power"`
+	SolarArrayCharge                  []float64            `json:"solar_charge"`
 }
 
 // RunReconTool runs ReconTool on data provided as a mapping of metrics to
@@ -64,6 +66,8 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	rpm := Average(data["Left_Wavesculptor_RPM"], data["Right_Wavesculptor_RPM"])
 	busVoltage := Average(data["Left_Bus_Voltage"], data["Right_Bus_Voltage"])
 	busCurrent := floats.AddTo(make([]float64, len(data["Left_Bus_Current"])), data["Left_Bus_Current"], data["Right_Bus_Current"])
+	solarArrayVoltage := Average(data["Photon_Channel_0_Array_Voltage"], data["Photon_Channel_1_Array_Voltage"])
+	solarArrayCurrent := floats.AddTo(make([]float64, len(data["Photon_Channel_0_Array_Current"])), data["Photon_Channel_0_Array_Current"], data["Photon_Channel_1_Array_Current"])
 	busPowerSeries := CalculateSeries(func(params ...float64) float64 {
 		return BusPower(params[0], params[1], params[2], params[3])
 	}, data["Left_Bus_Voltage"], data["Right_Bus_Voltage"], data["Left_Bus_Current"], data["Right_Bus_Current"])
@@ -120,6 +124,14 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	simulatedTotalChargeSeries := RiemannSumIntegrate(modelDerivedCurrentSeries, dt/3600)
 	simulatedNetChargeSeries := RiemannSumIntegrate(data["BMS_Current"], dt/3600)
 	measuredTotalChargeSeries := RiemannSumIntegrate(busCurrent, dt/3600)
+	solarPowerSeries := CalculatePower(solarArrayCurrent, solarArrayVoltage)
+	mpptCurrent := CalculateSeries(func(params ...float64) float64 {
+		if params[1] == 0 {
+			return 0
+		}
+		return params[0] / params[1]
+	}, solarPowerSeries, busVoltage)
+	solarChargeSeries := RiemannSumIntegrate(mpptCurrent, dt)
 	result.VelocityMph = floats.ScaleTo(make([]float64, len(velocitySeries)), MetersPerSecondToMilesPerHour, velocitySeries)
 	result.DistanceMiles = floats.ScaleTo(make([]float64, len(distanceSeries)), MetersToMiles, distanceSeries)
 	result.TimeMinutes = floats.ScaleTo(make([]float64, len(timeSeries)), SecondsToMinutes, timeSeries)
@@ -150,5 +162,7 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	result.MotorEfficiency = motorEfficiencySeries
 	result.MotorControllerEfficiency = motorControllerEfficiencySeries
 	result.PackEfficiency = packEfficiencySeries
+	result.SolarArrayPower = solarPowerSeries
+	result.SolarArrayCharge = solarChargeSeries
 	return &result, nil
 }
