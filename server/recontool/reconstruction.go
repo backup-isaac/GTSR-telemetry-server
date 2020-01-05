@@ -48,6 +48,8 @@ type AnalysisResult struct {
 	MotorTorque                       []float64            `json:"motor_torque"`
 	PhaseCCurrent                     []float64            `json:"phase_current"`
 	ThrottleCommand                   []float64            `json:"throttle"`
+	RelativeXDisplacement             []float64            `json:"x_disp"`
+	RelativeYDisplacement             []float64            `json:"y_disp"`
 }
 
 // RunReconTool runs ReconTool on data provided as a mapping of metrics to
@@ -169,5 +171,7 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	result.SolarArrayCharge = solarChargeSeries
 	result.PhaseCCurrent = phaseCurrentSeries
 	result.ThrottleCommand = data["Throttle"]
+	result.RelativeXDisplacement = LatLongToRelativeDisplacement(data["GPS_Longitude"])
+	result.RelativeYDisplacement = LatLongToRelativeDisplacement(data["GPS_Latitude"])
 	return &result, nil
 }

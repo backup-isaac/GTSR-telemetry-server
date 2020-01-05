@@ -50,3 +50,11 @@ func CalculatePower(i, v []float64) []float64 {
 	}
 	return p
 }
+
+// LatLongToRelativeDisplacement converts a series of lat/long degrees to miles displaced
+func LatLongToRelativeDisplacement(latLong []float64) []float64 {
+	min := floats.Min(latLong)
+	return CalculateSeries(func(params ...float64) float64 {
+		return (params[0] - min) / LatLongDegreeToMile
+	}, latLong)
+}

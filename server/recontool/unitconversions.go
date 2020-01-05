@@ -1,6 +1,8 @@
 package recontool
 
 const (
+	// LatLongDegreeToMile converts º -> mi
+	LatLongDegreeToMile = 69
 	// MetersPerSecondToMilesPerHour converts m/s -> mi/hr
 	MetersPerSecondToMilesPerHour = 2.234
 	// MetersToMiles converts m -> mi
