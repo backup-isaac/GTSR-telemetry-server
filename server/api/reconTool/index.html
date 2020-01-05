@@ -628,6 +628,19 @@
     return plotContainer;
   }
 
+  function tptContainer(data) {
+    // jackson calls this "torque, phase, throttle..."
+    // but is actually "velocity, phase, throttle"
+    var plotContainer = document.createElement("DIV");
+    var vtpTraces = [
+      timeSeriesTrace(data, 'velocity_mph', null, 'y3'),
+      timeSeriesTrace(data, 'phase_current', null, 'y2'),
+      timeSeriesTrace(data, 'throttle'),
+    ];
+    Plotly.newPlot(plotContainer, vtpTraces, layOutAxes("Velocity, Phase, and Throttle", ["Throttle (%)", "Phase Current (Arms)", "Velocity (mph)"], false));
+    return plotContainer;
+  }
+
   function displayResult(response) {
     document.getElementById("inputs").style.display = "none";
     document.getElementById("outputs").style.display = "inline";
@@ -645,6 +658,7 @@
       plotContainer.appendChild(drivetrainEfficiencyContainer(bigData[i]));
       plotContainer.appendChild(solarContainer(bigData[i]));
       plotContainer.appendChild(vtpContainer(bigData[i]));
+      plotContainer.appendChild(tptContainer(bigData[i]));
       document.getElementById("results").appendChild(plotContainer);
     }
     document.getElementById("downloadRawButton").onclick = function() {
