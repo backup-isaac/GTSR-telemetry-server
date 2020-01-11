@@ -136,6 +136,7 @@ var after = time.After
 
 func (t *Track) uploadPoints(track []*datatypes.RoutePoint, quit chan bool, wg *sync.WaitGroup) {
 	defer wg.Done()
+	log.Printf("Attempting route upload")
 	c := make(chan *datatypes.Datapoint, 10)
 	listener.Subscribe(c, newTrackInfoACK, packetACK)
 	defer listener.Unsubscribe(c)
@@ -177,6 +178,7 @@ func (t *Track) uploadPoints(track []*datatypes.RoutePoint, quit chan bool, wg *
 			// Retry current send after 3 seconds
 			timeoutCount++
 			if timeoutCount >= maxTimeouts {
+				log.Printf("WARNING: Failed to upload route with active connection")
 				return
 			}
 		case <-quit:

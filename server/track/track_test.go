@@ -254,6 +254,38 @@ func TestTrackUploader(t *testing.T) {
 	})
 	<-time.After(100 * time.Millisecond)
 	messenger.assertNoUploads(t)
+
+	// Test maximum retries exceeded
+	err = track.UploadRoute(route)
+	if err != nil {
+		t.Fatalf("Error uploading new route: %+v", err)
+	}
+	for i := 0; i < maxTimeouts; i++ {
+		select {
+		case <-messenger.tracks:
+		case <-time.After(100 * time.Millisecond):
+			t.Errorf("Exepcted new track point upload")
+		}
+		afterChan <- time.Time{}
+	}
+	select {
+	case <-messenger.tracks:
+		t.Fatalf("Execution should have halted after %d attempted retries", maxTimeouts)
+	case <-time.After(100 * time.Millisecond):
+	}
+	publisher.Publish(&datatypes.Datapoint{
+		Metric: "Connection_Status",
+		Value:  0,
+	})
+	publisher.Publish(&datatypes.Datapoint{
+		Metric: "Connection_Status",
+		Value:  1,
+	})
+	select {
+	case <-messenger.tracks:
+	case <-time.After(100 * time.Millisecond):
+		t.Fatalf("Upload did not restart on connection reestablish after max timeout")
+	}
 }
 
 func (f *fakePointUploader) assertNoUploads(t *testing.T) {
