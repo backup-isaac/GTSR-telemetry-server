@@ -17,10 +17,20 @@
     have to serve it ourselves.
     If you need to obtain it / update it inside the repository:
       1) npm install pickerjs (preferably not in a directory inside telemetry-server)
-      2) copy picker.min.css and picker.min.js from inside [directory of npm install]/node_modules/dist/
+      2) copy picker.min.css and picker.min.js from inside
+         [directory of npm install]/node_modules/pickerjs/dist/
   -->
   <script src="/reconTool/static/scripts/picker.min.js"></script>
   <link href="/reconTool/static/scripts/picker.min.css" rel="stylesheet">
+  <!--
+    For downloading raw data. Pretty much everything works ok without this, except that iOS
+    Safari doesn't support <a download="..."> and there aren't any easy workarounds besides
+    using a library.
+    It is also distributed as a NPM package, file-picker, and the file we serve is found in
+    [directory of npm install]/node_modules/file-saver/dist
+    Delete the mapfile comment from the minified code for one less thing we have to serve
+  -->
+  <script src="/reconTool/static/scripts/FileSaver.min.js"></script>
 </head>
 <body onload="return setupPickers()">
   <div class="container" id="inputs">
@@ -751,20 +761,7 @@
 
   function download(fileContents, filename, mimeType) {
     var file = new Blob([fileContents], {type: mimeType});
-    if (window.navigator.msSaveOrOpenBlob) {// IE10+
-      window.navigator.msSaveOrOpenBlob(file, filename);
-    } else { // Others
-      var a = document.createElement("a");
-      var url = URL.createObjectURL(file);
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function() {
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      }, 0);
-    }
+    saveAs(file, filename);
   }
 
   function setupPickers() {
