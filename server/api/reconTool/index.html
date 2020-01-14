@@ -56,51 +56,51 @@
           <h2 style="text-align:center">Configuration</h2>
         </div>
         <div class="panel-body">
-          <div class="checkbox">
+          <div class="checkbox" style="max-width: 100%;">
             <label><input type="checkbox" id="terrain">Use GPS for terrain data</label>
           </div>
           <h4>Vehicle parameters:</h4>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="Rmot">Motor radius (m) </label>
             <input type="number" value="0.278" id="Rmot">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="m">Vehicle mass (kg) </label>
             <input type="number" value="362.874" id="m">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="CDa">Area drag coefficient (m^2)</label>
             <input type="number" value="0.16" id="CDa">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="Crr1">Crr1 </label>
             <input type="number" value="0.006" id="Crr1">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="Crr2">Crr2 (s/m) </label>
             <input type="number" value="0.0009" id="Crr2">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="Tmax">Max motor torque (Nm) </label>
             <input type="number" value="80" id="Tmax">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="Qmax">Battery charge capacity (A-hr) </label>
             <input type="number" value="36" id="Qmax">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="Rline">Phase line resistance (Ω) </label>
             <input type="number" value="0.1" id="Rline">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="Vser">Battery modules in series </label>
             <input type="number" value="35" id="Vser">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="VcMax">Max module voltage (V) </label>
             <input type="number" value="4.2" id="VcMax">
           </div>
-          <div class="container">
+          <div class="container" style="max-width: 100%;">
             <label for="VcMin">Min module voltage (V) </label>
             <input type="number" value="2.5" id="VcMin">
           </div>
@@ -114,7 +114,7 @@
         </div>
         <div class="panel-body" style="padding-left:15%">
           <h4>Select timezone</h4>
-          <select name="timezone_offset" id="timezone-offset" class="span5">
+          <select name="timezone_offset" id="timezone-offset" class="span5" style="max-width: 100%;">
             <option value="-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
             <option value="-11:00">(GMT -11:00) Midway Island, Samoa</option>
             <option value="-10:00">(GMT -10:00) Hawaii</option>
@@ -724,6 +724,9 @@
       }
       document.getElementById("results").appendChild(plotContainer);
       window.onresize = function() {
+        if (document.getElementById('outputs').style.display == "none") {
+          return;
+        }
         var { width, height } = calculatePlotDimensions();
         if (width < 420 && oldWidth >= 420) {
           document.getElementById('smallWarning').style.display = "block";
