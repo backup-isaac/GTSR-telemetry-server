@@ -9,8 +9,20 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!--
+    Date/time picker. Necessary because <input type="date-local"> uses a different date format
+    on at least iOS Safari than on desktop browsers, and the iOS Safari date format assumes
+    UTC time instead of the local timezone.
+    The date/time library is distributed exclusively as a NPM package, which means that we
+    have to serve it ourselves.
+    If you need to obtain it / update it inside the repository:
+      1) npm install pickerjs (preferably not in a directory inside telemetry-server)
+      2) copy picker.min.css and picker.min.js from inside [directory of npm install]/node_modules/dist/
+  -->
+  <script src="/reconTool/static/scripts/picker.min.js"></script>
+  <link href="/reconTool/static/scripts/picker.min.css" rel="stylesheet">
 </head>
-<body>
+<body onload="return setupPickers()">
   <div class="container" id="inputs">
     <div class="col-sm-5">
       <div class="panel panel-default">
@@ -135,9 +147,9 @@
             <option value="+14:00">(GMT +14:00) Line Islands, Tokelau</option>
           </select>
           <h4>Start</h4>
-          <input id="start" type="datetime-local" step="1"/>
+          <input type="text" id="start"/>
           <h4>End</h4>
-          <input id="end" type="datetime-local" step="1"/>
+          <input type="text" id="end"/>
           <h4>Resolution (ms)</h4>
           <input value="250" id="resolution" type="number"/>
         </div>
@@ -179,7 +191,7 @@
     for (var param of params) {
       formData.append(param, document.getElementById(param).value);
     }
-    formData.append("terrain", document.getElementById("terrain").checked);
+    formData.append("terraigitn", document.getElementById("terrain").checked);
   }
 
   function formEncodedCommonConfigs() {
@@ -705,5 +717,16 @@
         window.URL.revokeObjectURL(url);
       }, 0);
     }
+  }
+
+  function setupPickers() {
+    new Picker(document.getElementById('start'), {
+      format: 'YYYY/MM/DD HH:mm',
+      controls: true,
+    });
+    new Picker(document.getElementById('end'), {
+      format: 'YYYY/MM/DD HH:mm',
+      controls: true,
+    });
   }
 </script>
