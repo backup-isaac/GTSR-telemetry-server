@@ -177,6 +177,7 @@
         </div>
         <div id="results" style="margin: auto; max-width: min-content; min-width: max-content;"></div>
         <div class="panel-body" style="text-align: center">
+          <h5 id="smallWarning" style="color: darkred; display: none">Screen too small to plot!</h5>
           <button id="downloadRawButton" class="btn btn-success">Download Raw Data (JSON)</button>
           <button id="fakeBackButton" onclick="goBack()" class="btn btn-primary">Back</button>
         </div>
@@ -191,7 +192,7 @@
     for (var param of params) {
       formData.append(param, document.getElementById(param).value);
     }
-    formData.append("terraigitn", document.getElementById("terrain").checked);
+    formData.append("terrain", document.getElementById("terrain").checked);
   }
 
   function formEncodedCommonConfigs() {
@@ -292,6 +293,18 @@
     document.getElementById("loading").style.display = "";
   }
 
+  function calculatePlotDimensions() {
+    var width = 700;
+    var height = 450;
+    if (window.innerWidth * 0.9 < 700) {
+      width = window.innerWidth * 0.9;
+      height = width * 450 / 700;
+    }
+    return {
+      width, height
+    }
+  }
+
   function timeSeriesTrace(data, metric, legendEntry, yAxis) {
     var trace = {
       x: data.time_min,
@@ -308,13 +321,14 @@
     return trace;
   }
 
-  function layOutAxes(chartTitle, axisTitles, showLegend, xAxis) {
+  function layOutAxes(chartTitle, axisTitles, showLegend, xAxis, width, height) {
     if (typeof showLegend != 'boolean') {
       showLegend = false;
     }
     if (typeof xAxis != 'string') {
       xAxis = "Time (min)"
     }
+    var { width, height } = calculatePlotDimensions();
     var layout = {
       showlegend: showLegend,
       title: {
@@ -330,6 +344,8 @@
           text: xAxis,
         },
       },
+      width: width,
+      height: height,
     };
     var domainSplit = axisTitles.length * 5.0 - 1.0;
     for (var i = 0; i < axisTitles.length; i++) {
@@ -355,7 +371,7 @@
       timeSeriesTrace(data, 'velocity_mph', null, 'y2'),
       timeSeriesTrace(data, 'acceleration', null, 'y3'),
     ];
-    Plotly.newPlot(plotContainer, kinematicsTraces, layOutAxes("Vehicle States", ["Distance (mi)", "Velocity (mph)", "Acceleration (m/s^2)"]));
+    Plotly.newPlot(plotContainer, kinematicsTraces, layOutAxes("Vehicle States", ["Distance (mi)", "Velocity (mph)", "Acceleration (m/s^2)"]), {responsive: true});
     return plotContainer;
   }
 
@@ -528,6 +544,7 @@
     var titleText = "Module Resistance and Distribution - ";
     titleText += sum.toString().split('.')[0]
     titleText += " mΩ Total"
+    var { width, height } = calculatePlotDimensions();
     var layout = {
       showlegend: true,
       title: {
@@ -602,6 +619,8 @@
         showarrow: false,
         yshift: -6
       }],
+      width: width,
+      height: height,
     };
     Plotly.newPlot(plotContainer, packTraces, layout /*layOutAxes(null, ["# of Modules", "Module Resistance (mΩ)"], false, "Module Number")*/);
     return plotContainer;
@@ -687,7 +706,36 @@
       plotContainer.appendChild(vtpContainer(bigData[i]));
       plotContainer.appendChild(tptContainer(bigData[i]));
       plotContainer.appendChild(speedContourContainer(bigData[i]));
+      var { width, height } = calculatePlotDimensions();
+      var oldWidth = width;
+      if (width < 420) {
+        document.getElementById('smallWarning').style.display = "block";
+        document.getElementById('results').style.display = "none";
+      }
       document.getElementById("results").appendChild(plotContainer);
+      window.onresize = function() {
+        var { width, height } = calculatePlotDimensions();
+        if (width < 420 && oldWidth >= 420) {
+          document.getElementById('smallWarning').style.display = "block";
+          document.getElementById('results').style.display = "none";
+        } else if (width < 420) {
+          return;
+        }
+        if (width >= 420 && oldWidth < 420) {
+          document.getElementById('smallWarning').style.display = "none";
+          document.getElementById('results').style.display = "block";
+        }
+        if (oldWidth == width) {
+          return;
+        }
+        for (var div of plotContainer.childNodes) {
+          Plotly.relayout(div, {
+            width: width,
+            height: height,
+          });
+        }
+        oldWidth = width;
+      }
     }
     document.getElementById("downloadRawButton").onclick = function() {
       download(response, "recontool_raw.json", "application/json")
