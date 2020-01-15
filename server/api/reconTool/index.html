@@ -711,54 +711,47 @@
     document.getElementById("inputs").style.display = "none";
     document.getElementById("outputs").style.display = "inline";
     var bigData = JSON.parse(response)
+    var { width, height } = calculatePlotDimensions();
+    var oldWidth = width;
+    if (width < 420) {
+      document.getElementById('smallWarning').style.display = "block";
+      document.getElementById('results').style.display = "none";
+    }
+    window.onresize = function() {
+      if (document.getElementById('outputs').style.display == "none") {
+        return;
+      }
+      var { width, height } = calculatePlotDimensions();
+      if (width < 420 && oldWidth >= 420) {
+        document.getElementById('smallWarning').style.display = "block";
+        document.getElementById('results').style.display = "none";
+      } else if (width < 420) {
+        return;
+      }
+      if (width >= 420 && oldWidth < 420) {
+        document.getElementById('smallWarning').style.display = "none";
+        document.getElementById('results').style.display = "block";
+      }
+      if (oldWidth == width) {
+        return;
+      }
+      for (var plotContainer of document.getElementById('results').childNodes) {
+        if (plotContainer.id && plotContainer.id.startsWith('plot')) {
+          for (var div of plotContainer.childNodes) {
+            Plotly.relayout(div, {
+              width: width,
+              height: height,
+            });
+          }
+        }
+      }
+      oldWidth = width;
+    }
     for (var i = 0; i < bigData.length; i++) {
       var plotContainer = document.createElement("DIV");
       plotContainer.style.display = "block";
-      plotContainer.id = "plotContainer" + i;
-      plotContainer.appendChild(statesContainer(bigData[i]));
-      plotContainer.appendChild(powerTorqueContainer(bigData[i]));
-      plotContainer.appendChild(chargeContainer(bigData[i]));
-      plotContainer.appendChild(packResistanceContainer(bigData[i]));
-      plotContainer.appendChild(batteryVoltagesContainer(bigData[i]));
-      plotContainer.appendChild(packStatsContainer(bigData[i]));
-      plotContainer.appendChild(drivetrainEfficiencyContainer(bigData[i]));
-      plotContainer.appendChild(solarContainer(bigData[i]));
-      plotContainer.appendChild(vtpContainer(bigData[i]));
-      plotContainer.appendChild(tptContainer(bigData[i]));
-      plotContainer.appendChild(speedContourContainer(bigData[i]));
-      var { width, height } = calculatePlotDimensions();
-      var oldWidth = width;
-      if (width < 420) {
-        document.getElementById('smallWarning').style.display = "block";
-        document.getElementById('results').style.display = "none";
-      }
+      plotContainer.id = "plot" + i;
       document.getElementById("results").appendChild(plotContainer);
-      window.onresize = function() {
-        if (document.getElementById('outputs').style.display == "none") {
-          return;
-        }
-        var { width, height } = calculatePlotDimensions();
-        if (width < 420 && oldWidth >= 420) {
-          document.getElementById('smallWarning').style.display = "block";
-          document.getElementById('results').style.display = "none";
-        } else if (width < 420) {
-          return;
-        }
-        if (width >= 420 && oldWidth < 420) {
-          document.getElementById('smallWarning').style.display = "none";
-          document.getElementById('results').style.display = "block";
-        }
-        if (oldWidth == width) {
-          return;
-        }
-        for (var div of plotContainer.childNodes) {
-          Plotly.relayout(div, {
-            width: width,
-            height: height,
-          });
-        }
-        oldWidth = width;
-      }
       if (i != bigData.length - 1) {
         var div = document.createElement("DIV");
         div.style.minHeight = "5px";
@@ -766,9 +759,36 @@
         div.style.backgroundColor = "rgb(224, 224, 224)";
         document.getElementById("results").appendChild(div);
       }
+      new Promise((resolve, reject) => {
+        plotContainer.appendChild(statesContainer(bigData[i]));
+        var container = plotContainer;
+        var data = bigData[i];
+        resolve({container, data});
+      }).then(promiseCallback(powerTorqueContainer))
+        .then(promiseCallback(chargeContainer))
+        .then(promiseCallback(packResistanceContainer))
+        .then(promiseCallback(batteryVoltagesContainer))
+        .then(promiseCallback(packStatsContainer))
+        .then(promiseCallback(drivetrainEfficiencyContainer))
+        .then(promiseCallback(solarContainer))
+        .then(promiseCallback(vtpContainer))
+        .then(promiseCallback(tptContainer))
+        .then(promiseCallback(speedContourContainer));
     }
     document.getElementById("downloadRawButton").onclick = function() {
       download(response, "recontool_raw.json", "application/json")
+    }
+  }
+
+  function promiseCallback(containerFunction) {
+    return function(obj) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          var { container, data } = obj;
+          container.appendChild(containerFunction(data));
+          resolve(obj);
+        }, 0);
+      });
     }
   }
 
