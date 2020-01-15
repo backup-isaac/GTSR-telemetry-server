@@ -449,12 +449,17 @@
         y: data.bus_voltage,
         mode: "markers",
         type: "scattergl",
-        // webgl rendering looks worse but SVG scatterplots murder the performance everything with more than a small handful of points
+        // webgl rendering looks worse but SVG scatterplots murder the
+        // performance of everything when you have more than a small handful
+        // of points
       }, {
         x: [imin, 0, imax],
         y: [vmax, data.pack_y_intercept, vmin],
         mode: "lines",
-        type: "scatter",
+        line: {
+          width: 5,
+        },
+        type: "scattergl",
       },
     ];
     var title = "Pack Resistance: "
