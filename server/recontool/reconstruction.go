@@ -59,6 +59,7 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	if len(rawTimestamps) < 2 {
 		return nil, fmt.Errorf("At least 2 data points required")
 	}
+	RemoveSuspiciousZeros(data, vehicle.VSer)
 	if plotAll {
 		result.RawValues = data
 		result.RawTimestamps = rawTimestamps

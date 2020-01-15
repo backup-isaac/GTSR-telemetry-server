@@ -1,8 +1,40 @@
 package recontool
 
 import (
+	"fmt"
+
 	"gonum.org/v1/gonum/floats"
 )
+
+// RemoveSuspiciousZeros removes rows from the beginning of data where zero
+// values are likely indicative of garbage data
+// May be due to vehicle systems taking time to start properly reporting or
+// recording their data
+// If any module voltage is zero in a row, the row is deleted and then the
+// next row is tested again. This repeats until no modules have zero voltage,
+// then the function terminates
+func RemoveSuspiciousZeros(data map[string][]float64, vSer uint) {
+	rowsToDelete := 0
+	colLen := len(data["Cell_Voltage_1"])
+	var j uint
+	for i := 0; i < colLen; i++ {
+		rowDeleted := false
+		for j = 0; j < vSer; j++ {
+			voltage := data[fmt.Sprintf("Cell_Voltage_%d", j+1)][i]
+			if voltage == 0 {
+				rowsToDelete++
+				rowDeleted = true
+				break
+			}
+		}
+		if !rowDeleted {
+			break
+		}
+	}
+	for metric, series := range data {
+		data[metric] = series[rowsToDelete:]
+	}
+}
 
 // RemoveTimeOffsets makes t linearly spaced and subtracts
 // t[0] from every value

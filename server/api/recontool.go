@@ -325,6 +325,9 @@ func readUploadedCsv(fileHeader *multipart.FileHeader, plotAll bool, fileChannel
 	}
 	csvContents := make(map[string][]float64, len(columns)-1)
 	for metric := range columns {
+		if metric == "time" {
+			continue
+		}
 		csvContents[metric] = make([]float64, 0, fileHeader.Size/int64(len(columns))/16)
 	}
 	timestamps := make([]int64, 0, fileHeader.Size/int64(len(columns))/16)

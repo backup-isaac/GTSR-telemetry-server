@@ -227,8 +227,7 @@
           displayResult(request.response);
         } else {
           hideLoadingSpinner();
-          alert("Request failed: " + request.statusText);
-          console.log(request.responseText);
+          alert("Request failed:\n" + request.responseText);
         }
       }
     }
@@ -280,8 +279,7 @@
           displayResult(request.response);
         } else {
           hideLoadingSpinner();
-          alert("Request failed: " + request.statusText);
-          console.log(request.responseText);
+          alert("Request failed:\n" + request.responseText);
         }
       }
     }
