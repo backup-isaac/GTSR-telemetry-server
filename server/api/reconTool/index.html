@@ -483,11 +483,11 @@
         line: {},
         yaxis: 'y3',
       };
-      if (i == data.max_module_mode) {
+      if (i + 1 == data.max_module_mode) {
         trace.line.color = 'rgb(0, 170, 0)';
         trace.name = "Max";
         maxTrace = trace;
-      } else if (i == data.min_module_mode) {
+      } else if (i + 1== data.min_module_mode) {
         trace.line.color = 'rgb(255, 0, 0)';
         trace.name = "Min";
         minTrace = trace;
@@ -522,11 +522,6 @@
     var sugma = data.module_standard_deviation * 1000;
     var pdfX = [];
     var pdfY = [];
-    for (var i = Math.min(rMin, mu - 3 * sugma); i < Math.max(rMax, mu + 3 * sugma); i += (rMax - rMin) / 420) {
-      pdfX.push(i);
-      var pdfi = (milliohms.length / (sugma * Math.sqrt(2 * Math.PI))) * Math.exp(-1 * (i - mu) * (i - mu) / (2 * sugma * sugma));
-      pdfY.push(pdfi);
-    }
     var packTraces = [{
       type: 'bar',
       x: data.module_resistances.map((_, i) => { return i + 1; }),
@@ -538,12 +533,6 @@
       type: 'histogram',
       x: milliohms,
       name: "Frequency",
-    }, {
-      x: pdfX,
-      y: pdfY,
-      mode: "lines",
-      type: "scatter",
-      name: "Normal Distribution"
     }];
     var sum = 0;
     for (var res of data.module_resistances) {
@@ -593,27 +582,6 @@
           },
         },
       },
-      shapes: [{
-        type: 'line',
-        x0: mu - 3 * sugma,
-        x1: mu - 3 * sugma,
-        y0: 0,
-        y1: Math.max.apply(null, pdfY) * 1.2,
-        line: {
-          dash: "dash",
-          color: "rgb(255, 0, 0)",
-        },
-      }, {
-        type: 'line',
-        x0: mu + 3 * sugma,
-        x1: mu + 3 * sugma,
-        y0: 0,
-        y1: Math.max.apply(null, pdfY) * 1.2,
-        line: {
-          dash: "dash",
-          color: "rgb(255, 0, 0)",
-        },
-      }],
       annotations: [{
         x: mu - 3 * sugma,
         y: 0,
@@ -631,6 +599,45 @@
       height: height,
     };
     Plotly.newPlot(plotContainer, packTraces, layout /*layOutAxes(null, ["# of Modules", "Module Resistance (mΩ)"], false, "Module Number")*/);
+    // going deep into the internals of Plotly histogram
+    // this is actually how the Plotly engineers recommend getting the
+    // bins/bin characteristics of a histogram that Plotly makes
+    // no functions are exposed for this purpose
+    var histMax = plotContainer._fullData[1]._extremes.y.max[0].val;
+    for (var i = Math.min(rMin, mu - 3 * sugma); i < Math.max(rMax, mu + 3 * sugma); i += (rMax - rMin) / 420) {
+      pdfX.push(i);
+      var pdfi = histMax * Math.exp(-1 * ((i - mu) / sugma) * ((i - mu) / sugma) / 2);
+      pdfY.push(pdfi);
+    }
+    packTraces.push({
+      x: pdfX,
+      y: pdfY,
+      mode: "lines",
+      type: "scatter",
+      name: "Normal Distribution"
+    });
+    layout.shapes = [{
+      type: 'line',
+      x0: mu - 3 * sugma,
+      x1: mu - 3 * sugma,
+      y0: 0,
+      y1: histMax * 1.1,
+      line: {
+        dash: "dash",
+        color: "rgb(255, 0, 0)",
+      },
+    }, {
+      type: 'line',
+      x0: mu + 3 * sugma,
+      x1: mu + 3 * sugma,
+      y0: 0,
+      y1: histMax * 1.1,
+      line: {
+        dash: "dash",
+        color: "rgb(255, 0, 0)",
+      },
+    }];
+    Plotly.react(plotContainer, packTraces, layout);
     return plotContainer;
   }
 
