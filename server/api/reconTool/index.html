@@ -47,7 +47,7 @@
           <div class="checkbox">
             <label><input type="checkbox" id="compileFiles">Combine uploaded files together</label>
           </div>
-          <input type="file" id="upload" multiple="true" accept="text/csv">
+          <input type="file" id="upload" multiple="true" accept="text/csv" style="max-width: 100%;">
           <button type="button" onclick="return clearFile()" class="btn btn-default">Clear Upload</button>
         </div>
       </div>
@@ -302,11 +302,11 @@
   }
 
   function calculatePlotDimensions() {
-    var width = 700;
-    var height = 450;
-    if (window.innerWidth * 0.9 < 700) {
-      width = window.innerWidth * 0.9;
-      height = width * 450 / 700;
+    var width = window.innerWidth * 0.9;
+    var height = width * 4.5 / 7;
+    if (height > window.innerHeight * 0.9) {
+      height = window.innerHeight * 0.9;
+      width = height * 7 / 4.5;
     }
     return {
       width, height
