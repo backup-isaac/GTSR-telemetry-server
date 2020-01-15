@@ -713,7 +713,7 @@
     var bigData = JSON.parse(response)
     for (var i = 0; i < bigData.length; i++) {
       var plotContainer = document.createElement("DIV");
-      plotContainer.style.display = "inline-block";
+      plotContainer.style.display = "block";
       plotContainer.id = "plotContainer" + i;
       plotContainer.appendChild(statesContainer(bigData[i]));
       plotContainer.appendChild(powerTorqueContainer(bigData[i]));
@@ -758,6 +758,13 @@
           });
         }
         oldWidth = width;
+      }
+      if (i != bigData.length - 1) {
+        var div = document.createElement("DIV");
+        div.style.minHeight = "5px";
+        div.style.display = "block";
+        div.style.backgroundColor = "rgb(224, 224, 224)";
+        document.getElementById("results").appendChild(div);
       }
     }
     document.getElementById("downloadRawButton").onclick = function() {
