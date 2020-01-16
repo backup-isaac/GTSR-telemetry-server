@@ -304,7 +304,7 @@
   function calculatePlotDimensions() {
     var width = window.innerWidth * 0.9;
     var height = width * 4.5 / 7;
-    if (height > window.innerHeight * 0.9) {
+    if (height > window.innerHeight * 0.9 && height > 300) {
       height = window.innerHeight * 0.9;
       width = height * 7 / 4.5;
     }
@@ -812,10 +812,12 @@
       for (var plotContainer of document.getElementById('results').childNodes) {
         if (plotContainer.id && plotContainer.id.startsWith('plot')) {
           for (var div of plotContainer.childNodes) {
-            Plotly.relayout(div, {
-              width: width,
-              height: height,
-            });
+            if (div.className == "js-plotly-plot") {
+              Plotly.relayout(div, {
+                width: width,
+                height: height,
+              });
+            }
           }
         }
       }
