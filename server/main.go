@@ -27,6 +27,7 @@ func main() {
 		api.NewFoodHandler(),
 		api.NewJacksonHandler(),
 		api.NewMapHandler(),
+		api.NewMergeHandler(),
 	})
 	go computations.RunComputations()
 	err = recordData(store)
