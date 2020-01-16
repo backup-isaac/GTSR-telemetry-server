@@ -718,6 +718,20 @@
     return plotContainer;
   }
 
+  function toggleAutoPlots(index) {
+    var rawPlots = document.getElementById(`rawPlotsContainer${index}`);
+    var toggleButton = document.getElementById(`toggleAutoPlotsButton${index}`);
+    if (rawPlots.style.display != "none") {
+      toggleButton.innerHTML = "Show Raw Plots";
+      rawPlots.style.display = "none";
+    } else {
+      toggleButton.innerHTML = "Hide Raw Plots";
+      rawPlots.style.display = "block";
+    }
+  }
+
+  var autoPlotsCounter = 0;
+
   function autoPlotsContainer(data) {
     if (data.raw_values && data.raw_timestamps) {
       var autoPlotsContainer = document.createElement("DIV");
@@ -726,6 +740,11 @@
       heading.className = "panel-heading";
       var body = document.createElement("DIV");
       body.class = "panel-body";
+      body.id = `rawPlotsContainer${autoPlotsCounter}`;
+      var buttonHolder = document.createElement("DIV");
+      buttonHolder.className = "panel-body";
+      buttonHolder.style.textAlign = "center";
+      buttonHolder.innerHTML = `<button id="toggleAutoPlotsButton${autoPlotsCounter}" onclick="toggleAutoPlots(${autoPlotsCounter})" class="btn btn-primary">Hide Raw Plots</button>`;
       var promise = new Promise((resolve, reject) => {
         var container = body;
         var start = data.raw_timestamps[0];
@@ -741,7 +760,9 @@
       }
       autoPlotsContainer.appendChild(heading);
       heading.innerHTML = '<h2 style="text-align: center">Raw Plots</h2>';
+      autoPlotsContainer.appendChild(buttonHolder);
       autoPlotsContainer.appendChild(body);
+      autoPlotsCounter++;
       return autoPlotsContainer;
     }
     return null;
