@@ -26,9 +26,12 @@ func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 }
 
 // MergePost is the POST handler for the /merge path.
-func (m *MergeHandler) MergePost(w http.ResponseWriter, r *http.Request) {
+func (m *MergeHandler) MergePost(w http.ResponseWriter, r *http.Request) (error){
   // Parse Form
   err := r.ParseForm()
+  if err != nil {
+    return err
+  }
 }
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
@@ -39,5 +42,6 @@ func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
 	dir := path.Dir(filename)
 	router.PathPrefix("/merge/static/").Handler(http.StripPrefix("/merge/static/", http.FileServer(http.Dir(path.Join(dir, "merge")))))
 
-	router.HandleFunc("/merge", m.MergeDefault)
+	router.HandleFunc("/merge", m.MergeDefault).Methods("GET")
+  router.HandleFunc("/merge", m.MergePOST).Methods("POST")
 }
