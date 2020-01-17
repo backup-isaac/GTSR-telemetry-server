@@ -20,7 +20,7 @@ type MergeHandler struct{
 
 // NewMergeHandler returns a pointer to a new MergeHandler.
 func NewMergeHandler(store *storage.Storage) *MergeHandler {
-	return &MergeHandler{store}
+	return &MergeHandler{store: store}
 }
 
 // MergeDefault is the default handler for the /merge path.
