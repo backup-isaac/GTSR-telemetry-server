@@ -28,6 +28,24 @@ func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 // MergePost is the POST handler for the /merge path.
 func (m *MergeHandler) MergePost(w http.ResponseWriter, r *http.Request) {
 
+  // Parse Form
+  err := r.ParseForm()
+  if err != nil {
+    http.Error(res, fmt.Sprintf("Error parsing form: %s", err), http.StatusBadRequest)
+    fmt.Println("Error parsing form: %s", err)
+    return
+  }
+
+  // Get data from from
+  timezone := req.Form.Get("timezone-offset")
+  startDateString := req.Form.Get("start")
+  endDateString := req.Form.Get("end")
+  if startDateString == "" || endDateString == "" || timezone == "" {
+    http.Error(res, "malformatted query", http.StatusBadRequest)
+    fmt.Println("malformatted query")
+    return
+  }
+
 }
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
