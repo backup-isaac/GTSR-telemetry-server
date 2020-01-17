@@ -39,5 +39,5 @@ func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/merge/static/").Handler(http.StripPrefix("/merge/static/", http.FileServer(http.Dir(path.Join(dir, "merge")))))
 
 	router.HandleFunc("/merge", m.MergeDefault).Methods("GET")
-  router.HandleFunc("/merge", m.MergePost).Methods("POST")
+  router.HandleFunc("/merge_post", m.MergePost).Methods("POST")
 }
