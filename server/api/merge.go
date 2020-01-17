@@ -1,43 +1,37 @@
 package api
 
 import (
-  	"fmt"
-    //"os"
-  	//"log"
-  	"net/http"
-    "html/template"
-    //"strings"
-    //"time"
-    //"bytes"
-    //"encoding/json"
-    "server/storage"
-    "github.com/gorilla/mux"
+	"log"
+	"net/http"
+	"path"
+	"runtime"
+
+	"github.com/gorilla/mux"
 )
 
+const mergePageFilePath = "merge/index.html"
 
-// Storage for MergeHandler
-type MergeHandler struct {
-    store *storage.Storage
+// MergeHandler handles requests related to merging points from a local
+// instance of the server onto the main remote server.
+type MergeHandler struct{}
+
+// NewMergeHandler returns a pointer to a new MergeHandler.
+func NewMergeHandler() *MergeHandler {
+	return &MergeHandler{}
 }
 
-// Passes server storage in for access
-func NewMergeHandler(store *storage.Storage) *MergeHandler {
-    return &MergeHandler{store}
+// MergeDefault is the default handler for the /merge path.
+func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/merge/static/index.html", http.StatusFound)
 }
 
-// Handles requests to merge points
-func (m *MergeHandler) mergeHandler(res http.ResponseWriter, req *http.Request) {
-
-    // For GET requests, load the form for user to fill out
-    fmt.Println("method:", req.Method)
-    if req.Method == "GET" {
-        t, _ := template.ParseFiles("/merge/index.html")
-        t.Execute(res, nil)
-    }
-
-}
-
-// Register routes to each handler
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
-  router.HandleFunc("/merge", m.mergeHandler)
+	_, filename, _, ok := runtime.Caller(0)
+	if !ok {
+		log.Fatal("Could not find runtime caller")
+	}
+	dir := path.Dir(filename)
+	router.PathPrefix("/merge/static/").Handler(http.StripPrefix("/merge/static/", http.FileServer(http.Dir(path.Join(dir, "merge")))))
+
+	router.HandleFunc("/merge", m.MergeDefault).Methods("GET")
 }
