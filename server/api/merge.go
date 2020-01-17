@@ -13,21 +13,18 @@ const mergePageFilePath = "merge/index.html"
 
 // MergeHandler handles requests related to merging points from a local
 // instance of the server onto the main remote server.
-type MergeHandler struct{}
+type MergeHandler struct{
+  store *storage.Storage
+}
 
 // NewMergeHandler returns a pointer to a new MergeHandler.
-func NewMergeHandler() *MergeHandler {
-	return &MergeHandler{}
+func NewMergeHandler(store *storage.Storage) *MergeHandler {
+	return &MergeHandler{store}
 }
 
 // MergeDefault is the default handler for the /merge path.
 func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/merge/static/index.html", http.StatusFound)
-}
-
-// MergePost is the POST handler for the /merge path.
-func (m *MergeHandler) MergePost(w http.ResponseWriter, r *http.Request) {
-  return
 }
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
@@ -39,5 +36,4 @@ func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/merge/static/").Handler(http.StripPrefix("/merge/static/", http.FileServer(http.Dir(path.Join(dir, "merge")))))
 
 	router.HandleFunc("/merge", m.MergeDefault).Methods("GET")
-  router.HandleFunc("/post", m.MergePost).Methods("POST")
 }
