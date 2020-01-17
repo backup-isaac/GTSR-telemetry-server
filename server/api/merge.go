@@ -2,7 +2,6 @@ package api
 
 import (
 	"log"
-  "fmt"
 	"net/http"
 	"path"
 	"runtime"
@@ -43,7 +42,6 @@ func (m *MergeHandler) MergePost(w http.ResponseWriter, r *http.Request) {
   endDateString := r.Form.Get("end")
   if startDateString == "" || endDateString == "" || timezone == "" {
     http.Error(w, "malformatted query", http.StatusBadRequest)
-    fmt.Println("malformatted query")
     return
   }
 
