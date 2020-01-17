@@ -27,13 +27,7 @@ func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 
 // MergePost is the POST handler for the /merge path.
 func (m *MergeHandler) MergePost(w http.ResponseWriter, r *http.Request) {
-  // Parse Form
-  err := r.ParseForm()
-  if err != nil {
-    return
-  }
 
-  return
 }
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
