@@ -9,8 +9,9 @@ import (
     "time"
     "bytes"
     "encoding/json"
-    "telemetry-server/server/storage"
+    "server/storage"
 )
+
 
 // Storage for MergeHandler
 type MergeHandler struct {
@@ -21,6 +22,7 @@ type MergeHandler struct {
 func NewMergeHandler(store *storage.Storage) *MergeHandler {
     return &MergeHandler{store}
 }
+
 
 // Turns date/timezone strings into RFX3339Nano time.Time
 func formatRFC3339(date string, timezone string) (time.Time,error) {
@@ -109,9 +111,11 @@ func (m *MergeHandler) sendPoints(start time.Time, end time.Time) (error) {
 
   // Run this code only if it is the local server
   // Need to check this still
-  if os.Getenv("PRODUCTION") == true:
+  if os.Getenv("PRODUCTION") == true{
     return nil
+  }
 
+  /*
 	//For each metric
 	for _, metric := range m.store.ListMetrics() {
 
@@ -146,6 +150,7 @@ func (m *MergeHandler) sendPoints(start time.Time, end time.Time) (error) {
 			}
 		}
 	}
+  */
 }
 
 /*
