@@ -32,6 +32,8 @@ func (m *MergeHandler) MergePost(w http.ResponseWriter, r *http.Request) (error)
   if err != nil {
     return err
   }
+
+  return err
 }
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
@@ -43,5 +45,5 @@ func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/merge/static/").Handler(http.StripPrefix("/merge/static/", http.FileServer(http.Dir(path.Join(dir, "merge")))))
 
 	router.HandleFunc("/merge", m.MergeDefault).Methods("GET")
-  router.HandleFunc("/merge", m.MergePOST).Methods("POST")
+  router.HandleFunc("/merge", m.MergePost).Methods("POST")
 }
