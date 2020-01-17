@@ -2,14 +2,16 @@ package main
 
 import (
   	"fmt"
-  	"log"
+    "os"
+  	//"log"
   	"net/http"
     "html/template"
-    "strings"
+    //"strings"
     "time"
-    "bytes"
-    "encoding/json"
+    //"bytes"
+    //"encoding/json"
     "server/storage"
+    "github.com/gorilla/mux"
 )
 
 
@@ -50,7 +52,7 @@ func formatRFC3339(date string, timezone string) (time.Time,error) {
 }
 
 // Handles requests to merge points
-func mergeHandler(res http.ResponseWriter, req *http.Request) {
+func (m *MergeHandler) mergeHandler(res http.ResponseWriter, req *http.Request) {
 
     // For GET requests, load the form for user to fill out
     fmt.Println("method:", req.Method)
@@ -111,7 +113,7 @@ func (m *MergeHandler) sendPoints(start time.Time, end time.Time) (error) {
 
   // Run this code only if it is the local server
   // Need to check this still
-  if os.Getenv("PRODUCTION") == true{
+  if os.Getenv("PRODUCTION") == "True"{
     return nil
   }
 
@@ -151,6 +153,7 @@ func (m *MergeHandler) sendPoints(start time.Time, end time.Time) (error) {
 		}
 	}
   */
+  return nil
 }
 
 /*
@@ -181,6 +184,6 @@ func (m *MergeHandler) receivePoints(res http.ResponseWriter, req *http.Request)
 
 // Register routes to each handler
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
-  router.HandleFunc("/merge", c.mergeHandler)
+  router.HandleFunc("/merge", m.mergeHandler)
   //router.HandleFunc("/receive", c.receivePoints)
 }
