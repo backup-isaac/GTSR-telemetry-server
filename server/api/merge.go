@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
   	"fmt"
@@ -33,9 +33,8 @@ func (m *MergeHandler) mergeHandler(res http.ResponseWriter, req *http.Request) 
     if req.Method == "GET" {
         t, _ := template.ParseFiles("/merge/index.html")
         t.Execute(res, nil)
-
-    // For POST requests, parse the form the user filled out
     }
+
 }
 
 // Register routes to each handler
