@@ -20,7 +20,7 @@ func NewMergeHandler() *MergeHandler {
 }
 
 // Handles requests to merge points
-func mergeHandler(res http.ResponseWriter, req *http.Request) {
+func (m *MergeHandler) mergeHandler(res http.ResponseWriter, req *http.Request) {
 
     // For GET requests, load the form for user to fill out
     fmt.Println("method:", req.Method)
