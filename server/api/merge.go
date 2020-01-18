@@ -35,7 +35,7 @@ func(m *MergeHandler) MergePoints(res http.ResponseWriter, req *http.Request) {
 	startDateString := req.Form.Get("startDate")
 	endDateString := req.Form.Get("endDate")
 
-	if startDateString == "" || endDateString == "" || resolutionString == "" {
+	if startDateString == "" || endDateString == "" {
 		http.Error(res, "malformatted query", http.StatusBadRequest)
 		return
 	}
