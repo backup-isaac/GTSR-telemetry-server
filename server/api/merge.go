@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"path"
 	"runtime"
+	"fmt"
 
 	"github.com/gorilla/mux"
 )
@@ -25,7 +26,7 @@ func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/merge/static/index.html", http.StatusFound)
 }
 
-func(m *MergeHandler) MergePoints(w http.ResponseWriter, r *http.Request) {
+func(m *MergeHandler) MergePoints(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing form: %s", err), http.StatusBadRequest)
