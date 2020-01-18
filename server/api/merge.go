@@ -1,12 +1,9 @@
 package api
 
 import (
-	"log"
 	"net/http"
-	"path"
-	"runtime"
 	"fmt"
-	"time"
+	"html/template"
 
 	"github.com/gorilla/mux"
 )
