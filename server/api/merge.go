@@ -22,66 +22,17 @@ func NewMergeHandler() *MergeHandler {
 	return &MergeHandler{}
 }
 
-type mergeRequest struct {
-	start      time.Time
-	end        time.Time
+// Handles requests to merge points
+func mergeHandler(res http.ResponseWriter, req *http.Request) {
+
+    // For GET requests, load the form for user to fill out
+    fmt.Println("method:", req.Method)
+    if req.Method == "GET" {
+        t, _ := template.ParseFiles("index.html")
+        t.Execute(res, nil)
+    }
 }
-
-var mergeQueue = make(chan mergeRequest)
-
-func (m *MergeHandler) mergeScheduler() {
-	for req := range mergeQueue {
-		m.sendPoints(req.start, req.end)
-	}
-}
-
-// MergeDefault is the default handler for the /merge path.
-func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/merge/static/index.html", http.StatusFound)
-}
-
-func(m *MergeHandler) MergePoints(res http.ResponseWriter, req *http.Request) {
-	err := req.ParseForm()
-	if err != nil {
-		http.Error(res, fmt.Sprintf("Error parsing form: %s", err), http.StatusBadRequest)
-		return
-	}
-	startDateString := req.Form.Get("startDate")
-	endDateString := req.Form.Get("endDate")
-
-	if startDateString == "" || endDateString == "" {
-		http.Error(res, "malformatted query", http.StatusBadRequest)
-		return
-	}
-	startDate, err := unixStringMillisToTime(startDateString)
-	if err != nil {
-		http.Error(res, fmt.Sprintf("Error parsing start date: %s", err), http.StatusBadRequest)
-		return
-	}
-	endDate, err := unixStringMillisToTime(endDateString)
-	if err != nil {
-		http.Error(res, fmt.Sprintf("Error parsing end date: %s", err), http.StatusBadRequest)
-		return
-	}
-	select {
-	case mergeQueue <- mergeRequest{startDate, endDate}:
-	default:
-		http.Error(res, "Already merging points", http.StatusLocked)
-		return
-	}
-	res.WriteHeader(http.StatusOK)
-}
-
-func (m *MergeHandler) sendPoints(start time.Time, end time.Time) {}
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
-	_, filename, _, ok := runtime.Caller(0)
-	if !ok {
-		log.Fatal("Could not find runtime caller")
-	}
-	dir := path.Dir(filename)
-	router.PathPrefix("/merge/static/").Handler(http.StripPrefix("/merge/static/", http.FileServer(http.Dir(path.Join(dir, "merge")))))
-
-	router.HandleFunc("/merge", m.MergeDefault).Methods("GET")
-	router.HandleFunc("/merge/mergePoints", m.MergePoints).Methods("POST")
+  router.HandleFunc("/merge", m.mergeHandler)
 }

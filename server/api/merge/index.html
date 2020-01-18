@@ -75,47 +75,7 @@
 
       <br/>
 
-      <input type="submit" value="Merge Datapoints"  onclick="sendData()">
-
-
-      <script>
-        function sendData() {
-          var startTime = Date.parse(document.getElementById("start").value);
-          var endTime = Date.parse(document.getElementById("end").value);
-          if (isNaN(startTime) || isNaN(endTime) || startTime >= endTime || (endTime - startTime) / 3600000 > 24) {
-            alert("Please enter a valid start and end date with a span of no more than 24 hours.");
-            return;
-          }
-          var offsets = document.getElementById("timezone-offset").value.split(":").map((item) => {return parseInt(item);});
-          var startDate = new Date(0);
-          var endDate = new Date(0);
-          /*
-          How the math works:
-          receivedTime = enteredTime - datetimeOffset
-          trueUTC = enteredTime - selectedOffset
-                  = receivedTime + datetimeOffset - selectedOffset
-          datetimeOffset is returned as a positive number instead of -300 which is what is expected, so it's actually subtracted
-          This may or may not break across daylight savings time boundaries
-          */
-          startTime -= startDate.getTimezoneOffset() * 60000 + (offsets[0] * 3600000 + offsets[1] * 60000);
-          endTime -= endDate.getTimezoneOffset() * 60000 + (offsets[0] * 3600000 + offsets[1] * 60000);
-          var request = new XMLHttpRequest();
-          request.onreadystatechange = function() {
-            if (request.readyState == 4) {
-              if (request.status == 200) {
-                window.location = "/merge/static/merging.html";
-              } else if (request.status == 423) {
-                alert("Merge is currently in progress");
-              } else {
-                alert("Request failed: " + request.statusText);
-              }
-            }
-          }
-          request.open("POST", "/merge/mergePoints", true);
-          request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-          request.send("startDate=" + startTime + "&endDate=" + endTime);
-        }
-      </script>
+      <input type="submit" value="Merge Datapoints">
 
 </div>
 </div>
