@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"html/template"
 	"strings"
-
-	"github.com/gorilla/mux"
 )
 
 // MergeHandler handles requests related to merging points from a local
@@ -84,5 +82,5 @@ func (m *MergeHandler) mergeHandler(res http.ResponseWriter, req *http.Request) 
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
     http.HandleFunc("/merge", m.defaultHandler)
-  router.HandleFunc("/merge/merge", m.mergeHandler)
+  	http.HandleFunc("/merge/merge", m.mergeHandler)
 }
