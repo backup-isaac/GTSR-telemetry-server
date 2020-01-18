@@ -28,6 +28,7 @@ func (m *MergeHandler) mergeHandler(res http.ResponseWriter, req *http.Request) 
         t, _ := template.ParseFiles("index.html")
         t.Execute(res, nil)
     }
+		
 }
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
