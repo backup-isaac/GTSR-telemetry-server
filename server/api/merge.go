@@ -6,7 +6,6 @@ import (
 	"path"
 	"runtime"
 
-  "server/storage"
 	"github.com/gorilla/mux"
 )
 
@@ -18,7 +17,7 @@ type MergeHandler struct{
 }
 
 // NewMergeHandler returns a pointer to a new MergeHandler.
-func NewMergeHandler(store *storage.Storage) *MergeHandler {
+func NewMergeHandler() *MergeHandler {
 	return &MergeHandler{}
 }
 
