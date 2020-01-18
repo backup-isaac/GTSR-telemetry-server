@@ -21,6 +21,19 @@ func NewMergeHandler() *MergeHandler {
 	return &MergeHandler{}
 }
 
+type mergeRequest struct {
+	start      time.Time
+	end        time.Time
+}
+
+var mergeQueue = make(chan mergeRequest
+
+func (m *MergeHandler) mergeScheduler() {
+	for req := range mergeQueue {
+		m.sendPoints(req.start, req.end)
+	}
+}
+
 // MergeDefault is the default handler for the /merge path.
 func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/merge/static/index.html", http.StatusFound)
@@ -49,8 +62,16 @@ func(m *MergeHandler) MergePoints(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, fmt.Sprintf("Error parsing end date: %s", err), http.StatusBadRequest)
 		return
 	}
-
+	select {
+	case mergeQueue <- mergeRequest{startDate, endDate}:
+	default:
+		http.Error(res, "Already merging points", http.StatusLocked)
+		return
+	}
+	res.WriteHeader(http.StatusOK)
 }
+
+func (m *MergeHandler) sendPoints(start time.Time, end time.Time) {}
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
 	_, filename, _, ok := runtime.Caller(0)
