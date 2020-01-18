@@ -1,12 +1,15 @@
 package api
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
 	"path"
 	"runtime"
 	"time"
+
+	"server/datatypes"
+	"server/storage"
 
 	"github.com/gorilla/mux"
 )
@@ -15,11 +18,13 @@ const mergePageFilePath = "merge/index.html"
 
 // MergeHandler handles requests related to merging points from a local
 // instance of the server onto the main remote server.
-type MergeHandler struct{}
+type MergeHandler struct {
+	store *storage.Storage
+}
 
 // NewMergeHandler returns a pointer to a new MergeHandler.
-func NewMergeHandler() *MergeHandler {
-	return &MergeHandler{}
+func NewMergeHandler(store *storage.Storage) *MergeHandler {
+	return &MergeHandler{store}
 }
 
 // MergeDefault is the default handler for the /merge path.
@@ -29,6 +34,7 @@ func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 
 // MergePointsHandler receives form data from the site at "/merge".
 func (m *MergeHandler) MergePointsHandler(w http.ResponseWriter, r *http.Request) {
+	// Parse form data from the merge/index.html page.
 	err := r.ParseForm()
 	if err != nil {
 		// TODO: Write a better error message omg
@@ -36,19 +42,45 @@ func (m *MergeHandler) MergePointsHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	// Parse that form data into time.Time datatypes.
 	tzOffset := r.Form.Get("timezone-offset")
 	startTime, err := formatRFC3339(r.Form.Get("start-time"), tzOffset)
 	if err != nil {
+		// TODO: Write a better error message omg
 		http.Error(w, "Failed to parse form data as a valid type: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 	endTime, err := formatRFC3339(r.Form.Get("end-time"), tzOffset)
 	if err != nil {
+		// TODO: Write a better error message omg
 		http.Error(w, "Failed to parse form data as a valid type: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Fprintf(w, "start time:: %s\nend time: %s", startTime, endTime)
+	// Get all points (of all metric types) within the specified time range.
+	pointsToMerge := []*datatypes.Datapoint{}
+	metrics, err := m.store.ListMetrics()
+	if err != nil {
+		errMsg := "Failed to list all metrics in the data store. This shouldn't happen."
+		http.Error(w, errMsg, http.StatusInternalServerError)
+		return
+	}
+	for _, metric := range metrics {
+		// We can safely dereference these pointers since we handle any errors
+		// during their creation above.
+		newPoints, err := m.store.SelectMetricTimeRange(
+			metric, *startTime, *endTime,
+		)
+		if err != nil {
+			// TODO: Write a better error message omg
+			http.Error(w, "fk", http.StatusInternalServerError)
+			return
+		}
+		pointsToMerge = append(pointsToMerge, newPoints...)
+	}
+
+	// Marshal the list of metrics that we've collected to JSON format.
+	json.NewEncoder(w).Encode(pointsToMerge)
 }
 
 // Turns date/timezone strings into RFX3339Nano time.Time types.
