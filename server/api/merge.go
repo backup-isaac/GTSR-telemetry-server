@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"path"
 	"runtime"
+	"time"
 
 	"github.com/gorilla/mux"
 )
@@ -34,11 +35,46 @@ func (m *MergeHandler) MergePointsHandler(w http.ResponseWriter, r *http.Request
 		http.Error(w, "Failed to parse form data: "+err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprintf(w, "form data: %s, %s, %s",
-		r.Form.Get("timezone-offset"),
-		r.Form.Get("start-time"),
-		r.Form.Get("end-time"),
-	)
+
+	tzOffset := r.Form.Get("timezone-offset")
+	startTime, err := formatRFC3339(r.Form.Get("start-time"), tzOffset)
+	if err != nil {
+		http.Error(w, "Failed to parse form data as a valid type: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	endTime, err := formatRFC3339(r.Form.Get("end-time"), tzOffset)
+	if err != nil {
+		http.Error(w, "Failed to parse form data as a valid type: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	fmt.Fprintf(w, "start time:: %s\nend time: %s", startTime, endTime)
+}
+
+// Turns date/timezone strings into RFX3339Nano time.Time types.
+func formatRFC3339(date string, timezone string) (*time.Time, error) {
+	// If there aren't seconds on the date string passed in, add them.
+	if len(date) == 16 {
+		date += ":00"
+	}
+	// Add nanoseconds
+	// date += ".999999999"
+	// Add timezone
+	if timezone[0] == '+' || timezone[0] == '-' {
+		date += timezone
+	} else {
+		date += "Z"
+	}
+
+	log.Println(date)
+
+	// Turn string into time datatype
+	t, err := time.Parse(time.RFC3339Nano, date)
+	if err != nil {
+		return nil, err
+	}
+
+	return &t, nil
 }
 
 // RegisterRoutes registers the routes for the merge service.
