@@ -15,12 +15,11 @@ const mergePageFilePath = "merge/index.html"
 // MergeHandler handles requests related to merging points from a local
 // instance of the server onto the main remote server.
 type MergeHandler struct{
-  store *storage.Storage
 }
 
 // NewMergeHandler returns a pointer to a new MergeHandler.
 func NewMergeHandler(store *storage.Storage) *MergeHandler {
-	return &MergeHandler{store: store}
+	return &MergeHandler{}
 }
 
 // MergeDefault is the default handler for the /merge path.
