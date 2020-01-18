@@ -28,7 +28,7 @@ func main() {
 		api.NewJacksonHandler(),
 		api.NewMapHandler(),
 		api.NewReconToolHandler(store),
-		api.NewMergeHandler(),
+		api.NewMergeHandler(store),
 	})
 	go computations.RunComputations()
 	err = recordData(store)
