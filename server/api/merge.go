@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
 	"path"
 	"runtime"
 	"time"
@@ -83,6 +84,34 @@ func (m *MergeHandler) MergePointsHandler(w http.ResponseWriter, r *http.Request
 	json.NewEncoder(w).Encode(pointsToMerge)
 }
 
+// RemoteMergeHandler takes datapoints and inserts them into the data store on
+// the remote server.
+//
+// The endpoint that this handler is responsible for should only be hit on the
+// remote server.
+func (m *MergeHandler) RemoteMergeHandler(w http.ResponseWriter, r *http.Request) {
+	if os.Getenv("PRODUCTION") == "True" {
+		errMsg := "This endpoint should only be hit on the remote server"
+		http.Error(w, errMsg, http.StatusBadRequest)
+		return
+	}
+
+	pointsToMerge := []*datatypes.Datapoint{}
+	err := json.NewDecoder(r.Body).Decode(&pointsToMerge)
+	if err != nil {
+		errMsg := "Failed to unmarshal points from request body into Datapoints: " + err.Error()
+		http.Error(w, errMsg, http.StatusInternalServerError)
+		return
+	}
+
+	err = m.store.Insert(pointsToMerge)
+	if err != nil {
+		errMsg := "Failed to insert all points into remote data store: " + err.Error()
+		http.Error(w, errMsg, http.StatusInternalServerError)
+		return
+	}
+}
+
 // Turns date/timezone strings into RFX3339Nano time.Time types.
 func formatRFC3339(date string, timezone string) (*time.Time, error) {
 	// If there aren't seconds on the date string passed in, add them.
@@ -120,4 +149,5 @@ func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
 
 	router.HandleFunc("/merge", m.MergeDefault).Methods("GET")
 	router.HandleFunc("/merge", m.MergePointsHandler).Methods("POST")
+	router.HandleFunc("/remotemerge", m.RemoteMergeHandler).Methods("POST")
 }
