@@ -25,7 +25,7 @@ func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/merge/static/index.html", http.StatusFound)
 }
 
-func(m *MergeHandler) SendPoints(w http.ResponseWriter, r *http.Request) {
+func(m *MergeHandler) MergePoints(w http.ResponseWriter, r *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		http.Error(res, fmt.Sprintf("Error parsing form: %s", err), http.StatusBadRequest)
@@ -33,6 +33,22 @@ func(m *MergeHandler) SendPoints(w http.ResponseWriter, r *http.Request) {
 	}
 	startDateString := req.Form.Get("startDate")
 	endDateString := req.Form.Get("endDate")
+
+	if startDateString == "" || endDateString == "" || resolutionString == "" {
+		http.Error(res, "malformatted query", http.StatusBadRequest)
+		return
+	}
+	startDate, err := unixStringMillisToTime(startDateString)
+	if err != nil {
+		http.Error(res, fmt.Sprintf("Error parsing start date: %s", err), http.StatusBadRequest)
+		return
+	}
+	endDate, err := unixStringMillisToTime(endDateString)
+	if err != nil {
+		http.Error(res, fmt.Sprintf("Error parsing end date: %s", err), http.StatusBadRequest)
+		return
+	}
+
 }
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
@@ -44,5 +60,5 @@ func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/merge/static/").Handler(http.StripPrefix("/merge/static/", http.FileServer(http.Dir(path.Join(dir, "merge")))))
 
 	router.HandleFunc("/merge", m.MergeDefault).Methods("GET")
-	router.HandleFunc("/merge/mergePoints", m.SendPoints).Methods("POST")
+	router.HandleFunc("/merge/mergePoints", m.MergePoints).Methods("POST")
 }
