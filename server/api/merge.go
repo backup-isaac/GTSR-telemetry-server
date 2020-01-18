@@ -26,7 +26,7 @@ type mergeRequest struct {
 	end        time.Time
 }
 
-var mergeQueue = make(chan mergeRequest
+var mergeQueue = make(chan mergeRequest)
 
 func (m *MergeHandler) mergeScheduler() {
 	for req := range mergeQueue {
