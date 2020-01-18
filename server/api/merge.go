@@ -1,6 +1,7 @@
 package api
 
 import (
+	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -15,7 +16,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const mergePageFilePath = "merge/index.html"
+const (
+	mergePageFilePath = "merge/index.html"
+	remoteMergeURL    = "https://solarracing.me/remotemerge"
+)
 
 // MergeHandler handles requests related to merging points from a local
 // instance of the server onto the main remote server.
@@ -81,7 +85,25 @@ func (m *MergeHandler) MergePointsHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	// Marshal the list of metrics that we've collected to JSON format.
-	json.NewEncoder(w).Encode(pointsToMerge)
+	pointsAsJSON, err := json.Marshal(pointsToMerge)
+	if err != nil {
+		errMsg := "Failed to marshal data points into JSON: " + err.Error()
+		http.Error(w, errMsg, http.StatusInternalServerError)
+		return
+	}
+
+	// Merge points into remote server's data store.
+	res, err := http.Post(remoteMergeURL, "application/json", bytes.NewBuffer(pointsAsJSON))
+	if err != nil {
+		errMsg := "Failed to send POST request to solarracing.me/remotemerge: " + err.Error()
+		http.Error(w, errMsg, http.StatusInternalServerError)
+		return
+	}
+	if res.StatusCode != 204 {
+		errMsg := "POST request to solarracing.me/remotemerge did not return 204:" + err.Error()
+		http.Error(w, errMsg, http.StatusInternalServerError)
+		return
+	}
 }
 
 // RemoteMergeHandler takes datapoints and inserts them into the data store on
@@ -90,7 +112,7 @@ func (m *MergeHandler) MergePointsHandler(w http.ResponseWriter, r *http.Request
 // The endpoint that this handler is responsible for should only be hit on the
 // remote server.
 func (m *MergeHandler) RemoteMergeHandler(w http.ResponseWriter, r *http.Request) {
-	if os.Getenv("PRODUCTION") == "True" {
+	if os.Getenv("PRODUCTION") == "False" {
 		errMsg := "This endpoint should only be hit on the remote server"
 		http.Error(w, errMsg, http.StatusBadRequest)
 		return
@@ -110,6 +132,9 @@ func (m *MergeHandler) RemoteMergeHandler(w http.ResponseWriter, r *http.Request
 		http.Error(w, errMsg, http.StatusInternalServerError)
 		return
 	}
+
+	// Everything went alright. Return 204.
+	w.WriteHeader(http.StatusNoContent)
 }
 
 // Turns date/timezone strings into RFX3339Nano time.Time types.
