@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"fmt"
 	"html/template"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -82,6 +83,6 @@ func (m *MergeHandler) mergeHandler(res http.ResponseWriter, req *http.Request) 
 }
 
 func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
-    http.HandleFunc("/merge", defaultHandler)
-  router.HandleFunc("/merge/merge", mergeHandler)
+    http.HandleFunc("/merge", m.defaultHandler)
+  router.HandleFunc("/merge/merge", m.mergeHandler)
 }
