@@ -85,6 +85,7 @@ func (a *Acceleration) Update(point *datatypes.Datapoint) bool {
 
 // Compute computes the current acceleration as
 // a_n = (v_{n+1}-v_{n-1})/(t_{n+1}-t_{n-1})
+// Unit: m/s^2
 func (a *Acceleration) Compute() *datatypes.Datapoint {
 	a.size--
 	beforeIndex := a.idx
@@ -98,7 +99,56 @@ func (a *Acceleration) Compute() *datatypes.Datapoint {
 	}
 }
 
+// Distance is the vehicle's distance traveled, computed as cumsum(RPM_Derived_Velocity*dt)
+// TODO reset when car goes offline
+type Distance struct {
+	cumSum     float64
+	velocities []*datatypes.Datapoint
+	idx        int
+}
+
+// NewDistance returns an initialized Distance
+func NewDistance() *Distance {
+	return &Distance{
+		cumSum:     0,
+		velocities: make([]*datatypes.Datapoint, 2),
+	}
+}
+
+// GetMetrics returns the metrics that Distance depends upon
+func (d *Distance) GetMetrics() []string {
+	return []string{"RPM_Derived_Velocity", "Connection_Status"}
+}
+
+// Update signifies an update when two velocities have been stored
+// so that a ∆time can be computed. A Connection_Status = 0 point
+// resets the distance traveled so far
+// Unit: meter
+func (d *Distance) Update(point *datatypes.Datapoint) bool {
+	if point.Metric == "RPM_Derived_Velocity" {
+		d.velocities[d.idx] = point
+		d.idx++
+	} else if point.Value == 0 {
+		d.cumSum = 0
+		d.idx = 0
+	}
+	return d.idx == 2
+}
+
+// Compute computes distance as cumsum(RPM_Derived_Velocity * dt)
+func (d *Distance) Compute() *datatypes.Datapoint {
+	d.cumSum += (d.velocities[1].Value + d.velocities[0].Value) * (d.velocities[1].Time.Sub(d.velocities[0].Time).Seconds()) / 2
+	d.velocities[0] = d.velocities[1]
+	d.idx = 1
+	return &datatypes.Datapoint{
+		Metric: "RPM_Derived_Distance",
+		Value:  d.cumSum,
+		Time:   d.velocities[0].Time,
+	}
+}
+
 func init() {
 	Register(NewVelocity())
 	Register(NewAcceleration())
+	Register(NewDistance())
 }
