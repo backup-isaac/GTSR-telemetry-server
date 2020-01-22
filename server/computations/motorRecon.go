@@ -1,6 +1,7 @@
 package computations
 
 import (
+	"fmt"
 	"server/datatypes"
 	"server/recontool"
 
@@ -147,8 +148,55 @@ func (d *Distance) Compute() *datatypes.Datapoint {
 	}
 }
 
+// EmpiricalTorque computes a motor torque empirically from phase current and RPM
+type EmpiricalTorque struct {
+	phaseCurrent *datatypes.Datapoint
+	rpm          *datatypes.Datapoint
+	motor        string
+}
+
+// NewEmpiricalTorque returns an initialized EmpiricalTorque that will
+// base itself off of the specified motor
+func NewEmpiricalTorque(motor string) *EmpiricalTorque {
+	return &EmpiricalTorque{
+		motor: motor,
+	}
+}
+
+// GetMetrics returns the EmpiricalTorque's metrics
+func (t *EmpiricalTorque) GetMetrics() []string {
+	return []string{fmt.Sprintf("%s_Phase_C_Current", t.motor), fmt.Sprintf("%s_Wavesculptor_RPM", t.motor)}
+}
+
+// Update signifies an update when both a phase current and an RPM have been received
+func (t *EmpiricalTorque) Update(point *datatypes.Datapoint) bool {
+	if point.Metric == fmt.Sprintf("%s_Phase_C_Current", t.motor) {
+		t.phaseCurrent = point
+	} else if point.Metric == fmt.Sprintf("%s_Wavesculptor_RPM", t.motor) {
+		t.rpm = point
+	}
+	return t.phaseCurrent != nil && t.rpm != nil
+}
+
+// Compute returns the motor's torque in Nm
+func (t *EmpiricalTorque) Compute() *datatypes.Datapoint {
+	avgTime := t.phaseCurrent.Time.Add(t.phaseCurrent.Time.Sub(t.rpm.Time) / 2)
+	rpm := t.rpm.Value
+	phaseC := t.phaseCurrent.Value
+	t.rpm = nil
+	t.phaseCurrent = nil
+	tMax := 80.0 // ideally we can manage this better
+	return &datatypes.Datapoint{
+		Metric: fmt.Sprintf("%s_RPM_Derived_Torque", t.motor),
+		Value:  recontool.MotorTorque(rpm, phaseC, tMax),
+		Time:   avgTime,
+	}
+}
+
 func init() {
 	Register(NewVelocity())
 	Register(NewAcceleration())
 	Register(NewDistance())
+	Register(NewEmpiricalTorque("Left"))
+	Register(NewEmpiricalTorque("Right"))
 }
