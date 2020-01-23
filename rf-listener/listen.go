@@ -1,10 +1,13 @@
 package main
 
 import (
+	"encoding/binary"
 	"fmt"
 	"log"
 	"net"
 	"os"
+
+	"hash/crc32"
 
 	"go.bug.st/serial.v1"
 )
@@ -12,6 +15,7 @@ import (
 func main() {
 	var host string
 	var serialPort string
+	var table = crc32.MakeTable(0x1EDC6F41)
 
 	// connect to the serial port
 	if len(os.Args) > 1 {
@@ -71,6 +75,12 @@ func main() {
 		if err != nil {
 			log.Fatalf("Serial error: %s", err)
 		}
+		// use CRC to verify message, if specified
+		if len(os.Args) > 3 && os.Args[3] == "CRC" {
+			if !verifyChecksum(buf, table) {
+				continue
+			}
+		}
 		// directly relay messages from serial to tcp
 		_, err = conn.Write(buf[:n])
 		if err != nil {
@@ -95,4 +105,10 @@ func listen(conn net.Conn, s serial.Port) {
 			log.Fatalf("Error writing to Serial Port :%s", err)
 		}
 	}
+}
+
+func verifyChecksum(buf []byte, table *crc32.Table) bool {
+	checksumTransmitted := binary.LittleEndian.Uint32(buf[len(buf)-4:])
+	checksumCalculated := crc32.Checksum(buf[:len(buf)-4], table)
+	return checksumTransmitted == checksumCalculated
 }
