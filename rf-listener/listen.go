@@ -69,7 +69,7 @@ func main() {
 	go listen(conn, s)
 
 	// receive messages from serial port
-	buf := make([]byte, 128)
+	buf := make([]byte, 144)
 	for {
 		n, err := s.Read(buf)
 		if err != nil {
@@ -77,9 +77,19 @@ func main() {
 		}
 		// use CRC to verify message, if specified
 		if len(os.Args) > 3 && os.Args[3] == "CRC" {
-			if !verifyChecksum(buf, table) {
-				continue
+			cleanBuf := make([]byte, 144)
+			j := 0
+			for i := 0; i < n; i += 16 {
+				if !verifyChecksum(buf[i:i+16], table) {
+					log.Println("CRC failed.")
+					continue
+				}
+				log.Println("CRC passed!")
+				copy(cleanBuf[j:j+12], buf[i:i+12])
+				j += 12
 			}
+			buf = cleanBuf
+			n = j
 		}
 		// directly relay messages from serial to tcp
 		_, err = conn.Write(buf[:n])
