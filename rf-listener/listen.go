@@ -77,17 +77,22 @@ func main() {
 		}
 		// use CRC to verify message, if specified
 		if len(os.Args) > 3 && os.Args[3] == "CRC" {
+			// create a new buffer to add uncompromised frames to
 			cleanBuf := make([]byte, 144)
 			j := 0
+			// size of a frame from TelemBoard is 12 bytes + 4 byte CRC checksum
 			for i := 0; i < n; i += 16 {
+				// if CRC fails, do nothing
 				if !verifyChecksum(buf[i:i+16], table) {
 					log.Println("CRC failed.")
 					continue
 				}
+				// if CRC passes, append frame without checksum to cleanBuf
 				log.Println("CRC passed!")
 				copy(cleanBuf[j:j+12], buf[i:i+12])
 				j += 12
 			}
+			// replace buf and n with values after CRC
 			buf = cleanBuf
 			n = j
 		}
