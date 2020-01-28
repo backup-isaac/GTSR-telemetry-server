@@ -8,6 +8,8 @@ import (
 	"time"
 )
 
+var sr3 *recontool.Vehicle
+
 // Velocity is the vehicle's velocity computed from motor RPM
 type Velocity struct {
 	leftRpm  *datatypes.Datapoint
@@ -43,10 +45,9 @@ func (v *Velocity) Compute() *datatypes.Datapoint {
 	avgTime := v.leftRpm.Time.Add(v.rightRpm.Time.Sub(v.leftRpm.Time) / 2)
 	v.leftRpm = nil
 	v.rightRpm = nil
-	motorRadius := 0.278 // ideally we can manage this better
 	return &datatypes.Datapoint{
 		Metric: "RPM_Derived_Velocity",
-		Value:  recontool.Velocity(avgRpm, motorRadius),
+		Value:  recontool.Velocity(avgRpm, sr3.RMot),
 		Time:   avgTime,
 	}
 }
@@ -185,18 +186,129 @@ func (t *EmpiricalTorque) Compute() *datatypes.Datapoint {
 	phaseC := t.phaseCurrent.Value
 	t.rpm = nil
 	t.phaseCurrent = nil
-	tMax := 80.0 // ideally we can manage this better
 	return &datatypes.Datapoint{
 		Metric: fmt.Sprintf("%s_RPM_Derived_Torque", t.motor),
-		Value:  recontool.MotorTorque(rpm, phaseC, tMax),
+		Value:  recontool.MotorTorque(rpm, phaseC, sr3.TMax),
 		Time:   avgTime,
 	}
 }
 
+// LeftRightSum sums the left and right versions of a metric
+type LeftRightSum struct {
+	left       *datatypes.Datapoint
+	right      *datatypes.Datapoint
+	baseMetric string
+}
+
+// NewLeftRightSum returns an initialized LeftRightSum that will
+// base itself off of the specified base metric
+func NewLeftRightSum(baseMetric string) *LeftRightSum {
+	return &LeftRightSum{
+		baseMetric: baseMetric,
+	}
+}
+
+// GetMetrics returns the LeftRightSum's metrics
+func (s *LeftRightSum) GetMetrics() []string {
+	return []string{fmt.Sprintf("Left_%s", s.baseMetric), fmt.Sprintf("Right_%s", s.baseMetric)}
+}
+
+// Update signifies an update when both the left and right versions of the metric have been received
+func (s *LeftRightSum) Update(point *datatypes.Datapoint) bool {
+	if point.Metric == fmt.Sprintf("Left_%s", s.baseMetric) {
+		s.left = point
+	} else if point.Metric == fmt.Sprintf("Right_%s", s.baseMetric) {
+		s.right = point
+	}
+	return s.left != nil && s.right != nil
+}
+
+// Compute adds Left_[base metric] + Right_[base metric]
+func (s *LeftRightSum) Compute() *datatypes.Datapoint {
+	avgTime := s.left.Time.Add(s.left.Time.Sub(s.right.Time) / 2)
+	left := s.left.Value
+	right := s.right.Value
+	s.left = nil
+	s.right = nil
+	return &datatypes.Datapoint{
+		Metric: s.baseMetric,
+		Value:  left + right,
+		Time:   avgTime,
+	}
+}
+
+// TerrainAngle computes the angle of the terrain that the vehicle is driving on
+// by deriving the amount of gravitational force that is accelerating the vehicle
+type TerrainAngle struct {
+	torque       *datatypes.Datapoint
+	velocity     *datatypes.Datapoint
+	acceleration *datatypes.Datapoint
+}
+
+// NewTerrainAngle returns an initialized TerrainAngle
+func NewTerrainAngle() *TerrainAngle {
+	return &TerrainAngle{}
+}
+
+// GetMetrics returns the TerrainAngle's metrics
+func (t *TerrainAngle) GetMetrics() []string {
+	return []string{"RPM_Derived_Torque", "RPM_Derived_Velocity", "RPM_Derived_Acceleration"}
+}
+
+// Update signifies an update when all three required metrics have been received
+func (t *TerrainAngle) Update(point *datatypes.Datapoint) bool {
+	switch point.Metric {
+	case "RPM_Derived_Torque":
+		t.torque = point
+	case "RPM_Derived_Velocity":
+		t.velocity = point
+	case "RPM_Derived_Acceleration":
+		t.acceleration = point
+	}
+	return t.torque != nil && t.velocity != nil && t.acceleration != nil
+}
+
+// Compute returns the terrain angle in radians
+func (t *TerrainAngle) Compute() *datatypes.Datapoint {
+	latest := t.torque.Time
+	if t.velocity.Time.After(latest) {
+		latest = t.velocity.Time
+	}
+	if t.acceleration.Time.After(latest) {
+		latest = t.acceleration.Time
+	}
+	torque := t.torque.Value
+	velocity := t.velocity.Value
+	accel := t.acceleration.Value
+	t.torque = nil
+	t.velocity = nil
+	t.acceleration = nil
+	return &datatypes.Datapoint{
+		Metric: "Terrain_Angle",
+		Value:  recontool.DeriveTerrainAngle(torque, velocity, accel, sr3),
+		Time:   latest,
+	}
+}
+
 func init() {
+	sr3 = &recontool.Vehicle{
+		RMot:  0.278,
+		M:     362.874,
+		Crr1:  0.006,
+		Crr2:  0.0009,
+		CDa:   0.16,
+		TMax:  80,
+		QMax:  36,
+		RLine: 0.1,
+		VcMax: 4.2,
+		VcMin: 2.5,
+		VSer:  35,
+	}
 	Register(NewVelocity())
 	Register(NewAcceleration())
 	Register(NewDistance())
 	Register(NewEmpiricalTorque("Left"))
 	Register(NewEmpiricalTorque("Right"))
+	Register(NewLeftRightSum("RPM_Derived_Torque"))
+	Register(NewTerrainAngle())
 }
