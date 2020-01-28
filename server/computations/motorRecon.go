@@ -42,13 +42,16 @@ func (v *Velocity) Update(point *datatypes.Datapoint) bool {
 // Compute returns the current velocity of the car in m/s
 func (v *Velocity) Compute() *datatypes.Datapoint {
 	avgRpm := (v.leftRpm.Value + v.rightRpm.Value) / 2
-	avgTime := v.leftRpm.Time.Add(v.rightRpm.Time.Sub(v.leftRpm.Time) / 2)
+	latest := v.leftRpm.Time
+	if v.rightRpm.Time.After(latest) {
+		latest = v.rightRpm.Time
+	}
 	v.leftRpm = nil
 	v.rightRpm = nil
 	return &datatypes.Datapoint{
 		Metric: "RPM_Derived_Velocity",
 		Value:  recontool.Velocity(avgRpm, sr3.RMot),
-		Time:   avgTime,
+		Time:   latest,
 	}
 }
 
@@ -181,7 +184,10 @@ func (t *EmpiricalTorque) Update(point *datatypes.Datapoint) bool {
 
 // Compute returns the motor's torque in Nm
 func (t *EmpiricalTorque) Compute() *datatypes.Datapoint {
-	avgTime := t.phaseCurrent.Time.Add(t.phaseCurrent.Time.Sub(t.rpm.Time) / 2)
+	latest := t.phaseCurrent.Time
+	if t.rpm.Time.After(latest) {
+		latest = t.rpm.Time
+	}
 	rpm := t.rpm.Value
 	phaseC := t.phaseCurrent.Value
 	t.rpm = nil
@@ -189,7 +195,7 @@ func (t *EmpiricalTorque) Compute() *datatypes.Datapoint {
 	return &datatypes.Datapoint{
 		Metric: fmt.Sprintf("%s_RPM_Derived_Torque", t.motor),
 		Value:  recontool.MotorTorque(rpm, phaseC, sr3.TMax),
-		Time:   avgTime,
+		Time:   latest,
 	}
 }
 
@@ -225,7 +231,10 @@ func (s *LeftRightSum) Update(point *datatypes.Datapoint) bool {
 
 // Compute adds Left_[base metric] + Right_[base metric]
 func (s *LeftRightSum) Compute() *datatypes.Datapoint {
-	avgTime := s.left.Time.Add(s.left.Time.Sub(s.right.Time) / 2)
+	latest := s.left.Time
+	if s.right.Time.After(latest) {
+		latest = s.right.Time
+	}
 	left := s.left.Value
 	right := s.right.Value
 	s.left = nil
@@ -233,7 +242,7 @@ func (s *LeftRightSum) Compute() *datatypes.Datapoint {
 	return &datatypes.Datapoint{
 		Metric: s.baseMetric,
 		Value:  left + right,
-		Time:   avgTime,
+		Time:   latest,
 	}
 }
 
