@@ -197,50 +197,89 @@ func (t *EmpiricalTorque) Compute() *datatypes.Datapoint {
 	}
 }
 
-// LeftRightSum sums the left and right versions of a metric
-type LeftRightSum struct {
-	left       *datatypes.Datapoint
-	right      *datatypes.Datapoint
-	baseMetric string
+// ModeledMotorForce calculates the magnitude of force that the motors exert
+// to cause the car to move
+type ModeledMotorForce struct {
+	velocity     *datatypes.Datapoint
+	acceleration *datatypes.Datapoint
+	terrainAngle *datatypes.Datapoint
 }
 
-// NewLeftRightSum returns an initialized LeftRightSum that will
-// base itself off of the specified base metric
-func NewLeftRightSum(baseMetric string) *LeftRightSum {
-	return &LeftRightSum{
-		baseMetric: baseMetric,
+// NewModeledMotorForce returns an initialized ModeledMotorForce
+func NewModeledMotorForce() *ModeledMotorForce {
+	return &ModeledMotorForce{}
+}
+
+// GetMetrics returns the ModeledMotorForce's metrics
+func (f *ModeledMotorForce) GetMetrics() []string {
+	return []string{"RPM_Derived_Velocity", "RPM_Derived_Acceleration", "Terrain_Angle"}
+}
+
+// Update signifies an update when all required metrics have been received
+func (f *ModeledMotorForce) Update(point *datatypes.Datapoint) bool {
+	switch point.Metric {
+	case "RPM_Derived_Velocity":
+		f.velocity = point
+	case "RPM_Derived_Acceleration":
+		f.acceleration = point
+	case "Terrain_Angle":
+		f.terrainAngle = point
 	}
+	return f.velocity != nil && f.acceleration != nil && f.terrainAngle != nil
 }
 
-// GetMetrics returns the LeftRightSum's metrics
-func (s *LeftRightSum) GetMetrics() []string {
-	return []string{fmt.Sprintf("Left_%s", s.baseMetric), fmt.Sprintf("Right_%s", s.baseMetric)}
-}
-
-// Update signifies an update when both the left and right versions of the metric have been received
-func (s *LeftRightSum) Update(point *datatypes.Datapoint) bool {
-	if point.Metric == fmt.Sprintf("Left_%s", s.baseMetric) {
-		s.left = point
-	} else if point.Metric == fmt.Sprintf("Right_%s", s.baseMetric) {
-		s.right = point
+// Compute returns the modeled motor force in Newtons
+func (f *ModeledMotorForce) Compute() *datatypes.Datapoint {
+	latest := f.velocity.Time
+	if f.acceleration.Time.After(latest) {
+		latest = f.acceleration.Time
 	}
-	return s.left != nil && s.right != nil
-}
-
-// Compute adds Left_[base metric] + Right_[base metric]
-func (s *LeftRightSum) Compute() *datatypes.Datapoint {
-	latest := s.left.Time
-	if s.right.Time.After(latest) {
-		latest = s.right.Time
+	if f.terrainAngle.Time.After(latest) {
+		latest = f.terrainAngle.Time
 	}
-	left := s.left.Value
-	right := s.right.Value
-	s.left = nil
-	s.right = nil
+	velocity := f.velocity.Value
+	accel := f.acceleration.Value
+	angle := f.terrainAngle.Value
+	f.velocity = nil
+	f.acceleration = nil
+	f.terrainAngle = nil
 	return &datatypes.Datapoint{
-		Metric: s.baseMetric,
-		Value:  left + right,
+		Metric: "Modeled_Motor_Force",
+		Value:  recontool.ModeledMotorForce(velocity, accel, angle, sr3),
 		Time:   latest,
+	}
+}
+
+// ModeledMotorTorque calculates motor torque from modeled force
+type ModeledMotorTorque struct {
+	force *datatypes.Datapoint
+}
+
+// NewModeledMotorTorque returns an initialized ModelMotorTorque
+func NewModeledMotorTorque() *ModeledMotorTorque {
+	return &ModeledMotorTorque{}
+}
+
+// GetMetrics returns the ModeledMotorTorque's metrics
+func (t *ModeledMotorTorque) GetMetrics() []string {
+	return []string{"Modeled_Motor_Force"}
+}
+
+// Update signifies an update when a new force point is received
+func (t *ModeledMotorTorque) Update(point *datatypes.Datapoint) bool {
+	t.force = point
+	return true
+}
+
+// Compute computes modeled motor torque in Nm
+func (t *ModeledMotorTorque) Compute() *datatypes.Datapoint {
+	time := t.force.Time
+	force := t.force.Value
+	t.force = nil
+	return &datatypes.Datapoint{
+		Metric: "Modeled_Motor_Torque",
+		Value:  force * sr3.RMot,
+		Time:   time,
 	}
 }
 
@@ -251,4 +290,6 @@ func init() {
 	Register(NewEmpiricalTorque("Left"))
 	Register(NewEmpiricalTorque("Right"))
 	Register(NewLeftRightSum("RPM_Derived_Torque"))
+	Register(NewModeledMotorForce())
+	Register(NewModeledMotorTorque())
 }
