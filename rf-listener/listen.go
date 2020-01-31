@@ -87,7 +87,6 @@ func main() {
 					log.Println("CRC failed.")
 					continue
 				}
-				// if CRC passes, append frame without checksum to cleanBuf
 				log.Println("CRC passed!")
 				copy(cleanBuf[j:j+12], buf[i:i+12])
 				j += 12
