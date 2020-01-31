@@ -19,6 +19,7 @@
 
 
 <div class="container">
+  <div class="row">
   <div class = "col-sm-4">
 <div class="panel panel-default">
 <div class= "panel-heading"><h2 style="text-align:center">Download Last Generated CSV</h2></div>
@@ -32,7 +33,7 @@
 
 <div class = "col-sm-8" >
 <div class="panel panel-default">
-  <div class= "panel-heading" ><h2 style="text-align:center">Generate New CSV</h2></div>
+  <div class= "panel-heading" ><h2 style="text-align:center">Generate CSV From Dates</h2></div>
   <div class="panel-body" style="padding-left:15%">
   <h4>Select timezone</h4>
   <select name="timezone_offset" id="timezone-offset" class="span5">
@@ -84,18 +85,54 @@
   <h4>Resolution (ms)</h4>
   <input value="250" id="resolution" type="number"/>
   <br/>
-  <button id="generateButton" onclick="generateCSV()"class="btn btn-success">Generate CSV</button>
+  <button id="generateButton" onclick="generateCSV_dates()"class="btn btn-success">Generate CSV</button>
 </div>
 </div>
+</div>
+</div>
+
+<div class="row">
+  <div class="col-sm-4"></div>
+    <div class = "col-sm-8" >
+        <div class="panel panel-default">
+          <div class= "panel-heading" ><h2 style="text-align:center">Generate CSV From UNIX Timestamps</h2></div>
+          <div class="panel-body" style="padding-left:15%">
+            <h4>Start</h4>
+          <input id="start" type="text" placeholder="Starting timestamp"/>
+          <h4>End</h4>
+          <input id="start" type="text" placeholder="Ending timestamp"/>
+          <br/>
+          <button id="generateButton" onclick="generateCSV_unix()"class="btn btn-success">Generate CSV</button>
+        </div>
+        </div>
+        </div>
 </div>
 </div>
 </body>
 
 <script>
-  function generateCSV() {
+  function generateCSV(start, end, resolution) {
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      if (request.readyState == 4) {
+        if (request.status == 200) {
+          window.location = "https://solarracing.me/csv/static/generating.html";
+        } else if (request.status == 423) {
+          alert("Generator is currently in use");
+        } else {
+          alert("Request failed: " + request.statusText);
+        }
+      }
+    }
+    request.open("POST", "https://solarracing.me/csv/generateCsv", true);
+    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    request.send("startDate=" + start + "&endDate=" + end + "&resolution=" + resolution);
+  }
+
+  function generateCSV_dates() {
     var startTime = Date.parse(document.getElementById("start").value);
     var endTime = Date.parse(document.getElementById("end").value);
-    var resolution = parseInt(document.getElementById("resolution").value)
+    var resolution = parseInt(document.getElementById("resolution").value);
     if (isNaN(startTime) || isNaN(endTime) || startTime >= endTime || (endTime - startTime) / 3600000 > 24) {
       alert("Please enter a valid start and end date with a span of no more than 24 hours.");
       return;
@@ -117,21 +154,11 @@
     */
     startTime -= startDate.getTimezoneOffset() * 60000 + (offsets[0] * 3600000 + offsets[1] * 60000);
     endTime -= endDate.getTimezoneOffset() * 60000 + (offsets[0] * 3600000 + offsets[1] * 60000);
-    var request = new XMLHttpRequest();
-    request.onreadystatechange = function() {
-      if (request.readyState == 4) {
-        if (request.status == 200) {
-          window.location = "/csv/static/generating.html";
-        } else if (request.status == 423) {
-          alert("Generator is currently in use");
-        } else {
-          alert("Request failed: " + request.statusText);
-        }
-      }
-    }
-    request.open("POST", "/csv/generateCsv", true);
-    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    request.send("startDate=" + startTime + "&endDate=" + endTime + "&resolution=" + resolution);
+    generateCSV(startTime, endTime, resolution);
+  }
+
+  function generateCSV_unix() {
+
   }
 </script>
 
