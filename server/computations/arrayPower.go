@@ -20,7 +20,7 @@ func NewArrayPower() *ArrayPower {
 	}
 }
 
-func (a *ArrayPower) Compute() *datatypes.DataPoint {
+func (a *ArrayPower) Compute() *datatypes.Datapoint {
 	mg0Power := a.values["MG_0_Input_Power"] / 1000.0
 
 	photon0Power := a.values["Photon_Channel_0_Array_Voltage"] * a.values["Photon_Channel_0_Array_Current"]
