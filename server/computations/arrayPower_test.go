@@ -43,7 +43,7 @@ func TestArrayPower(t *testing.T) {
 	actualPoint := array.Compute()
 	assert.Equal(t, expectedPoint, actualPoint)
 
-	done := array.Update(&datatypes.Datapoint{
+	done = array.Update(&datatypes.Datapoint{
 		Metric: "MG_0_Input_Power",
 		Value:  10000,
 	})
@@ -68,7 +68,7 @@ func TestArrayPower(t *testing.T) {
 		Value:  6,
 	})
 	assert.True(t, done)
-	expectedPoint := &datatypes.Datapoint{
+	expectedPoint = &datatypes.Datapoint{
 		Metric: "Array_Power",
 		Value:  480,
 	}
