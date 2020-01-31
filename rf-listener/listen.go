@@ -68,21 +68,48 @@ func main() {
 	// listen for incoming TCP messages, and print out
 	go listen(conn, s)
 
-	// receive messages from serial port
 	buf := make([]byte, 144)
-	for {
-		n, err := s.Read(buf)
-		if err != nil {
-			log.Fatalf("Serial error: %s", err)
-		}
-		// use CRC to verify message, if specified
-		if len(os.Args) > 3 && os.Args[3] == "CRC" {
+	// if CRC enabled, use a different algorithm to read in bytes
+	if len(os.Args) > 3 && os.Args[3] == "CRC" {
+		bytesRead := 0
+		incompleteBuf := make([]byte, 16)
+		for {
+			n, err := s.Read(buf)
+			if err != nil {
+				log.Fatalf("Serial error: %s", err)
+			}
+			// check if we need to add bytes to an incomplete frame
+			start := 0
+			if bytesRead > 0 {
+				if n+bytesRead < 16 {
+					// add bytes to existing incomplete frame
+					copy(incompleteBuf[bytesRead:bytesRead+n], buf[:])
+					bytesRead += n
+					continue
+				} else {
+					// finish incomplete frame, and offset start position in buf
+					copy(incompleteBuf[bytesRead:16], buf[:16-bytesRead])
+					start += 16 - bytesRead
+					// reset bytesRead to 0
+					bytesRead = 0
+				}
+			}
 			// create a new buffer to add uncompromised frames to
 			cleanBuf := make([]byte, 144)
+			var i int
 			j := 0
-			// size of a frame from TelemBoard is 12 bytes + 4 byte CRC checksum
-			for i := 0; i < n; i += 16 {
-				// if CRC fails, do nothing
+			// if incompleteBuf was finished, do CRC then add it to cleanBuf to be written if passed
+			if start > 0 {
+				if !verifyChecksum(incompleteBuf, table) {
+					log.Println("CRC failed.")
+				} else {
+					log.Println("CRC passed!")
+					copy(cleanBuf[:12], incompleteBuf[:12])
+					j = 12
+				}
+			}
+			// for each complete frame, do CRC, then add to cleanBuf if passed
+			for i = start; i < n-15; i += 16 {
 				if !verifyChecksum(buf[i:i+16], table) {
 					log.Println("CRC failed.")
 					continue
@@ -91,9 +118,20 @@ func main() {
 				copy(cleanBuf[j:j+12], buf[i:i+12])
 				j += 12
 			}
-			// replace buf and n with values after CRC
-			buf = cleanBuf
-			n = j
+			// add extra bytes (if any) to incompleteBuf
+			copy(incompleteBuf[:n-i+1], buf[i:n])
+			// write complete frames to TCP
+			_, err = conn.Write(cleanBuf[:j])
+			if err != nil {
+				log.Fatalf("Error writing to connection: %s", err)
+			}
+		}
+	}
+	// otherwise, receive messages from serial port
+	for {
+		n, err := s.Read(buf)
+		if err != nil {
+			log.Fatalf("Serial error: %s", err)
 		}
 		// directly relay messages from serial to tcp
 		_, err = conn.Write(buf[:n])
