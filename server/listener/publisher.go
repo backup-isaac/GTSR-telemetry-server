@@ -2,6 +2,7 @@ package listener
 
 import (
 	"fmt"
+	"log"
 	"sync"
 
 	"server/datatypes"
@@ -118,11 +119,19 @@ func (publisher *DatapointPublisher) publisherThread() {
 	for point := range publisher.publishChannel {
 		publisher.subscribersLock.Lock()
 		for _, subscriber := range publisher.subscribers {
-			subscriber <- point
+			send(subscriber, point)
 		}
 		for _, subscriber := range publisher.specificSubscribers[point.Metric] {
-			subscriber <- point
+			send(subscriber, point)
 		}
 		publisher.subscribersLock.Unlock()
+	}
+}
+
+func send(subscriber chan *datatypes.Datapoint, point *datatypes.Datapoint) {
+	select {
+	case subscriber <- point:
+	default:
+		log.Printf("WARNING: Subscriber %v blocked publisher. Skipping...", subscriber)
 	}
 }

@@ -2,6 +2,7 @@ package computations
 
 import (
 	"server/datatypes"
+	"time"
 )
 
 // TestComputation is a test computation, which is used to ensure
@@ -35,6 +36,7 @@ func (tc *TestComputation) Compute() *datatypes.Datapoint {
 	return &datatypes.Datapoint{
 		Metric: "Test_Computation",
 		Value:  val,
+		Time:   time.Now(),
 	}
 }
 

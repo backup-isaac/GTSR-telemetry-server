@@ -131,11 +131,29 @@ func formPacket() []byte {
 // Receive dashboard messages.
 func listen(conn net.Conn) {
 	buf := make([]byte, 128)
+	receiver := NewRouteReceiver()
 	for {
 		n, err := conn.Read(buf)
 		if err != nil {
 			log.Fatalf("Error reading from connection: %s", err)
 		}
 		log.Printf("Received message from server: %q", buf[:n])
+		for i := 0; i < n; i++ {
+			if response, ok := receiver.ReceiveByte(buf[i]); ok && rand.Float32() < 0.7 {
+				// Full packet received. Randomly drop some responses to test robustness
+				sendLock.Lock()
+				_, err := conn.Write(response)
+				sendLock.Unlock()
+				if err != nil {
+					log.Fatalf("Error writing to connection: %+v", err)
+				}
+				if receiver.RouteReceived() {
+					log.Println("Full route received:")
+					for _, point := range receiver.Route {
+						log.Println("\t" + point.String())
+					}
+				}
+			}
+		}
 	}
 }

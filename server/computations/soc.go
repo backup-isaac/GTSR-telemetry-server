@@ -2,6 +2,7 @@ package computations
 
 import (
 	"server/datatypes"
+	"time"
 )
 
 var imat = []float64{0, 36, 60, 120, 180}
@@ -52,6 +53,7 @@ func (sp *SOCPercentage) Compute() *datatypes.Datapoint {
 	bmsCurrent := sp.values["BMS_Current"]
 	point := &datatypes.Datapoint{
 		Metric: "SOC_Percentage",
+		Time:   time.Now(),
 	}
 	point.Value = lookupPercent(minVoltage, bmsCurrent)
 	sp.values = make(map[string]float64)

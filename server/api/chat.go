@@ -2,9 +2,7 @@ package api
 
 import (
 	"crypto/rand"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -12,22 +10,27 @@ import (
 	"runtime"
 	"server/datatypes"
 	"server/listener"
-	"strings"
+	"server/message"
 	"sync"
 	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/websocket"
-	"github.com/nlopes/slack"
 )
 
 // ChatHandler handles communications between the car, Slack, and the chat web service
-type ChatHandler struct{}
+type ChatHandler struct {
+	slackMessenger *message.SlackMessenger
+	carMessenger   *message.CarMessenger
+}
 
 // NewChatHandler returns a basic initialized ChatHandler
 func NewChatHandler() *ChatHandler {
-	return &ChatHandler{}
+	return &ChatHandler{
+		slackMessenger: message.NewSlackMessenger(),
+		carMessenger:   message.NewCarMessenger("GT", listener.NewTCPWriter()),
+	}
 }
 
 var hashKey = []byte(securecookie.GenerateRandomKey(32))
@@ -45,16 +48,6 @@ var authorizedUsers = map[string]bool{
 	"U709MM717": true, // Steven
 	"UCRCSKHBN": true, // Noah
 	"UCR9YCZCN": true, // Kat
-}
-
-var slck *slack.Client
-
-func postSlackMessage(message string) {
-	if slck != nil {
-		slck.PostMessage("chat", slack.MsgOptionText(message, false))
-	} else {
-		log.Printf("No slack key - message: %s", message)
-	}
 }
 
 var sc = securecookie.New(hashKey, blockKey)
@@ -166,33 +159,25 @@ func (c *ChatHandler) ChatSlashCommand(res http.ResponseWriter, req *http.Reques
 	}
 	user := req.Form.Get("user_id")
 	if requireAuthorization && !authorizedUsers[user] {
-		slackResponse("Unauthorized user", res)
+		c.slackMessenger.RespondToSlackRequest("Unauthorized user", res)
 		return
 	}
 	channel := req.Form.Get("channel_name")
 	if channel != "chat" && channel != "testing" {
-		slackResponse("Requests must be made from #chat", res)
+		c.slackMessenger.RespondToSlackRequest("Requests must be made from #chat", res)
 		return
 	}
 	msg := req.Form.Get("text")
 	if len(msg) == 0 {
-		slackResponse("Please provide a message", res)
+		c.slackMessenger.RespondToSlackRequest("Please provide a message", res)
 		return
 	}
 	if len(msg) > maxMessageLength {
-		slackResponse("Message exceeds maximum length", res)
+		c.slackMessenger.RespondToSlackRequest("Message exceeds maximum length", res)
 		return
 	}
-	uploadTCPMessage(msg)
-	slackResponse("Message sent", res)
-}
-
-func slackResponse(text string, res http.ResponseWriter) {
-	response := make(map[string]string)
-	response["response_type"] = "in_channel"
-	response["text"] = text
-	res.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(res).Encode(response)
+	c.carMessenger.UploadChatMessageViaTCP(msg)
+	c.slackMessenger.RespondToSlackRequest("Message sent", res)
 }
 
 // ChatSocket initializes the WebSocket for a connection.
@@ -236,9 +221,9 @@ func (c *ChatHandler) ChatSocket(res http.ResponseWriter, req *http.Request) {
 		} else {
 			// Print the message to the console
 			log.Printf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
-			postSlackMessage("Strategy: " + string(msg))
+			c.slackMessenger.PostNewMessage("Strategy: " + string(msg))
 			// upload message to car
-			uploadTCPMessage(string(msg))
+			c.carMessenger.UploadChatMessageViaTCP(string(msg))
 		}
 	}
 }
@@ -249,14 +234,15 @@ func (c *ChatHandler) ChatSocket(res http.ResponseWriter, req *http.Request) {
 func SubscribeDriverStatus() {
 	points := make(chan *datatypes.Datapoint)
 	listener.Subscribe(points, "Driver_ACK_Status")
+	slackMessenger := message.NewSlackMessenger()
 	for point := range points {
 		msg := ""
 		if point.Value == 0.0 {
 			msg = "Driver Response NACK"
-			postSlackMessage("Driver: NACK")
+			slackMessenger.PostNewMessage("Driver: NACK")
 		} else if point.Value == 1.0 {
 			msg = "Driver Response ACK"
-			postSlackMessage("Driver: ACK")
+			slackMessenger.PostNewMessage("Driver: ACK")
 		}
 		if msg == "" {
 			continue
@@ -308,17 +294,6 @@ func pingClient(conn *websocket.Conn) {
 	}
 }
 
-// uploadTCPMessage sends our message to the listener
-// which will then relay to the car
-func uploadTCPMessage(message string) {
-	// send GTSR, the length of the string, and the string itself
-	msg := []byte("GTSR")
-	messageLength := []byte{byte(len(message))}
-	msg = append(msg, messageLength...)
-	msg = append(msg, []byte(message)...)
-	listener.Write(msg)
-}
-
 // MonitorConnection listens for connection status messages and
 // posts Slack messages in response
 func MonitorConnection() {
@@ -327,11 +302,12 @@ func MonitorConnection() {
 	if err != nil {
 		log.Fatalf("Error getting datapoint publisher: %v", err)
 	}
+	slackMessenger := message.NewSlackMessenger()
 	for point := range c {
 		if point.Value == 1 {
-			postSlackMessage("Connection established")
+			slackMessenger.PostNewMessage("Connection established")
 		} else {
-			postSlackMessage("Connection lost")
+			slackMessenger.PostNewMessage("Connection lost")
 		}
 	}
 }
@@ -345,12 +321,6 @@ func (c *ChatHandler) RegisterRoutes(router *mux.Router) {
 		log.Fatal("Could not find runtime caller")
 	}
 	dir := path.Dir(filename)
-
-	if token, err := ioutil.ReadFile("/secrets/slack_token.txt"); err == nil {
-		slck = slack.New(strings.TrimSpace(string(token)))
-	} else {
-		log.Printf("Unable to find Slack credentials: %s\n", err)
-	}
 
 	router.PathPrefix("/chat/static").Handler(checkAuthHandler(http.StripPrefix("/chat/static/", http.FileServer(http.Dir(path.Join(dir, "chat"))))))
 	router.PathPrefix("/chat-login/static").Handler(http.StripPrefix("/chat-login/static/", http.FileServer(http.Dir(path.Join(dir, "chat-login")))))
