@@ -73,10 +73,34 @@ func main() {
 	if len(os.Args) > 3 && os.Args[3] == "CRC" {
 		bytesRead := 0
 		incompleteBuf := make([]byte, 16)
+		checkGT := true
 		for {
 			n, err := s.Read(buf)
 			if err != nil {
 				log.Fatalf("Serial error: %s", err)
+			}
+			// if this is the first iteration or CRC was failed in the previous iteration, look for a GT
+			if checkGT {
+				// if the first two characters between the incomplete buffer and read buffer aren't GT, reset bytesRead and look for a new GT in buf
+				if (bytesRead == 0) || (bytesRead == 1 && (incompleteBuf[0] != 'G' || buf[0] != 'T')) || incompleteBuf[0] != 'G' || incompleteBuf[1] != 'T' {
+					bytesRead = 0
+					for i := 0; i < n; i++ {
+						if buf[i] == 'G' {
+							if i+1 >= n {
+								incompleteBuf[0] = 'G'
+								bytesRead = 1
+							} else if buf[i+1] == 'T' {
+								checkGT = false
+								break
+							}
+						}
+					}
+					if checkGT {
+						continue
+					}
+				} else {
+					checkGT = false
+				}
 			}
 			// check if we need to add bytes to an incomplete frame
 			start := 0
@@ -102,6 +126,7 @@ func main() {
 			if start > 0 {
 				if !verifyChecksum(incompleteBuf, table) {
 					log.Println("CRC failed.")
+					checkGT = true
 				} else {
 					log.Println("CRC passed!")
 					copy(cleanBuf[:12], incompleteBuf[:12])
@@ -112,6 +137,7 @@ func main() {
 			for i = start; i < n-15; i += 16 {
 				if !verifyChecksum(buf[i:i+16], table) {
 					log.Println("CRC failed.")
+					checkGT = true
 					continue
 				}
 				log.Println("CRC passed!")
@@ -120,6 +146,7 @@ func main() {
 			}
 			// add extra bytes (if any) to incompleteBuf
 			copy(incompleteBuf[:n-i+1], buf[i:n])
+			bytesRead = n - i + 1
 			// write complete frames to TCP
 			_, err = conn.Write(cleanBuf[:j])
 			if err != nil {
