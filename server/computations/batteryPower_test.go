@@ -36,6 +36,7 @@ func TestBatteryPower(t *testing.T) {
 		Value:  5000,
 	}
 	actualPoint := bp.Compute()
+	expectedPoint.Time = actualPoint.Time
 	assert.Equal(t, expectedPoint, actualPoint)
 
 	done = bp.Update(&datatypes.Datapoint{
@@ -63,5 +64,6 @@ func TestBatteryPower(t *testing.T) {
 		Value:  7500,
 	}
 	actualPoint = bp.Compute()
+	expectedPoint.Time = actualPoint.Time
 	assert.Equal(t, expectedPoint, actualPoint)
 }

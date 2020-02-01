@@ -12,26 +12,21 @@ const connStatusMetric = "Connection_Status"
 // to Slack for when connection is established and lost.
 func monitorConnection() {
 	p := GetDatapointPublisher()
-	points := make(chan *datatypes.Datapoint, 10)
+	points := make(chan *datatypes.Datapoint, 1000)
 	err := Subscribe(points)
 	if err != nil {
 		log.Fatalf("Error subscribing to publisher: %v", err)
 	}
 	connected := false
 	timer := time.NewTimer(10 * time.Second)
+	receivedPoint := false
 	for {
 		select {
 		case point := <-points:
 			if point.Metric == connStatusMetric {
 				continue
 			}
-			timer.Stop()
-			// Clear potential timer channel contents (nonblocking)
-			select {
-			case <-timer.C:
-			default:
-			}
-			timer.Reset(10 * time.Second)
+			receivedPoint = true
 			if !connected {
 				p.Publish(&datatypes.Datapoint{
 					Metric: connStatusMetric,
@@ -42,7 +37,7 @@ func monitorConnection() {
 			}
 		case <-timer.C:
 			timer.Reset(10 * time.Second)
-			if connected {
+			if connected && !receivedPoint {
 				p.Publish(&datatypes.Datapoint{
 					Metric: connStatusMetric,
 					Value:  0,
@@ -50,6 +45,7 @@ func monitorConnection() {
 				})
 				connected = false
 			}
+			receivedPoint = false
 		}
 	}
 }

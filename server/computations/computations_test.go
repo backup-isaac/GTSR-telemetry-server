@@ -37,7 +37,10 @@ func TestComputations(t *testing.T) {
 	go computations.RunComputations()
 
 	publisher := listener.GetDatapointPublisher()
-	defer publisher.Close()
+	defer func() {
+		<-time.After(10 * time.Millisecond)
+		publisher.Close()
+	}()
 	stream := make(chan *datatypes.Datapoint, 1000)
 	err := publisher.Subscribe(stream)
 	assert.NoError(t, err)
