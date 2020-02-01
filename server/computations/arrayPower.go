@@ -13,9 +13,9 @@ func NewArrayPower() *ArrayPower {
 	return &ArrayPower{
 		standardComputation{
 			values: make(map[string]float64),
-			fields: []string{	"MG_0_Input_Power",
-								"Photon_Channel_0_Array_Voltage", "Photon_Channel_0_Array_Current", 
-								"Photon_Channel_1_Array_Voltage", "Photon_Channel_1_Array_Current"},
+			fields: []string{"MG_0_Input_Power",
+				"Photon_Channel_0_Array_Voltage", "Photon_Channel_0_Array_Current",
+				"Photon_Channel_1_Array_Voltage", "Photon_Channel_1_Array_Current"},
 		},
 	}
 }
@@ -30,7 +30,7 @@ func (a *ArrayPower) Compute() *datatypes.Datapoint {
 
 	point := &datatypes.Datapoint{
 		Metric: "Array_Power",
-		Value: totalPower,
+		Value:  totalPower,
 	}
 	a.values = make(map[string]float64)
 
