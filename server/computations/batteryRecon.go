@@ -234,10 +234,72 @@ func (m *MaxModuleVoltage) Compute() *datatypes.Datapoint {
 	}
 }
 
+// ModuleVoltageImbalance calculates ∆maxModuleVoltage - ∆minModuleVoltage
+type ModuleVoltageImbalance struct {
+	moduleVoltages []float64
+	time           time.Time
+	size           uint
+}
+
+// NewModuleVoltageImbalance returns an initialized ModuleVoltageImbalance
+func NewModuleVoltageImbalance() *ModuleVoltageImbalance {
+	return &ModuleVoltageImbalance{
+		moduleVoltages: make([]float64, sr3.VSer),
+		size:           0,
+	}
+}
+
+// GetMetrics returns the ModuleVoltageImbalance's metrics
+func (m *ModuleVoltageImbalance) GetMetrics() []string {
+	metrics := make([]string, sr3.VSer)
+	var i uint
+	for i = 0; i < sr3.VSer; i++ {
+		metrics[i] = fmt.Sprintf("Cell_Voltage_%d", i+1)
+	}
+	return metrics
+}
+
+// Update signifies an update when all required metrics have been received
+func (m *ModuleVoltageImbalance) Update(point *datatypes.Datapoint) bool {
+	ind, err := strconv.ParseUint(point.Metric[13:], 10, 32)
+	if err != nil {
+		return false
+	}
+	if m.moduleVoltages[ind-1] == 0 {
+		m.size++
+	}
+	m.moduleVoltages[ind-1] = point.Value
+	m.time = point.Time
+	return m.size == sr3.VSer
+}
+
+// Compute returns the imbalance of the battery pack
+func (m *ModuleVoltageImbalance) Compute() *datatypes.Datapoint {
+	time := m.time
+	max := m.moduleVoltages[0]
+	min := m.moduleVoltages[0]
+	var i uint
+	for i = 1; i < sr3.VSer; i++ {
+		if m.moduleVoltages[i] > max {
+			max = m.moduleVoltages[i]
+		} else if m.moduleVoltages[i] < min {
+			min = m.moduleVoltages[i]
+		}
+	}
+	m.size = 0
+	m.moduleVoltages = make([]float64, sr3.VSer)
+	return &datatypes.Datapoint{
+		Metric: "Cell_Voltage_Imbalance",
+		Value:  max - min,
+		Time:   time,
+	}
+}
+
 func init() {
 	InitSr3()
 	Register(NewPackResistance())
 	Register(NewPackEfficiency())
 	Register(NewMinModuleVoltage())
 	Register(NewMaxModuleVoltage())
+	Register(NewModuleVoltageImbalance())
 }
