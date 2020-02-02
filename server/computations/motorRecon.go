@@ -271,6 +271,49 @@ func (t *ModeledMotorTorque) Compute() *datatypes.Datapoint {
 	}
 }
 
+// MotorEfficiency calculates motor efficiency
+type MotorEfficiency struct {
+	busVoltage *datatypes.Datapoint
+	torque     *datatypes.Datapoint
+}
+
+// NewMotorEfficiency returns an initialized MotorEfficiency
+func NewMotorEfficiency() *MotorEfficiency {
+	return &MotorEfficiency{}
+}
+
+// GetMetrics returns the MotorEfficiency's metrics
+func (e *MotorEfficiency) GetMetrics() []string {
+	return []string{"Average_Bus_Voltage", "RPM_Derived_Torque"}
+}
+
+// Update signifies an update when both required metrics have been received
+func (e *MotorEfficiency) Update(point *datatypes.Datapoint) bool {
+	if point.Metric == "Average_Bus_Voltage" {
+		e.busVoltage = point
+	} else if point.Metric == "RPM_Derived_Torque" {
+		e.torque = point
+	}
+	return e.busVoltage != nil && e.torque != nil
+}
+
+// Compute computes motor efficiency
+func (e *MotorEfficiency) Compute() *datatypes.Datapoint {
+	latest := e.busVoltage.Time
+	if e.torque.Time.After(latest) {
+		latest = e.torque.Time
+	}
+	vBus := e.busVoltage.Value
+	torque := e.torque.Value
+	e.busVoltage = nil
+	e.torque = nil
+	return &datatypes.Datapoint{
+		Metric: "Motor_Efficiency",
+		Value:  recontool.MotorEfficiency(vBus, torque),
+		Time:   latest,
+	}
+}
+
 func init() {
 	Register(NewLeftRightAverage("Wavesculptor_RPM"))
 	Register(NewVelocity())
@@ -282,4 +325,5 @@ func init() {
 	Register(NewLeftRightSum("Phase_C_Current"))
 	Register(NewModeledMotorForce())
 	Register(NewModeledMotorTorque())
+	Register(NewMotorEfficiency())
 }
