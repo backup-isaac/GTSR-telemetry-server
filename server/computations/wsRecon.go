@@ -65,8 +65,61 @@ func (e *MotorControllerEfficiency) Compute() *datatypes.Datapoint {
 	}
 }
 
+// DrivetrainEfficiency gives the total drivetrain efficiency
+type DrivetrainEfficiency struct {
+	motorEfficiency           *datatypes.Datapoint
+	motorControllerEfficiency *datatypes.Datapoint
+	packEfficiency            *datatypes.Datapoint
+}
+
+// NewDrivetrainEfficiency returns an initialized DrivetrainEfficiency
+func NewDrivetrainEfficiency() *DrivetrainEfficiency {
+	return &DrivetrainEfficiency{}
+}
+
+// GetMetrics returns the DrivetrainEfficiency's metrics
+func (e *DrivetrainEfficiency) GetMetrics() []string {
+	return []string{"Motor_Efficiency", "Motor_Controller_Efficiency", "Pack_Efficiency"}
+}
+
+// Update signifies an update when all required metrics have been received
+func (e *DrivetrainEfficiency) Update(point *datatypes.Datapoint) bool {
+	switch point.Metric {
+	case "Motor_Efficiency":
+		e.motorEfficiency = point
+	case "Motor_Controller_Efficiency":
+		e.motorControllerEfficiency = point
+	case "Pack_Efficiency":
+		e.packEfficiency = point
+	}
+	return e.motorControllerEfficiency != nil && e.motorEfficiency != nil && e.packEfficiency != nil
+}
+
+// Compute computes drivetrain efficiency
+func (e *DrivetrainEfficiency) Compute() *datatypes.Datapoint {
+	latest := e.motorEfficiency.Time
+	if e.motorControllerEfficiency.Time.After(latest) {
+		latest = e.motorControllerEfficiency.Time
+	}
+	if e.packEfficiency.Time.After(latest) {
+		latest = e.packEfficiency.Time
+	}
+	eMot := e.motorEfficiency.Value
+	eMc := e.motorControllerEfficiency.Value
+	ePack := e.packEfficiency.Value
+	e.motorEfficiency = nil
+	e.motorControllerEfficiency = nil
+	e.packEfficiency = nil
+	return &datatypes.Datapoint{
+		Metric: "Drivetrain_Efficiency",
+		Value:  recontool.DrivetrainEfficiency(eMc, ePack, eMot),
+		Time:   latest,
+	}
+}
+
 func init() {
 	Register(NewLeftRightAverage("Bus_Voltage"))
 	Register(NewLeftRightSum("Bus_Current"))
 	Register(NewMotorControllerEfficiency())
+	Register(NewDrivetrainEfficiency())
 }
