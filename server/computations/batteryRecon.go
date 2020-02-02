@@ -1,8 +1,10 @@
 package computations
 
 import (
+	"fmt"
 	"server/datatypes"
 	"server/recontool"
+	"strconv"
 	"time"
 )
 
@@ -116,7 +118,126 @@ func (e *PackEfficiency) Compute() *datatypes.Datapoint {
 	}
 }
 
+// MinModuleVoltage calculates the battery module with the minimum voltage
+type MinModuleVoltage struct {
+	moduleVoltages []float64
+	time           time.Time
+	size           uint
+}
+
+// NewMinModuleVoltage returns an initialized MinModuleVoltage
+func NewMinModuleVoltage() *MinModuleVoltage {
+	return &MinModuleVoltage{
+		moduleVoltages: make([]float64, sr3.VSer),
+		size:           0,
+	}
+}
+
+// GetMetrics returns the MinModuleVoltage's metrics
+func (m *MinModuleVoltage) GetMetrics() []string {
+	metrics := make([]string, sr3.VSer)
+	var i uint
+	for i = 0; i < sr3.VSer; i++ {
+		metrics[i] = fmt.Sprintf("Cell_Voltage_%d", i+1)
+	}
+	return metrics
+}
+
+// Update signifies an update when all required metrics have been received
+func (m *MinModuleVoltage) Update(point *datatypes.Datapoint) bool {
+	ind, err := strconv.ParseUint(point.Metric[13:], 10, 32)
+	if err != nil {
+		return false
+	}
+	if m.moduleVoltages[ind-1] == 0 {
+		m.size++
+	}
+	m.moduleVoltages[ind-1] = point.Value
+	m.time = point.Time
+	return m.size == sr3.VSer
+}
+
+// Compute finds the module with the lowest voltage
+func (m *MinModuleVoltage) Compute() *datatypes.Datapoint {
+	time := m.time
+	var argmin uint
+	var i uint
+	for i = 1; i < sr3.VSer; i++ {
+		if m.moduleVoltages[i] < m.moduleVoltages[argmin] {
+			argmin = i
+		}
+	}
+	m.size = 0
+	m.moduleVoltages = make([]float64, sr3.VSer)
+	return &datatypes.Datapoint{
+		Metric: "Min_Cell_Voltage",
+		Value:  float64(argmin + 1),
+		Time:   time,
+	}
+}
+
+// MaxModuleVoltage calculates the battery module with the maximum voltage
+type MaxModuleVoltage struct {
+	moduleVoltages []float64
+	time           time.Time
+	size           uint
+}
+
+// NewMaxModuleVoltage returns an initialized MaxModuleVoltage
+func NewMaxModuleVoltage() *MaxModuleVoltage {
+	return &MaxModuleVoltage{
+		moduleVoltages: make([]float64, sr3.VSer),
+		size:           0,
+	}
+}
+
+// GetMetrics returns the MaxModuleVoltage's metrics
+func (m *MaxModuleVoltage) GetMetrics() []string {
+	metrics := make([]string, sr3.VSer)
+	var i uint
+	for i = 0; i < sr3.VSer; i++ {
+		metrics[i] = fmt.Sprintf("Cell_Voltage_%d", i+1)
+	}
+	return metrics
+}
+
+// Update signifies an update when all required metrics have been received
+func (m *MaxModuleVoltage) Update(point *datatypes.Datapoint) bool {
+	ind, err := strconv.ParseUint(point.Metric[13:], 10, 32)
+	if err != nil {
+		return false
+	}
+	if m.moduleVoltages[ind-1] == 0 {
+		m.size++
+	}
+	m.moduleVoltages[ind-1] = point.Value
+	m.time = point.Time
+	return m.size == sr3.VSer
+}
+
+// Compute finds the module with the highest voltage
+func (m *MaxModuleVoltage) Compute() *datatypes.Datapoint {
+	time := m.time
+	var argmax uint
+	var i uint
+	for i = 1; i < sr3.VSer; i++ {
+		if m.moduleVoltages[i] > m.moduleVoltages[argmax] {
+			argmax = i
+		}
+	}
+	m.size = 0
+	m.moduleVoltages = make([]float64, sr3.VSer)
+	return &datatypes.Datapoint{
+		Metric: "Max_Cell_Voltage",
+		Value:  float64(argmax + 1),
+		Time:   time,
+	}
+}
+
 func init() {
+	InitSr3()
 	Register(NewPackResistance())
 	Register(NewPackEfficiency())
+	Register(NewMinModuleVoltage())
+	Register(NewMaxModuleVoltage())
 }
