@@ -49,7 +49,7 @@ func (r *PackResistance) Update(point *datatypes.Datapoint) bool {
 		r.packCurrents = append(r.packCurrents, point.Value)
 	}
 	r.time = point.Time
-	return len(r.packCurrents) > 2 && len(r.packCurrents) == len(r.packVoltages)
+	return len(r.packCurrents) > 1 && len(r.packCurrents) == len(r.packVoltages)
 }
 
 // Compute returns the pack's resistance in ohms
@@ -295,6 +295,55 @@ func (m *ModuleVoltageImbalance) Compute() *datatypes.Datapoint {
 	}
 }
 
+// ModuleResistance is a battery module's resistance
+type ModuleResistance struct {
+	voltages     []float64
+	currents     []float64
+	time         time.Time
+	moduleNumber uint
+}
+
+// NewModuleResistance returns an initialized ModuleResistance
+func NewModuleResistance(moduleNumber uint) *ModuleResistance {
+	return &ModuleResistance{
+		voltages:     make([]float64, 0, 2048),
+		currents:     make([]float64, 0, 2048),
+		moduleNumber: moduleNumber,
+	}
+}
+
+// GetMetrics returns the ModuleResistance's metrics
+func (r *ModuleResistance) GetMetrics() []string {
+	return []string{fmt.Sprintf("Cell_Voltage_%d", r.moduleNumber), "BMS_Current"}
+}
+
+// Update signifies an update when there are an at least two voltages and currents received.
+func (r *ModuleResistance) Update(point *datatypes.Datapoint) bool {
+	if point.Metric == "BMS_Current" {
+		r.currents = append(r.currents, point.Value)
+	} else {
+		r.voltages = append(r.voltages, point.Value)
+	}
+	r.time = point.Time
+	return len(r.currents) > 1 && len(r.voltages) > 1
+}
+
+// Compute returns the module's resistance in ohms
+func (r *ModuleResistance) Compute() *datatypes.Datapoint {
+	resistance := recontool.ModuleResistance(r.voltages, r.currents)
+	if len(r.currents) == 2048 {
+		r.currents = r.currents[1:]
+	}
+	if len(r.voltages) == 2048 {
+		r.voltages = r.voltages[1:]
+	}
+	return &datatypes.Datapoint{
+		Metric: fmt.Sprintf("Cell_Resistance_%d", r.moduleNumber),
+		Value:  resistance,
+		Time:   r.time,
+	}
+}
+
 func init() {
 	InitSr3()
 	Register(NewPackResistance())
@@ -302,4 +351,8 @@ func init() {
 	Register(NewMinModuleVoltage())
 	Register(NewMaxModuleVoltage())
 	Register(NewModuleVoltageImbalance())
+	var i uint
+	for i = 1; i <= sr3.VSer; i++ {
+		Register(NewModuleResistance(i))
+	}
 }
