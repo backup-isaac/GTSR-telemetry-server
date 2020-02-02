@@ -67,5 +67,6 @@ func (e *MotorControllerEfficiency) Compute() *datatypes.Datapoint {
 
 func init() {
 	Register(NewLeftRightAverage("Bus_Voltage"))
+	Register(NewLeftRightSum("Bus_Current"))
 	Register(NewMotorControllerEfficiency())
 }
