@@ -98,3 +98,55 @@ func (a *LeftRightAverage) Compute() *datatypes.Datapoint {
 		Time:   latest,
 	}
 }
+
+// ChargeIntegral computes cumsum(current*dt)
+// Resets when car goes offline
+type ChargeIntegral struct {
+	cumSum      float64
+	currents    []*datatypes.Datapoint
+	idx         int
+	currentName string
+}
+
+// NewChargeIntegral returns an initialized ChargeIntegral
+func NewChargeIntegral(currentName string) *ChargeIntegral {
+	return &ChargeIntegral{
+		cumSum:      0,
+		currents:    make([]*datatypes.Datapoint, 2),
+		currentName: currentName,
+	}
+}
+
+// GetMetrics returns the ChargeIntegral's metrics
+func (c *ChargeIntegral) GetMetrics() []string {
+	return []string{fmt.Sprintf("%s_Current", c.currentName), "Connection_Status"}
+}
+
+// Update signifies an update when two currents have been stored
+// so that a ∆time can be computed. A Connection_Status = 0 point
+// resets the charge consumed so far
+// Unit: coulomb
+func (c *ChargeIntegral) Update(point *datatypes.Datapoint) bool {
+	if point.Metric == "Connection_Status" {
+		if point.Value == 0 {
+			c.cumSum = 0
+			c.idx = 0
+		}
+	} else {
+		c.currents[c.idx] = point
+		c.idx++
+	}
+	return c.idx == 2
+}
+
+// Compute computes charge as cumsum(current * dt)
+func (c *ChargeIntegral) Compute() *datatypes.Datapoint {
+	c.cumSum += (c.currents[1].Value + c.currents[0].Value) * (c.currents[1].Time.Sub(c.currents[0].Time).Seconds())
+	c.currents[0] = c.currents[1]
+	c.idx = 1
+	return &datatypes.Datapoint{
+		Metric: fmt.Sprintf("%s_Charge_Consumed", c.currentName),
+		Value:  c.cumSum,
+		Time:   c.currents[0].Time,
+	}
+}

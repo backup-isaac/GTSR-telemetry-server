@@ -91,7 +91,7 @@ func (a *Acceleration) Compute() *datatypes.Datapoint {
 }
 
 // Distance is the vehicle's distance traveled, computed as cumsum(RPM_Derived_Velocity*dt)
-// TODO reset when car goes offline
+// Resets when car goes offline
 type Distance struct {
 	cumSum     float64
 	velocities []*datatypes.Datapoint
@@ -128,7 +128,7 @@ func (d *Distance) Update(point *datatypes.Datapoint) bool {
 
 // Compute computes distance as cumsum(RPM_Derived_Velocity * dt)
 func (d *Distance) Compute() *datatypes.Datapoint {
-	d.cumSum += (d.velocities[1].Value + d.velocities[0].Value) * (d.velocities[1].Time.Sub(d.velocities[0].Time).Seconds()) / 2
+	d.cumSum += (d.velocities[1].Value + d.velocities[0].Value) * (d.velocities[1].Time.Sub(d.velocities[0].Time).Seconds())
 	d.velocities[0] = d.velocities[1]
 	d.idx = 1
 	return &datatypes.Datapoint{

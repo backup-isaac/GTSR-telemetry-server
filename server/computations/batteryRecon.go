@@ -355,4 +355,5 @@ func init() {
 	for i = 1; i <= sr3.VSer; i++ {
 		Register(NewModuleResistance(i))
 	}
+	Register(NewChargeIntegral("BMS"))
 }

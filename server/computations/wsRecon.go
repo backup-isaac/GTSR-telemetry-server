@@ -117,9 +117,55 @@ func (e *DrivetrainEfficiency) Compute() *datatypes.Datapoint {
 	}
 }
 
+// ModeledBusCurrent derives bus current from modeled power
+type ModeledBusCurrent struct {
+	power   *datatypes.Datapoint
+	voltage *datatypes.Datapoint
+}
+
+// NewModeledBusCurrent returns an initialized ModeledBusCurrent
+func NewModeledBusCurrent() *ModeledBusCurrent {
+	return &ModeledBusCurrent{}
+}
+
+// GetMetrics returns the ModeledBusCurrent's metrics
+func (c *ModeledBusCurrent) GetMetrics() []string {
+	return []string{"Modeled_Motor_Power", "Average_Bus_Voltage"}
+}
+
+// Update signifies an update when all required metrics have been received
+func (c *ModeledBusCurrent) Update(point *datatypes.Datapoint) bool {
+	if point.Metric == "Modeled_Motor_Power" {
+		c.power = point
+	} else if point.Metric == "Average_Bus_Voltage" {
+		c.voltage = point
+	}
+	return c.power != nil && c.voltage != nil
+}
+
+// Compute computes modeled bus current in amps
+func (c *ModeledBusCurrent) Compute() *datatypes.Datapoint {
+	latest := c.power.Time
+	if c.voltage.Time.After(latest) {
+		latest = c.voltage.Time
+	}
+	p := c.power.Value
+	vBus := c.voltage.Value
+	c.power = nil
+	c.voltage = nil
+	return &datatypes.Datapoint{
+		Metric: "Modeled_Bus_Current",
+		Value:  p / vBus,
+		Time:   latest,
+	}
+}
+
 func init() {
 	Register(NewLeftRightAverage("Bus_Voltage"))
 	Register(NewLeftRightSum("Bus_Current"))
 	Register(NewMotorControllerEfficiency())
 	Register(NewDrivetrainEfficiency())
+	Register(NewModeledBusCurrent())
+	Register(NewChargeIntegral("Modeled_Bus"))
+	Register(NewChargeIntegral("Bus"))
 }
