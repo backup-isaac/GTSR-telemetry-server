@@ -375,6 +375,59 @@ func (p *EmpiricalMotorPower) Compute() *datatypes.Datapoint {
 	}
 }
 
+// ModeledMotorPower computes motor power from modeled force, velocity,
+// and drivetrain efficiency
+type ModeledMotorPower struct {
+	force                *datatypes.Datapoint
+	velocity             *datatypes.Datapoint
+	drivetrainEfficiency *datatypes.Datapoint
+}
+
+// NewModeledMotorPower returns an initialized EmpiricalMotorPower
+func NewModeledMotorPower() *ModeledMotorPower {
+	return &ModeledMotorPower{}
+}
+
+// GetMetrics returns the ModeledMotorPower's metrics
+func (p *ModeledMotorPower) GetMetrics() []string {
+	return []string{"Modeled_Motor_Force", "RPM_Derived_Velocity", "Drivetrain_Efficiency"}
+}
+
+// Update signifies an update when all required metrics have been received
+func (p *ModeledMotorPower) Update(point *datatypes.Datapoint) bool {
+	switch point.Metric {
+	case "Modeled_Motor_Force":
+		p.force = point
+	case "RPM_Derived_Velocity":
+		p.velocity = point
+	case "Drivetrain_Efficiency":
+		p.drivetrainEfficiency = point
+	}
+	return p.force != nil && p.velocity != nil && p.drivetrainEfficiency != nil
+}
+
+// Compute computes modeled motor power in Watts
+func (p *ModeledMotorPower) Compute() *datatypes.Datapoint {
+	latest := p.force.Time
+	if p.velocity.Time.After(latest) {
+		latest = p.velocity.Time
+	}
+	if p.drivetrainEfficiency.Time.After(latest) {
+		latest = p.drivetrainEfficiency.Time
+	}
+	force := p.force.Value
+	velocity := p.velocity.Value
+	effDt := p.drivetrainEfficiency.Value
+	p.force = nil
+	p.velocity = nil
+	p.drivetrainEfficiency = nil
+	return &datatypes.Datapoint{
+		Metric: "Modeled_Motor_Power",
+		Value:  recontool.ModelDerivedPower(force, velocity, effDt),
+		Time:   latest,
+	}
+}
+
 func init() {
 	Register(NewLeftRightAverage("Wavesculptor_RPM"))
 	Register(NewVelocity())
@@ -388,4 +441,5 @@ func init() {
 	Register(NewModeledMotorTorque())
 	Register(NewMotorEfficiency())
 	Register(NewEmpiricalMotorPower())
+	Register(NewModeledMotorPower())
 }
