@@ -10,46 +10,34 @@ import (
 
 // Velocity is the vehicle's velocity computed from motor RPM
 type Velocity struct {
-	leftRpm  *datatypes.Datapoint
-	rightRpm *datatypes.Datapoint
+	avgRpm *datatypes.Datapoint
 }
 
 // NewVelocity returns an initialized Velocity
 func NewVelocity() *Velocity {
-	return &Velocity{
-		leftRpm:  nil,
-		rightRpm: nil,
-	}
+	return &Velocity{}
 }
 
 // GetMetrics returns the Velocity's metrics
 func (v *Velocity) GetMetrics() []string {
-	return []string{"Left_Wavesculptor_RPM", "Right_Wavesculptor_RPM"}
+	return []string{"Average_Wavesculptor_RPM"}
 }
 
 // Update signifies an update when both a left and a right rpm have been received
 func (v *Velocity) Update(point *datatypes.Datapoint) bool {
-	if point.Metric == "Left_Wavesculptor_RPM" {
-		v.leftRpm = point
-	} else if point.Metric == "Right_Wavesculptor_RPM" {
-		v.rightRpm = point
-	}
-	return v.leftRpm != nil && v.rightRpm != nil
+	v.avgRpm = point
+	return true
 }
 
 // Compute returns the current velocity of the car in m/s
 func (v *Velocity) Compute() *datatypes.Datapoint {
-	avgRpm := (v.leftRpm.Value + v.rightRpm.Value) / 2
-	latest := v.leftRpm.Time
-	if v.rightRpm.Time.After(latest) {
-		latest = v.rightRpm.Time
-	}
-	v.leftRpm = nil
-	v.rightRpm = nil
+	avgRpm := v.avgRpm.Value
+	time := v.avgRpm.Time
+	v.avgRpm = nil
 	return &datatypes.Datapoint{
 		Metric: "RPM_Derived_Velocity",
 		Value:  recontool.Velocity(avgRpm, sr3.RMot),
-		Time:   latest,
+		Time:   time,
 	}
 }
 
@@ -284,12 +272,14 @@ func (t *ModeledMotorTorque) Compute() *datatypes.Datapoint {
 }
 
 func init() {
+	Register(NewLeftRightAverage("Wavesculptor_RPM"))
 	Register(NewVelocity())
 	Register(NewAcceleration())
 	Register(NewDistance())
 	Register(NewEmpiricalTorque("Left"))
 	Register(NewEmpiricalTorque("Right"))
 	Register(NewLeftRightSum("RPM_Derived_Torque"))
+	Register(NewLeftRightSum("Phase_C_Current"))
 	Register(NewModeledMotorForce())
 	Register(NewModeledMotorTorque())
 }

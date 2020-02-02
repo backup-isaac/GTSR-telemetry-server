@@ -51,3 +51,50 @@ func (s *LeftRightSum) Compute() *datatypes.Datapoint {
 		Time:   latest,
 	}
 }
+
+// LeftRightAverage averages the left and right versions of a metric
+type LeftRightAverage struct {
+	left       *datatypes.Datapoint
+	right      *datatypes.Datapoint
+	baseMetric string
+}
+
+// NewLeftRightAverage returns an initialized LeftRightAverage that will
+// base itself off of the specified metric
+func NewLeftRightAverage(baseMetric string) *LeftRightAverage {
+	return &LeftRightAverage{
+		baseMetric: baseMetric,
+	}
+}
+
+// GetMetrics returns the LeftRightAverage's metrics
+func (a *LeftRightAverage) GetMetrics() []string {
+	return []string{fmt.Sprintf("Left_%s", a.baseMetric), fmt.Sprintf("Right_%s", a.baseMetric)}
+}
+
+// Update signifies an update when both the left and right versions of the metric have been received
+func (a *LeftRightAverage) Update(point *datatypes.Datapoint) bool {
+	if point.Metric == fmt.Sprintf("Left_%s", a.baseMetric) {
+		a.left = point
+	} else if point.Metric == fmt.Sprintf("Right_%s", a.baseMetric) {
+		a.right = point
+	}
+	return a.left != nil && a.right != nil
+}
+
+// Compute averages Left_[base metric] with Right_[base metric]
+func (a *LeftRightAverage) Compute() *datatypes.Datapoint {
+	latest := a.left.Time
+	if a.right.Time.After(latest) {
+		latest = a.right.Time
+	}
+	left := a.left.Value
+	right := a.right.Value
+	a.left = nil
+	a.right = nil
+	return &datatypes.Datapoint{
+		Metric: fmt.Sprintf("Average_%s", a.baseMetric),
+		Value:  (left + right) / 2,
+		Time:   latest,
+	}
+}
