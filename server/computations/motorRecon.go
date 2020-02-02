@@ -314,6 +314,67 @@ func (e *MotorEfficiency) Compute() *datatypes.Datapoint {
 	}
 }
 
+// EmpiricalMotorPower computes motor power from torque, velocity,
+// and drivetrain characteristics
+type EmpiricalMotorPower struct {
+	torque               *datatypes.Datapoint
+	velocity             *datatypes.Datapoint
+	phaseCCurrent        *datatypes.Datapoint
+	drivetrainEfficiency *datatypes.Datapoint
+}
+
+// NewEmpiricalMotorPower returns an initialized EmpiricalMotorPower
+func NewEmpiricalMotorPower() *EmpiricalMotorPower {
+	return &EmpiricalMotorPower{}
+}
+
+// GetMetrics returns the EmpiricalMotorPower's metrics
+func (p *EmpiricalMotorPower) GetMetrics() []string {
+	return []string{"RPM_Derived_Torque", "RPM_Derived_Velocity", "Phase_C_Current", "Drivetrain_Efficiency"}
+}
+
+// Update signifies an update when all required metrics have been received
+func (p *EmpiricalMotorPower) Update(point *datatypes.Datapoint) bool {
+	switch point.Metric {
+	case "RPM_Derived_Torque":
+		p.torque = point
+	case "RPM_Derived_Velocity":
+		p.velocity = point
+	case "Phase_C_Current":
+		p.phaseCCurrent = point
+	case "Drivetrain_Efficiency":
+		p.drivetrainEfficiency = point
+	}
+	return p.torque != nil && p.velocity != nil && p.phaseCCurrent != nil && p.drivetrainEfficiency != nil
+}
+
+// Compute computes empirical motor power in Watts
+func (p *EmpiricalMotorPower) Compute() *datatypes.Datapoint {
+	latest := p.torque.Time
+	if p.velocity.Time.After(latest) {
+		latest = p.velocity.Time
+	}
+	if p.phaseCCurrent.Time.After(latest) {
+		latest = p.phaseCCurrent.Time
+	}
+	if p.drivetrainEfficiency.Time.After(latest) {
+		latest = p.drivetrainEfficiency.Time
+	}
+	torque := p.torque.Value
+	velocity := p.velocity.Value
+	iPhaseC := p.phaseCCurrent.Value
+	effDt := p.drivetrainEfficiency.Value
+	p.torque = nil
+	p.velocity = nil
+	p.phaseCCurrent = nil
+	p.drivetrainEfficiency = nil
+	return &datatypes.Datapoint{
+		Metric: "RPM_Derived_Motor_Power",
+		Value:  recontool.MotorPower(torque, velocity, iPhaseC, effDt, sr3),
+		Time:   latest,
+	}
+}
+
 func init() {
 	Register(NewLeftRightAverage("Wavesculptor_RPM"))
 	Register(NewVelocity())
@@ -326,4 +387,5 @@ func init() {
 	Register(NewModeledMotorForce())
 	Register(NewModeledMotorTorque())
 	Register(NewMotorEfficiency())
+	Register(NewEmpiricalMotorPower())
 }
