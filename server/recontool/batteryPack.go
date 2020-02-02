@@ -58,6 +58,25 @@ func PackResistanceRegression(busCurrent, busVoltage []float64) (float64, float6
 	return (-1 * dotProductResistance / denominator), (dotProductIntercept / denominator), usedCurrents, usedVoltages
 }
 
+// PackResistanceUnfiltered calculates pack resistance in the same manner
+// as above, but it does not give the y-intercept of the linear regression
+// and it does not filter out any points
+func PackResistanceUnfiltered(busCurrent, busVoltage []float64) float64 {
+	sumI := 0.0
+	sumI2 := 0.0
+	for _, iBus := range busCurrent {
+		sumI += iBus
+		sumI2 += iBus * iBus
+	}
+	count := float64(len(busCurrent))
+	dotProductResistance := 0.0
+	for i, iBus := range busCurrent {
+		dotProductResistance += (-1*sumI + count*iBus) * busVoltage[i]
+	}
+	denominator := count*sumI2 - (sumI * sumI)
+	return -1 * dotProductResistance / denominator
+}
+
 // PackModuleVoltages arranges raw module voltages into a 2-D array, calculates the max and min modules over time, and calculates the max-min difference over time
 // Returns (raw module voltages, max-min difference, max module, min module)
 func PackModuleVoltages(data map[string][]float64, vSer uint) ([][]float64, []float64, []float64, []float64) {

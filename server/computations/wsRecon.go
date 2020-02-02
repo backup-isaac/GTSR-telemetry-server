@@ -24,6 +24,7 @@ func (e *MotorControllerEfficiency) GetMetrics() []string {
 }
 
 // Update signifies an update when all required metrics have been received
+// A point with zero bus power will cause everything to be thrown out
 func (e *MotorControllerEfficiency) Update(point *datatypes.Datapoint) bool {
 	switch point.Metric {
 	case "Phase_C_Current":
