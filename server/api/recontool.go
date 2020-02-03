@@ -234,43 +234,24 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 	}
 	var parsedCsvs []map[string][]float64
 	var parsedTimestamps [][]int64
+	parsedCsvs = make([]map[string][]float64, len(fileChannels))
+	parsedTimestamps = make([][]int64, len(fileChannels))
+	for i, fileChan := range fileChannels {
+		csvParse := <-fileChan
+		parsedCsv := csvParse.csvData
+		parsedTimestamp := csvParse.timestamps
+		err := csvParse.err
+		if err != nil {
+			http.Error(res, err.Error(), http.StatusBadRequest)
+			return
+		}
+		parsedCsvs[i] = parsedCsv
+		parsedTimestamps[i] = parsedTimestamp
+	}
 	if combineFiles {
-		parsedCsvs = make([]map[string][]float64, 1)
-		parsedTimestamps = make([][]int64, 1)
-		first := true
-		for _, fileChan := range fileChannels {
-			csvParse := <-fileChan
-			parsedCsv := csvParse.csvData
-			parsedTimestamp := csvParse.timestamps
-			err := csvParse.err
-			if err != nil {
-				http.Error(res, err.Error(), http.StatusBadRequest)
-				return
-			}
-			if first {
-				first = false
-				parsedCsvs[0] = parsedCsv
-				parsedTimestamps[0] = parsedTimestamp
-			} else {
-				mergeParsedCsvs(parsedCsvs[0], parsedCsv)
-				parsedTimestamps[0] = append(parsedTimestamps[0], parsedTimestamp...)
-			}
-		}
-	} else {
-		parsedCsvs = make([]map[string][]float64, len(fileChannels))
-		parsedTimestamps = make([][]int64, len(fileChannels))
-		for i, fileChan := range fileChannels {
-			csvParse := <-fileChan
-			parsedCsv := csvParse.csvData
-			parsedTimestamp := csvParse.timestamps
-			err := csvParse.err
-			if err != nil {
-				http.Error(res, err.Error(), http.StatusBadRequest)
-				return
-			}
-			parsedCsvs[i] = parsedCsv
-			parsedTimestamps[i] = parsedTimestamp
-		}
+		combinedCsv, combinedTimestamps := mergeParsedCsvs(parsedCsvs, parsedTimestamps)
+		parsedCsvs = []map[string][]float64{combinedCsv}
+		parsedTimestamps = [][]int64{combinedTimestamps}
 	}
 	results := make([]*recontool.AnalysisResult, len(parsedCsvs))
 	resultChannels := make([]chan reconResult, len(parsedCsvs))
@@ -294,15 +275,48 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 	json.NewEncoder(res).Encode(results)
 }
 
-func mergeParsedCsvs(csv1, csv2 map[string][]float64) {
-	for metric, metricValues := range csv2 {
-		arr, cont := csv1[metric]
-		if cont {
-			csv1[metric] = append(arr, metricValues...)
-		} else {
-			csv1[metric] = metricValues
+func mergeParsedCsvs(csvs []map[string][]float64, timestamps [][]int64) (map[string][]float64, []int64) {
+	combinedLength := 0
+	arrayIndices := make([]int, len(timestamps))
+	arraysLeft := make([][]int64, len(timestamps))
+	csvsLeft := make([]map[string][]float64, len(timestamps))
+	for i, t := range timestamps {
+		combinedLength += len(t)
+		arraysLeft[i] = t
+		csvsLeft[i] = csvs[i]
+	}
+	newTimestamps := make([]int64, combinedLength)
+	newCsv := make(map[string][]float64)
+	totIndex := 0
+	for len(arrayIndices) > 0 {
+		indexArgMin := 0
+		for i := 1; i < len(arrayIndices); i++ {
+			if arraysLeft[i][arrayIndices[i]] < arraysLeft[indexArgMin][arrayIndices[indexArgMin]] {
+				indexArgMin = i
+			}
+		}
+		newTimestamps[totIndex] = arraysLeft[indexArgMin][arrayIndices[indexArgMin]]
+		for metric, metricValue := range csvsLeft[indexArgMin] {
+			_, cont := newCsv[metric]
+			if !cont {
+				newCsv[metric] = make([]float64, len(metricValue))
+			}
+			newCsv[metric] = append(newCsv[metric], metricValue[arrayIndices[indexArgMin]])
+		}
+		totIndex++
+		arrayIndices[indexArgMin]++
+		if arrayIndices[indexArgMin] >= len(arraysLeft[indexArgMin]) {
+			copy(arrayIndices[indexArgMin:], arrayIndices[indexArgMin+1:])
+			arrayIndices = arrayIndices[:len(arrayIndices)-1]
+			copy(arraysLeft[indexArgMin:], arraysLeft[indexArgMin+1:])
+			arraysLeft[len(arraysLeft)-1] = nil
+			arraysLeft = arraysLeft[:len(arraysLeft)-1]
+			copy(csvsLeft[indexArgMin:], csvsLeft[indexArgMin+1:])
+			csvsLeft[len(csvsLeft)-1] = nil
+			csvsLeft = csvsLeft[:len(csvsLeft)-1]
 		}
 	}
+	return newCsv, newTimestamps
 }
 
 func readUploadedCsv(fileHeader *multipart.FileHeader, plotAll bool, fileChannel chan csvParse) {
