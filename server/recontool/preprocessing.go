@@ -13,7 +13,8 @@ import (
 // If any module voltage is zero in a row, the row is deleted and then the
 // next row is tested again. This repeats until no modules have zero voltage,
 // then the function terminates
-func RemoveSuspiciousZeros(data map[string][]float64, vSer uint) {
+// Modified timestamps are returned
+func RemoveSuspiciousZeros(data map[string][]float64, timestamps []int64, vSer uint) []int64 {
 	rowsToDelete := 0
 	colLen := len(data["Cell_Voltage_1"])
 	var j uint
@@ -34,6 +35,7 @@ func RemoveSuspiciousZeros(data map[string][]float64, vSer uint) {
 	for metric, series := range data {
 		data[metric] = series[rowsToDelete:]
 	}
+	return timestamps[rowsToDelete:]
 }
 
 // RemoveTimeOffsets makes t linearly spaced and subtracts
