@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"net"
@@ -12,7 +13,18 @@ import (
 func main() {
 	var host string
 	var serialPort string
+	var scanner *bufio.Scanner
+	var isTest bool = contains(os.Args, "testing")
 
+	if isTest {
+		testFile, err := os.Open("testing.bin")
+		if err != nil {
+			log.Fatal("Testing file read error!")
+		}
+		defer testFile.Close()
+
+		scanner := bufio.NewScanner(testFile)
+	}
 	// connect to the serial port
 	if len(os.Args) > 1 {
 		serialPort = os.Args[1]
@@ -67,9 +79,21 @@ func main() {
 	// receive messages from serial port
 	buf := make([]byte, 128)
 	for {
-		n, err := s.Read(buf)
-		if err != nil {
-			log.Fatalf("Serial error: %s", err)
+		if isTest {
+			scanned := scanner.Scan()
+			err := scanner.Err()
+			if err != nil {
+				log.Fatalf("File read error: %s", err)
+			} else if !scanned {
+				log.Fatalf("EOF reached")
+			}
+			n = len(scanner.Bytes())
+			copy(buf[:n], scanner.Bytes())
+		} else {
+			n, err := s.Read(buf)
+			if err != nil {
+				log.Fatalf("Serial error: %s", err)
+			}
 		}
 		// directly relay messages from serial to tcp
 		_, err = conn.Write(buf[:n])
