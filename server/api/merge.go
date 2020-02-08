@@ -1,7 +1,6 @@
 package api
 
 import (
-	"bytes"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -10,26 +9,30 @@ import (
 	"runtime"
 	"time"
 
+	"server/api/merge"
 	"server/datatypes"
 	"server/storage"
 
 	"github.com/gorilla/mux"
 )
 
-const (
-	mergePageFilePath = "merge/index.html"
-	remoteMergeURL    = "https://solarracing.me/remotemerge"
-)
+const mergePageFilePath = "merge/index.html"
 
 // MergeHandler handles requests related to merging points from a local
 // instance of the server onto the main remote server.
 type MergeHandler struct {
-	store *storage.Storage
+	merger *merge.Merger
+	store  *storage.Storage
 }
 
 // NewMergeHandler returns a pointer to a new MergeHandler.
 func NewMergeHandler(store *storage.Storage) *MergeHandler {
-	return &MergeHandler{store}
+	merger, err := merge.NewMerger(store)
+	if err != nil {
+		log.Fatalf("Error instantiating a new Merger object: %v", err.Error())
+	}
+
+	return &MergeHandler{merger, store}
 }
 
 // MergeDefault is the default handler for the /merge path.
@@ -37,13 +40,12 @@ func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/merge/static/index.html", http.StatusFound)
 }
 
-// MergePointsHandler receives form data from the site at "/merge".
-func (m *MergeHandler) MergePointsHandler(w http.ResponseWriter, r *http.Request) {
+// LocalMergeHandler receives form data from the site at "/merge".
+func (m *MergeHandler) LocalMergeHandler(w http.ResponseWriter, r *http.Request) {
 	// Parse form data from the merge/index.html page.
 	err := r.ParseForm()
 	if err != nil {
-		// TODO: Write a better error message omg
-		http.Error(w, "Failed to parse form data: "+err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Could not retrieve input from form: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
@@ -51,67 +53,35 @@ func (m *MergeHandler) MergePointsHandler(w http.ResponseWriter, r *http.Request
 	tzOffset := r.Form.Get("timezone-offset")
 	startTime, err := formatRFC3339(r.Form.Get("start-time"), tzOffset)
 	if err != nil {
-		// TODO: Write a better error message omg
-		http.Error(w, "Failed to parse form data as a valid type: "+err.Error(), http.StatusInternalServerError)
+		errMsg := "Could not convert form input into a valid time.Time datatype: " + err.Error()
+		http.Error(w, errMsg, http.StatusBadRequest)
 		return
 	}
 	endTime, err := formatRFC3339(r.Form.Get("end-time"), tzOffset)
 	if err != nil {
-		// TODO: Write a better error message omg
-		http.Error(w, "Failed to parse form data as a valid type: "+err.Error(), http.StatusInternalServerError)
+		errMsg := "Could not convert form input into a valid time.Time datatype: " + err.Error()
+		http.Error(w, errMsg, http.StatusBadRequest)
 		return
 	}
 
-	// Get all points (of all metric types) within the specified time range.
-	pointsToMerge := []*datatypes.Datapoint{}
-	metrics, err := m.store.ListMetrics()
+	// Begin the upload process to the remote server
+	err = m.merger.UploadLocalPointsToRemote(startTime, endTime)
 	if err != nil {
-		errMsg := "Failed to list all metrics in the data store. This shouldn't happen."
-		http.Error(w, errMsg, http.StatusInternalServerError)
-		return
-	}
-	for _, metric := range metrics {
-		// We can safely dereference these pointers since we handle any errors
-		// during their creation above.
-		newPoints, err := m.store.SelectMetricTimeRange(
-			metric, *startTime, *endTime,
-		)
-		if err != nil {
-			// TODO: Write a better error message omg
-			http.Error(w, "fk", http.StatusInternalServerError)
-			return
-		}
-		pointsToMerge = append(pointsToMerge, newPoints...)
-	}
-
-	// Marshal the list of metrics that we've collected to JSON format.
-	pointsAsJSON, err := json.Marshal(pointsToMerge)
-	if err != nil {
-		errMsg := "Failed to marshal data points into JSON: " + err.Error()
+		errMsg := "Error uploading local datapoints to remote server: " + err.Error()
 		http.Error(w, errMsg, http.StatusInternalServerError)
 		return
 	}
 
-	// Merge points into remote server's data store.
-	res, err := http.Post(remoteMergeURL, "application/json", bytes.NewBuffer(pointsAsJSON))
-	if err != nil {
-		errMsg := "Failed to send POST request to solarracing.me/remotemerge: " + err.Error()
-		http.Error(w, errMsg, http.StatusInternalServerError)
-		return
-	}
-	if res.StatusCode != 204 {
-		errMsg := "POST request to solarracing.me/remotemerge did not return 204:" + err.Error()
-		http.Error(w, errMsg, http.StatusInternalServerError)
-		return
-	}
+	w.WriteHeader(http.StatusNoContent)
 }
 
-// RemoteMergeHandler takes datapoints and inserts them into the data store on
-// the remote server.
-//
-// The endpoint that this handler is responsible for should only be hit on the
+// RemoteMergeHandler inserts provided datapoints into the data store on the
 // remote server.
+//
+// This handler is intended to run on the remote server.
 func (m *MergeHandler) RemoteMergeHandler(w http.ResponseWriter, r *http.Request) {
+	// TODO: Reset this conditional
+	// if os.Getenv("PRODUCTION") != "True" {
 	if os.Getenv("PRODUCTION") == "False" {
 		errMsg := "This endpoint should only be hit on the remote server"
 		http.Error(w, errMsg, http.StatusBadRequest)
@@ -126,9 +96,9 @@ func (m *MergeHandler) RemoteMergeHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	err = m.store.Insert(pointsToMerge)
+	err = m.merger.MergePointsOntoRemote(pointsToMerge)
 	if err != nil {
-		errMsg := "Failed to insert all points into remote data store: " + err.Error()
+		errMsg := "Failed to insert provided points into remote data store: " + err.Error()
 		http.Error(w, errMsg, http.StatusInternalServerError)
 		return
 	}
@@ -173,6 +143,6 @@ func (m *MergeHandler) RegisterRoutes(router *mux.Router) {
 	router.PathPrefix("/merge/static/").Handler(http.StripPrefix("/merge/static/", http.FileServer(http.Dir(path.Join(dir, "merge")))))
 
 	router.HandleFunc("/merge", m.MergeDefault).Methods("GET")
-	router.HandleFunc("/merge", m.MergePointsHandler).Methods("POST")
+	router.HandleFunc("/merge", m.LocalMergeHandler).Methods("POST")
 	router.HandleFunc("/remotemerge", m.RemoteMergeHandler).Methods("POST")
 }
