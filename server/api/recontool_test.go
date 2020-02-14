@@ -51,18 +51,18 @@ func TestParseTimeRangeParams(t *testing.T) {
 		end:        time.Date(2069, time.April, 20, 13, 47, 0, 0, time.UTC),
 		resolution: 500,
 		gps:        false,
-		vehicle:    &recontool.Vehicle{
-			RMot: 0.3,
-			M: 320,
-			Crr1: 0.007,
-			Crr2: 0.0005,
-			CDa: 0.14,
-			TMax: 100,
-			QMax: 30,
-			RLine: 0.07
+		vehicle: &recontool.Vehicle{
+			RMot:  0.3,
+			M:     320,
+			Crr1:  0.007,
+			Crr2:  0.0005,
+			CDa:   0.14,
+			TMax:  100,
+			QMax:  30,
+			RLine: 0.07,
 			VcMax: 4.15,
 			VcMin: 2.65,
-			VSer: 35,
+			VSer:  35,
 		},
 	}, params)
 }
