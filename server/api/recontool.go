@@ -397,7 +397,7 @@ func parseColumnNames(headers []string, plotAll bool) (map[string]int, error) {
 		if len(trimmed) == 0 {
 			continue
 		}
-		metric, ok := recontool.MetricHeaderNames[trimmed]
+		metric, ok := recontool.LoggerMetricHeaders[trimmed]
 		if ok {
 			columnsFound++
 		} else if trimmed == recontool.TimeHeaderName {
@@ -417,7 +417,7 @@ func parseColumnNames(headers []string, plotAll bool) (map[string]int, error) {
 		}
 		columnLocs[metric] = i
 	}
-	if columnsFound < len(recontool.MetricHeaderNames) {
+	if columnsFound < len(recontool.LoggerMetricHeaders) {
 		return nil, fmt.Errorf("Required column(s) missing from CSV. Found columns %v", columnLocs)
 	}
 	if timeLoc == -1 {
