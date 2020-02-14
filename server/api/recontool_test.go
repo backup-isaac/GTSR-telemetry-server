@@ -46,8 +46,8 @@ func TestParseTimeRangeParams(t *testing.T) {
 	params, err := parseTimeRangeParams(req)
 	assert.NoError(t, err)
 	assert.Equal(t, &timeRangeParams{
-		start:      time.Date(2069, time.April, 20, 13, 37, 0, 0, time.UTC),
-		end:        time.Date(2069, time.April, 20, 13, 47, 0, 0, time.UTC),
+		start:      time.Unix(3133690620, 0),
+		end:        time.Unix(3133691220, 0),
 		resolution: 500,
 		gps:        false,
 		vehicle: &recontool.Vehicle{
