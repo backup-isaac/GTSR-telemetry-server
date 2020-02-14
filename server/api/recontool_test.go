@@ -12,10 +12,10 @@ import (
 
 func TestParseTimeRangeParams(t *testing.T) {
 	req := timeRangeRequest()
-	goodForm := req.form
+	goodForm := req.Form
 	req.Form = nil
 	_, err := parseTimeRangeParams(req)
-	assert.Errorf(t, "Error parsing form")
+	assert.Errorf(t, err, "Error parsing form")
 	req.Form = goodForm
 	req.Form.Del("startDate")
 	_, err = parseTimeRangeParams(req)
