@@ -67,7 +67,7 @@ func TestParseTimeRangeParams(t *testing.T) {
 }
 
 func timeRangeRequest() *http.Request {
-	form := url.Values()
+	form := url.Values{}
 	form.Set("startDate", "3133690620000")
 	form.Set("endDate", "3133691220000")
 	form.Set("resolution", "500")
