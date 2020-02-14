@@ -82,7 +82,7 @@ func timeRangeRequest() *http.Request {
 	form.Set("Rline", "0.07")
 	form.Set("VcMax", "4.15")
 	form.Set("VcMin", "2.65")
-	form.Set("Vser", 35)
+	form.Set("Vser", "35")
 	return &http.Request{
 		Form: form,
 	}
