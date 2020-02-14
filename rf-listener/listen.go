@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"os"
@@ -13,18 +13,7 @@ import (
 func main() {
 	var host string
 	var serialPort string
-	var scanner *bufio.Scanner
-	var isTest bool = contains(os.Args, "testing")
 
-	if isTest {
-		testFile, err := os.Open("testing.bin")
-		if err != nil {
-			log.Fatal("Testing file read error!")
-		}
-		defer testFile.Close()
-
-		scanner := bufio.NewScanner(testFile)
-	}
 	// connect to the serial port
 	if len(os.Args) > 1 {
 		serialPort = os.Args[1]
@@ -74,49 +63,23 @@ func main() {
 	defer conn.Close()
 
 	// listen for incoming TCP messages, and print out
-	go listen(conn, s)
+	go readWriteBytes(conn, s)
 
 	// receive messages from serial port
-	buf := make([]byte, 128)
-	for {
-		if isTest {
-			scanned := scanner.Scan()
-			err := scanner.Err()
-			if err != nil {
-				log.Fatalf("File read error: %s", err)
-			} else if !scanned {
-				log.Fatalf("EOF reached")
-			}
-			n = len(scanner.Bytes())
-			copy(buf[:n], scanner.Bytes())
-		} else {
-			n, err := s.Read(buf)
-			if err != nil {
-				log.Fatalf("Serial error: %s", err)
-			}
-		}
-		// directly relay messages from serial to tcp
-		_, err = conn.Write(buf[:n])
-		if err != nil {
-			log.Fatalf("Error writing to connection: %s", err)
-		}
-	}
+	readWriteBytes(s, conn)
 }
 
-// Dashboard messages and prints them out
-func listen(conn net.Conn, s serial.Port) {
+// Read from some io.Reader (e.g. the serial port or a file reader) and write the bytes to some io.Writer (e.g. the open socket or a file writer).
+func readWriteBytes(reader io.Reader, writer io.Writer) {
 	buf := make([]byte, 128)
 	for {
-		n, err := conn.Read(buf)
+		n, err := reader.Read(buf)
 		if err != nil {
-			log.Fatalf("Error reading from connection: %s", err)
+			log.Fatalf("Read error: %s", err)
 		}
-		log.Printf("Received message from server: %q", buf[:n])
-
-		// relay the message via serial
-		_, err = s.Write(buf[:n])
+		_, err = writer.Write(buf[:n])
 		if err != nil {
-			log.Fatalf("Error writing to Serial Port :%s", err)
+			log.Fatalf("Write error: %s", err)
 		}
 	}
 }
