@@ -3,7 +3,6 @@ package api
 import (
 	"net/http"
 	"net/url"
-	"server/api"
 	"server/recontool"
 	"testing"
 	"time"
@@ -15,36 +14,36 @@ func TestParseTimeRangeParams(t *testing.T) {
 	req := timeRangeRequest()
 	goodForm := req.form
 	req.Form = nil
-	_, err := api.parseTimeRangeParams(req)
+	_, err := parseTimeRangeParams(req)
 	assert.Errorf(t, "Error parsing form")
 	req.Form = goodForm
 	req.Form.Del("startDate")
-	_, err = api.parseTimeRangeParams(req)
+	_, err = parseTimeRangeParams(req)
 	assert.Errorf(t, err, "Missing startDate")
 	req.Form.Set("startDate", "foo")
-	_, err = api.parseTimeRangeParams(req)
+	_, err = parseTimeRangeParams(req)
 	assert.Errorf(t, err, "Error parsing start date:")
 	req.Form.Set("startDate", "3133690620000")
 	req.Form.Set("endDate", "foo")
-	_, err = api.parseTimeRangeParams(req)
+	_, err = parseTimeRangeParams(req)
 	assert.Errorf(t, err, "Error parsing end date:")
 	req.Form.Set("endDate", "3133691220000")
 	req.Form.Set("resolution", "foo")
-	_, err = api.parseTimeRangeParams(req)
+	_, err = parseTimeRangeParams(req)
 	assert.Errorf(t, err, "Error parsing resolution:")
 	req.Form.Set("resolution", "0")
-	_, err = api.parseTimeRangeParams(req)
+	_, err = parseTimeRangeParams(req)
 	assert.Errorf(t, err, "Resolution must be positive")
 	req.Form.Set("resolution", "500")
 	req.Form.Set("terrain", "500")
-	_, err = api.parseTimeRangeParams(req)
+	_, err = parseTimeRangeParams(req)
 	assert.Errorf(t, err, "Error parsing terrain specifier: ")
 	req.Form.Set("terrain", "false")
 	req.Form.Set("Rmot", "foo")
-	_, err = api.parseTimeRangeParams(req)
+	_, err = parseTimeRangeParams(req)
 	assert.Errorf(t, err, "")
 	req.Form.Set("Rmot", "0.3")
-	params, err := api.parseTimeRangeParams(req)
+	params, err := parseTimeRangeParams(req)
 	assert.NoError(t, err)
 	assert.Equal(t, &timeRangeParams{
 		start:      time.Date(2069, time.April, 20, 13, 37, 0, 0, time.UTC),
