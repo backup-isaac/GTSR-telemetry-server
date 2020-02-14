@@ -46,72 +46,80 @@ func (r *ReconToolHandler) ReconToolDefault(res http.ResponseWriter, req *http.R
 	http.Redirect(res, req, "/reconTool/static/index.html", http.StatusFound)
 }
 
+type timeRangeParams struct {
+	start      time.Time
+	end        time.Time
+	resolution int
+	gps        bool
+	vehicle    *recontool.Vehicle
+}
+
 // ReconTimeRange runs ReconTool on data taken from the server
 func (r *ReconToolHandler) ReconTimeRange(res http.ResponseWriter, req *http.Request) {
-	err := req.ParseForm()
-	if err != nil {
-		http.Error(res, fmt.Sprintf("Error parsing form: %s", err), http.StatusBadRequest)
-		return
-	}
-	startDateString := req.Form.Get("startDate")
-	if startDateString == "" {
-		http.Error(res, "Missing start date", http.StatusBadRequest)
-		return
-	}
-	endDateString := req.Form.Get("endDate")
-	if endDateString == "" {
-		http.Error(res, "Missing end date", http.StatusBadRequest)
-		return
-	}
-	resolutionString := req.Form.Get("resolution")
-	if resolutionString == "" {
-		http.Error(res, "Missing resolution", http.StatusBadRequest)
-		return
-	}
-	gpsTerrainString := req.Form.Get("terrain")
-	startDate, err := unixStringMillisToTime(startDateString)
-	if err != nil {
-		http.Error(res, fmt.Sprintf("Error parsing start date: %s", err), http.StatusBadRequest)
-		return
-	}
-	endDate, err := unixStringMillisToTime(endDateString)
-	if err != nil {
-		http.Error(res, fmt.Sprintf("Error parsing end date: %s", err), http.StatusBadRequest)
-		return
-	}
-	resolution64, err := strconv.ParseInt(resolutionString, 10, 32)
-	if err != nil {
-		http.Error(res, fmt.Sprintf("Error parsing resolution: %s", err), http.StatusBadRequest)
-		return
-	}
-	resolution := int(resolution64)
-	if resolution <= 0 {
-		http.Error(res, "Resolution must be positive", http.StatusBadRequest)
-		return
-	}
-	gpsTerrain, err := strconv.ParseBool(gpsTerrainString)
+	params, err := parseTimeRangeParams(req)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return
 	}
-	vehicle, err := extractVehicleForm(&req.Form)
+	data, err := r.store.GetMetricPointsRange(recontool.MetricNames, params.start, params.end, params.resolution, true)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return
 	}
-	data, err := r.store.GetMetricPointsRange(recontool.MetricNames, startDate, endDate, resolution, true)
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusBadRequest)
-		return
-	}
-	timestamps := makeTimestamps(startDate, endDate, resolution)
-	results, err := recontool.RunReconTool(data, timestamps, vehicle, gpsTerrain, false)
+	timestamps := makeTimestamps(params.start, params.end, params.resolution)
+	results, err := recontool.RunReconTool(data, timestamps, params.vehicle, params.gps, false)
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)
 		return
 	}
 	var resultsArr = [1]*recontool.AnalysisResult{results}
 	json.NewEncoder(res).Encode(resultsArr)
+}
+
+func parseTimeRangeParams(req *http.Request) (*timeRangeParams, error) {
+	err := req.ParseForm()
+	if err != nil {
+		return nil, fmt.Errorf("Error parsing form: %s", err)
+	}
+	formParams := []string{"startDate", "endDate", "resolution", "terrain"}
+	paramStrings := make(map[string]string, len(formParams))
+	for _, p := range formParams {
+		paramStrings[p] = req.Form.Get(p)
+		if paramStrings[p] == "" {
+			return nil, fmt.Errorf("Missing %s", p)
+		}
+	}
+	startDate, err := unixStringMillisToTime(paramStrings["startDate"])
+	if err != nil {
+		return nil, fmt.Errorf("Error parsing start date: %s", err)
+	}
+	endDate, err := unixStringMillisToTime(paramStrings["endDate"])
+	if err != nil {
+		return nil, fmt.Errorf("Error parsing end date: %s", err)
+	}
+	resolution64, err := strconv.ParseInt(paramStrings["resolution"], 10, 32)
+	if err != nil {
+		return nil, fmt.Errorf("Error parsing resolution: %s", err)
+	}
+	resolution := int(resolution64)
+	if resolution <= 0 {
+		return nil, fmt.Errorf("Resolution must be positive")
+	}
+	gpsTerrain, err := strconv.ParseBool(paramStrings["terrain"])
+	if err != nil {
+		return nil, fmt.Errorf("Error parsing terrain specifier: %s", err)
+	}
+	vehicle, err := extractVehicleForm(&req.Form)
+	if err != nil {
+		return nil, err
+	}
+	return &timeRangeParams{
+		start:      startDate,
+		end:        endDate,
+		resolution: resolution,
+		gps:        gpsTerrain,
+		vehicle:    vehicle,
+	}, nil
 }
 
 func makeTimestamps(start, end time.Time, resolution int) []int64 {
@@ -176,59 +184,61 @@ func extractVehicleForm(form *url.Values) (*recontool.Vehicle, error) {
 	}, nil
 }
 
-// ReconCSV runs ReconTool on data provided as a CSV
-func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) {
+type csvParams struct {
+	gps          bool
+	plotAll      bool
+	combineFiles bool
+	numCsvs      int
+	vehicle      *recontool.Vehicle
+}
+
+func parseCsvParams(req *http.Request) (*csvParams, error) {
 	err := req.ParseMultipartForm(1048576)
 	if err != nil {
-		http.Error(res, fmt.Sprintf("Error parsing multipart form: %s", err), http.StatusBadRequest)
-		return
+		return nil, err
 	}
-	gpsTerrainString, ok := req.MultipartForm.Value["terrain"]
-	if !ok {
-		http.Error(res, "Missing GPS terrain", http.StatusBadRequest)
-		return
-	}
-	gpsTerrain, err := strconv.ParseBool(gpsTerrainString[0])
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusBadRequest)
-		return
-	}
-	plotAllString, ok := req.MultipartForm.Value["autoPlots"]
-	if !ok {
-		http.Error(res, "Missing plot all", http.StatusBadRequest)
-		return
-	}
-	plotAll, err := strconv.ParseBool(plotAllString[0])
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusBadRequest)
-		return
-	}
-	combineFilesString, ok := req.MultipartForm.Value["compileFiles"]
-	if !ok {
-		http.Error(res, "Missing plot all", http.StatusBadRequest)
-		return
-	}
-	combineFiles, err := strconv.ParseBool(combineFilesString[0])
-	if err != nil {
-		http.Error(res, err.Error(), http.StatusBadRequest)
-		return
+	formParams := []string{"terrain", "autoPlots", "compileFiles"}
+	paramVals := make(map[string]bool, len(formParams))
+	for _, p := range formParams {
+		paramString, ok := req.MultipartForm.Value[p]
+		if !ok {
+			return nil, fmt.Errorf("Missing %s", p)
+		}
+		paramVal, err := strconv.ParseBool(paramString[0])
+		if err != nil {
+			return nil, err
+		}
+		paramVals[p] = paramVal
 	}
 	numCsvs := len(req.MultipartForm.File)
 	if numCsvs == 0 {
-		http.Error(res, fmt.Sprintf("No CSVs present"), http.StatusBadRequest)
-		return
+		return nil, fmt.Errorf("No CSVs present")
 	}
-
 	vehicle, err := extractVehicleMultipart(req.MultipartForm)
 	if err != nil {
-		http.Error(res, err.Error(), http.StatusBadRequest)
+		return nil, err
+	}
+	return &csvParams{
+		gps:          paramVals["terrain"],
+		plotAll:      paramVals["autoPlots"],
+		combineFiles: paramVals["compileFiles"],
+		numCsvs:      numCsvs,
+		vehicle:      vehicle,
+	}, nil
+}
+
+// ReconCSV runs ReconTool on data provided as a CSV
+func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) {
+	params, err := parseCsvParams(req)
+	if err != nil {
+		http.Error(res, fmt.Sprintf("Error parsing multipart form: %s", err), http.StatusBadRequest)
 		return
 	}
 	fileChannels := make([]chan csvParse, len(req.MultipartForm.File))
 	i := 0
 	for _, file := range req.MultipartForm.File {
 		channel := make(chan csvParse)
-		go readUploadedCsv(file[0], plotAll, channel)
+		go readUploadedCsv(file[0], params.plotAll, channel)
 		fileChannels[i] = channel
 		i++
 	}
@@ -248,7 +258,7 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 		parsedCsvs[i] = parsedCsv
 		parsedTimestamps[i] = parsedTimestamp
 	}
-	if combineFiles {
+	if params.combineFiles {
 		combinedCsv, combinedTimestamps := mergeParsedCsvs(parsedCsvs, parsedTimestamps)
 		parsedCsvs = []map[string][]float64{combinedCsv}
 		parsedTimestamps = [][]int64{combinedTimestamps}
@@ -258,7 +268,7 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 	for i := range results {
 		resultChannels[i] = make(chan reconResult)
 		go func(data map[string][]float64, timestamp []int64, channel chan reconResult) {
-			result, err := recontool.RunReconTool(data, timestamp, vehicle, gpsTerrain, plotAll)
+			result, err := recontool.RunReconTool(data, timestamp, params.vehicle, params.gps, params.plotAll)
 			channel <- reconResult{result, err}
 		}(parsedCsvs[i], parsedTimestamps[i], resultChannels[i])
 	}
