@@ -66,20 +66,21 @@ func main() {
 	go readWriteBytes(conn, s)
 
 	// receive messages from serial port
-	readWriteBytes(s, conn)
+	err = readWriteBytes(s, conn)
+	log.Fatalf("Read/write failed: %s", err)
 }
 
 // Read from some io.Reader (e.g. the serial port or a file reader) and write the bytes to some io.Writer (e.g. the open socket or a file writer).
-func readWriteBytes(reader io.Reader, writer io.Writer) {
+func readWriteBytes(reader io.Reader, writer io.Writer) error {
 	buf := make([]byte, 128)
 	for {
 		n, err := reader.Read(buf)
 		if err != nil {
-			log.Fatalf("Read error: %s", err)
+			return err
 		}
 		_, err = writer.Write(buf[:n])
 		if err != nil {
-			log.Fatalf("Write error: %s", err)
+			return err
 		}
 	}
 }
