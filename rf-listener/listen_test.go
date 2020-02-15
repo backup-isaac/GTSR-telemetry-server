@@ -9,6 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+// TestReadWriteBytes checks whether readWriteBytes writes the bytes from test_input.bin to test_output.bin correctly.
 func TestReadWriteBytes(t *testing.T) {
 	testInput, err := os.Open("test_input.bin")
 	assert.NoError(t, err)
