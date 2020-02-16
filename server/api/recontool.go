@@ -238,7 +238,17 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 	i := 0
 	for _, file := range req.MultipartForm.File {
 		channel := make(chan csvParse)
-		go readUploadedCsv(file[0], params.plotAll, channel)
+		go func(fh *multipart.FileHeader, plotAll bool, ch chan csvParse) {
+			file, err := fh.Open()
+			defer file.Close()
+			if err != nil {
+				ch <- csvParse{nil, nil, err}
+			} else {
+				readUploadedCsv(file, fh.Size, plotAll, ch)
+			}
+		}(file[0], params.plotAll, channel)
+
+		// go readUploadedCsv(file[0], params.plotAll, channel)
 		fileChannels[i] = channel
 		i++
 	}
@@ -329,13 +339,7 @@ func mergeParsedCsvs(csvs []map[string][]float64, timestamps [][]int64) (map[str
 	return newCsv, newTimestamps
 }
 
-func readUploadedCsv(fileHeader *multipart.FileHeader, plotAll bool, fileChannel chan csvParse) {
-	file, err := fileHeader.Open()
-	defer file.Close()
-	if err != nil {
-		fileChannel <- csvParse{nil, nil, err}
-		return
-	}
+func readUploadedCsv(file io.Reader, fileSize int64, plotAll bool, fileChannel chan csvParse) {
 	reader := csv.NewReader(file)
 	headerRow, err := reader.Read()
 	if err != nil {
@@ -352,9 +356,9 @@ func readUploadedCsv(fileHeader *multipart.FileHeader, plotAll bool, fileChannel
 		if metric == "time" {
 			continue
 		}
-		csvContents[metric] = make([]float64, 0, fileHeader.Size/int64(len(columns))/16)
+		csvContents[metric] = make([]float64, 0, fileSize/int64(len(columns))/16)
 	}
-	timestamps := make([]int64, 0, fileHeader.Size/int64(len(columns))/16)
+	timestamps := make([]int64, 0, fileSize/int64(len(columns))/16)
 	for {
 		row, err := reader.Read()
 		if err != nil {
