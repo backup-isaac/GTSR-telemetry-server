@@ -346,7 +346,7 @@ func readUploadedCsv(file io.Reader, fileSize int64, plotAll bool, fileChannel c
 		fileChannel <- csvParse{nil, nil, err}
 		return
 	}
-	columns, err := parseColumnNames(headerRow, plotAll)
+	columns, err := parseColumnNames(headerRow, plotAll, recontool.LoggerMetricHeaders, recontool.TimeHeaderName)
 	if err != nil {
 		fileChannel <- csvParse{nil, nil, err}
 		return
@@ -392,7 +392,7 @@ func readUploadedCsv(file io.Reader, fileSize int64, plotAll bool, fileChannel c
 	fileChannel <- csvParse{csvContents, timestamps, nil}
 }
 
-func parseColumnNames(headers []string, plotAll bool) (map[string]int, error) {
+func parseColumnNames(headers []string, plotAll bool, metricHeaders map[string]string, timeHeader string) (map[string]int, error) {
 	columnLocs := make(map[string]int)
 	columnsFound := 0
 	timeLoc := -1
@@ -401,10 +401,10 @@ func parseColumnNames(headers []string, plotAll bool) (map[string]int, error) {
 		if len(trimmed) == 0 {
 			continue
 		}
-		metric, ok := recontool.LoggerMetricHeaders[trimmed]
+		metric, ok := metricHeaders[trimmed]
 		if ok {
 			columnsFound++
-		} else if trimmed == recontool.TimeHeaderName {
+		} else if trimmed == timeHeader {
 			if timeLoc != -1 {
 				return nil, fmt.Errorf("Duplicate column %s", trimmed)
 			}
@@ -421,7 +421,7 @@ func parseColumnNames(headers []string, plotAll bool) (map[string]int, error) {
 		}
 		columnLocs[metric] = i
 	}
-	if columnsFound < len(recontool.LoggerMetricHeaders) {
+	if columnsFound < len(metricHeaders) {
 		return nil, fmt.Errorf("Required column(s) missing from CSV. Found columns %v", columnLocs)
 	}
 	if timeLoc == -1 {

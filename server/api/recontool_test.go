@@ -432,3 +432,121 @@ func csvColumnsOf(col []float64, additionalCols []string, additionalElements map
 	}
 	return ret
 }
+
+func TestParseColumnNames(t *testing.T) {
+	loggerToServerMapping := map[string]string{
+		"Test 0": "Test_0",
+		"Test 1": "Test_1",
+		"Test 2": "Test_2",
+	}
+	basicNames, expParse := createColumnNames(map[string]string{}, map[string]bool{}, false)
+	actParse, err := parseColumnNames(basicNames, false, loggerToServerMapping, "Millis")
+	assert.NoError(t, err)
+	assert.Equal(t, expParse, actParse)
+	spacedNames, expParse := createColumnNames(map[string]string{
+		"Test 1": "    ",
+		"Test 2": " ",
+	}, map[string]bool{}, false)
+	actParse, err = parseColumnNames(spacedNames, false, loggerToServerMapping, "Millis")
+	assert.NoError(t, err)
+	assert.Equal(t, expParse, actParse)
+	spacedTime, expParse := createColumnNames(map[string]string{
+		"Millis": "          ",
+	}, map[string]bool{}, false)
+	actParse, err = parseColumnNames(spacedTime, false, loggerToServerMapping, "Millis")
+	assert.NoError(t, err)
+	assert.Equal(t, expParse, actParse)
+	dupTime, _ := createColumnNames(map[string]string{}, map[string]bool{"Millis": true}, false)
+	_, err = parseColumnNames(dupTime, false, loggerToServerMapping, "Millis")
+	assert.Error(t, err)
+	dupTimeSpaced, _ := createColumnNames(map[string]string{
+		"Millis": "   ",
+	}, map[string]bool{"Millis": true}, false)
+	_, err = parseColumnNames(dupTimeSpaced, false, loggerToServerMapping, "Millis")
+	assert.Error(t, err)
+	dupOther, _ := createColumnNames(map[string]string{}, map[string]bool{"Test 0": true}, false)
+	_, err = parseColumnNames(dupOther, false, loggerToServerMapping, "Millis")
+	assert.Error(t, err)
+	extraBlank, expParse := createColumnNames(map[string]string{}, map[string]bool{
+		"    ": false,
+	}, false)
+	actParse, err = parseColumnNames(extraBlank, false, loggerToServerMapping, "Millis")
+	assert.NoError(t, err)
+	assert.Equal(t, expParse, actParse)
+	actParse, err = parseColumnNames(extraBlank, true, loggerToServerMapping, "Millis")
+	assert.NoError(t, err)
+	assert.Equal(t, expParse, actParse)
+	extraCols, expParse := createColumnNames(map[string]string{}, map[string]bool{
+		"Test 3": false,
+	}, true)
+	actParse, err = parseColumnNames(extraCols, true, loggerToServerMapping, "Millis")
+	assert.NoError(t, err)
+	assert.Equal(t, expParse, actParse)
+	extraCols, expParse = createColumnNames(map[string]string{}, map[string]bool{
+		"Test 3": false,
+	}, false)
+	actParse, err = parseColumnNames(extraCols, false, loggerToServerMapping, "Millis")
+	assert.NoError(t, err)
+	assert.Equal(t, expParse, actParse)
+	missingCol, _ := createColumnNames(map[string]string{
+		"Test 1": "delete",
+	}, map[string]bool{}, false)
+	actParse, err = parseColumnNames(missingCol, false, loggerToServerMapping, "Millis")
+	assert.Error(t, err)
+	badCol, _ := createColumnNames(map[string]string{
+		"Test 1": "Foo",
+	}, map[string]bool{}, false)
+	actParse, err = parseColumnNames(badCol, true, loggerToServerMapping, "Millis")
+	assert.Error(t, err)
+	dupAndMissingCol, _ := createColumnNames(map[string]string{
+		"Test 1": "delete",
+	}, map[string]bool{
+		"Test 0": true,
+	}, false)
+	actParse, err = parseColumnNames(dupAndMissingCol, false, loggerToServerMapping, "Millis")
+	assert.Error(t, err)
+	// missing time
+	missingTime, _ := createColumnNames(map[string]string{
+		"Millis": "delete",
+	}, map[string]bool{}, false)
+	actParse, err = parseColumnNames(missingTime, false, loggerToServerMapping, "Millis")
+	assert.Error(t, err)
+}
+
+func createColumnNames(toPrepend map[string]string, extra map[string]bool, plotAll bool) ([]string, map[string]int) {
+	names := []string{"Test 1", "Test 2", "Test 0"}
+	indMap := map[string]int{}
+	for i, s := range names {
+		prep, ok := toPrepend[s]
+		if ok {
+			if prep == "delete" {
+				copy(names[i:], names[i+1:])
+				names = names[:len(names)-1]
+			} else {
+				names[i] = prep + s
+			}
+		}
+		indMap[strings.Replace(s, " ", "_", 1)] = i
+	}
+	indMap["time"] = len(names)
+	timeName := "Millis"
+	prep, ok := toPrepend[timeName]
+	if ok {
+		timeName = prep + timeName
+	}
+	names = append(names, timeName)
+	duplicates := false
+	for s, dup := range extra {
+		if plotAll {
+			indMap[s] = len(names)
+		}
+		names = append(names, s)
+		if dup {
+			duplicates = true
+		}
+	}
+	if duplicates {
+		return names, nil
+	}
+	return names, indMap
+}
