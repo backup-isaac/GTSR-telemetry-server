@@ -16,7 +16,6 @@ import (
 func main() {
 	var host string
 	var serialPort string
-	var table = crc32.MakeTable(0x1EDC6F41)
 
 	// connect to the serial port
 	if len(os.Args) > 1 {
@@ -69,34 +68,10 @@ func main() {
 	// listen for incoming TCP messages, and print out
 	go readWriteBytes(conn, s)
 
-	buf := make([]byte, 144)
 	// if CRC enabled, use a different algorithm to read in bytes
 	if len(os.Args) > 3 && os.Args[3] == "CRC" {
-		var packetIndex = 0
-		var packetBuffer = make([]byte, 16)
-		for {
-			numBytes, err := s.Read(buf)
-			if err != nil {
-				log.Fatalf("Serial error: %s", err)
-			}
-			for i := 0; i < numBytes; i++ {
-				parseByte(buf[i], &packetIndex, packetBuffer)
-				if err != nil {
-					continue
-				}
-				if packetIndex == len(packetBuffer) {
-					packetIndex = 0
-					if verifyChecksum(packetBuffer, table) {
-						_, err := conn.Write(packetBuffer[:12])
-						if err != nil {
-							log.Fatalf("Error writing to connection: %s", err)
-						}
-					} else {
-						log.Printf("CRC failed")
-					}
-				}
-			}
-		}
+		err = readWriteBytesCRC(s, conn)
+		log.Fatalf("CRC-enabled read/write failed: %s", err)
 	}
 	// receive messages from serial port
 	err = readWriteBytes(s, conn)
@@ -114,6 +89,34 @@ func readWriteBytes(reader io.Reader, writer io.Writer) error {
 		_, err = writer.Write(buf[:n])
 		if err != nil {
 			return err
+		}
+	}
+}
+
+func readWriteBytesCRC(reader io.Reader, writer io.Writer) error {
+	buf := make([]byte, 144)
+	packetIndex := 0
+	packetBuffer := make([]byte, 16)
+	table := crc32.MakeTable(0x1EDC6F41)
+	for {
+		numBytes, err := reader.Read(buf)
+		if err != nil {
+			return err
+		}
+		for i := 0; i < numBytes; i++ {
+			parseByte(buf[i], &packetIndex, packetBuffer)
+			if err != nil {
+				continue
+			}
+			if packetIndex == len(packetBuffer) {
+				packetIndex = 0
+				if verifyChecksum(packetBuffer, table) {
+					_, err := writer.Write(packetBuffer[:12])
+					if err != nil {
+						return err
+					}
+				}
+			}
 		}
 	}
 }
