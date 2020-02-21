@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"server/recontool"
+	"sort"
 	"strings"
 	"testing"
 	"time"
@@ -549,4 +550,75 @@ func createColumnNames(toPrepend map[string]string, extra map[string]bool, plotA
 		return names, nil
 	}
 	return names, indMap
+}
+
+func TestMergeParsedCsvs(t *testing.T) {
+	mergeCsvRunner(t, []int{4}, []int{})
+	mergeCsvRunner(t, []int{0, 0, 0}, []int{})
+	mergeCsvRunner(t, []int{10, 10, 0}, []int{})
+	mergeCsvRunner(t, []int{25, 25, 25}, []int{})
+	mergeCsvRunner(t, []int{60, 60, 1}, []int{})
+	mergeCsvRunner(t, []int{200, 150, 225}, []int{})
+	mergeCsvRunner(t, []int{200, 150, 225}, []int{2})
+	mergeCsvRunner(t, []int{200, 150, 225}, []int{0, 1, 2})
+}
+
+func mergeCsvRunner(t *testing.T, columnLengths []int, csvsWithExtraColumns []int) {
+	inputCsvs, inputTimestamps, expectedCsv, expectedTimestamps := createTestParsedCsvs(columnLengths, csvsWithExtraColumns)
+	actualCsv, actualTimestamps := mergeParsedCsvs(inputCsvs, inputTimestamps)
+	assert.Equal(t, expectedTimestamps, actualTimestamps)
+	assert.Equal(t, expectedCsv, actualCsv)
+}
+
+func createTestParsedCsvs(columnLengths []int, csvsWithExtraColumns []int) ([]map[string][]float64, [][]int64, map[string][]float64, []int64) {
+	inputCsvs := make([]map[string][]float64, len(columnLengths))
+	inputTimestamps := make([][]int64, len(columnLengths))
+	totalTimestamps := 0
+	for _, length := range columnLengths {
+		totalTimestamps += length
+	}
+	expectedTimestamps := make([]int64, totalTimestamps)
+	expectedCsv := map[string][]float64{
+		"Test 0": make([]float64, totalTimestamps),
+		"Test 1": make([]float64, totalTimestamps),
+	}
+	ttIndex := 0
+	for i := 0; i < len(columnLengths); i++ {
+		inputCsvs[i] = map[string][]float64{
+			"Test 0": make([]float64, columnLengths[i]),
+			"Test 1": make([]float64, columnLengths[i]),
+		}
+		inputTimestamps[i] = make([]int64, columnLengths[i])
+		for j := 0; j < columnLengths[i]; j++ {
+			inputTimestamps[i][j] = int64(i + 100*j)
+			expectedTimestamps[ttIndex] = int64(i + 100*j)
+			test0 := 1.2*float64(j) + 0.1*float64(i)
+			inputCsvs[i]["Test 0"][j] = test0
+			expectedCsv["Test 0"][ttIndex] = test0
+			test1 := 1.3*float64(j) + 0.1*float64(i)
+			inputCsvs[i]["Test 1"][j] = test1
+			expectedCsv["Test 1"][ttIndex] = test1
+			ttIndex++
+		}
+	}
+	extraCsvCounter := 2
+	for _, c := range csvsWithExtraColumns {
+		extraColumn := make([]float64, columnLengths[c])
+		for i := 0; i < len(extraColumn); i++ {
+			extraColumn[i] = float64(extraCsvCounter * i)
+		}
+		colName := fmt.Sprintf("Test %d", extraCsvCounter)
+		inputCsvs[c][colName] = extraColumn
+		expectedCsv[colName] = extraColumn
+		extraCsvCounter++
+	}
+	for _, metricValues := range expectedCsv {
+		sort.Slice(metricValues, func(i, j int) bool {
+			return metricValues[i]-metricValues[j] < 0
+		})
+	}
+	sort.Slice(expectedTimestamps, func(i, j int) bool {
+		return expectedTimestamps[i]-expectedTimestamps[j] < 0
+	})
+	return inputCsvs, inputTimestamps, expectedCsv, expectedTimestamps
 }

@@ -297,16 +297,26 @@ func (r *ReconToolHandler) ReconCSV(res http.ResponseWriter, req *http.Request) 
 
 func mergeParsedCsvs(csvs []map[string][]float64, timestamps [][]int64) (map[string][]float64, []int64) {
 	combinedLength := 0
-	arrayIndices := make([]int, len(timestamps))
-	arraysLeft := make([][]int64, len(timestamps))
-	csvsLeft := make([]map[string][]float64, len(timestamps))
+	newCsv := make(map[string][]float64)
+	arrayIndices := make([]int, 0, len(timestamps))
+	arraysLeft := make([][]int64, 0, len(timestamps))
+	csvsLeft := make([]map[string][]float64, 0, len(timestamps))
 	for i, t := range timestamps {
+		if len(t) == 0 {
+			for metric := range csvs[i] {
+				_, cont := newCsv[metric]
+				if !cont {
+					newCsv[metric] = make([]float64, 0)
+				}
+			}
+			continue
+		}
 		combinedLength += len(t)
-		arraysLeft[i] = t
-		csvsLeft[i] = csvs[i]
+		arrayIndices = append(arrayIndices, 0)
+		arraysLeft = append(arraysLeft, t)
+		csvsLeft = append(csvsLeft, csvs[i])
 	}
 	newTimestamps := make([]int64, combinedLength)
-	newCsv := make(map[string][]float64)
 	totIndex := 0
 	for len(arrayIndices) > 0 {
 		indexArgMin := 0
@@ -319,7 +329,7 @@ func mergeParsedCsvs(csvs []map[string][]float64, timestamps [][]int64) (map[str
 		for metric, metricValue := range csvsLeft[indexArgMin] {
 			_, cont := newCsv[metric]
 			if !cont {
-				newCsv[metric] = make([]float64, len(metricValue))
+				newCsv[metric] = make([]float64, 0, len(metricValue))
 			}
 			newCsv[metric] = append(newCsv[metric], metricValue[arrayIndices[indexArgMin]])
 		}
