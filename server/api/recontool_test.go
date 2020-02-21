@@ -435,83 +435,61 @@ func csvColumnsOf(col []float64, additionalCols []string, additionalElements map
 }
 
 func TestParseColumnNames(t *testing.T) {
+	parseColumnNamesRunner(t, true, map[string]string{}, map[string]bool{}, false)
+	parseColumnNamesRunner(t, true, map[string]string{
+		"Test 1": "    ",
+		"Test 2": " ",
+	}, map[string]bool{}, false)
+	parseColumnNamesRunner(t, true, map[string]string{
+		"Millis": "          ",
+	}, map[string]bool{}, false)
+	parseColumnNamesRunner(t, false, map[string]string{}, map[string]bool{"Millis": true}, false)
+	parseColumnNamesRunner(t, false, map[string]string{
+		"Millis": "   ",
+	}, map[string]bool{"Millis": true}, false)
+	parseColumnNamesRunner(t, false, map[string]string{}, map[string]bool{"Test 0": true}, false)
+	parseColumnNamesRunner(t, true, map[string]string{}, map[string]bool{
+		"    ": false,
+	}, false)
+	parseColumnNamesRunner(t, true, map[string]string{}, map[string]bool{
+		"    ": false,
+	}, true)
+	parseColumnNamesRunner(t, true, map[string]string{}, map[string]bool{
+		"Test 3": false,
+	}, true)
+	parseColumnNamesRunner(t, true, map[string]string{}, map[string]bool{
+		"Test 3": false,
+	}, false)
+	parseColumnNamesRunner(t, false, map[string]string{
+		"Test 1": "delete",
+	}, map[string]bool{}, false)
+	parseColumnNamesRunner(t, false, map[string]string{
+		"Test 1": "Foo",
+	}, map[string]bool{}, false)
+	parseColumnNamesRunner(t, false, map[string]string{
+		"Test 1": "delete",
+	}, map[string]bool{
+		"Test 0": true,
+	}, false)
+	parseColumnNamesRunner(t, false, map[string]string{
+		"Millis": "delete",
+	}, map[string]bool{}, false)
+}
+
+func parseColumnNamesRunner(t *testing.T, expectedSuccess bool, toPrepend map[string]string, extra map[string]bool, plotAll bool) {
 	loggerToServerMapping := map[string]string{
 		"Test 0": "Test_0",
 		"Test 1": "Test_1",
 		"Test 2": "Test_2",
 	}
-	basicNames, expParse := createColumnNames(map[string]string{}, map[string]bool{}, false)
-	actParse, err := parseColumnNames(basicNames, false, loggerToServerMapping, "Millis")
-	assert.NoError(t, err)
-	assert.Equal(t, expParse, actParse)
-	spacedNames, expParse := createColumnNames(map[string]string{
-		"Test 1": "    ",
-		"Test 2": " ",
-	}, map[string]bool{}, false)
-	actParse, err = parseColumnNames(spacedNames, false, loggerToServerMapping, "Millis")
-	assert.NoError(t, err)
-	assert.Equal(t, expParse, actParse)
-	spacedTime, expParse := createColumnNames(map[string]string{
-		"Millis": "          ",
-	}, map[string]bool{}, false)
-	actParse, err = parseColumnNames(spacedTime, false, loggerToServerMapping, "Millis")
-	assert.NoError(t, err)
-	assert.Equal(t, expParse, actParse)
-	dupTime, _ := createColumnNames(map[string]string{}, map[string]bool{"Millis": true}, false)
-	_, err = parseColumnNames(dupTime, false, loggerToServerMapping, "Millis")
-	assert.Error(t, err)
-	dupTimeSpaced, _ := createColumnNames(map[string]string{
-		"Millis": "   ",
-	}, map[string]bool{"Millis": true}, false)
-	_, err = parseColumnNames(dupTimeSpaced, false, loggerToServerMapping, "Millis")
-	assert.Error(t, err)
-	dupOther, _ := createColumnNames(map[string]string{}, map[string]bool{"Test 0": true}, false)
-	_, err = parseColumnNames(dupOther, false, loggerToServerMapping, "Millis")
-	assert.Error(t, err)
-	extraBlank, expParse := createColumnNames(map[string]string{}, map[string]bool{
-		"    ": false,
-	}, false)
-	actParse, err = parseColumnNames(extraBlank, false, loggerToServerMapping, "Millis")
-	assert.NoError(t, err)
-	assert.Equal(t, expParse, actParse)
-	actParse, err = parseColumnNames(extraBlank, true, loggerToServerMapping, "Millis")
-	assert.NoError(t, err)
-	assert.Equal(t, expParse, actParse)
-	extraCols, expParse := createColumnNames(map[string]string{}, map[string]bool{
-		"Test 3": false,
-	}, true)
-	actParse, err = parseColumnNames(extraCols, true, loggerToServerMapping, "Millis")
-	assert.NoError(t, err)
-	assert.Equal(t, expParse, actParse)
-	extraCols, expParse = createColumnNames(map[string]string{}, map[string]bool{
-		"Test 3": false,
-	}, false)
-	actParse, err = parseColumnNames(extraCols, false, loggerToServerMapping, "Millis")
-	assert.NoError(t, err)
-	assert.Equal(t, expParse, actParse)
-	missingCol, _ := createColumnNames(map[string]string{
-		"Test 1": "delete",
-	}, map[string]bool{}, false)
-	actParse, err = parseColumnNames(missingCol, false, loggerToServerMapping, "Millis")
-	assert.Error(t, err)
-	badCol, _ := createColumnNames(map[string]string{
-		"Test 1": "Foo",
-	}, map[string]bool{}, false)
-	actParse, err = parseColumnNames(badCol, true, loggerToServerMapping, "Millis")
-	assert.Error(t, err)
-	dupAndMissingCol, _ := createColumnNames(map[string]string{
-		"Test 1": "delete",
-	}, map[string]bool{
-		"Test 0": true,
-	}, false)
-	actParse, err = parseColumnNames(dupAndMissingCol, false, loggerToServerMapping, "Millis")
-	assert.Error(t, err)
-	// missing time
-	missingTime, _ := createColumnNames(map[string]string{
-		"Millis": "delete",
-	}, map[string]bool{}, false)
-	actParse, err = parseColumnNames(missingTime, false, loggerToServerMapping, "Millis")
-	assert.Error(t, err)
+	columns, expectedParse := createColumnNames(toPrepend, extra, plotAll)
+	actualParse, err := parseColumnNames(columns, plotAll, loggerToServerMapping, "Millis")
+	if expectedSuccess {
+		assert.NoError(t, err)
+		assert.Equal(t, expectedParse, actualParse)
+	} else {
+		assert.Error(t, err)
+	}
 }
 
 func createColumnNames(toPrepend map[string]string, extra map[string]bool, plotAll bool) ([]string, map[string]int) {
@@ -538,7 +516,7 @@ func createColumnNames(toPrepend map[string]string, extra map[string]bool, plotA
 	names = append(names, timeName)
 	duplicates := false
 	for s, dup := range extra {
-		if plotAll {
+		if plotAll && len(strings.TrimLeft(s, " ")) > 0 {
 			indMap[s] = len(names)
 		}
 		names = append(names, s)
@@ -556,11 +534,11 @@ func TestMergeParsedCsvs(t *testing.T) {
 	mergeCsvRunner(t, []int{4}, []int{})
 	mergeCsvRunner(t, []int{0, 0, 0}, []int{})
 	mergeCsvRunner(t, []int{10, 10, 0}, []int{})
-	mergeCsvRunner(t, []int{25, 25, 25}, []int{})
-	mergeCsvRunner(t, []int{60, 60, 1}, []int{})
-	mergeCsvRunner(t, []int{200, 150, 225}, []int{})
-	mergeCsvRunner(t, []int{200, 150, 225}, []int{2})
-	mergeCsvRunner(t, []int{200, 150, 225}, []int{0, 1, 2})
+	mergeCsvRunner(t, []int{12, 12, 12}, []int{})
+	mergeCsvRunner(t, []int{15, 15, 1}, []int{})
+	mergeCsvRunner(t, []int{20, 17, 27}, []int{})
+	mergeCsvRunner(t, []int{24, 24, 24}, []int{2})
+	mergeCsvRunner(t, []int{24, 24, 24}, []int{0, 1, 2})
 }
 
 func mergeCsvRunner(t *testing.T, columnLengths []int, csvsWithExtraColumns []int) {
