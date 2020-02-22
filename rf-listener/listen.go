@@ -97,7 +97,7 @@ func readWriteBytesCRC(reader io.Reader, writer io.Writer) error {
 	buf := make([]byte, 144)
 	packetIndex := 0
 	packetBuffer := make([]byte, 16)
-	table := crc32.MakeTable(0x1EDC6F41)
+	table := crc32.MakeTable(crc32.Castagnoli)
 	for {
 		numBytes, err := reader.Read(buf)
 		if err != nil {
