@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -72,7 +73,10 @@ func (m *MergeHandler) LocalMergeHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	// TODO: temporary! Have the webpage react to the status code that this
+	// handler returns rather than sending content here.
+	fmt.Fprintln(w, "Points collected locally merged successfully")
+	// w.WriteHeader(http.StatusNoContent)
 }
 
 // RemoteMergeHandler inserts provided datapoints into the data store on the
