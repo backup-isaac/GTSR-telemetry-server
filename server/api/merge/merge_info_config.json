@@ -1,6 +1,6 @@
 {
-    "lastJobStartTimestamp": "",
-    "lastJobEndTimestamp": "",
+    "lastJobStartTimestamp": "2020-01-01T00:00:00Z",
+    "lastJobEndTimestamp": "2020-01-01T00:00:00Z",
     "lastJobBlockNumber": 0,
     "didLastJobFinish": true
 }
