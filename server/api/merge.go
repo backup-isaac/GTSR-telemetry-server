@@ -122,8 +122,6 @@ func formatRFC3339(date string, timezone string) (*time.Time, error) {
 		date += "Z"
 	}
 
-	log.Println(date)
-
 	// Turn string into time datatype
 	t, err := time.Parse(time.RFC3339Nano, date)
 	if err != nil {
