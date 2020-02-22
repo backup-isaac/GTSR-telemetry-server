@@ -48,7 +48,20 @@ func NewMerger(store *storage.Storage) (*Merger, error) {
 //
 // This func is intended to run on a local server.
 func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error {
-	// Get all points (of all metric types) within the specified time range.
+	var curBlockNum int
+
+	// Check the contents of merge_info_config.json to see if there is an
+	// incomplete job for us to finish.
+	if m.model.DidLastJobFinish == false {
+		m.slack.PostNewMessage("Resuming previous job that did not finish...")
+		startTime = m.model.LastJobStartTimestamp
+		endTime = m.model.LastJobEndTimestamp
+		curBlockNum = m.model.LastJobBlockNumber
+	} else {
+		m.slack.PostNewMessage("Starting new merge job...")
+	}
+
+	// Get all points (of all metric types) within the current job's time range.
 	metrics, err := m.store.ListMetrics()
 	if err != nil {
 		errMsg := "Failed to list all metrics in the data store. This shouldn't happen"
@@ -62,7 +75,7 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 		)
 		if err != nil {
 			errMsg := "Failed to fetch points for the " + metric +
-				" metric within the provided time range: " +
+				" metric within the current job's time range: " +
 				err.Error()
 			return errors.New(errMsg)
 		}
@@ -71,17 +84,22 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 	}
 
 	if len(pointsToMerge) <= 0 {
-		errMsg := "No points were collected locally within the specified time" +
-			" range: " + startTime.Format("2006-01-02 15:04:05") + " to " +
+		errMsg := "No points were collected locally within the current job's" +
+			" time range: " + startTime.Format("2006-01-02 15:04:05") + " to " +
 			endTime.Format("2006-01-02 15:04:05")
 		m.slack.PostNewMessage(errMsg)
 		return errors.New(errMsg)
 	}
 
+	// Begin the process of merging the points in pointsToMerge in blocks.
+	m.model.LastJobStartTimestamp = startTime
+	m.model.LastJobEndTimestamp = endTime
+	m.model.DidLastJobFinish = false
+	m.model.Commit()
+
 	m.slack.PostNewMessage("Fetched points collected locally. Beginning the upload process to the remote server...")
 
-	// Merge pointsToMerge in blocks
-	for curBlockNum := 0; curBlockNum <= len(pointsToMerge)/blockSize; curBlockNum++ {
+	for ; curBlockNum <= len(pointsToMerge)/blockSize; curBlockNum++ {
 		suffix := min(len(pointsToMerge), blockSize*(curBlockNum+1))
 		if blockSize*curBlockNum < suffix {
 			// TODO: If we fail to merge the current block of points into the
@@ -97,7 +115,6 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 			// the merging process at the saved block number.
 
 			curBlock := pointsToMerge[blockSize*curBlockNum : suffix]
-
 			curBlockAsJSON, err := json.Marshal(curBlock)
 			if err != nil {
 				return err
@@ -116,8 +133,18 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 					" did not return 204:" + err.Error()
 				return errors.New(errMsg)
 			}
+
+			// Record that the current block was merged successfully.
+			m.model.LastJobBlockNumber = curBlockNum
+			m.model.Commit()
 		}
 	}
+
+	// Record that the current merge job finished successfully.
+	m.model.DidLastJobFinish = true
+	m.model.Commit()
+
+	m.slack.PostNewMessage("Upload process finished")
 
 	return nil
 }
