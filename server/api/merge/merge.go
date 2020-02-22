@@ -70,6 +70,14 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 		pointsToMerge = append(pointsToMerge, newPoints...)
 	}
 
+	if len(pointsToMerge) <= 0 {
+		errMsg := "No points were collected locally within the specified time" +
+			" range: " + startTime.Format("2006-01-02 15:04:05") + " to " +
+			endTime.Format("2006-01-02 15:04:05")
+		m.slack.PostNewMessage(errMsg)
+		return errors.New(errMsg)
+	}
+
 	m.slack.PostNewMessage("Fetched points collected locally. Beginning the upload process to the remote server...")
 
 	// Merge pointsToMerge in blocks
