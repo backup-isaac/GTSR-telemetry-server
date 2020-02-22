@@ -1,5 +1,6 @@
 {
     "lastJobStartTimestamp": "",
     "lastJobEndTimestamp": "",
-    "lastJobBlockNumber": 0
+    "lastJobBlockNumber": 0,
+    "didLastJobFinish": true
 }

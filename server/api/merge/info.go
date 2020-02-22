@@ -17,6 +17,7 @@ type Model struct {
 	LastJobStartTimestamp *time.Time `json:"lastJobStartTimestamp"`
 	LastJobEndTimestamp   *time.Time `json:"lastJobEndTimestamp"`
 	LastJobBlockNumber    int        `json:"lastJobBlockNumber"`
+	DidLastJobFinish      bool       `json:"didLastJobFinish"`
 }
 
 var infoPath string
