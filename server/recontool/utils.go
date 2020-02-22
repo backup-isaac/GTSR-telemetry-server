@@ -9,6 +9,9 @@ func meanIf(data []float64, predicate func(float64) bool) float64 {
 			count++
 		}
 	}
+	if count == 0 {
+		return 0
+	}
 	return sum / float64(count)
 }
 

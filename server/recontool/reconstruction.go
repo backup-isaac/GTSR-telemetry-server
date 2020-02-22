@@ -89,7 +89,9 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 	motorTorqueSeries := CalculateSeries(func(params ...float64) float64 {
 		return MotorTorque(params[0], params[1], vehicle.TMax)
 	}, rpm, phaseCurrentSeries)
-	terrainAngleSeries := DeriveTerrainAngleSeries(motorTorqueSeries, velocitySeries, accelerationSeries, vehicle)
+	terrainAngleSeries := CalculateSeries(func(params ...float64) float64 {
+		return DeriveTerrainAngle(params[0], params[1], params[2], vehicle)
+	}, motorTorqueSeries, velocitySeries, accelerationSeries)
 	resultantForceSeries := CalculateSeries(func(params ...float64) float64 {
 		return ModeledMotorForce(params[0], params[1], params[2], vehicle)
 	}, velocitySeries, accelerationSeries, terrainAngleSeries)

@@ -42,6 +42,6 @@ func (v *Vehicle) DragForce(velocity float64) float64 {
 
 // RollingFrictionalForce computes the rolling frictional force experienced by this vehicle at the given velocity and angle wrt horizontal
 func (v *Vehicle) RollingFrictionalForce(velocity, theta float64) float64 {
-	coefficients := v.Crr1*math.Cos(theta) + v.Crr2*velocity
+	coefficients := v.Crr1*math.Cos(theta) + v.Crr2*math.Abs(velocity)
 	return v.M * float64(constant.StandardGravity) * coefficients
 }

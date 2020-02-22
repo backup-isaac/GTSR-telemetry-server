@@ -14,12 +14,3 @@ func DeriveTerrainAngle(tMot, v, a float64, vehicle *Vehicle) float64 {
 	fgsintheta := tMot/vehicle.RMot - vehicle.M*a - vehicle.DragForce(v) - vehicle.RollingFrictionalForce(v, 0)
 	return math.Asin(fgsintheta / (vehicle.M * float64(constant.StandardGravity)))
 }
-
-// DeriveTerrainAngleSeries computes terrain angle for a series of points
-func DeriveTerrainAngleSeries(tMot, dxdt, dvdt []float64, vehicle *Vehicle) []float64 {
-	thetaSeries := make([]float64, len(tMot))
-	for i, t := range tMot {
-		thetaSeries[i] = DeriveTerrainAngle(t, dxdt[i], dvdt[i], vehicle)
-	}
-	return thetaSeries
-}
