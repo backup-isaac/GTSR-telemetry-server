@@ -28,7 +28,7 @@ func NewPackResistance() *PackResistance {
 
 // GetMetrics returns the PackResistance's metrics
 func (r *PackResistance) GetMetrics() []string {
-	return []string{"Average_Bus_Voltage", "BMS_Current"}
+	return []string{"Average_Bus_Voltage", "BMS_Current", "Connection_Status"}
 }
 
 // Update signifies an update when there are an equal amount of voltages
@@ -37,7 +37,14 @@ func (r *PackResistance) GetMetrics() []string {
 // metric. A point is also thrown out if it corresponds to a bus voltage
 // lower than 1, to avoid bias in the regression
 func (r *PackResistance) Update(point *datatypes.Datapoint) bool {
-	if point.Metric == "Average_Bus_Voltage" {
+	if point.Metric == "Connection_Status" {
+		if point.Value == 0 {
+			r.rejectCurrent = false
+			r.packCurrents = make([]float64, 0, 4096)
+			r.packVoltages = make([]float64, 0, 4096)
+		}
+		return false
+	} else if point.Metric == "Average_Bus_Voltage" {
 		r.rejectCurrent = point.Value < 1
 		if r.rejectCurrent || len(r.packCurrents) < len(r.packVoltages) {
 			return false
@@ -314,12 +321,17 @@ func NewModuleResistance(moduleNumber uint) *ModuleResistance {
 
 // GetMetrics returns the ModuleResistance's metrics
 func (r *ModuleResistance) GetMetrics() []string {
-	return []string{fmt.Sprintf("Cell_Voltage_%d", r.moduleNumber), "BMS_Current"}
+	return []string{fmt.Sprintf("Cell_Voltage_%d", r.moduleNumber), "BMS_Current", "Connection_Status"}
 }
 
 // Update signifies an update when there are an at least two voltages and currents received.
 func (r *ModuleResistance) Update(point *datatypes.Datapoint) bool {
-	if point.Metric == "BMS_Current" {
+	if point.Metric == "Connection_Status" {
+		if point.Value == 0 {
+			r.currents = make([]float64, 0, 2048)
+			r.voltages = make([]float64, 0, 2048)
+		}
+	} else if point.Metric == "BMS_Current" {
 		r.currents = append(r.currents, point.Value)
 	} else {
 		r.voltages = append(r.voltages, point.Value)

@@ -100,10 +100,11 @@ func TestChargeIntegral(t *testing.T) {
 	computationRunner(t, i, []*datatypes.Datapoint{
 		makeDatapoint("Connection_Status", 0),
 		makeDatapoint("Test_Current", -1),
+		makeDatapoint("Connection_Status", 1),
 		makeDatapoint("Test_Current", -2),
 	}, &datatypes.Datapoint{
 		Metric: "Test_Charge_Consumed",
-		Value:  -0.001,
-		Time:   pointTime.Add(time.Millisecond * -1),
+		Value:  -0.002,
+		Time:   pointTime.Add(time.Millisecond * -2),
 	})
 }

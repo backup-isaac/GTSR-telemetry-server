@@ -68,8 +68,10 @@ func (a *Acceleration) GetMetrics() []string {
 // it's time to calculate a_n when we have v_{n-1}, v_n, v_{n+1}
 func (a *Acceleration) Update(point *datatypes.Datapoint) bool {
 	if point.Metric == "Connection_Status" {
-		a.idx = 0
-		a.size = 0
+		if point.Value == 0 {
+			a.idx = 0
+			a.size = 0
+		}
 		return false
 	}
 	a.velocities[a.idx] = point.Value

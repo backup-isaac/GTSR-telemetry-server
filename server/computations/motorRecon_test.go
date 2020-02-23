@@ -50,11 +50,12 @@ func TestAcceleration(t *testing.T) {
 		makeDatapoint("Connection_Status", 0),
 		makeDatapoint("RPM_Derived_Velocity", 1),
 		makeDatapoint("RPM_Derived_Velocity", 0),
+		makeDatapoint("Connection_Status", 1),
 		makeDatapoint("RPM_Derived_Velocity", -1),
 	}, &datatypes.Datapoint{
 		Metric: "RPM_Derived_Acceleration",
-		Value:  -2 / 0.002,
-		Time:   pointTime.Add(-1 * time.Millisecond),
+		Value:  -2 / 0.003,
+		Time:   pointTime.Add(-2 * time.Millisecond),
 	})
 }
 
@@ -85,11 +86,12 @@ func TestDistance(t *testing.T) {
 	computationRunner(t, d, []*datatypes.Datapoint{
 		makeDatapoint("Connection_Status", 0),
 		makeDatapoint("RPM_Derived_Velocity", -1),
+		makeDatapoint("Connection_Status", 1),
 		makeDatapoint("RPM_Derived_Velocity", -2),
 	}, &datatypes.Datapoint{
 		Metric: "RPM_Derived_Distance",
-		Value:  -0.001,
-		Time:   pointTime.Add(time.Millisecond * -1),
+		Value:  -0.002,
+		Time:   pointTime.Add(time.Millisecond * -2),
 	})
 }
 
