@@ -141,12 +141,13 @@ func (c *ChargeIntegral) Update(point *datatypes.Datapoint) bool {
 
 // Compute computes charge as cumsum(current * dt)
 func (c *ChargeIntegral) Compute() *datatypes.Datapoint {
-	c.cumSum += (c.currents[1].Value + c.currents[0].Value) * (c.currents[1].Time.Sub(c.currents[0].Time).Seconds())
+	c.cumSum += c.currents[0].Value * (c.currents[1].Time.Sub(c.currents[0].Time).Seconds())
+	t := c.currents[0].Time
 	c.currents[0] = c.currents[1]
 	c.idx = 1
 	return &datatypes.Datapoint{
 		Metric: fmt.Sprintf("%s_Charge_Consumed", c.currentName),
 		Value:  c.cumSum,
-		Time:   c.currents[0].Time,
+		Time:   t,
 	}
 }

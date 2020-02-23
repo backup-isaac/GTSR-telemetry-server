@@ -1,6 +1,7 @@
 package computations
 
 import (
+	"math"
 	"server/datatypes"
 	"server/recontool"
 )
@@ -33,7 +34,16 @@ func (t *TerrainAngle) Update(point *datatypes.Datapoint) bool {
 	case "RPM_Derived_Acceleration":
 		t.acceleration = point
 	}
-	return t.torque != nil && t.velocity != nil && t.acceleration != nil
+	if t.torque != nil && t.velocity != nil && t.acceleration != nil {
+		if math.IsNaN(recontool.DeriveTerrainAngle(t.torque.Value, t.velocity.Value, t.acceleration.Value, sr3)) {
+			t.torque = nil
+			t.velocity = nil
+			t.acceleration = nil
+		} else {
+			return true
+		}
+	}
+	return false
 }
 
 // Compute returns the terrain angle in radians
