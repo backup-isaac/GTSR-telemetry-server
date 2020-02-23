@@ -61,12 +61,17 @@ func NewAcceleration() *Acceleration {
 
 // GetMetrics returns the Acceleration's metrics
 func (a *Acceleration) GetMetrics() []string {
-	return []string{"RPM_Derived_Velocity"}
+	return []string{"RPM_Derived_Velocity", "Connection_Status"}
 }
 
 // Update signifies an update when there are three velocity points in the queue
 // it's time to calculate a_n when we have v_{n-1}, v_n, v_{n+1}
 func (a *Acceleration) Update(point *datatypes.Datapoint) bool {
+	if point.Metric == "Connection_Status" {
+		a.idx = 0
+		a.size = 0
+		return false
+	}
 	a.velocities[a.idx] = point.Value
 	a.times[a.idx] = point.Time
 	a.idx = (a.idx + 1) % 3
@@ -128,13 +133,14 @@ func (d *Distance) Update(point *datatypes.Datapoint) bool {
 
 // Compute computes distance as cumsum(RPM_Derived_Velocity * dt)
 func (d *Distance) Compute() *datatypes.Datapoint {
-	d.cumSum += (d.velocities[1].Value + d.velocities[0].Value) * (d.velocities[1].Time.Sub(d.velocities[0].Time).Seconds())
+	d.cumSum += d.velocities[0].Value * (d.velocities[1].Time.Sub(d.velocities[0].Time).Seconds())
+	t := d.velocities[0].Time
 	d.velocities[0] = d.velocities[1]
 	d.idx = 1
 	return &datatypes.Datapoint{
 		Metric: "RPM_Derived_Distance",
 		Value:  d.cumSum,
-		Time:   d.velocities[0].Time,
+		Time:   t,
 	}
 }
 
@@ -343,6 +349,13 @@ func (p *EmpiricalMotorPower) Update(point *datatypes.Datapoint) bool {
 	case "Phase_C_Current":
 		p.phaseCCurrent = point
 	case "Drivetrain_Efficiency":
+		if point.Value == 0 {
+			p.torque = nil
+			p.velocity = nil
+			p.phaseCCurrent = nil
+			p.drivetrainEfficiency = nil
+			return false
+		}
 		p.drivetrainEfficiency = point
 	}
 	return p.torque != nil && p.velocity != nil && p.phaseCCurrent != nil && p.drivetrainEfficiency != nil
@@ -401,6 +414,12 @@ func (p *ModeledMotorPower) Update(point *datatypes.Datapoint) bool {
 	case "RPM_Derived_Velocity":
 		p.velocity = point
 	case "Drivetrain_Efficiency":
+		if point.Value == 0 {
+			p.force = nil
+			p.velocity = nil
+			p.drivetrainEfficiency = nil
+			return false
+		}
 		p.drivetrainEfficiency = point
 	}
 	return p.force != nil && p.velocity != nil && p.drivetrainEfficiency != nil
