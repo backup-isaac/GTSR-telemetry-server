@@ -52,7 +52,7 @@ func RemoveTimeOffsets(t []int64) []float64 {
 // result[i] where i >= len(r) = l[i]
 func Average(l, r []float64) []float64 {
 	var length int
-	if len(l) > len(r) {
+	if len(l) < len(r) {
 		length = len(l)
 	} else {
 		length = len(r)
@@ -89,6 +89,6 @@ func CalculatePower(i, v []float64) []float64 {
 func LatLongToRelativeDisplacement(latLong []float64) []float64 {
 	min := floats.Min(latLong)
 	return CalculateSeries(func(params ...float64) float64 {
-		return (params[0] - min) / LatLongDegreeToMile
+		return (params[0] - min) * LatLongDegreeToMile
 	}, latLong)
 }
