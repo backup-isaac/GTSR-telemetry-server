@@ -11,11 +11,11 @@ func TestCalculateModuleResistances(t *testing.T) {
 	assert.InDeltaSlice(t, []float64{
 		0.107142857, 0.071428571, 0.042857143,
 	}, CalculateModuleResistances(map[string][]float64{
-		"Cell_Voltage_1": []float64{3.9, 3.8, 3.95},
-		"Cell_Voltage_2": []float64{3.92, 3.85, 3.95},
-		"Cell_Voltage_3": []float64{3.86, 3.82, 3.88},
-		"BMS_Current":    []float64{0, 1, -0.4},
-		"Test 0":         []float64{0, 0.1, 0.2},
+		"Cell_Voltage_1": {3.9, 3.8, 3.95},
+		"Cell_Voltage_2": {3.92, 3.85, 3.95},
+		"Cell_Voltage_3": {3.86, 3.82, 3.88},
+		"BMS_Current":    {0, 1, -0.4},
+		"Test 0":         {0, 0.1, 0.2},
 	}, 3), 1)
 }
 
@@ -25,15 +25,15 @@ func TestModuleResistance(t *testing.T) {
 
 func TestPackModuleVoltages(t *testing.T) {
 	rawModuleVoltages, maxMinDiff, maxModule, minModule := PackModuleVoltages(map[string][]float64{
-		"Test 0":         []float64{0, 0.1, 0.2},
-		"Cell_Voltage_1": []float64{3.9, 3.8, 3.95},
-		"Cell_Voltage_2": []float64{3.92, 3.85, 3.95},
-		"Cell_Voltage_3": []float64{3.86, 3.82, 3.88},
+		"Test 0":         {0, 0.1, 0.2},
+		"Cell_Voltage_1": {3.9, 3.8, 3.95},
+		"Cell_Voltage_2": {3.92, 3.85, 3.95},
+		"Cell_Voltage_3": {3.86, 3.82, 3.88},
 	}, 3)
 	assert.Equal(t, [][]float64{
-		[]float64{3.9, 3.8, 3.95},
-		[]float64{3.92, 3.85, 3.95},
-		[]float64{3.86, 3.82, 3.88},
+		{3.9, 3.8, 3.95},
+		{3.92, 3.85, 3.95},
+		{3.86, 3.82, 3.88},
 	}, rawModuleVoltages)
 	assert.InDeltaSlice(t, []float64{0.06, 0.05, 0.07}, maxMinDiff, fd(0.07))
 	assert.Equal(t, []float64{2, 2, 1}, maxModule)
