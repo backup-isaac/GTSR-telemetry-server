@@ -138,6 +138,11 @@ func (c *ModeledBusCurrent) Update(point *datatypes.Datapoint) bool {
 	if point.Metric == "Modeled_Motor_Power" {
 		c.power = point
 	} else if point.Metric == "Average_Bus_Voltage" {
+		if point.Value == 0 {
+			c.power = nil
+			c.voltage = nil
+			return false
+		}
 		c.voltage = point
 	}
 	return c.power != nil && c.voltage != nil
