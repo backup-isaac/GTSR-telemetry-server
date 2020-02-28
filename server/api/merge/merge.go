@@ -131,18 +131,6 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 	for ; curBlockNum <= len(pointsToMerge)/blockSize; curBlockNum++ {
 		suffix := min(len(pointsToMerge), blockSize*(curBlockNum+1))
 		if blockSize*curBlockNum < suffix {
-			// TODO: If we fail to merge the current block of points into the
-			// remote server's data store, write the block number that failed
-			// to merge_info_config.json, as well as the start and end
-			// timestamps that all of the points were produced in between.
-			//
-			// Each time that this function is called, check if the block
-			// number currently written to merge_info_config.json is equal to
-			// 0. If it isn't, then resume that incomplete job by refetching
-			// all of the points in between the saved start and end
-			// timestamps, reconstruct the pointsToMerge array, and continue
-			// the merging process at the saved block number.
-
 			curBlock := pointsToMerge[blockSize*curBlockNum : suffix]
 			curBlockAsJSON, err := json.Marshal(curBlock)
 			if err != nil {

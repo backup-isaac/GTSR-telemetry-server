@@ -17,8 +17,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-const mergePageFilePath = "merge/index.html"
-
 // MergeHandler handles requests related to merging points from a local
 // instance of the server onto the main remote server.
 type MergeHandler struct {
