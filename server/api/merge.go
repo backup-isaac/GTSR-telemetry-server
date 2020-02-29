@@ -2,6 +2,7 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -111,6 +112,10 @@ func (m *MergeHandler) RemoteMergeHandler(w http.ResponseWriter, r *http.Request
 
 // Turns date/timezone strings into RFX3339Nano time.Time types.
 func formatRFC3339(date string, timezone string) (*time.Time, error) {
+	if date == "" || timezone == "" {
+		return nil, errors.New("Input to formatRFC3339 cannot be empty")
+	}
+
 	// If there aren't seconds on the date string passed in, add them.
 	if len(date) == 16 {
 		date += ":00"
