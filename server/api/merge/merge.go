@@ -17,6 +17,8 @@ import (
 const (
 	remoteMergeURL = "https://solarracing.me/remotemerge"
 	blockSize      = 1000
+	timeout        = 3 * time.Second
+	maxRetries     = 15
 )
 
 // Merger controls the logic for uploading data points from a local server to
@@ -128,6 +130,9 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 	log.Println(msg)
 	m.slack.PostNewMessage(msg)
 
+	c := make(chan bool, 1)
+	retryCount := 0
+
 	for ; curBlockNum <= len(pointsToMerge)/blockSize; curBlockNum++ {
 		suffix := min(len(pointsToMerge), blockSize*(curBlockNum+1))
 		if blockSize*curBlockNum < suffix {
@@ -137,27 +142,39 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 				return err
 			}
 
-			// Hit the RemoteMergeHandler to merge the points into the remote
-			// server's data store.
-			res, err := http.Post(remoteMergeURL, "application/json", bytes.NewBuffer(curBlockAsJSON))
-			if err != nil {
-				errMsg := fmt.Sprintf("Failed to send POST request to %s: %v",
-					remoteMergeURL, err.Error(),
-				)
-				log.Println(errMsg)
-				return errors.New(errMsg)
-			}
-			if res.StatusCode != 204 {
-				errMsg := fmt.Sprintf("POST request to %s did not return"+
-					" 204: %v", remoteMergeURL, err.Error(),
-				)
-				log.Println(errMsg)
-				return errors.New(errMsg)
-			}
+			go mergeCurBlockOfPoints(curBlockAsJSON, c)
 
-			// Record that the current block was merged successfully.
-			m.model.LastJobBlockNumber = curBlockNum
-			m.model.Commit()
+			select {
+			case res := <-c:
+				if res {
+					// Record that the current block was merged successfully.
+					m.model.LastJobBlockNumber = curBlockNum
+					m.model.Commit()
+				} else {
+					curBlockNum--
+					retryCount++
+					if retryCount >= maxRetries {
+						errMsg := "Max number of attempts to send blocks of" +
+							" points exceeded. Aborting the current merge" +
+							" operation and marking this job as incomplete..."
+						log.Println(errMsg)
+						return errors.New(errMsg)
+					}
+
+					msg := "Retrying to merge the last block of points..."
+					log.Println(msg)
+				}
+			case <-time.After(timeout):
+				curBlockNum--
+				retryCount++
+				if retryCount >= maxRetries {
+					errMsg := "Max number of attempts to send blocks of" +
+						" points exceeded. Aborting the current merge" +
+						" operation and marking this job as incomplete..."
+					log.Println(errMsg)
+					return errors.New(errMsg)
+				}
+			}
 		}
 	}
 
@@ -190,6 +207,35 @@ func (m *Merger) MergePointsOntoRemote(pointsToMerge []*datatypes.Datapoint) err
 		return err
 	}
 	return nil
+}
+
+// mergeCurBlockOfPoints fires a POST request to the /remotemerge endpoint
+// that the remote server exposes with the provided block of points in the
+// request body.
+//
+// If the request goes through with no problems, then this func pushes: true
+// onto the provided channel; if the request doesn't go through for any
+// reason, then this func pushes: false onto the provided channel.
+func mergeCurBlockOfPoints(curBlockAsJSON []byte, c chan bool) {
+	// Hit the RemoteMergeHandler to merge the points into the remote
+	// server's data store.
+	res, err := http.Post(remoteMergeURL, "application/json", bytes.NewBuffer(curBlockAsJSON))
+	if err != nil {
+		errMsg := fmt.Sprintf("Failed to send POST request to %s: %v",
+			remoteMergeURL, err.Error(),
+		)
+		log.Println(errMsg)
+		c <- false
+	}
+	if res.StatusCode != 204 {
+		errMsg := fmt.Sprintf("POST request to %s did not return"+
+			" 204: %v", remoteMergeURL, err.Error(),
+		)
+		log.Println(errMsg)
+		c <- false
+	}
+
+	c <- true
 }
 
 // Helper func that should really be in the standard library if you ask me...
