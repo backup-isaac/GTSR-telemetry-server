@@ -220,12 +220,13 @@ func mergeCurBlockOfPoints(curBlockAsJSON []byte, c chan bool) {
 	// Hit the RemoteMergeHandler to merge the points into the remote
 	// server's data store.
 	res, err := http.Post(remoteMergeURL, "application/json", bytes.NewBuffer(curBlockAsJSON))
-	if err != nil {
+	if err != nil || res != nil {
 		errMsg := fmt.Sprintf("Failed to send POST request to %s: %v",
 			remoteMergeURL, err.Error(),
 		)
 		log.Println(errMsg)
 		c <- false
+		return
 	}
 	if res.StatusCode != 204 {
 		errMsg := fmt.Sprintf("POST request to %s did not return"+
@@ -233,6 +234,7 @@ func mergeCurBlockOfPoints(curBlockAsJSON []byte, c chan bool) {
 		)
 		log.Println(errMsg)
 		c <- false
+		return
 	}
 
 	c <- true
