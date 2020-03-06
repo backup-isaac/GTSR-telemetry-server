@@ -10,35 +10,28 @@ import (
 
 // Velocity is the vehicle's velocity computed from motor RPM
 type Velocity struct {
-	avgRpm *datatypes.Datapoint
+	standardComputation
 }
 
 // NewVelocity returns an initialized Velocity
 func NewVelocity() *Velocity {
-	return &Velocity{}
-}
-
-// GetMetrics returns the Velocity's metrics
-func (v *Velocity) GetMetrics() []string {
-	return []string{"Average_Wavesculptor_RPM"}
-}
-
-// Update signifies an update when both a left and a right rpm have been received
-func (v *Velocity) Update(point *datatypes.Datapoint) bool {
-	v.avgRpm = point
-	return true
+	return &Velocity{
+		standardComputation{
+			values: make(map[string]float64),
+			fields: []string{"Average_Wavesculptor_RPM"},
+		},
+	}
 }
 
 // Compute returns the current velocity of the car in m/s
 func (v *Velocity) Compute() *datatypes.Datapoint {
-	avgRpm := v.avgRpm.Value
-	time := v.avgRpm.Time
-	v.avgRpm = nil
-	return &datatypes.Datapoint{
+	datapoint := &datatypes.Datapoint{
 		Metric: "RPM_Derived_Velocity",
-		Value:  recontool.Velocity(avgRpm, sr3.RMot),
-		Time:   time,
+		Value:  recontool.Velocity(v.values["Average_Wavesculptor_RPM"], sr3.RMot),
+		Time:   v.timestamp,
 	}
+	v.values = make(map[string]float64)
+	return datapoint
 }
 
 // Acceleration is the vehicle's acceleration computed from ∆RPM_Derived_Velocity/∆t
@@ -148,305 +141,209 @@ func (d *Distance) Compute() *datatypes.Datapoint {
 
 // EmpiricalTorque computes a motor torque empirically from phase current and RPM
 type EmpiricalTorque struct {
-	phaseCurrent *datatypes.Datapoint
-	rpm          *datatypes.Datapoint
-	motor        string
+	standardComputation
+	motor string
 }
 
 // NewEmpiricalTorque returns an initialized EmpiricalTorque that will
 // base itself off of the specified motor
 func NewEmpiricalTorque(motor string) *EmpiricalTorque {
 	return &EmpiricalTorque{
+		standardComputation: standardComputation{
+			values: make(map[string]float64),
+			fields: []string{fmt.Sprintf("%s_Phase_C_Current", motor), fmt.Sprintf("%s_Wavesculptor_RPM", motor)},
+		},
 		motor: motor,
 	}
 }
 
-// GetMetrics returns the EmpiricalTorque's metrics
-func (t *EmpiricalTorque) GetMetrics() []string {
-	return []string{fmt.Sprintf("%s_Phase_C_Current", t.motor), fmt.Sprintf("%s_Wavesculptor_RPM", t.motor)}
-}
-
-// Update signifies an update when both a phase current and an RPM have been received
-func (t *EmpiricalTorque) Update(point *datatypes.Datapoint) bool {
-	if point.Metric == fmt.Sprintf("%s_Phase_C_Current", t.motor) {
-		t.phaseCurrent = point
-	} else if point.Metric == fmt.Sprintf("%s_Wavesculptor_RPM", t.motor) {
-		t.rpm = point
-	}
-	return t.phaseCurrent != nil && t.rpm != nil
-}
-
 // Compute returns the motor's torque in Nm
 func (t *EmpiricalTorque) Compute() *datatypes.Datapoint {
-	latest := t.phaseCurrent.Time
-	if t.rpm.Time.After(latest) {
-		latest = t.rpm.Time
-	}
-	rpm := t.rpm.Value
-	phaseC := t.phaseCurrent.Value
-	t.rpm = nil
-	t.phaseCurrent = nil
-	return &datatypes.Datapoint{
+	datapoint := &datatypes.Datapoint{
 		Metric: fmt.Sprintf("%s_RPM_Derived_Torque", t.motor),
-		Value:  recontool.MotorTorque(rpm, phaseC, sr3.TMax),
-		Time:   latest,
+		Value: recontool.MotorTorque(
+			t.values[fmt.Sprintf("%s_Wavesculptor_RPM", t.motor)],
+			t.values[fmt.Sprintf("%s_Phase_C_Current", t.motor)],
+			sr3.TMax,
+		),
+		Time: t.timestamp,
 	}
+	t.values = make(map[string]float64)
+	return datapoint
 }
 
 // ModeledMotorForce calculates the magnitude of force that the motors exert
 // to cause the car to move
 type ModeledMotorForce struct {
-	velocity     *datatypes.Datapoint
-	acceleration *datatypes.Datapoint
-	terrainAngle *datatypes.Datapoint
+	standardComputation
 }
 
 // NewModeledMotorForce returns an initialized ModeledMotorForce
 func NewModeledMotorForce() *ModeledMotorForce {
-	return &ModeledMotorForce{}
-}
-
-// GetMetrics returns the ModeledMotorForce's metrics
-func (f *ModeledMotorForce) GetMetrics() []string {
-	return []string{"RPM_Derived_Velocity", "RPM_Derived_Acceleration", "Terrain_Angle"}
-}
-
-// Update signifies an update when all required metrics have been received
-func (f *ModeledMotorForce) Update(point *datatypes.Datapoint) bool {
-	switch point.Metric {
-	case "RPM_Derived_Velocity":
-		f.velocity = point
-	case "RPM_Derived_Acceleration":
-		f.acceleration = point
-	case "Terrain_Angle":
-		f.terrainAngle = point
+	return &ModeledMotorForce{
+		standardComputation{
+			values: make(map[string]float64),
+			fields: []string{"RPM_Derived_Velocity", "RPM_Derived_Acceleration", "Terrain_Angle"},
+		},
 	}
-	return f.velocity != nil && f.acceleration != nil && f.terrainAngle != nil
 }
 
 // Compute returns the modeled motor force in Newtons
 func (f *ModeledMotorForce) Compute() *datatypes.Datapoint {
-	latest := f.velocity.Time
-	if f.acceleration.Time.After(latest) {
-		latest = f.acceleration.Time
-	}
-	if f.terrainAngle.Time.After(latest) {
-		latest = f.terrainAngle.Time
-	}
-	velocity := f.velocity.Value
-	accel := f.acceleration.Value
-	angle := f.terrainAngle.Value
-	f.velocity = nil
-	f.acceleration = nil
-	f.terrainAngle = nil
-	return &datatypes.Datapoint{
+	datapoint := &datatypes.Datapoint{
 		Metric: "Modeled_Motor_Force",
-		Value:  recontool.ModeledMotorForce(velocity, accel, angle, sr3),
-		Time:   latest,
+		Value: recontool.ModeledMotorForce(
+			f.values["RPM_Derived_Velocity"],
+			f.values["RPM_Derived_Acceleration"],
+			f.values["Terrain_Angle"],
+			sr3,
+		),
+		Time: f.timestamp,
 	}
+	f.values = make(map[string]float64)
+	return datapoint
 }
 
 // ModeledMotorTorque calculates motor torque from modeled force
 type ModeledMotorTorque struct {
-	force *datatypes.Datapoint
+	standardComputation
 }
 
 // NewModeledMotorTorque returns an initialized ModelMotorTorque
 func NewModeledMotorTorque() *ModeledMotorTorque {
-	return &ModeledMotorTorque{}
-}
-
-// GetMetrics returns the ModeledMotorTorque's metrics
-func (t *ModeledMotorTorque) GetMetrics() []string {
-	return []string{"Modeled_Motor_Force"}
-}
-
-// Update signifies an update when a new force point is received
-func (t *ModeledMotorTorque) Update(point *datatypes.Datapoint) bool {
-	t.force = point
-	return true
+	return &ModeledMotorTorque{
+		standardComputation{
+			values: make(map[string]float64),
+			fields: []string{"Modeled_Motor_Force"},
+		},
+	}
 }
 
 // Compute computes modeled motor torque in Nm
 func (t *ModeledMotorTorque) Compute() *datatypes.Datapoint {
-	time := t.force.Time
-	force := t.force.Value
-	t.force = nil
-	return &datatypes.Datapoint{
+	datapoint := &datatypes.Datapoint{
 		Metric: "Modeled_Motor_Torque",
-		Value:  force * sr3.RMot,
-		Time:   time,
+		Value:  t.values["Modeled_Motor_Force"] * sr3.RMot,
+		Time:   t.timestamp,
 	}
+	t.values = make(map[string]float64)
+	return datapoint
 }
 
 // MotorEfficiency calculates motor efficiency
 type MotorEfficiency struct {
-	busVoltage *datatypes.Datapoint
-	torque     *datatypes.Datapoint
+	standardComputation
 }
 
 // NewMotorEfficiency returns an initialized MotorEfficiency
 func NewMotorEfficiency() *MotorEfficiency {
-	return &MotorEfficiency{}
-}
-
-// GetMetrics returns the MotorEfficiency's metrics
-func (e *MotorEfficiency) GetMetrics() []string {
-	return []string{"Average_Bus_Voltage", "RPM_Derived_Torque"}
-}
-
-// Update signifies an update when both required metrics have been received
-func (e *MotorEfficiency) Update(point *datatypes.Datapoint) bool {
-	if point.Metric == "Average_Bus_Voltage" {
-		e.busVoltage = point
-	} else if point.Metric == "RPM_Derived_Torque" {
-		e.torque = point
+	return &MotorEfficiency{
+		standardComputation{
+			values: make(map[string]float64),
+			fields: []string{"Average_Bus_Voltage", "RPM_Derived_Torque"},
+		},
 	}
-	return e.busVoltage != nil && e.torque != nil
 }
 
 // Compute computes motor efficiency
 func (e *MotorEfficiency) Compute() *datatypes.Datapoint {
-	latest := e.busVoltage.Time
-	if e.torque.Time.After(latest) {
-		latest = e.torque.Time
-	}
-	vBus := e.busVoltage.Value
-	torque := e.torque.Value
-	e.busVoltage = nil
-	e.torque = nil
-	return &datatypes.Datapoint{
+	datapoint := &datatypes.Datapoint{
 		Metric: "Motor_Efficiency",
-		Value:  recontool.MotorEfficiency(vBus, torque),
-		Time:   latest,
+		Value:  recontool.MotorEfficiency(e.values["Average_Bus_Voltage"], e.values["RPM_Derived_Torque"]),
+		Time:   e.timestamp,
 	}
+	e.values = make(map[string]float64)
+	return datapoint
 }
 
 // EmpiricalMotorPower computes motor power from torque, velocity,
 // and drivetrain characteristics
 type EmpiricalMotorPower struct {
-	torque               *datatypes.Datapoint
-	velocity             *datatypes.Datapoint
-	phaseCCurrent        *datatypes.Datapoint
-	drivetrainEfficiency *datatypes.Datapoint
+	standardComputation
 }
 
 // NewEmpiricalMotorPower returns an initialized EmpiricalMotorPower
 func NewEmpiricalMotorPower() *EmpiricalMotorPower {
-	return &EmpiricalMotorPower{}
-}
-
-// GetMetrics returns the EmpiricalMotorPower's metrics
-func (p *EmpiricalMotorPower) GetMetrics() []string {
-	return []string{"RPM_Derived_Torque", "RPM_Derived_Velocity", "Phase_C_Current", "Drivetrain_Efficiency"}
+	return &EmpiricalMotorPower{
+		standardComputation{
+			values: make(map[string]float64),
+			fields: []string{"RPM_Derived_Torque", "RPM_Derived_Velocity", "Phase_C_Current", "Drivetrain_Efficiency"},
+		},
+	}
 }
 
 // Update signifies an update when all required metrics have been received
 func (p *EmpiricalMotorPower) Update(point *datatypes.Datapoint) bool {
-	switch point.Metric {
-	case "RPM_Derived_Torque":
-		p.torque = point
-	case "RPM_Derived_Velocity":
-		p.velocity = point
-	case "Phase_C_Current":
-		p.phaseCCurrent = point
-	case "Drivetrain_Efficiency":
-		if point.Value == 0 {
-			p.torque = nil
-			p.velocity = nil
-			p.phaseCCurrent = nil
-			p.drivetrainEfficiency = nil
-			return false
-		}
-		p.drivetrainEfficiency = point
+	if point.Metric == "Drivetrain_Efficiency" && point.Value == 0 {
+		p.values = make(map[string]float64)
+		return false
 	}
-	return p.torque != nil && p.velocity != nil && p.phaseCCurrent != nil && p.drivetrainEfficiency != nil
+	p.values[point.Metric] = point.Value
+	if point.Time.After(p.timestamp) {
+		p.timestamp = point.Time
+	}
+	return len(p.values) >= len(p.fields)
 }
 
 // Compute computes empirical motor power in Watts
 func (p *EmpiricalMotorPower) Compute() *datatypes.Datapoint {
-	latest := p.torque.Time
-	if p.velocity.Time.After(latest) {
-		latest = p.velocity.Time
-	}
-	if p.phaseCCurrent.Time.After(latest) {
-		latest = p.phaseCCurrent.Time
-	}
-	if p.drivetrainEfficiency.Time.After(latest) {
-		latest = p.drivetrainEfficiency.Time
-	}
-	torque := p.torque.Value
-	velocity := p.velocity.Value
-	iPhaseC := p.phaseCCurrent.Value
-	effDt := p.drivetrainEfficiency.Value
-	p.torque = nil
-	p.velocity = nil
-	p.phaseCCurrent = nil
-	p.drivetrainEfficiency = nil
-	return &datatypes.Datapoint{
+	datapoint := &datatypes.Datapoint{
 		Metric: "RPM_Derived_Motor_Power",
-		Value:  recontool.MotorPower(torque, velocity, iPhaseC, effDt, sr3),
-		Time:   latest,
+		Value: recontool.MotorPower(
+			p.values["RPM_Derived_Torque"],
+			p.values["RPM_Derived_Velocity"],
+			p.values["Phase_C_Current"],
+			p.values["Drivetrain_Efficiency"],
+			sr3,
+		),
+		Time: p.timestamp,
 	}
+	p.values = make(map[string]float64)
+	return datapoint
 }
 
 // ModeledMotorPower computes motor power from modeled force, velocity,
 // and drivetrain efficiency
 type ModeledMotorPower struct {
-	force                *datatypes.Datapoint
-	velocity             *datatypes.Datapoint
-	drivetrainEfficiency *datatypes.Datapoint
+	standardComputation
 }
 
 // NewModeledMotorPower returns an initialized EmpiricalMotorPower
 func NewModeledMotorPower() *ModeledMotorPower {
-	return &ModeledMotorPower{}
-}
-
-// GetMetrics returns the ModeledMotorPower's metrics
-func (p *ModeledMotorPower) GetMetrics() []string {
-	return []string{"Modeled_Motor_Force", "RPM_Derived_Velocity", "Drivetrain_Efficiency"}
+	return &ModeledMotorPower{
+		standardComputation{
+			values: make(map[string]float64),
+			fields: []string{"Modeled_Motor_Force", "RPM_Derived_Velocity", "Drivetrain_Efficiency"},
+		},
+	}
 }
 
 // Update signifies an update when all required metrics have been received
 func (p *ModeledMotorPower) Update(point *datatypes.Datapoint) bool {
-	switch point.Metric {
-	case "Modeled_Motor_Force":
-		p.force = point
-	case "RPM_Derived_Velocity":
-		p.velocity = point
-	case "Drivetrain_Efficiency":
-		if point.Value == 0 {
-			p.force = nil
-			p.velocity = nil
-			p.drivetrainEfficiency = nil
-			return false
-		}
-		p.drivetrainEfficiency = point
+	if point.Metric == "Drivetrain_Efficiency" && point.Value == 0 {
+		p.values = make(map[string]float64)
+		return false
 	}
-	return p.force != nil && p.velocity != nil && p.drivetrainEfficiency != nil
+	p.values[point.Metric] = point.Value
+	if point.Time.After(p.timestamp) {
+		p.timestamp = point.Time
+	}
+	return len(p.values) >= len(p.fields)
 }
 
 // Compute computes modeled motor power in Watts
 func (p *ModeledMotorPower) Compute() *datatypes.Datapoint {
-	latest := p.force.Time
-	if p.velocity.Time.After(latest) {
-		latest = p.velocity.Time
-	}
-	if p.drivetrainEfficiency.Time.After(latest) {
-		latest = p.drivetrainEfficiency.Time
-	}
-	force := p.force.Value
-	velocity := p.velocity.Value
-	effDt := p.drivetrainEfficiency.Value
-	p.force = nil
-	p.velocity = nil
-	p.drivetrainEfficiency = nil
-	return &datatypes.Datapoint{
+	datapoint := &datatypes.Datapoint{
 		Metric: "Modeled_Motor_Power",
-		Value:  recontool.ModelDerivedPower(force, velocity, effDt),
-		Time:   latest,
+		Value: recontool.ModelDerivedPower(
+			p.values["Modeled_Motor_Force"],
+			p.values["RPM_Derived_Velocity"],
+			p.values["Drivetrain_Efficiency"],
+		),
+		Time: p.timestamp,
 	}
+	p.values = make(map[string]float64)
+	return datapoint
 }
 
 func init() {
