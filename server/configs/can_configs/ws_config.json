@@ -281,8 +281,8 @@
         "name": "Right_Odometer",
         "offset": 0,
         "check_bounds": true,
-        "min_value": -12742,
-        "max_value": 12742,
+        "min_value": -321869,
+        "max_value": 321869,
         "description": "Distance the right motor has travelled since the right Wavesculptor was last reset"
     },
     {
@@ -577,8 +577,8 @@
         "name": "Left_Odometer",
         "offset": 0,
         "check_bounds": true,
-        "min_value": -12742,
-        "max_value": 12742,
+        "min_value": -321869,
+        "max_value": 321869,
         "description": "Distance the left motor has travelled since the left Wavesculptor was last reset"
     },
     {
