@@ -5,7 +5,6 @@ import (
 	"errors"
 	"log"
 	"net/http"
-	"os"
 	"path"
 	"runtime"
 	"time"
@@ -64,7 +63,6 @@ func (m *MergeHandler) LocalMergeHandler(w http.ResponseWriter, r *http.Request)
 		http.Error(w, errMsg, http.StatusBadRequest)
 		return
 	}
-	// endTime, err := formatRFC3339(r.FormValue("end-time"), tzOffset)
 	endTime, err := formatRFC3339(responses.EndTime, responses.TimezoneOffset)
 	if err != nil {
 		errMsg := "Could not convert form input into a valid time.Time datatype: " + err.Error()
@@ -80,9 +78,7 @@ func (m *MergeHandler) LocalMergeHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// TODO: temporary! Have the webpage react to the status code that this
-	// handler returns rather than sending content here.
-	// fmt.Fprintln(w, "Points collected locally merged successfully")
+	// Upload process completed with no problems. Respond with 204.
 	w.WriteHeader(http.StatusNoContent)
 }
 
@@ -91,14 +87,6 @@ func (m *MergeHandler) LocalMergeHandler(w http.ResponseWriter, r *http.Request)
 //
 // This handler is intended to run on the remote server.
 func (m *MergeHandler) RemoteMergeHandler(w http.ResponseWriter, r *http.Request) {
-	// TODO: Reset this conditional
-	// if os.Getenv("PRODUCTION") != "True" {
-	if os.Getenv("PRODUCTION") == "False" {
-		errMsg := "This endpoint should only be hit on the remote server"
-		http.Error(w, errMsg, http.StatusBadRequest)
-		return
-	}
-
 	pointsToMerge := []*datatypes.Datapoint{}
 	err := json.NewDecoder(r.Body).Decode(&pointsToMerge)
 	if err != nil {
@@ -114,7 +102,7 @@ func (m *MergeHandler) RemoteMergeHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	// Everything went alright. Return 204.
+	// Everything went alright. Respond with 204.
 	w.WriteHeader(http.StatusNoContent)
 }
 
