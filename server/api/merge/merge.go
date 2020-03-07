@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"server/datatypes"
-	"server/message"
 	"server/storage"
 )
 
@@ -26,7 +25,6 @@ const (
 // the remote server.
 type Merger struct {
 	model *Model
-	slack *message.SlackMessenger
 	store *storage.Storage
 }
 
@@ -40,7 +38,6 @@ func NewMerger(store *storage.Storage) (*Merger, error) {
 
 	merger := &Merger{
 		model: model,
-		slack: message.NewSlackMessenger(),
 		store: store,
 	}
 
@@ -68,14 +65,12 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 			endTime.Format(timeFormatString),
 		)
 		log.Println(msg)
-		m.slack.PostNewMessage(msg)
 	} else {
 		msg := fmt.Sprintf("Starting new merge job (times %s to %s)"+
 			startTime.Format(timeFormatString),
 			endTime.Format(timeFormatString),
 		)
 		log.Println(msg)
-		m.slack.PostNewMessage(msg)
 	}
 
 	// Get all points (of all metric types) within the current job's time range.
@@ -84,7 +79,6 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 		errMsg := "Failed to list all metrics in the data store." +
 			" This shouldn't happen"
 		log.Println(errMsg)
-		m.slack.PostNewMessage(errMsg)
 		return errors.New(errMsg)
 	}
 
@@ -102,7 +96,6 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 				err.Error(),
 			)
 			log.Println(errMsg)
-			m.slack.PostNewMessage(errMsg)
 			return errors.New(errMsg)
 		}
 
@@ -116,7 +109,6 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 			endTime.Format(timeFormatString),
 		)
 		log.Println(errMsg)
-		m.slack.PostNewMessage(errMsg)
 		return errors.New(errMsg)
 	}
 
@@ -129,7 +121,6 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 	msg := "Fetched points collected locally. Beginning the upload process" +
 		" to the remote server..."
 	log.Println(msg)
-	m.slack.PostNewMessage(msg)
 
 	c := make(chan bool, 1)
 	retryCount := 0
@@ -191,7 +182,6 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 		endTime.Format(timeFormatString),
 	)
 	log.Println(msg)
-	m.slack.PostNewMessage(msg)
 
 	return nil
 }
