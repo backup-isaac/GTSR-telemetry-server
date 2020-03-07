@@ -73,6 +73,7 @@ func main() {
 		err = readWriteBytesCRC(s, conn)
 		log.Fatalf("CRC-enabled read/write failed: %s", err)
 	}
+	log.Println("Note that CRC is not currently enabled. Enable it by passing \"CRC\" as the third argument.")
 	// receive messages from serial port
 	err = readWriteBytes(s, conn)
 	log.Fatalf("Read/write failed: %s", err)
@@ -97,7 +98,7 @@ func readWriteBytesCRC(reader io.Reader, writer io.Writer) error {
 	buf := make([]byte, 144)
 	packetIndex := 0
 	packetBuffer := make([]byte, 16)
-	table := crc32.MakeTable(crc32.Castagnoli)
+	table := crc32.MakeTable(crc32.IEEE)
 	for {
 		numBytes, err := reader.Read(buf)
 		if err != nil {
@@ -122,8 +123,10 @@ func readWriteBytesCRC(reader io.Reader, writer io.Writer) error {
 }
 
 func verifyChecksum(buf []byte, table *crc32.Table) bool {
+	log.Printf("\nData transmitted: %024x\n", buf[:len(buf)-4])
 	checksumTransmitted := binary.LittleEndian.Uint32(buf[len(buf)-4:])
 	checksumCalculated := crc32.Checksum(buf[:len(buf)-4], table)
+	log.Printf("Checksum transmitted: %08x\nChecksum calculated: %08x", checksumTransmitted, checksumCalculated)
 	return checksumTransmitted == checksumCalculated
 }
 
