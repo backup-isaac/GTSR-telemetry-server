@@ -15,10 +15,11 @@ import (
 )
 
 const (
-	remoteMergeURL = "https://solarracing.me/remotemerge"
-	blockSize      = 1000
-	timeout        = 3 * time.Second
-	maxRetries     = 15
+	remoteMergeURL   = "https://solarracing.me/remotemerge"
+	blockSize        = 1000
+	timeout          = 3 * time.Second
+	maxRetries       = 15
+	timeFormatString = "2006-01-02 15:04:05"
 )
 
 // Merger controls the logic for uploading data points from a local server to
@@ -63,15 +64,15 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 
 		msg := fmt.Sprintf("Resuming previous merge job that did not finish "+
 			"(times %s to %s)",
-			startTime.Format("2006-01-02 15:04:05"),
-			endTime.Format("2006-01-02 15:04:05"),
+			startTime.Format(timeFormatString),
+			endTime.Format(timeFormatString),
 		)
 		log.Println(msg)
 		m.slack.PostNewMessage(msg)
 	} else {
 		msg := fmt.Sprintf("Starting new merge job (times %s to %s)"+
-			startTime.Format("2006-01-02 15:04:05"),
-			endTime.Format("2006-01-02 15:04:05"),
+			startTime.Format(timeFormatString),
+			endTime.Format(timeFormatString),
 		)
 		log.Println(msg)
 		m.slack.PostNewMessage(msg)
@@ -96,8 +97,8 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 			errMsg := fmt.Sprintf("Failed to fetch points for the %s metric"+
 				" within the current job's time range (times %s to %s): %v",
 				metric,
-				startTime.Format("2006-01-02 15:04:05"),
-				endTime.Format("2006-01-02 15:04:05"),
+				startTime.Format(timeFormatString),
+				endTime.Format(timeFormatString),
 				err.Error(),
 			)
 			log.Println(errMsg)
@@ -111,8 +112,8 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 	if len(pointsToMerge) <= 0 {
 		errMsg := fmt.Sprintf("No points were collected locally within the"+
 			" current job's time range (times %s to %s)",
-			startTime.Format("2006-01-02 15:04:05"),
-			endTime.Format("2006-01-02 15:04:05"),
+			startTime.Format(timeFormatString),
+			endTime.Format(timeFormatString),
 		)
 		log.Println(errMsg)
 		m.slack.PostNewMessage(errMsg)
@@ -151,6 +152,7 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 					m.model.LastJobBlockNumber = curBlockNum
 					m.model.Commit()
 				} else {
+					// Attempt to merge the current block again.
 					curBlockNum--
 					retryCount++
 					if retryCount >= maxRetries {
@@ -165,6 +167,8 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 					log.Println(msg)
 				}
 			case <-time.After(timeout):
+				// The current block took too long to merge. Attempt to merge
+				// the current block again.
 				curBlockNum--
 				retryCount++
 				if retryCount >= maxRetries {
@@ -183,8 +187,8 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 	m.model.Commit()
 
 	msg = fmt.Sprintf("Current merge job finished (times %s to %s)",
-		startTime.Format("2006-01-02 15:04:05"),
-		endTime.Format("2006-01-02 15:04:05"),
+		startTime.Format(timeFormatString),
+		endTime.Format(timeFormatString),
 	)
 	log.Println(msg)
 	m.slack.PostNewMessage(msg)
