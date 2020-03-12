@@ -1,1 +1,87 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#000000"/><title>Merge Local Points - GTSR Telemetry Server</title><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"/><link href="static/css/main.5ecd60fb.chunk.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div><script>!function(e){function r(r){for(var n,l,a=r[0],p=r[1],f=r[2],c=0,s=[];c<a.length;c++)l=a[c],Object.prototype.hasOwnProperty.call(o,l)&&o[l]&&s.push(o[l][0]),o[l]=0;for(n in p)Object.prototype.hasOwnProperty.call(p,n)&&(e[n]=p[n]);for(i&&i(r);s.length;)s.shift()();return u.push.apply(u,f||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,a=1;a<t.length;a++){var p=t[a];0!==o[p]&&(n=!1)}n&&(u.splice(r--,1),e=l(l.s=t[0]))}return e}var n={},o={1:0},u=[];function l(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,l),t.l=!0,t.exports}l.m=e,l.c=n,l.d=function(e,r,t){l.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},l.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},l.t=function(e,r){if(1&r&&(e=l(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(l.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var n in e)l.d(t,n,function(r){return e[r]}.bind(null,n));return t},l.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return l.d(r,"a",r),r},l.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},l.p="/";var a=this["webpackJsonptelemetry-server-merge-webpage"]=this["webpackJsonptelemetry-server-merge-webpage"]||[],p=a.push.bind(a);a.push=r,a=a.slice();for(var f=0;f<a.length;f++)r(a[f]);var i=p;t()}([])</script><script src="static/js/2.5e690cd7.chunk.js"></script><script src="static/js/main.256859a7.chunk.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<title>Merge Local Datapoints</title>
+
+		<!-- Bootstrap styles -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<style>
+			h2 {
+				text-align: center;
+			}
+			#generateButton {
+				margin-top: 50px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h2>Merge Local Datapoints</h2>
+				</div>
+				<div class="panel-body">
+					<form action="/merge" method="POST">
+						<div class="form-group">
+							<label for="timezone-offset">Timezone</label>
+							<select class="form-control" id="timezone-offset" name="timezone-offset">
+								<option value="-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
+								<option value="-11:00">(GMT -11:00) Midway Island, Samoa</option>
+								<option value="-10:00">(GMT -10:00) Hawaii</option>
+								<option value="-09:50">(GMT -9:30) Taiohae</option>
+								<option value="-09:00">(GMT -9:00) Alaska</option>
+								<option value="-08:00">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+								<option value="-07:00">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+								<option value="-06:00">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+								<option value="-05:00" selected="selected">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+								<option value="-04:50">(GMT -4:30) Caracas</option>
+								<option value="-04:00">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+								<option value="-03:50">(GMT -3:30) Newfoundland</option>
+								<option value="-03:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+								<option value="-02:00">(GMT -2:00) Mid-Atlantic</option>
+								<option value="-01:00">(GMT -1:00) Azores, Cape Verde Islands</option>
+								<option value="+00:00">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+								<option value="+01:00">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
+								<option value="+02:00">(GMT +2:00) Kaliningrad, South Africa</option>
+								<option value="+03:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+								<option value="+03:50">(GMT +3:30) Tehran</option>
+								<option value="+04:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+								<option value="+04:50">(GMT +4:30) Kabul</option>
+								<option value="+05:00">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+								<option value="+05:50">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+								<option value="+05:75">(GMT +5:45) Kathmandu, Pokhara</option>
+								<option value="+06:00">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+								<option value="+06:50">(GMT +6:30) Yangon, Mandalay</option>
+								<option value="+07:00">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+								<option value="+08:00">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+								<option value="+08:75">(GMT +8:45) Eucla</option>
+								<option value="+09:00">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+								<option value="+09:50">(GMT +9:30) Adelaide, Darwin</option>
+								<option value="+10:00">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+								<option value="+10:50">(GMT +10:30) Lord Howe Island</option>
+								<option value="+11:00">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+								<option value="+11:50">(GMT +11:30) Norfolk Island</option>
+								<option value="+12:00">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+								<option value="+12:75">(GMT +12:45) Chatham Islands</option>
+								<option value="+13:00">(GMT +13:00) Apia, Nukualofa</option>
+								<option value="+14:00">(GMT +14:00) Line Islands, Tokelau</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="start-time">Start time</label>
+							<input type="datetime-local" class="form-control" id="start-time" name="start-time" step="1" />
+						</div>
+						<div class="form-group">
+							<label for="end-time">End time</label>
+							<input type="datetime-local" class="form-control" id="end-time" name="end-time" step="1" />
+						</div>
+						<button type="submit" class="btn btn-primary">Merge</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

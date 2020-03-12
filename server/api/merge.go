@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"path"
@@ -38,32 +39,24 @@ func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/merge/static/index.html", http.StatusFound)
 }
 
-// FormResponse mirrors the contents of the POST request body that the
-// LocalMergeHandler parses.
-type FormResponse struct {
-	TimezoneOffset string `json:"timezoneOffset"`
-	StartTime      string `json:"startTime"`
-	EndTime        string `json:"endTime"`
-}
-
 // LocalMergeHandler receives form data from the site at "/merge".
 func (m *MergeHandler) LocalMergeHandler(w http.ResponseWriter, r *http.Request) {
 	// Parse form data from the merge/index.html page.
-	responses := FormResponse{}
-	err := json.NewDecoder(r.Body).Decode(&responses)
+	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, "Could not retrieve input from form: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	// Parse that form data into time.Time datatypes.
-	startTime, err := formatRFC3339(responses.StartTime, responses.TimezoneOffset)
+	tzOffset := r.Form.Get("timezone-offset")
+	startTime, err := formatRFC3339(r.Form.Get("start-time"), tzOffset)
 	if err != nil {
 		errMsg := "Could not convert form input into a valid time.Time datatype: " + err.Error()
 		http.Error(w, errMsg, http.StatusBadRequest)
 		return
 	}
-	endTime, err := formatRFC3339(responses.EndTime, responses.TimezoneOffset)
+	endTime, err := formatRFC3339(r.Form.Get("end-time"), tzOffset)
 	if err != nil {
 		errMsg := "Could not convert form input into a valid time.Time datatype: " + err.Error()
 		http.Error(w, errMsg, http.StatusBadRequest)
@@ -78,8 +71,12 @@ func (m *MergeHandler) LocalMergeHandler(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	// Upload process completed with no problems. Respond with 204.
-	w.WriteHeader(http.StatusNoContent)
+	// TODO: temporary!
+	// Eventually, have the web page react to the status code that we send
+	// here. Perhaps the web page could append some paragraph tag to the DOM
+	// that either says everything went smoothly or that an error occurred.
+	fmt.Fprintln(w, "Points collected locally have been merged successfully")
+	// w.WriteHeader(http.StatusNoContent)
 }
 
 // RemoteMergeHandler inserts provided datapoints into the data store on the
