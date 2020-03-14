@@ -1,5 +1,6 @@
 secrets.json
 telemetry.csv
+server/api/*.csv
 route.json
 node_modules
 jenkins/jenkins_home
@@ -8,3 +9,4 @@ secrets
 fooddb
 .vscode
 .DS_Store
+

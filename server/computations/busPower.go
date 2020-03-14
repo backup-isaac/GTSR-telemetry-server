@@ -2,7 +2,6 @@ package computations
 
 import (
 	"server/datatypes"
-	"time"
 )
 
 // BusPower is the total bus power across both the left and right busses
@@ -27,7 +26,7 @@ func (bp *BusPower) Compute() *datatypes.Datapoint {
 	return &datatypes.Datapoint{
 		Metric: "Bus_Power",
 		Value:  val,
-		Time:   time.Now(),
+		Time:   bp.timestamp,
 	}
 }
 
@@ -54,7 +53,7 @@ func (bp *LeftBusPower) Compute() *datatypes.Datapoint {
 	return &datatypes.Datapoint{
 		Metric: "Left_Bus_Power",
 		Value:  val,
-		Time:   time.Now(),
+		Time:   bp.timestamp,
 	}
 }
 
@@ -81,7 +80,7 @@ func (bp *RightBusPower) Compute() *datatypes.Datapoint {
 	return &datatypes.Datapoint{
 		Metric: "Right_Bus_Power",
 		Value:  val,
-		Time:   time.Now(),
+		Time:   bp.timestamp,
 	}
 }
 

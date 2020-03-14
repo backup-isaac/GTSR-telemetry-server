@@ -2,7 +2,6 @@ package computations
 
 import (
 	"server/datatypes"
-	"time"
 )
 
 // BatteryPower is the power being output by the pack
@@ -29,7 +28,7 @@ func (bp *BatteryPower) Compute() *datatypes.Datapoint {
 	busVoltage := (bp.values["Left_Bus_Voltage"] + bp.values["Right_Bus_Voltage"]) / 2
 	point := &datatypes.Datapoint{
 		Metric: "Battery_Power",
-		Time:   time.Now(),
+		Time:   bp.timestamp,
 	}
 	if busVoltage < 50.0 {
 		point.Value = bmsCurrent * packVoltage

@@ -46,8 +46,136 @@ func main() {
 		go sendLocations(tcpConn)
 	}
 
+	// simulate Wavesculptor telemetry as if the car is driving
+	go driveMotors(tcpConn)
+
 	// every 50 milliseconds, send test computation (UDP/Unreliable)
 	sendTestComputation(udpConn)
+}
+
+// pretend that the car drives a couple seconds, then stops for a bit, then repeats
+func driveMotors(conn net.Conn) {
+	leftMotorRpms := []float32{
+		0.0, 3.8, 8.5, 13.0, 18.0, 23.0, 28.4, 34.1, 40.0, 45.0, 49.2, 44.8, 44.1, 37.6, 31.8, 25.3, 19.9, 14.7, 10.1, 6.2, 2.7, 0.0, 0.0,
+	}
+	rightMotorRpms := []float32{
+		0.0, 3.8, 8.4, 13.0, 18.2, 23.1, 28.4, 34.0, 39.7, 44.9, 49.3, 44.8, 44.4, 37.7, 31.7, 25.3, 19.7, 14.5, 10.1, 6.3, 2.7, 0.1, 0.0,
+	}
+	leftMotorPhaseCs := []float32{
+		0.0, 1.9, 4.0, 4.2, 4.1, 4.5, 4.7, 4.8, 4.5, 4.0, 2.0, 0.5, -0.9, -3.7, -5.3, -5.4, -5.4, -5.3, -4.8, -3.8, -3.0, -0.6, 0.0,
+	}
+	rightMotorPhaseCs := []float32{
+		0.0, 2.1, 4.1, 4.0, 4.3, 4.5, 4.7, 4.7, 4.4, 4.1, 1.9, 0.7, -1.0, -3.5, -5.2, -5.4, -5.5, -5.2, -4.6, -3.6, -2.9, -0.4, 0.0,
+	}
+	leftMotorBusVoltages := []float32{
+		128.14, 127.99, 127.92, 127.84, 127.81, 127.76, 127.72, 127.50, 127.48, 127.46, 127.77, 127.98, 128.19, 128.60, 128.60, 128.50, 128.43, 128.38, 128.33, 128.14, 128.09, 128.15, 128.04,
+	}
+	rightMotorBusVoltages := []float32{
+		128.17, 127.99, 127.93, 127.85, 127.81, 127.78, 127.76, 127.52, 127.51, 127.46, 127.81, 127.97, 128.22, 128.61, 128.60, 128.51, 128.45, 128.39, 128.37, 128.15, 128.10, 128.19, 128.05,
+	}
+	leftMotorBusCurrents := []float32{
+		0.00, 0.08, 0.38, 0.61, 0.82, 1.15, 1.48, 1.82, 2.00, 2.00, 1.09, 0.25, -0.44, -1.55, -1.87, -1.52, -1.19, -0.87, -0.54, -0.26, -0.09, -0.00, 0.00,
+	}
+	rightMotorBusCurrents := []float32{
+		0.00, 0.09, 0.38, 0.58, 0.87, 1.16, 1.48, 1.78, 1.94, 2.05, 1.04, 0.35, -0.49, -1.47, -1.83, -1.52, -1.20, -0.84, -0.52, -0.25, -0.09, -0.00, 0.00,
+	}
+	bmsCurrents := []float32{
+		0.07, 0.19, 0.81, 1.26, 1.80, 2.48, 3.19, 3.80, 4.18, 4.28, 2.28, 0.66, -0.95, -3.10, -3.86, -3.17, -2.47, -1.74, -1.03, -0.51, -0.16, 0.08, 0.02,
+	}
+
+	i := 0
+	var qLeft float32
+	var qRight float32
+	for {
+		var leftMotorRpm, rightMotorRpm, leftMotorPhaseC, rightMotorPhaseC, leftMotorBusVoltage, rightMotorBusVoltage, leftMotorBusCurrent, rightMotorBusCurrent, bmsCurrent float32
+		if i < len(leftMotorRpms) {
+			leftMotorRpm = leftMotorRpms[i]
+			rightMotorRpm = rightMotorRpms[i]
+			leftMotorPhaseC = leftMotorPhaseCs[i]
+			rightMotorPhaseC = rightMotorPhaseCs[i]
+			leftMotorBusVoltage = leftMotorBusVoltages[i]
+			rightMotorBusVoltage = rightMotorBusVoltages[i]
+			leftMotorBusCurrent = leftMotorBusCurrents[i]
+			rightMotorBusCurrent = rightMotorBusCurrents[i]
+			bmsCurrent = bmsCurrents[i]
+		} else {
+			leftMotorRpm = 0
+			rightMotorRpm = 0
+			leftMotorPhaseC = 0
+			rightMotorPhaseC = 0
+			leftMotorBusVoltage = 0
+			rightMotorBusVoltage = 0
+			leftMotorBusCurrent = 0
+			rightMotorBusCurrent = 0
+			bmsCurrent = 0
+		}
+		qLeft += leftMotorBusCurrent * 0.25 / 3600
+		qRight += rightMotorBusCurrent * 0.25 / 3600
+		err := sendFloatPacket(0x423, leftMotorRpm, 0, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x403, rightMotorRpm, 0, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x424, 0, leftMotorPhaseC, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x404, 0, rightMotorPhaseC, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x422, leftMotorBusVoltage, leftMotorBusCurrent, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x402, rightMotorBusVoltage, rightMotorBusCurrent, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x42e, 0, qLeft, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x40e, 0, qRight, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		err = sendFloatPacket(0x342, bmsCurrent, 0, conn)
+		if err != nil {
+			log.Fatalf("Error writing to connection: %s", err)
+		}
+		fakeCellVoltages := make([]float32, 35)
+		for j := 0; j < 35; j++ {
+			if leftMotorBusVoltage > 0 {
+				fakeCellVoltages[j] = (leftMotorBusVoltage+rightMotorBusVoltage)/70 + (0.01 * float32(j))
+			} else {
+				fakeCellVoltages[j] = 128.2/35 + 0.005*float32(j)
+			}
+		}
+		for j := 0; j < 18; j++ {
+			err = sendFloatPacket(0x300+uint16(j), fakeCellVoltages[j], fakeCellVoltages[j+1], conn)
+			if err != nil {
+				log.Fatalf("Error writing to connection: %s", err)
+			}
+		}
+		i = (i + 1) % 40
+		time.Sleep(250 * time.Millisecond)
+	}
+}
+
+func sendFloatPacket(id uint16, lowValue float32, highValue float32, conn net.Conn) error {
+	packet := formPacket()
+	packet[2] = byte(id & 0xff)
+	packet[3] = byte((id & 0xff00) >> 8)
+	binary.LittleEndian.PutUint32(packet[4:8], math.Float32bits(lowValue))
+	binary.LittleEndian.PutUint32(packet[8:12], math.Float32bits(highValue))
+	sendLock.Lock()
+	_, err := conn.Write(packet)
+	sendLock.Unlock()
+	return err
 }
 
 func sendTestComputation(conn net.Conn) {

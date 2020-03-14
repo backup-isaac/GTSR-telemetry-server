@@ -11,58 +11,9 @@ import (
 	"time"
 
 	"server/api"
-	"server/datatypes"
 
 	"github.com/stretchr/testify/assert"
 )
-
-type mockStore struct {
-	metrics []string
-	points  []*datatypes.Datapoint
-}
-
-func (m *mockStore) ListMetrics() ([]string, error) {
-	return m.metrics, nil
-}
-
-func (m *mockStore) SelectMetricTimeRange(name string, start time.Time, end time.Time) ([]*datatypes.Datapoint, error) {
-	return m.points, nil
-}
-
-func TestGetSampledPointsForMetric(t *testing.T) {
-	start := time.Unix(0, 0)
-	end := time.Unix(2, 0)
-	resolution := 250
-	metric := "CSV_Test_Points"
-	points := []*datatypes.Datapoint{
-		{
-			Metric: metric,
-			Value:  1,
-			Time:   time.Unix(0, 250*1e6),
-		},
-		{
-			Metric: metric,
-			Value:  2,
-			Time:   time.Unix(0, 251*1e6),
-		},
-		{
-			Metric: metric,
-			Value:  3,
-			Time:   time.Unix(0, 752*1e6),
-		},
-		{
-			Metric: metric,
-			Value:  4,
-			Time:   time.Unix(1, 250*1e6),
-		},
-	}
-	expectedValues := []float64{0, 1, 1, 3, 3, 4, 4, 4}
-	mockStore := &mockStore{points: points}
-	apiObj := api.NewCSVHandler(mockStore)
-	actualValues, err := apiObj.GetSampledPointsForMetric(metric, start, end, resolution)
-	assert.NoError(t, err)
-	assert.Equal(t, expectedValues, actualValues)
-}
 
 func TestWriteCsv(t *testing.T) {
 	backupCsv(t)

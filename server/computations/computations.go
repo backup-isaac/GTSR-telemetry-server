@@ -1,6 +1,8 @@
 package computations
 
 import (
+	"log"
+	"math"
 	"server/datatypes"
 	"server/listener"
 )
@@ -33,7 +35,12 @@ func compute(computation Computable, stream chan *datatypes.Datapoint) {
 	publisher := listener.GetDatapointPublisher()
 	for point := range stream {
 		if computation.Update(point) {
-			publisher.Publish(computation.Compute())
+			computed := computation.Compute()
+			if math.IsInf(computed.Value, 0) || math.IsNaN(computed.Value) {
+				log.Printf("WARNING: %T computed invalid value %f. Stopping computation...\n", computation, computed.Value)
+				return
+			}
+			publisher.Publish(computed)
 		}
 	}
 }
