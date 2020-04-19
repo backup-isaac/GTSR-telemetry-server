@@ -36,10 +36,10 @@ func teardown() {
 
 // TestReadWriteBytes checks whether readWriteBytes writes the bytes from test_input.bin to test_output.bin correctly.
 func TestReadWriteBytes(t *testing.T) {
-	testInput, err := os.Open("test_files/test_input.bin")
+	testInput, err := os.Open("test_input.bin")
 	assert.NoError(t, err)
 	defer testInput.Close()
-	testOutput, err := os.Create("test_files/test_output.bin")
+	testOutput, err := os.Create("test_output.bin")
 	assert.NoError(t, err)
 	defer testOutput.Close()
 	err = readWriteBytes(testInput, testOutput)
@@ -49,10 +49,10 @@ func TestReadWriteBytes(t *testing.T) {
 	// Reset readers
 	testInput.Close()
 	testOutput.Close()
-	testInput, err = os.Open("test_files/test_input.bin")
+	testInput, err = os.Open("test_input.bin")
 	assert.NoError(t, err)
 	defer testInput.Close()
-	testOutput, err = os.Open("test_files/test_output.bin")
+	testOutput, err = os.Open("test_output.bin")
 	assert.NoError(t, err)
 	defer testOutput.Close()
 	inBytes, err := ioutil.ReadAll(testInput)
@@ -65,22 +65,22 @@ func TestReadWriteBytes(t *testing.T) {
 // TestReadWriteBytesCompleteCRC checks whether readWriteBytesCRC strips the CRC checksum from the frames in
 // test_input_complete_crc.bin such that test_output.bin = test_input.bin.
 func TestReadWriteBytesCompleteCRC(t *testing.T) {
-	testInput, err := os.Open("test_files/test_input_complete_crc.bin")
+	testInput, err := os.Open("test_input_complete_crc.bin")
 	assert.NoError(t, err)
 	defer testInput.Close()
-	testOutput, err := os.Create("test_files/test_output.bin")
+	testOutput, err := os.Create("test_output.bin")
 	assert.NoError(t, err)
 	defer testOutput.Close()
 	err = readWriteBytesCRC(testInput, testOutput)
 	if err != io.EOF {
 		assert.Fail(t, err.Error())
 	}
-	expectedOutput, err := os.Open("test_files/test_input.bin")
+	expectedOutput, err := os.Open("test_input.bin")
 	assert.NoError(t, err)
 	defer expectedOutput.Close()
 	// Reset reader
 	testOutput.Close()
-	testOutput, err = os.Open("test_files/test_output.bin")
+	testOutput, err = os.Open("test_output.bin")
 	assert.NoError(t, err)
 	defer testOutput.Close()
 	expectedBytes, err := ioutil.ReadAll(expectedOutput)
@@ -92,10 +92,10 @@ func TestReadWriteBytesCompleteCRC(t *testing.T) {
 
 // // TestReadWriteBytesCRC checks whether readWriteBytes reads bytes from test_input_crc.bin and outputs only frames that pass CRC to test_output_crc.bin.
 // func TestReadWriteBytesCRC(t *testing.T) {
-// 	testInput, err := os.Open("test_files/test_input_crc.bin")
+// 	testInput, err := os.Open("test_input_crc.bin")
 // 	assert.NoError(t, err)
 // 	defer testInput.Close()
-// 	testOutput, err := os.Create("test_files/test_output_crc.bin")
+// 	testOutput, err := os.Create("test_output_crc.bin")
 // 	assert.NoError(t, err)
 // 	defer testOutput.Close()
 // 	err = readWriteBytesCRC(testInput, testOutput)
@@ -112,10 +112,10 @@ func TestReadWriteBytesCompleteCRC(t *testing.T) {
 
 // TestReadWriteBytesCRCComplete checks whether readWriteBytesCRC reads bytes from test_input_crc_complete.bin and outputs only frames that pass CRC to test_output_crc_complete.bin.
 // func TestReadWriteBytesCRCComplete(t *testing.T) {
-// 	testInput, err := os.Open("test_files/test_input_crc_complete.bin")
+// 	testInput, err := os.Open("test_input_crc_complete.bin")
 // 	assert.NoError(t, err)
 // 	defer testInput.Close()
-// 	testOutput, err := os.Create("test_files/test_output_crc_complete.bin")
+// 	testOutput, err := os.Create("test_output_crc_complete.bin")
 // 	assert.NoError(t, err)
 // 	defer testOutput.Close()
 // 	err = readWriteBytesCRC(testInput, testOutput)
@@ -123,12 +123,12 @@ func TestReadWriteBytesCompleteCRC(t *testing.T) {
 // 		assert.Fail(t, err.Error())
 // 	}
 // 	testOutput.Close()
-// 	expectedOutput, err := os.Open("test_files/test_input.bin")
+// 	expectedOutput, err := os.Open("test_input.bin")
 // 	assert.NoError(t, err)
 // 	defer expectedOutput.Close()
 // 	expectedBytes, err := ioutil.ReadAll(expectedOutput)
 // 	assert.NoError(t, err)
-// 	actualOutput, err := os.Open("test_files/test_output_crc_complete.bin")
+// 	actualOutput, err := os.Open("test_output_crc_complete.bin")
 // 	assert.NoError(t, err)
 // 	defer actualOutput.Close()
 // 	actualBytes, err := ioutil.ReadAll(actualOutput)
@@ -140,7 +140,7 @@ func TestReadWriteBytesCompleteCRC(t *testing.T) {
 
 // generateTestInput creates a file with sample frames, following the format used by the solar car.
 func generateTestInput() {
-	outFile, err := os.Create("test_files/test_input.bin")
+	outFile, err := os.Create("test_input.bin")
 	if err != nil {
 		log.Fatalf("Creation of test input failed: %s", err.Error())
 	}
@@ -167,7 +167,7 @@ func generateTestInput() {
 // generateCompleteCRCTestInput creates a file with sample frames and appended CRC checksums.
 func generateCompleteCRCTestInput() {
 	table := crc32.MakeTable(crc32.IEEE)
-	outFile, err := os.Create("test_files/test_input_complete_crc.bin")
+	outFile, err := os.Create("test_input_complete_crc.bin")
 	if err != nil {
 		log.Fatalf("Creation of complete CRC test input failed: %s", err.Error())
 	}
