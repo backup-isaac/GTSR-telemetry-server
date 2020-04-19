@@ -90,7 +90,8 @@ func TestReadWriteBytesCompleteCRC(t *testing.T) {
 	assert.EqualValues(t, expectedBytes, actualBytes)
 }
 
-// TODO: write test to parse incomplete frames+CRC, write only complete frames
+// TestReadWriteBytesIncompleteCRC checks whether readWriteBytesCRC throws out incomplete frames from its datastream
+// as expected.
 func TestReadWriteBytesIncompleteCRC(t *testing.T) {
 	testInput, err := os.Open("test_input_incomplete_crc.bin")
 	assert.NoError(t, err)
@@ -117,7 +118,9 @@ func TestReadWriteBytesIncompleteCRC(t *testing.T) {
 	assert.EqualValues(t, expectedBytes, actualBytes)
 }
 
-// Test input generation functions (called in setup)
+////////////////////////////////////////////////////////
+// Test input generation functions, called in setup() //
+////////////////////////////////////////////////////////
 
 // generateTestInput creates a file with sample frames, following the format used by the solar car.
 func generateTestInput() {
@@ -176,7 +179,6 @@ func generateCompleteCRCTestInput() {
 	}
 }
 
-// TODO: write generator for incomplete frame+CRC test input
 // Mock corruption of data by randomly removing a byte from the frame every now and then
 func generateIncompleteCRCTestInput() {
 	table := crc32.MakeTable(crc32.IEEE)
