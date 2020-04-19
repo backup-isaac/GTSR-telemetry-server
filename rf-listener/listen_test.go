@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/binary"
+	"hash/crc32"
 	"io"
 	"io/ioutil"
 	"os"
@@ -74,60 +76,55 @@ func TestReadWriteBytes(t *testing.T) {
 // 	assert.EqualValues(t, expectedBytes, actualBytes)
 // }
 
-// func TestGenerateCompleteCRCTestInput(t *testing.T) {
-// 	inFile, err := os.Open("test_files/test_input.bin")
-// 	assert.NoError(t, err)
-// 	defer inFile.Close()
-// 	buf := make([]byte, 12)
-// 	table := crc32.MakeTable(crc32.Castagnoli)
-// 	testOutput, err := os.Create("test_files/test_input_crc_complete.bin")
-// 	if err != nil {
-// 		log.Fatalf("Output file creation error: %s", err)
-// 	}
-// 	defer testOutput.Close()
-// 	for {
-// 		_, err = inFile.Read(buf)
-// 		if err == io.EOF {
-// 			break
-// 		} else if err != nil {
-// 			log.Fatalf("Read error: %s", err)
-// 		}
-// 		checksum := crc32.Checksum(buf, table)
-// 		checksumBytes := make([]byte, 4)
-// 		binary.LittleEndian.PutUint32(checksumBytes, checksum)
-// 		print(checksumBytes)
-// 		CRCBuf := append(buf, checksumBytes...)
-// 		_, err = testOutput.Write(CRCBuf)
-// 		if err != nil {
-// 			log.Fatalf("Write error: %s", err)
-// 		}
-// 	}
-// }
+// TestGenerateCompleteCRCTestInput
+func TestGenerateCompleteCRCTestInput(t *testing.T) {
+	table := crc32.MakeTable(crc32.Castagnoli)
+	outFile, err := os.Create("test_files/test_input_complete_crc.bin")
+	assert.NoError(t, err)
+	defer outFile.Close()
+	GTAndCANID := make([]byte, 4)
+	binary.BigEndian.PutUint32(GTAndCANID, 0x4754FFFF)
+	var floatValue uint16 = 0xC842
+	zeroBuf := make([]byte, 6)
+	valBuf := make([]byte, 2)
+	checksumBuf := make([]byte, 4)
+	for i := 0; i < 100; i++ {
+		binary.BigEndian.PutUint16(valBuf, floatValue)
+		buf := make([]byte, 0)
+		buf = append(buf, GTAndCANID...)
+		buf = append(buf, zeroBuf...)
+		buf = append(buf, valBuf...)
+		checksum := crc32.Checksum(buf, table)
+		binary.LittleEndian.PutUint32(checksumBuf, checksum)
+		buf = append(buf, checksumBuf...)
+		_, err = outFile.Write(buf)
+		if err != nil {
+			assert.NoError(t, err)
+		}
+		floatValue -= 512
+	}
+}
 
-// func TestGenerateTestInput(t *testing.T) {
-// 	outFile, err := os.Create("test_files/test_input.bin")
-// 	assert.NoError(t, err)
-// 	defer outFile.Close()
-// 	var frame1 uint32 = 0x4754FFFF
-// 	var frame2 uint16 = 0xC842
-// 	zeroBuf := make([]byte, 6)
-// 	for i := 0; i < 100; i++ {
-// 		buf1 := make([]byte, 4)
-// 		buf2 := make([]byte, 2)
-// 		binary.BigEndian.PutUint32(buf1, frame1)
-// 		binary.BigEndian.PutUint16(buf2, frame2)
-// 		_, err = outFile.Write(buf1)
-// 		if err != nil {
-// 			assert.NoError(t, err)
-// 		}
-// 		_, err = outFile.Write(zeroBuf)
-// 		if err != nil {
-// 			assert.NoError(t, err)
-// 		}
-// 		_, err = outFile.Write(buf2)
-// 		if err != nil {
-// 			assert.NoError(t, err)
-// 		}
-// 		frame2 -= 512
-// 	}
-// }
+// TestGenerateTestInput creates a file with sample frames, following the format used by the solar car.
+func TestGenerateTestInput(t *testing.T) {
+	outFile, err := os.Create("test_files/test_input.bin")
+	assert.NoError(t, err)
+	defer outFile.Close()
+	GTAndCANID := make([]byte, 4)
+	binary.BigEndian.PutUint32(GTAndCANID, 0x4754FFFF)
+	var floatValue uint16 = 0xC842
+	valBuf := make([]byte, 2)
+	zeroBuf := make([]byte, 6)
+	for i := 0; i < 100; i++ {
+		binary.BigEndian.PutUint16(valBuf, floatValue)
+		buf := make([]byte, 0)
+		buf = append(buf, GTAndCANID...)
+		buf = append(buf, zeroBuf...)
+		buf = append(buf, valBuf...)
+		_, err = outFile.Write(buf)
+		if err != nil {
+			assert.NoError(t, err)
+		}
+		floatValue -= 512
+	}
+}
