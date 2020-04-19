@@ -123,10 +123,10 @@ func readWriteBytesCRC(reader io.Reader, writer io.Writer) error {
 }
 
 func verifyChecksum(buf []byte, table *crc32.Table) bool {
-	log.Printf("\nData transmitted: %024x\n", buf[:len(buf)-4])
+	// log.Printf("\nData transmitted: %024x\n", buf[:len(buf)-4])
 	checksumTransmitted := binary.LittleEndian.Uint32(buf[len(buf)-4:])
 	checksumCalculated := crc32.Checksum(buf[:len(buf)-4], table)
-	log.Printf("Checksum transmitted: %08x\nChecksum calculated: %08x", checksumTransmitted, checksumCalculated)
+	// log.Printf("Checksum transmitted: %08x\nChecksum calculated: %08x", checksumTransmitted, checksumCalculated)
 	return checksumTransmitted == checksumCalculated
 }
 
