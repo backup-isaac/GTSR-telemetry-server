@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+
+<head>
+  <link rel="apple-touch-icon" sizes="180x180" href="/reconTool/static/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/reconTool/static/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/reconTool/static/favicon-16x16.png">
+  <link rel="manifest" href="/reconTool/static/site.webmanifest">
+  <meta charset="utf-8">
+  <title>ReconTool</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <!--
+    Date/time picker. Necessary because <input type="date-local"> uses a different date format
+    on at least iOS Safari than on desktop browsers, and the iOS Safari date format assumes
+    UTC time instead of the local timezone.
+    The date/time library is distributed exclusively as a NPM package, which means that we
+    have to serve it ourselves.
+    If you need to obtain it / update it inside the repository:
+      1) npm install pickerjs (preferably not in a directory inside telemetry-server)
+      2) copy picker.min.css and picker.min.js from inside
+         [directory of npm install]/node_modules/pickerjs/dist/
+  -->
+  <script src="/reconTool/static/scripts/picker.min.js"></script>
+  <link href="/reconTool/static/scripts/picker.min.css" rel="stylesheet">
+  <!--
+    For downloading raw data. Pretty much everything works ok without this, except that iOS
+    Safari doesn't support <a download="..."> and there aren't any easy workarounds besides
+    using a library.
+    It is also distributed as a NPM package, file-picker, and the file we serve is found in
+    [directory of npm install]/node_modules/file-saver/dist
+    Delete the mapfile comment from the minified code for one less thing we have to serve
+  -->
+  <script src="/reconTool/static/scripts/FileSaver.min.js"></script>
+  <script src="/reconTool/static/scripts/recontool.js"></script>
+</head>
+<body onload="return setupPickers()">
+  <div class="container" id="inputs">
+    <div class="col-sm-5">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 style="text-align:center">Upload CSV(s)</h2>
+        </div>
+        <div class="panel-body">
+          <h4>Uploaded file options:</h4>
+          <div class="checkbox">
+            <label><input type="checkbox" id="autoPlots">Plot all raw data</label>
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox" id="compileFiles">Combine uploaded files together</label>
+          </div>
+          <input type="file" id="upload" multiple="true" accept="text/csv" style="max-width: 100%;">
+          <button type="button" onclick="return clearFile()" class="btn btn-default">Clear Upload</button>
+        </div>
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h2 style="text-align:center">Configuration</h2>
+        </div>
+        <div class="panel-body">
+          <div class="checkbox" style="max-width: 100%;">
+            <label><input type="checkbox" id="terrain">Use GPS for terrain data</label>
+          </div>
+          <h4>Vehicle parameters:</h4>
+          <div class="container" style="max-width: 100%;">
+            <label for="Rmot">Motor radius (m) </label>
+            <input type="number" value="0.278" id="Rmot">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="m">Vehicle mass (kg) </label>
+            <input type="number" value="362.874" id="m">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="CDa">Area drag coefficient (m^2)</label>
+            <input type="number" value="0.16" id="CDa">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="Crr1">Crr1 </label>
+            <input type="number" value="0.006" id="Crr1">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="Crr2">Crr2 (s/m) </label>
+            <input type="number" value="0.0009" id="Crr2">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="Tmax">Max motor torque (Nm) </label>
+            <input type="number" value="80" id="Tmax">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="Qmax">Battery charge capacity (A-hr) </label>
+            <input type="number" value="36" id="Qmax">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="Rline">Phase line resistance (Ω) </label>
+            <input type="number" value="0.1" id="Rline">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="Vser">Battery modules in series </label>
+            <input type="number" value="35" id="Vser">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="VcMax">Max module voltage (V) </label>
+            <input type="number" value="4.2" id="VcMax">
+          </div>
+          <div class="container" style="max-width: 100%;">
+            <label for="VcMin">Min module voltage (V) </label>
+            <input type="number" value="2.5" id="VcMin">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <div class="panel panel-default">
+        <div class= "panel-heading" >
+          <h2 style="text-align:center">Use Data from Server</h2>
+        </div>
+        <div class="panel-body" style="padding-left:15%">
+          <h4>Select timezone</h4>
+          <select name="timezone_offset" id="timezone-offset" class="span5" style="max-width: 100%;">
+            <option value="-12:00">(GMT -12:00) Eniwetok, Kwajalein</option>
+            <option value="-11:00">(GMT -11:00) Midway Island, Samoa</option>
+            <option value="-10:00">(GMT -10:00) Hawaii</option>
+            <option value="-09:30">(GMT -9:30) Taiohae</option>
+            <option value="-09:00">(GMT -9:00) Alaska</option>
+            <option value="-08:00">(GMT -8:00) Pacific Time (US &amp; Canada)</option>
+            <option value="-07:00">(GMT -7:00) Mountain Time (US &amp; Canada)</option>
+            <option value="-06:00">(GMT -6:00) Central Time (US &amp; Canada), Mexico City</option>
+            <option value="-05:00" selected="selected">(GMT -5:00) Eastern Time (US &amp; Canada), Bogota, Lima</option>
+            <option value="-04:30">(GMT -4:30) Caracas</option>
+            <option value="-04:00">(GMT -4:00) Atlantic Time (Canada), Caracas, La Paz</option>
+            <option value="-03:30">(GMT -3:30) Newfoundland</option>
+            <option value="-03:00">(GMT -3:00) Brazil, Buenos Aires, Georgetown</option>
+            <option value="-02:00">(GMT -2:00) Mid-Atlantic</option>
+            <option value="-01:00">(GMT -1:00) Azores, Cape Verde Islands</option>
+            <option value="+00:00">(GMT) Western Europe Time, London, Lisbon, Casablanca</option>
+            <option value="+01:00">(GMT +1:00) Brussels, Copenhagen, Madrid, Paris</option>
+            <option value="+02:00">(GMT +2:00) Kaliningrad, South Africa</option>
+            <option value="+03:00">(GMT +3:00) Baghdad, Riyadh, Moscow, St. Petersburg</option>
+            <option value="+03:30">(GMT +3:30) Tehran</option>
+            <option value="+04:00">(GMT +4:00) Abu Dhabi, Muscat, Baku, Tbilisi</option>
+            <option value="+04:30">(GMT +4:30) Kabul</option>
+            <option value="+05:00">(GMT +5:00) Ekaterinburg, Islamabad, Karachi, Tashkent</option>
+            <option value="+05:30">(GMT +5:30) Bombay, Calcutta, Madras, New Delhi</option>
+            <option value="+05:45">(GMT +5:45) Kathmandu, Pokhara</option>
+            <option value="+06:00">(GMT +6:00) Almaty, Dhaka, Colombo</option>
+            <option value="+06:30">(GMT +6:30) Yangon, Mandalay</option>
+            <option value="+07:00">(GMT +7:00) Bangkok, Hanoi, Jakarta</option>
+            <option value="+08:00">(GMT +8:00) Beijing, Perth, Singapore, Hong Kong</option>
+            <option value="+08:45">(GMT +8:45) Eucla</option>
+            <option value="+09:00">(GMT +9:00) Tokyo, Seoul, Osaka, Sapporo, Yakutsk</option>
+            <option value="+09:30">(GMT +9:30) Adelaide, Darwin</option>
+            <option value="+10:00">(GMT +10:00) Eastern Australia, Guam, Vladivostok</option>
+            <option value="+10:30">(GMT +10:30) Lord Howe Island</option>
+            <option value="+11:00">(GMT +11:00) Magadan, Solomon Islands, New Caledonia</option>
+            <option value="+11:30">(GMT +11:30) Norfolk Island</option>
+            <option value="+12:00">(GMT +12:00) Auckland, Wellington, Fiji, Kamchatka</option>
+            <option value="+12:45">(GMT +12:45) Chatham Islands</option>
+            <option value="+13:00">(GMT +13:00) Apia, Nukualofa</option>
+            <option value="+14:00">(GMT +14:00) Line Islands, Tokelau</option>
+          </select>
+          <h4>Start</h4>
+          <input type="text" id="start"/>
+          <h4>End</h4>
+          <input type="text" id="end"/>
+          <h4>Resolution (ms)</h4>
+          <input value="250" id="resolution" type="number"/>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-7">
+      <div class="panel panel-default" id="buttonContainer">
+        <div class="panel-body" style="text-align: center">
+          <button id="csvButton" onclick="runCSV()"class="btn btn-success">Run ReconTool with CSV</button>
+        </div>
+        <div class="panel-body" style="text-align: center">
+          <button id="serverButton" onclick="runServer()"class="btn btn-success">Run ReconTool with Server Data</button>
+        </div>
+      </div>
+      <div class="panel panel-default" id="loading" style="display: none; text-align: center;">
+        <img src="/reconTool/static/loading.gif" alt="loading..." style="width:96px; height:96px">
+      </div>
+    </div>
+  </div>
+  <div class="container" id="outputs" style="display: none">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-heading" style="text-align: center">
+          <h1>Results</h1>
+        </div>
+        <div id="results" style="margin: auto; max-width: min-content; min-width: max-content;"></div>
+        <div class="panel-body" style="text-align: center">
+          <h5 id="smallWarning" style="color: darkred; display: none">Screen too small to plot!</h5>
+          <button id="downloadRawButton" class="btn btn-success">Download Raw Data (JSON)</button>
+          <button id="fakeBackButton" onclick="goBack()" class="btn btn-primary">Back</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
