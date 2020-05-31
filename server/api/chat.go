@@ -40,7 +40,7 @@ const cookieName = "login-cookie"
 
 const maxMessageLength = 35
 
-const requireAuthorization = false
+var requireAuthorization = false
 
 var authorizedUsers = map[string]bool{
 	"U0JSX098T": true, // Jared
