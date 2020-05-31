@@ -1,11 +1,14 @@
 package main
 
 import (
+	"encoding/binary"
 	"fmt"
 	"io"
 	"log"
 	"net"
 	"os"
+
+	"hash/crc32"
 
 	"go.bug.st/serial.v1"
 )
@@ -65,6 +68,12 @@ func main() {
 	// listen for incoming TCP messages, and print out
 	go readWriteBytes(conn, s)
 
+	// if CRC enabled, use a different algorithm to read in bytes
+	if len(os.Args) > 3 && os.Args[3] == "CRC" {
+		err = readWriteBytesCRC(s, conn)
+		log.Fatalf("CRC-enabled read/write failed: %s", err)
+	}
+	log.Println("Note that CRC is not currently enabled. Enable it by passing \"CRC\" as the third argument.")
 	// receive messages from serial port
 	err = readWriteBytes(s, conn)
 	log.Fatalf("Read/write failed: %s", err)
@@ -83,4 +92,62 @@ func readWriteBytes(reader io.Reader, writer io.Writer) error {
 			return err
 		}
 	}
+}
+
+func readWriteBytesCRC(reader io.Reader, writer io.Writer) error {
+	buf := make([]byte, 144)
+	packetIndex := 0
+	packetBuffer := make([]byte, 16)
+	table := crc32.MakeTable(crc32.IEEE)
+	for {
+		numBytes, err := reader.Read(buf)
+		if err != nil {
+			return err
+		}
+		for i := 0; i < numBytes; i++ {
+			parseByte(buf[i], &packetIndex, packetBuffer)
+			if err != nil {
+				continue
+			}
+			if packetIndex == len(packetBuffer) {
+				packetIndex = 0
+				if verifyChecksum(packetBuffer, table) {
+					_, err := writer.Write(packetBuffer[:12])
+					if err != nil {
+						return err
+					}
+				}
+			}
+		}
+	}
+}
+
+func verifyChecksum(buf []byte, table *crc32.Table) bool {
+	// log.Printf("\nData transmitted: %024x\n", buf[:len(buf)-4])
+	checksumTransmitted := binary.LittleEndian.Uint32(buf[len(buf)-4:])
+	checksumCalculated := crc32.Checksum(buf[:len(buf)-4], table)
+	// log.Printf("Checksum transmitted: %08x\nChecksum calculated: %08x", checksumTransmitted, checksumCalculated)
+	return checksumTransmitted == checksumCalculated
+}
+
+func parseByte(b byte, packetIndex *int, packetBuffer []byte) error {
+	switch *packetIndex {
+	case 0:
+		if b != 'G' {
+			return fmt.Errorf("G not found")
+		}
+		packetBuffer[*packetIndex] = b
+		*packetIndex++
+	case 1:
+		if b != 'T' {
+			*packetIndex = 0
+			return fmt.Errorf("T not found")
+		}
+		packetBuffer[*packetIndex] = b
+		*packetIndex++
+	default:
+		packetBuffer[*packetIndex] = b
+		*packetIndex++
+	}
+	return nil
 }
