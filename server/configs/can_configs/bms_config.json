@@ -1080,5 +1080,14 @@
         "check_bounds": true,
         "min_value": 0,
         "max_value": 20
+    },
+    {
+        "can_id": 846,
+        "datatype": "float32",
+        "name": "BMS_Master_MPPT_Current",
+        "offset": 0,
+        "check_bounds": true,
+        "min_value": -20,
+        "max_value": 20
     }
 ]

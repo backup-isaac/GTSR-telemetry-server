@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="apple-touch-icon" sizes="180x180" href="/map/static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/map/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/map/static/favicon-16x16.png">
+    <link rel="manifest" href="/map/static/site.webmanifest">
     <style>
       #overlay {
         position: absolute;
@@ -124,14 +128,14 @@
           updateGPSStatus();
           updateMarker(false);
         }, 1000);
-        
+
         function updateMarker(center) {
           if (updateRouteFlag) {
             updateRouteFlag = false;
             updateRoute();
           }
           var xmlHttp = new XMLHttpRequest();
-          xmlHttp.onreadystatechange = function() { 
+          xmlHttp.onreadystatechange = function() {
             if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
               var latlng = JSON.parse(xmlHttp.responseText);
               if (latlng.lat !== 0 && latlng.lng !== 0) {
@@ -159,7 +163,7 @@
                   var dlat = curPosition.lat() - lastPosition.lat()
                   var dlng = curPosition.lng() - lastPosition.lng()
                   var mag = (dlat ** 2 + dlng ** 2) ** (1/2)
-                  
+
                   if (mag > 0) {
                     trackMarker(new google.maps.LatLng({
                       lat: curPosition.lat() - dlat / mag * .0002,
@@ -265,7 +269,7 @@
                   path: [
                     new google.maps.LatLng(route[i].latitude, route[i].longitude),
                     new google.maps.LatLng(route[i+1].latitude, route[i+1].longitude)
-                  ], 
+                  ],
                   geodesic: true,
                   strokeColor: rgb(minSpeed, maxSpeed, avgSpeed),
                   strokeOpacity: 1.0,
@@ -336,7 +340,7 @@
         formData.append('uploadedFile', document.getElementById('uploadedFile').files[0]);
         xmlHttp.send(formData);
       }
-      
+
       updateData();
       setInterval(updateData, 1000);
 

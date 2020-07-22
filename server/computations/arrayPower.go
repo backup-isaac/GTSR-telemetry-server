@@ -9,6 +9,7 @@ type ArrayPower struct {
 	standardComputation
 }
 
+// NewArrayPower returns an initialized ArrayPower
 func NewArrayPower() *ArrayPower {
 	return &ArrayPower{
 		standardComputation{
@@ -20,6 +21,7 @@ func NewArrayPower() *ArrayPower {
 	}
 }
 
+// Compute computes solar array power
 func (a *ArrayPower) Compute() *datatypes.Datapoint {
 	mg0Power := a.values["MG_0_Input_Power"] / 1000.0
 
@@ -31,6 +33,7 @@ func (a *ArrayPower) Compute() *datatypes.Datapoint {
 	point := &datatypes.Datapoint{
 		Metric: "Array_Power",
 		Value:  totalPower,
+		Time:   a.timestamp,
 	}
 	a.values = make(map[string]float64)
 

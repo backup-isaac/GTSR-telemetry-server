@@ -9,7 +9,7 @@ import (
 	"os"
 	"path"
 	"runtime"
-	"server/datatypes"
+	"server/storage"
 	"strconv"
 	"sync/atomic"
 	"time"
@@ -23,19 +23,14 @@ func init() {
 	generating.Store(false)
 }
 
-type csvStore interface {
-	ListMetrics() ([]string, error)
-	SelectMetricTimeRange(string, time.Time, time.Time) ([]*datatypes.Datapoint, error)
-}
-
 // CSVHandler handles requests related to the CSV generator tool
 type CSVHandler struct {
-	store csvStore
+	store *storage.Storage
 }
 
 // NewCSVHandler returns an initialized CSVHandler
-func NewCSVHandler(store csvStore) *CSVHandler {
-	return &CSVHandler{store}
+func NewCSVHandler(store *storage.Storage) *CSVHandler {
+	return &CSVHandler{store: store}
 }
 
 type generationRequest struct {
@@ -120,63 +115,12 @@ func unixStringMillisToTime(timeString string) (time.Time, error) {
 }
 
 func (c *CSVHandler) generateCsv(start time.Time, end time.Time, resolution int) {
-	metrics, err := c.store.ListMetrics()
+	columns, err := c.store.GetAllMetricPointsRange(start, end, resolution)
 	if err != nil {
 		log.Printf("Error getting metrics: %s\n", err)
 		return
 	}
-	colChannels := make([]chan []float64, len(metrics))
-	for i, metric := range metrics {
-		colChannels[i] = make(chan []float64, 1)
-		go func(metric string, colChan chan []float64) {
-			column, err := c.GetSampledPointsForMetric(metric, start, end, resolution)
-			if err != nil {
-				log.Printf("Error getting values for metric %s: %s\n", metric, err)
-				colChan <- nil
-				return
-			}
-			colChan <- column
-		}(metric, colChannels[i])
-	}
-	columns := make(map[string][]float64, len(metrics))
-	for i, colChan := range colChannels {
-		column := <-colChan
-		if column != nil {
-			columns[metrics[i]] = column
-		}
-	}
 	WriteCsv(columns, start, end, resolution)
-}
-
-// GetSampledPointsForMetric returns sampled data for a particular metric in the time range specified by start and end
-// at the given resolution
-func (c *CSVHandler) GetSampledPointsForMetric(metric string, start time.Time, end time.Time, resolution int) ([]float64, error) {
-	points, err := c.store.SelectMetricTimeRange(metric, start, end)
-	if err != nil {
-		return nil, err
-	}
-	duration := end.Sub(start)
-	durMillis := duration.Nanoseconds() / 1e6
-	resolutionDur := time.Duration(resolution) * time.Millisecond
-	numRows := int(durMillis-1)/resolution + 1
-	column := make([]float64, numRows)
-	var last float64
-	i := 0
-	row := 0
-	for timestamp := start; timestamp.Before(end); timestamp = timestamp.Add(resolutionDur) {
-		for i < len(points) && points[i].Time.Before(timestamp) {
-			i++
-		}
-		next := timestamp.Add(resolutionDur)
-		if i >= len(points) || points[i].Time.Equal(next) || points[i].Time.After(next) {
-			column[row] = last
-		} else {
-			column[row] = points[i].Value
-			last = points[i].Value
-		}
-		row++
-	}
-	return column, nil
 }
 
 // WriteCsv writes the contents of columns to api/csv/telemetry.csv
