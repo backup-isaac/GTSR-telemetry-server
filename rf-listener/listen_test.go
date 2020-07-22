@@ -10,7 +10,6 @@ import (
 	"math/rand"
 	"os"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -198,8 +197,8 @@ func generateIncompleteCRCTestInput() {
 	zeroBuf := make([]byte, 6)
 	valBuf := make([]byte, 2)
 	checksumBuf := make([]byte, 4)
-	// Seed rand with current time, so that test is unique
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	r := rand.New(rand.NewSource(69))
 	// Was the previous frame corrupted?
 	wasCorrupted := false
 	for i := 0; i < 100; i++ {
