@@ -139,7 +139,7 @@ func RunReconTool(data map[string][]float64, rawTimestamps []int64, vehicle *Veh
 		}
 		return params[0] / params[1]
 	}, solarPowerSeries, busVoltage)
-	solarChargeSeries := RiemannSumIntegrate(mpptCurrent, dt)
+	solarChargeSeries := RiemannSumIntegrate(mpptCurrent, dt/3600)
 	result.VelocityMph = floats.ScaleTo(make([]float64, len(velocitySeries)), MetersPerSecondToMilesPerHour, velocitySeries)
 	result.DistanceMiles = floats.ScaleTo(make([]float64, len(distanceSeries)), MetersToMiles, distanceSeries)
 	result.TimeMinutes = floats.ScaleTo(make([]float64, len(timeSeries)), SecondsToMinutes, timeSeries)
