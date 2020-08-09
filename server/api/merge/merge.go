@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"server/datatypes"
@@ -14,7 +15,6 @@ import (
 )
 
 const (
-	remoteMergeURL   = "https://solarracing.me/remotemerge"
 	blockSize        = 1000
 	timeout          = 3 * time.Second
 	maxRetries       = 15
@@ -211,6 +211,15 @@ func (m *Merger) MergePointsOntoRemote(pointsToMerge []*datatypes.Datapoint) err
 // onto the provided channel; if the request doesn't go through for any
 // reason, then this func pushes: false onto the provided channel.
 func mergeCurBlockOfPoints(curBlockAsJSON []byte, c chan bool) {
+	// Get the public URL of the remote server.
+	remoteMergeURL, ok := os.LookupEnv("REMOTE_SERVER_URL")
+	if !ok {
+		log.Println("Failed to find the public URL of the remote server. The" +
+			" REMOTE_SERVER_URL environment variable is not set.")
+		c <- false
+		return
+	}
+
 	// Hit the RemoteMergeHandler to merge the points into the remote
 	// server's data store.
 	res, err := http.Post(remoteMergeURL, "application/json", bytes.NewBuffer(curBlockAsJSON))
