@@ -134,7 +134,15 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 				return err
 			}
 
-			go mergeCurBlockOfPoints(curBlockAsJSON, c)
+			go func() {
+				mergeBlockErr := mergeCurBlockOfPoints(curBlockAsJSON)
+				if mergeBlockErr != nil {
+					log.Println(mergeBlockErr.Error())
+					c <- false
+				} else {
+					c <- true
+				}
+			}()
 
 			select {
 			case res := <-c:
@@ -210,37 +218,27 @@ func (m *Merger) MergePointsOntoRemote(pointsToMerge []*datatypes.Datapoint) err
 // If the request goes through with no problems, then this func pushes: true
 // onto the provided channel; if the request doesn't go through for any
 // reason, then this func pushes: false onto the provided channel.
-func mergeCurBlockOfPoints(curBlockAsJSON []byte, c chan bool) {
+func mergeCurBlockOfPoints(curBlockAsJSON []byte) error {
 	// Get the public URL of the remote server.
 	remoteMergeURL, ok := os.LookupEnv("REMOTE_SERVER_URL")
 	if !ok {
-		log.Println("Failed to find the public URL of the remote server. The" +
-			" REMOTE_SERVER_URL environment variable is not set.")
-		c <- false
-		return
+		return fmt.Errorf("Failed to find the public URL of the remote" +
+			" server. Is the REMOTE_SERVER_URL environment variable set?")
 	}
 
 	// Hit the RemoteMergeHandler to merge the points into the remote
 	// server's data store.
 	res, err := http.Post(remoteMergeURL, "application/json", bytes.NewBuffer(curBlockAsJSON))
 	if err != nil {
-		errMsg := fmt.Sprintf("Failed to send POST request to %s: %v",
-			remoteMergeURL, err.Error(),
-		)
-		log.Println(errMsg)
-		c <- false
-		return
+		return fmt.Errorf("Failed to send POST request to %s: %v",
+			remoteMergeURL, err.Error())
 	}
 	if res.StatusCode != 204 {
-		errMsg := fmt.Sprintf("POST request to %s did not return"+
-			" 204: %v", remoteMergeURL, err.Error(),
-		)
-		log.Println(errMsg)
-		c <- false
-		return
+		return fmt.Errorf("POST request to %s did not return 204: %v",
+			remoteMergeURL, err.Error())
 	}
 
-	c <- true
+	return nil
 }
 
 // Helper func that should really be in the standard library if you ask me...
