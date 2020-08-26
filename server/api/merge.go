@@ -41,33 +41,9 @@ func (m *MergeHandler) MergeDefault(w http.ResponseWriter, r *http.Request) {
 
 // LocalMergeHandler receives form data from the site at "/merge".
 func (m *MergeHandler) LocalMergeHandler(w http.ResponseWriter, r *http.Request) {
-	// Parse form data from the merge/index.html page.
-	err := r.ParseForm()
+	statusCode, err := m.localMergeHandlerHelper(r)
 	if err != nil {
-		http.Error(w, "Could not retrieve input from form: "+err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	// Parse that form data into time.Time datatypes.
-	tzOffset := r.Form.Get("timezone-offset")
-	startTime, err := formatRFC3339(r.Form.Get("start-time"), tzOffset)
-	if err != nil {
-		errMsg := "Could not convert form input into a valid time.Time datatype: " + err.Error()
-		http.Error(w, errMsg, http.StatusBadRequest)
-		return
-	}
-	endTime, err := formatRFC3339(r.Form.Get("end-time"), tzOffset)
-	if err != nil {
-		errMsg := "Could not convert form input into a valid time.Time datatype: " + err.Error()
-		http.Error(w, errMsg, http.StatusBadRequest)
-		return
-	}
-
-	// Begin the upload process to the remote server
-	err = m.merger.UploadLocalPointsToRemote(startTime, endTime)
-	if err != nil {
-		errMsg := "Error uploading local datapoints to remote server: " + err.Error()
-		http.Error(w, errMsg, http.StatusInternalServerError)
+		http.Error(w, err.Error(), statusCode)
 		return
 	}
 
@@ -77,6 +53,46 @@ func (m *MergeHandler) LocalMergeHandler(w http.ResponseWriter, r *http.Request)
 	// that either says everything went smoothly or that an error occurred.
 	fmt.Fprintln(w, "Points collected locally have been merged successfully")
 	// w.WriteHeader(http.StatusNoContent)
+}
+
+// localMergeHandlerHelper performs the business logic for input validation and
+// uploading local points to the remote server.
+func (m *MergeHandler) localMergeHandlerHelper(r *http.Request) (int, error) {
+	// Parse form data from the merge/index.html page.
+	err := r.ParseForm()
+	if err != nil {
+		return http.StatusBadRequest,
+			fmt.Errorf("Could not retrieve input from form: %v", err.Error())
+	}
+
+	// Parse that form data into time.Time datatypes.
+	tzOffset := r.Form.Get("timezone-offset")
+	startTime, err := formatRFC3339(r.Form.Get("start-time"), tzOffset)
+	if err != nil {
+		return http.StatusBadRequest,
+			fmt.Errorf(
+				"Could not convert form input into a valid time.Time datatype: %v",
+				err.Error(),
+			)
+	}
+	endTime, err := formatRFC3339(r.Form.Get("end-time"), tzOffset)
+	if err != nil {
+		return http.StatusBadRequest,
+			fmt.Errorf(
+				"Could not convert form input into a valid time.Time datatype: %v",
+				err.Error(),
+			)
+	}
+
+	// Begin the upload process to the remote server
+	err = m.merger.UploadLocalPointsToRemote(startTime, endTime)
+	if err != nil {
+		return http.StatusInternalServerError,
+			fmt.Errorf("Error uploading local datapoints to remote server: %v",
+				err.Error())
+	}
+
+	return -1, nil
 }
 
 // RemoteMergeHandler inserts provided datapoints into the data store on the
