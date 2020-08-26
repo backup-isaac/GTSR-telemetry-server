@@ -15,11 +15,28 @@ import (
 )
 
 const (
-	blockSize        = 1000
-	timeout          = 3 * time.Second
-	maxRetries       = 15
-	timeFormatString = "2006-01-02 15:04:05"
+	blockSize             = 1000
+	timeout               = 3 * time.Second
+	maxRetries            = 15
+	timeFormatString      = "2006-01-02 15:04:05"
+	defaultRemoteMergeURL = "https://solarracing.me/remotemerge"
 )
+
+var remoteMergeURL string
+
+func init() {
+	// Get the public URL of the remote server.
+	url, ok := os.LookupEnv("REMOTE_SERVER_URL")
+	if !ok {
+		log.Println("Failed to find the public URL of the remote" +
+			" server. Is the REMOTE_SERVER_URL environment variable set?")
+		log.Printf("Defaulting to %s for REMOTE_SERVER_URL\n",
+			defaultRemoteMergeURL)
+		remoteMergeURL = defaultRemoteMergeURL
+	} else {
+		remoteMergeURL = url
+	}
+}
 
 // Merger controls the logic for uploading data points from a local server to
 // the remote server.
@@ -219,13 +236,6 @@ func (m *Merger) MergePointsOntoRemote(pointsToMerge []*datatypes.Datapoint) err
 // onto the provided channel; if the request doesn't go through for any
 // reason, then this func pushes: false onto the provided channel.
 func mergeCurBlockOfPoints(curBlockAsJSON []byte) error {
-	// Get the public URL of the remote server.
-	remoteMergeURL, ok := os.LookupEnv("REMOTE_SERVER_URL")
-	if !ok {
-		return fmt.Errorf("Failed to find the public URL of the remote" +
-			" server. Is the REMOTE_SERVER_URL environment variable set?")
-	}
-
 	// Hit the RemoteMergeHandler to merge the points into the remote
 	// server's data store.
 	res, err := http.Post(remoteMergeURL, "application/json", bytes.NewBuffer(curBlockAsJSON))
