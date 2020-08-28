@@ -155,10 +155,8 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 				mergeBlockErr := mergeCurBlockOfPoints(curBlockAsJSON)
 				if mergeBlockErr != nil {
 					log.Println(mergeBlockErr.Error())
-					c <- false
-				} else {
-					c <- true
 				}
+				c <- mergeBlockErr == nil
 			}()
 
 			select {
