@@ -49,8 +49,8 @@ func NewMergeHandler(store *storage.Storage) *MergeHandler {
 }
 
 type uploadRequest struct {
-	startTime *time.Time
-	endTime   *time.Time
+	startTime time.Time
+	endTime   time.Time
 }
 
 var uploadRequestQueue = make(chan uploadRequest)
@@ -160,7 +160,7 @@ func (m *MergeHandler) RemoteMergeHandler(w http.ResponseWriter, r *http.Request
 // uploadLocalPointsToRemote uses information in an uploadRequest to kick off
 // the process of merging datapoints on a local server instance to the remote
 // server.
-func (m *MergeHandler) uploadLocalPointsToRemote(startTime, endTime *time.Time) {
+func (m *MergeHandler) uploadLocalPointsToRemote(startTime, endTime time.Time) {
 	err := m.merger.UploadLocalPointsToRemote(startTime, endTime)
 	if err != nil {
 		errMsg := fmt.Errorf("Error uploading local datapoints to remote"+
@@ -170,9 +170,11 @@ func (m *MergeHandler) uploadLocalPointsToRemote(startTime, endTime *time.Time) 
 }
 
 // Turns date/timezone strings into RFX3339Nano time.Time types.
-func formatRFC3339(date string, timezone string) (*time.Time, error) {
+func formatRFC3339(date string, timezone string) (time.Time, error) {
+	zeroValue := time.Time{}
+
 	if date == "" || timezone == "" {
-		return nil, errors.New("Input to formatRFC3339 cannot be empty")
+		return zeroValue, errors.New("Input to formatRFC3339 cannot be empty")
 	}
 
 	// If there aren't seconds on the date string passed in, add them.
@@ -191,10 +193,10 @@ func formatRFC3339(date string, timezone string) (*time.Time, error) {
 	// Turn string into time datatype
 	t, err := time.Parse(time.RFC3339Nano, date)
 	if err != nil {
-		return nil, err
+		return zeroValue, err
 	}
 
-	return &t, nil
+	return t, nil
 }
 
 // RegisterRoutes registers the routes for the merge service.

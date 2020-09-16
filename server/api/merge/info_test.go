@@ -26,8 +26,8 @@ func TestMergeInfoModel(t *testing.T) {
 	startTimestamp, _ := time.Parse("2006-01-02 15:04:05", "2009-11-07T23:00:00-05:00")
 	endTimestamp, _ := time.Parse("2006-01-02 15:04:05", "2009-11-08T00:00:00-05:00")
 	m := &Model{
-		LastJobStartTimestamp: &startTimestamp,
-		LastJobEndTimestamp:   &endTimestamp,
+		LastJobStartTimestamp: startTimestamp,
+		LastJobEndTimestamp:   endTimestamp,
 		LastJobBlockNumber:    42,
 		DidLastJobFinish:      false,
 	}

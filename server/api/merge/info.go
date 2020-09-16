@@ -14,10 +14,10 @@ const configFileName = "merge_info_config.json"
 // Model mirrors the structure of the merge config file. Used to read and edit
 // that config file's contents.
 type Model struct {
-	LastJobStartTimestamp *time.Time `json:"lastJobStartTimestamp"`
-	LastJobEndTimestamp   *time.Time `json:"lastJobEndTimestamp"`
-	LastJobBlockNumber    int        `json:"lastJobBlockNumber"`
-	DidLastJobFinish      bool       `json:"didLastJobFinish"`
+	LastJobStartTimestamp time.Time `json:"lastJobStartTimestamp"`
+	LastJobEndTimestamp   time.Time `json:"lastJobEndTimestamp"`
+	LastJobBlockNumber    int       `json:"lastJobBlockNumber"`
+	DidLastJobFinish      bool      `json:"didLastJobFinish"`
 }
 
 var infoPath string

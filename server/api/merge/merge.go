@@ -66,7 +66,7 @@ func NewMerger(store *storage.Storage) (*Merger, error) {
 // of uploading those points to the server hosted at solarracing.me.
 //
 // This func is intended to run on a local server.
-func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error {
+func (m *Merger) UploadLocalPointsToRemote(startTime, endTime time.Time) error {
 	var curBlockNum int
 
 	// Check the contents of merge_info_config.json to see if there is an
@@ -102,7 +102,7 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime *time.Time) error 
 	pointsToMerge := []*datatypes.Datapoint{}
 	for _, metric := range metrics {
 		newPoints, err := m.store.SelectMetricTimeRange(
-			metric, *startTime, *endTime,
+			metric, startTime, endTime,
 		)
 		if err != nil {
 			errMsg := fmt.Sprintf("Failed to fetch points for the %s metric"+
