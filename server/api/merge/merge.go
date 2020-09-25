@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"server/datatypes"
@@ -34,7 +35,7 @@ func init() {
 			defaultRemoteMergeURL)
 		remoteMergeURL = defaultRemoteMergeURL
 	} else {
-		remoteMergeURL = url
+		remoteMergeURL = strings.Trim(url, "\"")
 	}
 }
 
