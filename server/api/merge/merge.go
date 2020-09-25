@@ -243,8 +243,8 @@ func mergeCurBlockOfPoints(curBlockAsJSON []byte) error {
 			remoteMergeURL, err.Error())
 	}
 	if res.StatusCode != 204 {
-		return fmt.Errorf("POST request to %s did not return 204: %v",
-			remoteMergeURL, err.Error())
+		return fmt.Errorf("POST request to %s did not return 204: got: %d, want: 204",
+			remoteMergeURL, res.StatusCode)
 	}
 
 	return nil
