@@ -3,6 +3,7 @@ services:
   server:
     environment:
       - PRODUCTION=false
+      - REMOTE_SERVER_URL="https://solarracing.me/remotemerge"
     volumes:
       - ./secrets:/secrets
       - ./fooddb:/fooddb

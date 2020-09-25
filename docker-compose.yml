@@ -28,6 +28,7 @@ services:
     environment:
       - IN_DOCKER=true
       - PRODUCTION=true
+      - REMOTE_SERVER_URL="https://solarracing.me/remotemerge"
     depends_on:
       - "influxdb"
     working_dir: /app

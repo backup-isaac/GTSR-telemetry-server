@@ -2,6 +2,7 @@ secrets.json
 telemetry.csv
 server/api/*.csv
 route.json
+merge_info_config.json
 node_modules
 jenkins/jenkins_home
 package-lock.json
