@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"os"
 	"path"
 	"runtime"
 	"time"
@@ -34,9 +35,20 @@ func init() {
 // ReadMergeInfoModel marshals the info in the merge config file into a Model
 // object.
 func ReadMergeInfoModel() (*Model, error) {
+	// If the merge_info_config.json file doesn't exist, then feed the caller a
+	// stubbed version.
+	//
+	// If we didn't do this, then a Model struct with all of its fields
+	// populated with their default values would be handed back. The
+	// DidLastJobFinish field would be false, which would confuse the caller
+	// into thinking that a previous merge job needs to be restarted.
+	if _, err := os.Stat(infoPath); os.IsNotExist(err) {
+		return &Model{DidLastJobFinish: true}, nil
+	}
+
 	configFile, err := ioutil.ReadFile(infoPath)
 	if err != nil {
-		return &Model{}, nil
+		return &Model{DidLastJobFinish: true}, nil
 	}
 	m := &Model{}
 	err = json.Unmarshal(configFile, m)
