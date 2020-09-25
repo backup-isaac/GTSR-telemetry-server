@@ -83,7 +83,7 @@ func (m *Merger) UploadLocalPointsToRemote(startTime, endTime time.Time) error {
 		)
 		log.Println(msg)
 	} else {
-		msg := fmt.Sprintf("Starting new merge job (times %s to %s)"+
+		msg := fmt.Sprintf("Starting new merge job (times %s to %s)",
 			startTime.Format(timeFormatString),
 			endTime.Format(timeFormatString),
 		)
