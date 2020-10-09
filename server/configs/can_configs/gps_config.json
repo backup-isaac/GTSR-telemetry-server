@@ -2,52 +2,52 @@
     {
         "can_id": 1569,
         "datatype": "float32",
-        "name": "GPS_Latitude",
+        "name": "TB_GPS_Latitude",
         "offset": 0,
         "check_bounds": true,
         "min_value": -90,
         "max_value": 90,
-        "description": "The latitude of the car"
+        "description": "The latitude of the car; from telemboard"
     },
     {
         "can_id": 1569,
         "datatype": "float32",
-        "name": "GPS_Longitude",
+        "name": "TB_GPS_Longitude",
         "offset": 4,
         "check_bounds": true,
         "min_value": -180,
         "max_value": 180,
-        "description": "The longitude of the car"
+        "description": "The longitude of the car; from telemboard"
     },
     {
         "can_id": 1570,
         "datatype": "float32",
-        "name": "GPS_Altitude",
+        "name": "TB_GPS_Altitude",
         "offset": 0,
         "check_bounds": true,
         "min_value": -100,
         "max_value": 10000,
-        "description": "The altitude of the car"
+        "description": "The altitude of the car; from telemboard"
     },
     {
         "can_id": 1571,
         "datatype": "float32",
-        "name": "GPS_Speed",
+        "name": "TB_GPS_Speed",
         "offset": 0,
         "check_bounds": true,
         "min_value": 0,
         "max_value": 100,
-        "description": "The speed of the car"
+        "description": "The speed of the car; from telemboard"
     },
     {
         "can_id": 1571,
         "datatype": "float32",
-        "name": "GPS_Angle",
+        "name": "TB_GPS_Angle",
         "offset": 4,
         "check_bounds": true,
         "min_value": 0,
         "max_value": 365,
-        "description": "The angle of which the car is traveling at"
+        "description": "The angle of which the car is traveling at; from telemboard"
     },
     {
         "can_id": 1573,
@@ -57,7 +57,7 @@
         "check_bounds": true,
         "min_value": -3.15,
         "max_value": 3.15,
-        "description": "Angle of the car about the vertical axis"
+        "description": "Angle of the car about the vertical axis; from telemboard"
     },
     {
         "can_id": 1573,
@@ -67,7 +67,7 @@
         "check_bounds": true,
         "min_value": -3.15,
         "max_value": 3.15,
-        "description": "Angle of the car with respect to the ground (hill inclination)"
+        "description": "Angle of the car with respect to the ground (hill inclination); from telemboard"
     },
     {
         "can_id": 1574,
@@ -77,66 +77,66 @@
         "check_bounds": true,
         "min_value": -3.15,
         "max_value": 3.15,
-        "description": "Angle of the car with respect to the ground (hill secondary axis of curvature)"
+        "description": "Angle of the car with respect to the ground (hill secondary axis of curvature); from telemboard"
     },
     {
         "can_id": 1577,
         "datatype": "float32",
-        "name": "Raw_Acceleration_X",
+        "name": "TB_Raw_Acceleration_X",
         "offset": 0,
         "check_bounds": true,
         "min_value": -16,
         "max_value": 16,
-        "description": "The acceleration of the car going forward"
+        "description": "The acceleration of the car going forward; from telemboard"
     },
     {
         "can_id": 1577,
         "datatype": "float32",
-        "name": "Raw_Acceleration_Y",
+        "name": "TB_Raw_Acceleration_Y",
         "offset": 4,
         "check_bounds": true,
         "min_value": -16,
         "max_value": 16,
-        "description": "The acceleration of the car going left/right"
+        "description": "The acceleration of the car going left/right; from telemboard"
     },
     {
         "can_id": 1578,
         "datatype": "float32",
-        "name": "Raw_Acceleration_Z",
+        "name": "TB_Raw_Acceleration_Z",
         "offset": 0,
         "check_bounds": true,
         "min_value": -16,
         "max_value": 16,
-        "description": "The acceleration of the car going up/down"
+        "description": "The acceleration of the car going up/down; from telemboard"
     },
     {
         "can_id": 1578,
         "datatype": "float32",
-        "name": "Acceleration_Scale",
+        "name": "TB_Acceleration_Scale",
         "offset": 4,
         "check_bounds": true,
         "min_value": 0,
         "max_value": 8,
-        "description": "The magnitude of the acceleration"
+        "description": "The magnitude of the acceleration; from telemboard"
     },
     {
         "can_id": 1581,
         "datatype": "float32",
-        "name": "IMU_Temperature",
+        "name": "TB_IMU_Temperature",
         "offset": 0,
         "check_bounds": true,
         "min_value": -80,
         "max_value": 120,
-        "description": "The temperature of the Inertial Measurement Unit"
+        "description": "The temperature of the Inertial Measurement Unit; from telemboard"
     },
     {
         "can_id": 1582,
         "datatype": "uint8",
-        "name": "GPS_Status",
+        "name": "TB_GPS_Status",
         "offset": 0,
         "check_bounds": true,
         "min_value": 0,
         "max_value": 1,
-        "description": "Displays whether the GPS currently has a position fix"
+        "description": "Displays whether the GPS currently has a position fix; from telemboard"
     }
 ]
