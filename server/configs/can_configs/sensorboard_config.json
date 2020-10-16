@@ -313,7 +313,7 @@
       "check_bounds": true,
       "min_value": -100,
       "max_value": 10000,
-      "description": "The altitude of the car; from sensorboard's GPS"
+      "description": "The altitude of the car; from sensorboard's GPS [m]"
   },
   {
       "can_id": 1971,
