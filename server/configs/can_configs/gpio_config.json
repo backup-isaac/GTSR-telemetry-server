@@ -1,5 +1,21 @@
 [
     {
+        "can_id": 513,
+        "datatype": "uint8",
+        "name": "GPIO_Board_Subscribe",
+        "offset": 0,
+        "check_bounds": false,
+        "description": "Peripheral Board subscribing to the GPIO Board"
+    },
+    {
+        "can_id": 514,
+        "datatype": "float32",
+        "name": "GPIO_Board_Acknowledge",
+        "offset": 0,
+        "check_bounds": false,
+        "description": "Peripheral Board acknowledging the CAN frame GPIO sent"
+    },
+    {
         "can_id": 515,
         "datatype": "bit",
         "name": "GPIO_Board_A_Brake_Switch",
