@@ -333,7 +333,7 @@
       "check_bounds": true,
       "min_value": 0,
       "max_value": 365,
-      "description": "The angle of which the car is traveling at; from sensorboard GPS"
+      "description": "The angle of which the car is traveling at [degrees]; from sensorboard GPS"
   }
 ]
   
