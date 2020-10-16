@@ -303,7 +303,7 @@
       "check_bounds": true,
       "min_value": -180,
       "max_value": 180,
-      "description": "The longitude of the car; from sensorboard"
+      "description": "The longitude of the car; from sensorboard [degrees]"
   },
   {
       "can_id": 1970,
