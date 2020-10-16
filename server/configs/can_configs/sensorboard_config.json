@@ -323,7 +323,7 @@
       "check_bounds": true,
       "min_value": 0,
       "max_value": 100,
-      "description": "The speed of the car; from sensorboard"
+      "description": "The speed of the car [km/h]; from sensorboard"
   },
   {
       "can_id": 1971,
