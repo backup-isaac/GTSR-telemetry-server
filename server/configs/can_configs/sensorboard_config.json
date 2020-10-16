@@ -83,7 +83,7 @@
       "check_bounds": true,
       "min_value": -16,
       "max_value": 16,
-      "description": "The acceleration of the car going up/down; from sensorboard IMU"
+      "description": "The acceleration of the car going up/down [g]; from sensorboard IMU"
     },
     {
       "can_id": 1981,
