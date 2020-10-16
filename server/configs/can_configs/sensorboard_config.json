@@ -1,0 +1,339 @@
+[
+    {
+      "can_id": 1979,
+      "datatype": "uint8",
+      "name": "ImuMag_Status",
+      "offset": 0,
+      "check_bounds": false,
+      "description": "Packed flag for inertial measurement unit and magnetometer status"
+    },
+    {
+      "can_id": 1979,
+      "datatype": "uint8",
+      "name": "Inclinometer_Status",
+      "offset": 1,
+      "check_bounds": false,
+      "description": "Packed flag for inclinometer status"
+    },
+    {
+      "can_id": 1979,
+      "datatype": "uint8",
+      "name": "Altitude_Status",
+      "offset": 2,
+      "check_bounds": false,
+      "description": "Packed flag for altimetry status"
+    },
+    {
+      "can_id": 1979,
+      "datatype": "uint8",
+      "name": "SB_GPS_Status",
+      "offset": 3,
+      "check_bounds": false, 
+      "description": "Packed flag for GPS status on sensorboard"
+    },
+    {
+      "can_id": 1979,
+      "datatype": "uint8",
+      "name": "SB_SD_Status",
+      "offset": 4,
+      "check_bounds": false,
+      "description": "Packed flag for SD logging status on sensorboard"
+    },
+    {
+      "can_id": 1979,
+      "datatype": "uint8",
+      "name": "TPMS_Status",
+      "offset": 5,
+      "check_bounds": false,
+      "description": "Packed flag for TPMS status"
+    },
+    {
+      "can_id": 1979,
+      "datatype": "uint8",
+      "name": "CAN_Errors",
+      "offset": 6,
+      "check_bounds": false,
+      "description": "Packed flag for CAN errors"
+    },
+    {
+      "can_id": 1980,
+      "datatype": "float32",
+      "name": "SB_IMU_Accel_X",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -16,
+      "max_value": 16,
+      "description": "The acceleration of the car going forward [g]; from sensorboard IMU"
+    },
+    {
+      "can_id": 1980,
+      "datatype": "float32",
+      "name": "SB_IMU_Accel_Y",
+      "offset": 4,
+      "check_bounds": true,
+      "min_value": -16,
+      "max_value": 16, 
+      "description": "The acceleration of the car going left/right [g]; from sensorboard IMU"
+    },
+    {
+      "can_id": 1981,
+      "datatype": "float32",
+      "name": "SB_IMU_Accel_Z",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -16,
+      "max_value": 16,
+      "description": "The acceleration of the car going up/down [g]; from sensorboard IMU"
+    },
+    {
+      "can_id": 1981,
+      "datatype": "uint8",
+      "name": "SB_IMU_Status",
+      "offset": 4,
+      "check_bounds": false,
+      "description": "Status of IMU on sensorboard"
+    },
+    {
+      "can_id": 1982,
+      "datatype": "float32",
+      "name": "IMU_Gyro_X",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -2000,
+      "max_value": 2000,
+      "description": "The angluar velocity of the car on the X axis [deg/s]"
+    },
+    {
+      "can_id": 1982,
+      "datatype": "float32",
+      "name": "IMU_Gyro_Y",
+      "offset": 4,
+      "check_bounds": true,
+      "min_value": -2000,
+      "max_value": 2000, 
+      "description": "The angluar velocity of the car on the Y axis [deg/s]"
+    },
+    {
+      "can_id": 1983,
+      "datatype": "float32",
+      "name": "IMU_Gyro_Z",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -2000,
+      "max_value": 2000,
+      "description": "The angluar velocity of the car on the Z axis"
+    },
+    {
+      "can_id": 1983,
+      "datatype": "uint8",
+      "name": "IMU_Gyro_Status",
+      "offset": 4,
+      "check_bounds": false,
+      "description": "The status of the gyroscope on sensorboard's IMU"
+    },
+    {
+      "can_id": 1984,
+      "datatype": "float32",
+      "name": "IMU_Mag_X",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -4900,
+      "max_value": 4900,
+      "description": "The magnetic field experienced by the car on the X axis"
+    },
+    {
+      "can_id": 1984,
+      "datatype": "float32",
+      "name": "IMU_Mag_Y",
+      "offset": 4,
+      "check_bounds": true,
+      "min_value": -4900,
+      "max_value": 4900,
+      "description": "The magnetic field experienced by the car on the Y axis"
+    },
+    {
+      "can_id": 1985,
+      "datatype": "float32",
+      "name": "IMU_Mag_Z",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -4900,
+      "max_value": 4900,
+      "description": "The magnetic field experienced by the car on the Z axis"
+    },
+    {
+      "can_id": 1985,
+      "datatype": "uint8",
+      "name": "IMU_Mag_Status",
+      "offset": 4,
+      "check_bounds": false,
+      "description": "The status of the magnetometer on sensorboard's IMU"
+    },
+    {
+      "can_id": 1986,
+      "datatype": "float32",
+      "name": "INCL_Ang_X",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": 0,
+      "max_value": 365,
+      "description": "Angle of the car about the X axis; from sensorboard's inclinometer"
+    },
+    {
+      "can_id": 1986,
+      "datatype": "float32",
+      "name": "INCL_Ang_Y",
+      "offset": 4,
+      "check_bounds": true,
+      "min_value": 0,
+      "max_value": 365,
+      "description": "Angle of the car about the Y axis; from sensorboard's inclinometer"
+    },
+    {
+      "can_id": 1987,
+      "datatype": "float32",
+      "name": "INCL_Ang_Z",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": 0,
+      "max_value": 365,
+      "description": "Angle of the car about the Z axis; from sensorboard's inclinometer"
+    },
+    {
+      "can_id": 1987,
+      "datatype": "uint8",
+      "name": "INCL_Status",
+      "offset": 4,
+      "check_bounds": false,
+      "description": "Status of the inclinometer on sensorboard"
+    },
+    {
+      "can_id": 1988,
+      "datatype": "float32",
+      "name": "INCL_Acc_X",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -16,
+      "max_value": 16,
+      "description": "The acceleration of the car going forward; from sensorboard inclinometer"
+    },
+    {
+      "can_id": 1988,
+      "datatype": "float32",
+      "name": "INCL_Acc_Y",
+      "offset": 4,
+      "check_bounds": true,
+      "min_value": -16,
+      "max_value": 16,
+      "description": "The acceleration of the car going left/right; from sensorboard inclinometer"
+    },
+    {
+      "can_id": 1989,
+      "datatype": "float32",
+      "name": "INCL_Acc_Z",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -16,
+      "max_value": 16, 
+      "description": "The acceleration of the car going up/down; from sensorboard inclinometer"
+    },
+    {
+      "can_id": 1989,
+      "datatype": "float32",
+      "name": "INCL_TEMP",
+      "offset": 4,
+      "check_bounds": true,
+      "min_value": -80,
+      "max_value": 120,
+      "description": "The temperature of the inclinometer"
+    },
+    {
+      "can_id": 1990,
+      "datatype": "float32",
+      "name": "Altitude",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -100,
+      "max_value": 10000,
+      "description": "The altitude above sea level accoring to sesnorboard's altimeter"
+    },
+    {
+      "can_id": 1990,
+      "datatype": "float32",
+      "name": "Alt_CFG_SeaLevelPressure",
+      "offset": 4,
+      "check_bounds": true,
+      "min_value": -40000,
+      "max_value": 40000,
+      "description": "The pressure in pascals relative to sea level"
+    },
+    {
+      "can_id": 1991,
+      "datatype": "uint8",
+      "name": "Ambient_Temp",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": 0,
+      "max_value": 120,
+      "description": "The ambient temperature inside the car"
+    },
+    {
+      "can_id": 1991,
+      "datatype": "uint8",
+      "name": "ALT_Status",
+      "offset": 4,
+      "check_bounds": false,
+      "description": "Status of altimeter"
+    }, 
+    {
+      "can_id": 1969,
+      "datatype": "float32",
+      "name": "SB_GPS_Latitude",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -90,
+      "max_value": 90,
+      "description": "The latitude of the car; from sensorboard"
+  },
+  {
+      "can_id": 1969,
+      "datatype": "float32",
+      "name": "SB_GPS_Longitude",
+      "offset": 4,
+      "check_bounds": true,
+      "min_value": -180,
+      "max_value": 180,
+      "description": "The longitude of the car; from sensorboard [degrees]"
+  },
+  {
+      "can_id": 1970,
+      "datatype": "float32",
+      "name": "SB_GPS_Altitude",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": -100,
+      "max_value": 10000,
+      "description": "The altitude of the car; from sensorboard's GPS [m]"
+  },
+  {
+      "can_id": 1971,
+      "datatype": "float32",
+      "name": "SB_GPS_Speed",
+      "offset": 0,
+      "check_bounds": true,
+      "min_value": 0,
+      "max_value": 150,
+      "description": "The speed of the car [km/h]; from sensorboard"
+  },
+  {
+      "can_id": 1971,
+      "datatype": "float32",
+      "name": "SB_GPS_Angle",
+      "offset": 4,
+      "check_bounds": true,
+      "min_value": 0,
+      "max_value": 365,
+      "description": "The angle of which the car is traveling at [degrees]; from sensorboard GPS"
+  }
+]
+  
