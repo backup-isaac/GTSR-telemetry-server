@@ -102,18 +102,18 @@ func (c *Core) Latest(res http.ResponseWriter, req *http.Request) {
 
 // Location returns the current position of the car
 func (c *Core) Location(res http.ResponseWriter, req *http.Request) {
-	latpt, err := c.store.LatestNonZero("GPS_Latitude")
+	latpt, err := c.store.LatestNonZero("SB_GPS_Latitude")
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	lngpt, err := c.store.LatestNonZero("GPS_Longitude")
+	lngpt, err := c.store.LatestNonZero("SB_GPS_Longitude")
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if latpt == nil || lngpt == nil {
-		http.Error(res, "Location metrics (GPS_Latitude/GPS_Longitude) not found", http.StatusInternalServerError)
+		http.Error(res, "Location metrics (SB_GPS_Latitude/SB_GPS_Longitude) not found", http.StatusInternalServerError)
 		return
 	}
 	location := map[string]float64{
