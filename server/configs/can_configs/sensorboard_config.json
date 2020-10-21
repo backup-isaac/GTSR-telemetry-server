@@ -269,7 +269,7 @@
     },
     {
       "can_id": 1991,
-      "datatype": "uint8",
+      "datatype": "float32",
       "name": "Ambient_Temp",
       "offset": 0,
       "check_bounds": true,
