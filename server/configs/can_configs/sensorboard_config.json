@@ -175,8 +175,8 @@
       "name": "INCL_Ang_X",
       "offset": 0,
       "check_bounds": true,
-      "min_value": 0,
-      "max_value": 365,
+      "min_value": -90,
+      "max_value": 90,
       "description": "Angle of the car about the X axis; from sensorboard's inclinometer"
     },
     {
@@ -185,8 +185,8 @@
       "name": "INCL_Ang_Y",
       "offset": 4,
       "check_bounds": true,
-      "min_value": 0,
-      "max_value": 365,
+      "min_value": -90,
+      "max_value": 90,
       "description": "Angle of the car about the Y axis; from sensorboard's inclinometer"
     },
     {
@@ -195,8 +195,8 @@
       "name": "INCL_Ang_Z",
       "offset": 0,
       "check_bounds": true,
-      "min_value": 0,
-      "max_value": 365,
+      "min_value": -90,
+      "max_value": 90,
       "description": "Angle of the car about the Z axis; from sensorboard's inclinometer"
     },
     {
@@ -269,7 +269,7 @@
     },
     {
       "can_id": 1991,
-      "datatype": "uint8",
+      "datatype": "float32",
       "name": "Ambient_Temp",
       "offset": 0,
       "check_bounds": true,
