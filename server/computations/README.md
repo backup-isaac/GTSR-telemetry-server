@@ -1,5 +1,0 @@
-To create a new computation, make a struct that implements the Computable interface, and register it in the init() function with the metrics it should listen for. For a standard computation, which is a computation that waits to receive at least one point from each registered metric type to perform a computation, include standardComputation as a field in the struct (see Battery Power and Bus Power for examples). standardComputation already implements the Update function, so all you need to do is some initialization work and implement Compute. 
-
-Please write unit tests for your computation. Use some of the existing unit tests as examples. Make sure to test that your Compute function properly resets data if necessary (e.g. for standard computations make sure it resets the value field).
-
-Ensure that your computations are thread safe i.e. include a mutex field and acquire/release it at the start/end of every function. The central computation algorithm launches Compute in a separate goroutine.

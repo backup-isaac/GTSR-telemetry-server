@@ -1,12 +1,12 @@
 version: "3.5"
 services:
-  server:
-    environment:
-      - PRODUCTION=false
-      - REMOTE_SERVER_URL="https://solarracing.me/remotemerge"
-    volumes:
-      - ./secrets:/secrets
-      - ./fooddb:/fooddb
+  # server:
+  #   environment:
+  #     - PRODUCTION=false
+  #     - REMOTE_SERVER_URL="https://solarracing.me/remotemerge"
+  #   volumes:
+  #     - ./secrets:/secrets
+  #     - ./fooddb:/fooddb
   nginx:
     volumes:
       - ./nginx/conf.d/dev:/etc/nginx/conf.d

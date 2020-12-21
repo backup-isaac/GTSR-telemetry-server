@@ -1,56 +1,23 @@
 version: "3.5"
 services:
-  influxdb:
-    image: influxdb
-    container_name: influxdb
-    environment:
-      - INFLUXDB_DB="telemetry"
-    volumes:
-      - db-data:/var/lib/influxdb
-    restart: unless-stopped
-    networks:
-      - telemetry-server
-  grafana:
-    build: ./grafana 
-    container_name: grafana
-    depends_on:
-      - "influxdb"
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana-storage:/var/lib/grafana
-    restart: unless-stopped
-    networks:
-      - telemetry-server
-  server:
-    image: "golang:1.13"
-    container_name: server
-    environment:
-      - IN_DOCKER=true
-      - PRODUCTION=true
-      - REMOTE_SERVER_URL="https://solarracing.me/remotemerge"
-    depends_on:
-      - "influxdb"
+  deployinator:
+    image: "golang:1.15"
+    container_name: deployinator
     working_dir: /app
     volumes: 
-      - ./server:/app
+      - ./deployinator:/app
       - cache:/go
-      - /etc/telemetry-server/secrets:/secrets
-      - /etc/telemetry-server/fooddb:/fooddb
+      - /opt/gtsr:/deploy-location
     command: bash -c "go run main.go"
-    ports:
-      - "8888:8888"
-      - "6001:6001"
-      - "6001:6001/udp"
+    expose: 
+      - "8800"
     restart: unless-stopped 
     networks:
-      - telemetry-server
+      - deployer-network
   nginx:
     image: nginx
     container_name: nginx
     depends_on:
-      - "server"
-      - "grafana"
       - "jenkins"
     volumes:
       - ./nginx/conf.d/prod:/etc/nginx/conf.d
@@ -62,29 +29,31 @@ services:
       - "443:443"
     restart: unless-stopped 
     networks:
-      - telemetry-server
-      - jenkins-network
+      - jenkins-proxy
+      - public-services
   jenkins:
     build: ./jenkins
     container_name: jenkins
+    depends_on:
+      - "deployinator"
     environment:
       - TRY_UPGRADE_IF_NO_MARKER=true
       - PLUGINS_FORCE_UPGRADE=true
     volumes:
       - jenkins-home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - .:/opt/telemetry-server
     ports:
       - "8080:8080"
     networks:
-      - jenkins-network
+      - jenkins-proxy
+      - deployer-network
 volumes:
   cache:
-  db-data:
-  grafana-storage:
   jenkins-home:
 networks:
-  telemetry-server:
-    name: telemetry-server
-  jenkins-network:
-    name: jenkins-network
+  jenkins-proxy:
+    name: jenkins-proxy
+  deployer-network:
+    name: deployer-network
+  public-services:
+    name: public-services
